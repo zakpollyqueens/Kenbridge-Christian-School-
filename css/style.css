@@ -1,0 +1,837 @@
+/* =========================================================
+   KENBRIDGE CHRISTIAN SCHOOL
+   GLOBAL STYLES
+   Brand: Green + Orange + White
+   ========================================================= */
+
+:root {
+    --green: #08783f;
+    --green-dark: #055a2f;
+    --green-light: #eaf7ef;
+
+    --orange: #f28c28;
+    --orange-dark: #d96f0b;
+    --orange-light: #fff2e3;
+
+    --white: #ffffff;
+    --black: #111111;
+    --text: #333333;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --light: #f7faf8;
+
+    --header-height: 78px;
+    --container: 1180px;
+
+    --shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    --radius: 8px;
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.6;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+
+.container {
+    width: min(92%, var(--container));
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   IMPORTANT LINK RESET
+   Prevent browser purple visited links
+   ========================================================= */
+
+a {
+    color: var(--green);
+    text-decoration: none;
+    transition:
+        color 0.25s ease,
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.25s ease;
+}
+
+a:visited {
+    color: var(--green);
+}
+
+a:hover {
+    color: var(--orange);
+}
+
+a:active {
+    color: var(--orange-dark);
+}
+
+
+/* =========================================================
+   TOP CONTACT BAR
+   Keep this because it is part of the reference layout
+   ========================================================= */
+
+.top-bar {
+    background: var(--green-dark);
+    color: var(--white);
+    font-size: 14px;
+}
+
+.top-bar a,
+.top-bar a:visited {
+    color: var(--white);
+}
+
+.top-bar a:hover {
+    color: var(--orange);
+}
+
+.top-bar .container {
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: var(--white);
+    border-bottom: 3px solid var(--orange);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.header-inner {
+    min-height: var(--header-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+
+/* =========================================================
+   LOGO / BRAND
+   ========================================================= */
+
+.logo,
+.logo:visited {
+    color: var(--green);
+}
+
+.logo:hover {
+    color: var(--green-dark);
+}
+
+.logo strong {
+    color: var(--green);
+}
+
+.logo span {
+    color: var(--orange);
+}
+
+
+/* =========================================================
+   MAIN NAVIGATION
+   ========================================================= */
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.main-nav > a,
+.main-nav > a:visited,
+.main-nav .dropdown > a,
+.main-nav .dropdown > a:visited {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 50px;
+    padding: 0 13px;
+
+    color: var(--green);
+    font-weight: 600;
+    font-size: 15px;
+
+    background: transparent;
+}
+
+
+/* Orange underline on hover */
+
+.main-nav > a::after,
+.main-nav .dropdown > a::after {
+    content: "";
+    position: absolute;
+    left: 13px;
+    right: 13px;
+    bottom: 4px;
+
+    height: 3px;
+    background: var(--orange);
+
+    transform: scaleX(0);
+    transform-origin: center;
+
+    transition: transform 0.25s ease;
+}
+
+.main-nav > a:hover,
+.main-nav .dropdown > a:hover {
+    color: var(--orange);
+}
+
+.main-nav > a:hover::after,
+.main-nav .dropdown > a:hover::after {
+    transform: scaleX(1);
+}
+
+
+/* =========================================================
+   ACTIVE NAVIGATION LINK
+   ========================================================= */
+
+.main-nav > a.active,
+.main-nav > a.active:visited,
+.main-nav .dropdown > a.active,
+.main-nav .dropdown > a.active:visited {
+    color: var(--orange);
+}
+
+.main-nav > a.active::after,
+.main-nav .dropdown > a.active::after {
+    transform: scaleX(1);
+}
+
+
+/* =========================================================
+   DROPDOWN
+   ========================================================= */
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 3px);
+    left: 0;
+
+    min-width: 220px;
+
+    background: var(--white);
+    border-top: 4px solid var(--orange);
+    box-shadow: var(--shadow);
+
+    padding: 8px 0;
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        visibility 0.2s ease;
+}
+
+.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-menu a,
+.dropdown-menu a:visited {
+    display: block;
+    padding: 10px 18px;
+
+    color: var(--green);
+    background: var(--white);
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.dropdown-menu a:hover {
+    color: var(--white);
+    background: var(--green);
+}
+
+
+/* =========================================================
+   APPLY ONLINE BUTTON
+   ========================================================= */
+
+.apply-button,
+.apply-button:visited {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 12px 20px;
+
+    color: var(--white) !important;
+    background: var(--orange);
+
+    border: 2px solid var(--orange);
+    border-radius: 5px;
+
+    font-weight: 700;
+}
+
+.apply-button:hover {
+    color: var(--white) !important;
+    background: var(--orange-dark);
+    border-color: var(--orange-dark);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   MOBILE MENU
+   ========================================================= */
+
+.mobile-nav {
+    display: none;
+    background: var(--white);
+    border-top: 3px solid var(--orange);
+}
+
+.mobile-nav.open {
+    display: flex;
+}
+
+.mobile-nav a,
+.mobile-nav a:visited {
+    display: block;
+    padding: 13px 20px;
+
+    color: var(--green);
+    background: var(--white);
+
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+}
+
+.mobile-nav a:hover {
+    color: var(--white);
+    background: var(--green);
+}
+
+.mobile-nav .mobile-apply,
+.mobile-nav .mobile-apply:visited {
+    margin: 12px 20px;
+
+    color: var(--white);
+    background: var(--orange);
+
+    border: 0;
+    text-align: center;
+}
+
+.mobile-nav .mobile-apply:hover {
+    background: var(--orange-dark);
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero {
+    position: relative;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(8, 120, 63, 0.94),
+            rgba(8, 120, 63, 0.72)
+        );
+
+    color: var(--white);
+    padding: 95px 0;
+}
+
+.hero-label,
+.section-label {
+    display: inline-block;
+
+    color: var(--orange);
+
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.hero h1 {
+    margin: 12px 0 20px;
+
+    color: var(--white);
+
+    font-size: clamp(40px, 6vw, 70px);
+    line-height: 1.05;
+}
+
+.hero h1 span {
+    color: var(--orange);
+}
+
+.hero p {
+    max-width: 700px;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+
+/* =========================================================
+   SECTIONS
+   ========================================================= */
+
+.section {
+    padding: 80px 0;
+}
+
+.section:nth-child(even) {
+    background: var(--light);
+}
+
+.section-heading {
+    max-width: 760px;
+    margin: 0 auto 45px;
+    text-align: center;
+}
+
+.section-heading h2 {
+    margin: 10px 0;
+
+    color: var(--green);
+
+    font-size: clamp(30px, 4vw, 44px);
+    line-height: 1.15;
+}
+
+.section-heading h2 span {
+    color: var(--orange);
+}
+
+.section-heading p {
+    color: var(--muted);
+}
+
+
+/* =========================================================
+   HEADINGS
+   ========================================================= */
+
+h1,
+h2,
+h3,
+h4 {
+    color: var(--green);
+}
+
+h3 span,
+h4 span {
+    color: var(--orange);
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.btn,
+button[type="submit"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 12px 22px;
+
+    color: var(--white);
+    background: var(--green);
+
+    border: 2px solid var(--green);
+    border-radius: 5px;
+
+    font-weight: 700;
+    cursor: pointer;
+
+    transition:
+        background 0.25s ease,
+        border-color 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
+}
+
+.btn:visited {
+    color: var(--white);
+}
+
+.btn:hover,
+button[type="submit"]:hover {
+    color: var(--white);
+    background: var(--orange);
+    border-color: var(--orange);
+
+    transform: translateY(-2px);
+}
+
+.btn-orange {
+    background: var(--orange);
+    border-color: var(--orange);
+}
+
+.btn-orange:hover {
+    background: var(--green);
+    border-color: var(--green);
+}
+
+.btn-outline,
+.btn-outline:visited {
+    color: var(--green);
+    background: transparent;
+    border: 2px solid var(--green);
+}
+
+.btn-outline:hover {
+    color: var(--white);
+    background: var(--green);
+}
+
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.feature-card,
+.card {
+    background: var(--white);
+
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--green);
+    border-radius: var(--radius);
+
+    padding: 28px;
+
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.05);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+.feature-card:hover,
+.card:hover {
+    transform: translateY(-5px);
+    border-top-color: var(--orange);
+    box-shadow: var(--shadow);
+}
+
+.feature-card h3,
+.card h3 {
+    margin-bottom: 10px;
+    color: var(--green);
+}
+
+.feature-icon {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 18px;
+
+    color: var(--white);
+    background: var(--orange);
+
+    border-radius: 50%;
+}
+
+
+/* =========================================================
+   LINKS INSIDE CONTENT
+   ========================================================= */
+
+.section a:not(.btn):not(.apply-button),
+.welcome a:not(.btn),
+.card a:not(.btn),
+.feature-card a:not(.btn) {
+    color: var(--green);
+    font-weight: 600;
+}
+
+.section a:not(.btn):not(.apply-button):hover,
+.welcome a:not(.btn):hover,
+.card a:not(.btn):hover,
+.feature-card a:not(.btn):hover {
+    color: var(--orange);
+}
+
+
+/* =========================================================
+   QUICK INFO
+   ========================================================= */
+
+.quick-info {
+    background: var(--green);
+    color: var(--white);
+}
+
+.quick-info .item {
+    color: var(--white);
+}
+
+.quick-info .icon {
+    color: var(--orange);
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+footer {
+    background: var(--green-dark);
+    color: rgba(255, 255, 255, 0.86);
+}
+
+footer h3,
+footer h4 {
+    color: var(--white);
+}
+
+footer h4 {
+    border-bottom: 2px solid var(--orange);
+    padding-bottom: 8px;
+}
+
+footer a,
+footer a:visited {
+    color: rgba(255, 255, 255, 0.86);
+}
+
+footer a:hover {
+    color: var(--orange);
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.footer-bottom a,
+.footer-bottom a:visited {
+    color: var(--orange);
+}
+
+
+/* =========================================================
+   FORMS
+   ========================================================= */
+
+input,
+textarea,
+select {
+    width: 100%;
+
+    padding: 12px 14px;
+
+    color: var(--text);
+    background: var(--white);
+
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(8, 120, 63, 0.12);
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+
+    color: var(--green);
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   TABLES
+   ========================================================= */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    color: var(--white);
+    background: var(--green);
+    padding: 13px;
+    text-align: left;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+tr:nth-child(even) td {
+    background: var(--light);
+}
+
+tr:hover td {
+    background: var(--orange-light);
+}
+
+
+/* =========================================================
+   SPECIAL ORANGE ACCENTS
+   ========================================================= */
+
+.orange {
+    color: var(--orange) !important;
+}
+
+.green {
+    color: var(--green) !important;
+}
+
+.bg-green {
+    background: var(--green) !important;
+    color: var(--white);
+}
+
+.bg-orange {
+    background: var(--orange) !important;
+    color: var(--white);
+}
+
+.bg-light-green {
+    background: var(--green-light) !important;
+}
+
+.bg-light-orange {
+    background: var(--orange-light) !important;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .main-nav {
+        display: none;
+    }
+
+    .header-inner {
+        min-height: 68px;
+    }
+
+    .top-bar .container {
+        flex-direction: column;
+        justify-content: center;
+        gap: 3px;
+        padding: 7px 0;
+        text-align: center;
+    }
+
+    .hero {
+        padding: 70px 0;
+    }
+
+    .section {
+        padding: 60px 0;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .top-bar {
+        font-size: 12px;
+    }
+
+    .hero {
+        padding: 55px 0;
+    }
+
+    .hero h1 {
+        font-size: 40px;
+    }
+
+    .section {
+        padding: 50px 0;
+    }
+
+    .feature-card,
+    .card {
+        padding: 22px;
+    }
+
+    .btn,
+    .apply-button {
+        width: 100%;
+    }
+  }
