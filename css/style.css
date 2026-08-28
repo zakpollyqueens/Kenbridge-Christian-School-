@@ -1601,3 +1601,375 @@ body.launch-locked {
         bottom: 10px;
     }
    }
+/* =========================================================
+   KENBRIDGE HEADER - FINAL NAVIGATION
+   ========================================================= */
+
+/* Header layout */
+
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: var(--white);
+    border-bottom: 3px solid var(--orange);
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+}
+
+.nav-container {
+    min-height: 78px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+
+/* Logo */
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.logo-container {
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.school-logo {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+}
+
+.brand-name {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.05;
+}
+
+.brand-name strong {
+    color: var(--green);
+    font-size: 17px;
+}
+
+.brand-name span {
+    color: var(--orange);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .5px;
+}
+
+
+/* =========================================================
+   MAIN NAVIGATION
+   ========================================================= */
+
+.desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.desktop-nav > a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 9px;
+    color: var(--green);
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.desktop-nav > a:hover {
+    color: var(--orange);
+}
+
+.desktop-nav > a.active {
+    color: var(--orange);
+}
+
+
+/* Apply button */
+
+.desktop-nav .apply-button {
+    min-height: 40px;
+    margin-left: 5px;
+    padding: 0 15px;
+    color: var(--white) !important;
+    background: var(--orange);
+    border: 2px solid var(--orange);
+    border-radius: 5px;
+}
+
+.desktop-nav .apply-button:hover {
+    color: var(--white) !important;
+    background: var(--green);
+    border-color: var(--green);
+}
+
+
+/* =========================================================
+   MORE BUTTON
+   ========================================================= */
+
+.more-menu {
+    position: relative;
+}
+
+.more-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 48px;
+    padding: 0 9px;
+    border: 0;
+    background: transparent;
+    color: var(--green);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.more-button:hover {
+    color: var(--orange);
+}
+
+
+/* Hamburger icon */
+
+.hamburger-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.hamburger-icon span {
+    display: block;
+    width: 21px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 2px;
+}
+
+
+/* =========================================================
+   MORE DROPDOWN
+   ========================================================= */
+
+.more-menu .dropdown {
+    position: absolute;
+    top: calc(100% + 3px);
+    right: 0;
+    min-width: 220px;
+    padding: 7px 0;
+    background: var(--white);
+    border-top: 4px solid var(--orange);
+    box-shadow: var(--shadow);
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(7px);
+
+    transition:
+        opacity .2s ease,
+        visibility .2s ease,
+        transform .2s ease;
+}
+
+.more-menu:hover .dropdown,
+.more-menu.open .dropdown,
+.more-menu:focus-within .dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.more-menu .dropdown a,
+.more-menu .dropdown a:visited {
+    display: block;
+    padding: 10px 18px;
+    color: var(--green);
+    background: var(--white);
+    font-size: 14px;
+}
+
+.more-menu .dropdown a:hover {
+    color: var(--white);
+    background: var(--green);
+}
+
+
+/* =========================================================
+   MOBILE HAMBURGER
+   ========================================================= */
+
+.mobile-menu-button {
+    width: 44px;
+    height: 44px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 7px;
+    background: var(--white);
+    border: 2px solid var(--green);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.mobile-menu-button span {
+    width: 23px;
+    height: 3px;
+    background: var(--green);
+    border-radius: 2px;
+    transition: .25s ease;
+}
+
+
+/* Hamburger becomes X */
+
+.mobile-menu-button.active span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.mobile-menu-button.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-menu-button.active span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+
+/* =========================================================
+   MOBILE NAVIGATION
+   ========================================================= */
+
+.mobile-nav {
+    display: none;
+    width: 100%;
+    background: var(--white);
+    border-top: 3px solid var(--orange);
+    box-shadow: var(--shadow);
+}
+
+.mobile-nav.open {
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-group {
+    border-bottom: 1px solid var(--border);
+}
+
+.menu-title {
+    padding: 10px 20px 6px;
+    color: var(--orange);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.mobile-nav a,
+.mobile-nav a:visited {
+    display: block;
+    padding: 11px 20px;
+    color: var(--green);
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.mobile-nav a:hover {
+    color: var(--white);
+    background: var(--green);
+}
+
+.mobile-nav .mobile-apply,
+.mobile-nav .mobile-apply:visited {
+    width: calc(100% - 40px);
+    margin: 14px 20px;
+    padding: 12px;
+    color: var(--white);
+    background: var(--orange);
+    border: 0;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.mobile-nav .mobile-apply:hover {
+    background: var(--green);
+}
+
+
+/* =========================================================
+   DESKTOP / MOBILE BREAKPOINT
+   ========================================================= */
+
+@media (max-width: 1050px) {
+
+    .desktop-nav > a {
+        padding: 0 6px;
+        font-size: 13px;
+    }
+
+    .desktop-nav .apply-button {
+        padding: 0 10px;
+    }
+
+    .more-button {
+        padding: 0 6px;
+    }
+}
+
+
+@media (max-width: 900px) {
+
+    .desktop-nav {
+        display: none;
+    }
+
+    .mobile-menu-button {
+        display: flex;
+    }
+
+    .nav-container {
+        min-height: 68px;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .logo-container,
+    .school-logo {
+        width: 47px;
+        height: 47px;
+    }
+
+    .brand-name strong {
+        font-size: 14px;
+    }
+
+    .brand-name span {
+        font-size: 9px;
+    }
+
+    .mobile-menu-button {
+        width: 43px;
+        height: 43px;
+    }
+
+   }
