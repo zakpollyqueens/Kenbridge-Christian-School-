@@ -1973,3 +1973,267 @@ body.launch-locked {
     }
 
    }
+/* =========================================================
+   KENBRIDGE OPENING / SPLASH SCREEN
+   ========================================================= */
+
+.opening-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 25px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(8, 120, 63, 0.96),
+            rgba(5, 90, 47, 1)
+        );
+
+    color: var(--white);
+
+    opacity: 1;
+    visibility: visible;
+
+    transition:
+        opacity 0.8s ease,
+        visibility 0.8s ease;
+}
+
+
+/* Screen disappears */
+
+.opening-screen.hide {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+
+/* Main content */
+
+.opening-content {
+    width: min(100%, 700px);
+
+    text-align: center;
+
+    animation: openingAppear 1s ease;
+}
+
+
+/* Temporary badge */
+
+.opening-badge {
+    width: 125px;
+    height: 125px;
+
+    margin: 0 auto 22px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--green-dark);
+    background: var(--orange);
+
+    border: 6px solid var(--white);
+    border-radius: 50%;
+
+    font-size: 17px;
+    font-weight: 900;
+    letter-spacing: 1px;
+
+    box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+.opening-badge span {
+    margin-top: 4px;
+
+    color: var(--green-dark);
+
+    font-size: 10px;
+    letter-spacing: 0.5px;
+}
+
+
+/* Welcome label */
+
+.opening-small {
+    margin-bottom: 7px;
+
+    color: var(--orange);
+
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 3px;
+}
+
+
+/* School name */
+
+.opening-content h1 {
+    margin: 0 auto 10px;
+
+    color: var(--white);
+
+    font-size: clamp(30px, 6vw, 58px);
+    line-height: 1.05;
+}
+
+
+/* Motto */
+
+.opening-motto {
+    margin-bottom: 15px;
+
+    color: rgba(255, 255, 255, 0.9);
+
+    font-size: 17px;
+    font-style: italic;
+}
+
+
+/* Countdown number */
+
+.opening-counter {
+    margin: 5px 0;
+
+    color: var(--orange);
+
+    font-size: clamp(65px, 14vw, 110px);
+    font-weight: 900;
+    line-height: 1;
+
+    text-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.25);
+
+    animation: counterPop 0.7s ease;
+}
+
+
+/* Message */
+
+.opening-message {
+    min-height: 28px;
+
+    margin-top: 10px;
+
+    color: var(--white);
+
+    font-size: 15px;
+}
+
+
+/* Progress line */
+
+.opening-line {
+    width: min(100%, 420px);
+    height: 4px;
+
+    margin: 25px auto 0;
+
+    overflow: hidden;
+
+    background: rgba(255, 255, 255, 0.25);
+
+    border-radius: 10px;
+}
+
+.opening-line span {
+    display: block;
+
+    width: 0;
+    height: 100%;
+
+    background: var(--orange);
+
+    transition: width 1s linear;
+}
+
+
+/* =========================================================
+   OPENING ANIMATIONS
+   ========================================================= */
+
+@keyframes openingAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+@keyframes counterPop {
+
+    0% {
+        opacity: 0;
+        transform: scale(0.7);
+    }
+
+    70% {
+        transform: scale(1.08);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE OPENING SCREEN
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .opening-screen {
+        padding: 20px;
+    }
+
+    .opening-badge {
+        width: 105px;
+        height: 105px;
+
+        margin-bottom: 18px;
+
+        font-size: 14px;
+    }
+
+    .opening-badge span {
+        font-size: 8px;
+    }
+
+    .opening-small {
+        font-size: 11px;
+        letter-spacing: 2px;
+    }
+
+    .opening-content h1 {
+        font-size: 32px;
+    }
+
+    .opening-motto {
+        font-size: 14px;
+    }
+
+    .opening-message {
+        font-size: 14px;
+    }
+
+       }
