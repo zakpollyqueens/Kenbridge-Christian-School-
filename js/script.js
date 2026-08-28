@@ -1,4 +1,117 @@
-/* =========================================================
+/* =====================================================
+   KENBRIDGE 10-SECOND OPENING SCREEN
+   ===================================================== */
+
+const openingScreen =
+    document.getElementById("openingScreen");
+
+const openingCounter =
+    document.getElementById("openingCounter");
+
+const openingMessage =
+    document.getElementById("openingMessage");
+
+const openingProgress =
+    document.getElementById("openingProgress");
+
+
+if (
+    openingScreen &&
+    openingCounter &&
+    openingMessage
+) {
+
+    let count = 10;
+
+    const openingMessages = {
+        10: "Preparing your experience...",
+        9: "Welcome to Kenbridge...",
+        8: "Building Character...",
+        7: "Modifying Education...",
+        6: "Growing in Christian Values...",
+        5: "Learning with Purpose...",
+        4: "Serving with Excellence...",
+        3: "Building Tomorrow's Leaders...",
+        2: "Almost ready...",
+        1: "Welcome to Kenbridge Christian School!"
+    };
+
+
+    function updateOpeningScreen() {
+
+        openingCounter.textContent = count;
+
+        openingMessage.textContent =
+            openingMessages[count] ||
+            "Welcome to Kenbridge Christian School!";
+
+
+        if (openingProgress) {
+
+            const progress =
+                ((10 - count) / 10) * 100;
+
+            openingProgress.style.width =
+                progress + "%";
+
+        }
+
+
+        /* Restart number animation */
+
+        openingCounter.style.animation = "none";
+
+        void openingCounter.offsetWidth;
+
+        openingCounter.style.animation =
+            "counterPop 0.7s ease";
+
+    }
+
+
+    updateOpeningScreen();
+
+
+    const openingTimer =
+        setInterval(function () {
+
+            count--;
+
+            if (count > 0) {
+
+                updateOpeningScreen();
+
+            } else {
+
+                clearInterval(openingTimer);
+
+
+                openingCounter.textContent = "✓";
+
+                openingMessage.textContent =
+                    "Welcome to Kenbridge Christian School!";
+
+
+                if (openingProgress) {
+                    openingProgress.style.width = "100%";
+                }
+
+
+                setTimeout(function () {
+
+                    openingScreen.classList.add("hide");
+
+                    document.body.classList.remove(
+                        "opening-active"
+                    );
+
+                }, 900);
+
+            }
+
+        }, 1000);
+
+            }/* =========================================================
 KENBRIDGE CHRISTIAN SCHOOL
 MAIN JAVASCRIPT
 ========================================================= */
