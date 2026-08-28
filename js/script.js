@@ -28,7 +28,7 @@ if (
     openingCounter &&
     openingMessage
 ) {
-
+    document.body.classList.add("opening-active");
     document.body.classList.add("opening-active");
 
     let count = 10;
