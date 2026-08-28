@@ -1314,3 +1314,593 @@ a {
 }
 
     }
+/* =========================================================
+KENBRIDGE CHRISTIAN SCHOOL
+PHASE 2 — DESIGN SYSTEM + RESPONSIVE LAYOUT
+Colours: Green + Orange + White
+========================================================= */
+
+/* =========================================================
+COLOUR VARIABLES
+========================================================= */
+
+:root {
+
+--kenbridge-green: #08783f;
+--kenbridge-green-dark: #04552d;
+--kenbridge-green-light: #eaf7f0;
+
+--kenbridge-orange: #f28c18;
+--kenbridge-orange-dark: #d86f00;
+--kenbridge-orange-light: #fff3e3;
+
+--kenbridge-white: #ffffff;
+--kenbridge-black: #172019;
+--kenbridge-grey: #66736b;
+--kenbridge-light: #f6f8f7;
+
+--border-light: #e1e8e4;
+
+--shadow-small:
+    0 5px 20px rgba(0, 0, 0, 0.08);
+
+--shadow-medium:
+    0 12px 35px rgba(0, 0, 0, 0.12);
+
+}
+
+/* =========================================================
+GENERAL
+========================================================= */
+
+html {
+scroll-behavior: smooth;
+}
+
+body {
+color: var(--kenbridge-black);
+background: var(--kenbridge-white);
+}
+
+a {
+color: inherit;
+}
+
+img {
+max-width: 100%;
+height: auto;
+}
+
+/* =========================================================
+CONTAINER
+========================================================= */
+
+.container {
+width: min(1180px, 92%);
+margin-left: auto;
+margin-right: auto;
+}
+
+/* =========================================================
+TOP BAR
+========================================================= */
+
+.top-bar {
+background: var(--kenbridge-green-dark);
+color: var(--kenbridge-white);
+}
+
+.top-bar a {
+color: var(--kenbridge-white);
+text-decoration: none;
+}
+
+.top-bar a:hover {
+color: var(--kenbridge-orange);
+}
+
+/* =========================================================
+HEADER
+========================================================= */
+
+.header {
+background: var(--kenbridge-white);
+border-bottom: 3px solid var(--kenbridge-orange);
+position: sticky;
+top: 0;
+z-index: 1000;
+}
+
+.header.scrolled {
+box-shadow: var(--shadow-medium);
+}
+
+/* =========================================================
+BRAND
+========================================================= */
+
+.brand {
+text-decoration: none;
+}
+
+.school-logo {
+object-fit: contain;
+}
+
+.brand-name strong {
+color: var(--kenbridge-green);
+}
+
+.brand-name span {
+color: var(--kenbridge-orange-dark);
+}
+
+/* =========================================================
+DESKTOP NAV
+========================================================= */
+
+.desktop-nav a {
+text-decoration: none;
+transition:
+color 0.25s ease,
+background 0.25s ease;
+}
+
+.desktop-nav > a:hover {
+color: var(--kenbridge-orange-dark);
+}
+
+.desktop-nav > a.active {
+color: var(--kenbridge-green);
+font-weight: 700;
+}
+
+/* =========================================================
+APPLY BUTTON
+========================================================= */
+
+.apply-button,
+.btn-primary {
+background: var(--kenbridge-orange);
+color: var(--kenbridge-white) !important;
+border: 2px solid var(--kenbridge-orange);
+text-decoration: none;
+transition:
+background 0.25s ease,
+transform 0.25s ease,
+box-shadow 0.25s ease;
+}
+
+.apply-button:hover,
+.btn-primary:hover {
+background: var(--kenbridge-orange-dark);
+border-color: var(--kenbridge-orange-dark);
+transform: translateY(-2px);
+box-shadow: var(--shadow-small);
+}
+
+/* =========================================================
+MORE DROPDOWN
+========================================================= */
+
+.more-button {
+background: transparent;
+border: none;
+color: var(--kenbridge-black);
+cursor: pointer;
+}
+
+.more-button:hover {
+color: var(--kenbridge-green);
+}
+
+.more-menu .dropdown {
+background: var(--kenbridge-white);
+border-top: 3px solid var(--kenbridge-orange);
+box-shadow: var(--shadow-medium);
+}
+
+.more-menu .dropdown a:hover {
+background: var(--kenbridge-green-light);
+color: var(--kenbridge-green);
+}
+
+/* =========================================================
+HERO
+========================================================= */
+
+.hero {
+background:
+linear-gradient(
+135deg,
+var(--kenbridge-green-dark),
+var(--kenbridge-green)
+);
+color: var(--kenbridge-white);
+position: relative;
+overflow: hidden;
+}
+
+.hero::after {
+content: "";
+position: absolute;
+width: 280px;
+height: 280px;
+border-radius: 50%;
+background: var(--kenbridge-orange);
+opacity: 0.15;
+right: -100px;
+top: -100px;
+}
+
+.hero-label,
+.section-label {
+color: var(--kenbridge-orange);
+font-weight: 700;
+letter-spacing: 1.5px;
+}
+
+.hero h1 span,
+.section-heading h2 span,
+.welcome-content h2 span {
+color: var(--kenbridge-orange);
+}
+
+/* =========================================================
+SECTIONS
+========================================================= */
+
+.section {
+background: var(--kenbridge-white);
+}
+
+.section:nth-of-type(even) {
+background: var(--kenbridge-light);
+}
+
+.section-heading h2 {
+color: var(--kenbridge-green-dark);
+}
+
+/* =========================================================
+FEATURE CARDS
+========================================================= */
+
+.feature-card {
+background: var(--kenbridge-white);
+border: 1px solid var(--border-light);
+border-top: 4px solid var(--kenbridge-green);
+box-shadow: var(--shadow-small);
+transition:
+transform 0.3s ease,
+box-shadow 0.3s ease,
+border-color 0.3s ease;
+}
+
+.feature-card:hover {
+transform: translateY(-6px);
+box-shadow: var(--shadow-medium);
+border-top-color: var(--kenbridge-orange);
+}
+
+.feature-icon {
+color: var(--kenbridge-green);
+}
+
+/* =========================================================
+FORMS
+========================================================= */
+
+.contact-form-wrapper {
+background: var(--kenbridge-white);
+border: 1px solid var(--border-light);
+border-top: 5px solid var(--kenbridge-orange);
+box-shadow: var(--shadow-small);
+}
+
+.form-group label {
+color: var(--kenbridge-green-dark);
+font-weight: 700;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+width: 100%;
+border: 1px solid #ccd7d1;
+background: var(--kenbridge-white);
+color: var(--kenbridge-black);
+transition:
+border-color 0.25s ease,
+box-shadow 0.25s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+outline: none;
+border-color: var(--kenbridge-green);
+box-shadow:
+0 0 0 3px rgba(8, 120, 63, 0.12);
+}
+
+/* =========================================================
+FORM STATUS
+========================================================= */
+
+.form-status.success {
+background: var(--kenbridge-green-light);
+border-left: 4px solid var(--kenbridge-green);
+color: var(--kenbridge-green-dark);
+}
+
+/* =========================================================
+CONTENT PAGES
+========================================================= */
+
+.content-page h2 {
+color: var(--kenbridge-green-dark);
+}
+
+.content-page a {
+color: var(--kenbridge-green);
+font-weight: 600;
+}
+
+.content-page a:hover {
+color: var(--kenbridge-orange-dark);
+}
+
+/* =========================================================
+SCHOOL LIFE / DARK SECTIONS
+========================================================= */
+
+.school-life {
+background:
+linear-gradient(
+135deg,
+var(--kenbridge-green-dark),
+var(--kenbridge-green)
+);
+color: var(--kenbridge-white);
+}
+
+.school-life h2,
+.school-life h3 {
+color: var(--kenbridge-white);
+}
+
+/* =========================================================
+CTA
+========================================================= */
+
+.admissions-cta {
+background: var(--kenbridge-orange-light);
+border-top: 5px solid var(--kenbridge-orange);
+}
+
+.admissions-cta h2 {
+color: var(--kenbridge-green-dark);
+}
+
+/* =========================================================
+FOOTER
+========================================================= */
+
+.footer {
+background: #073d24;
+color: var(--kenbridge-white);
+}
+
+.footer h3,
+.footer h4 {
+color: var(--kenbridge-white);
+}
+
+.footer a {
+color: #e9f5ee;
+text-decoration: none;
+}
+
+.footer a:hover {
+color: var(--kenbridge-orange);
+}
+
+.footer-logo {
+object-fit: contain;
+}
+
+.footer-bottom {
+border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* =========================================================
+MOBILE NAVIGATION
+========================================================= */
+
+.mobile-nav {
+background: var(--kenbridge-white);
+border-top: 3px solid var(--kenbridge-orange);
+box-shadow: var(--shadow-medium);
+}
+
+.mobile-nav a {
+text-decoration: none;
+border-bottom: 1px solid var(--border-light);
+}
+
+.mobile-nav a:hover,
+.mobile-nav a.active {
+background: var(--kenbridge-green-light);
+color: var(--kenbridge-green);
+}
+
+/* =========================================================
+MAP
+========================================================= */
+
+.map-container {
+overflow: hidden;
+border-radius: 10px;
+box-shadow: var(--shadow-small);
+}
+
+.map-placeholder {
+background: var(--kenbridge-green-light);
+border: 2px dashed var(--kenbridge-green);
+text-align: center;
+}
+
+/* =========================================================
+RESPONSIVE — TABLETS
+========================================================= */
+
+@media (max-width: 1000px) {
+
+.desktop-nav {
+    gap: 12px;
+}
+
+.desktop-nav > a:nth-child(4),
+.desktop-nav > a:nth-child(5) {
+    display: none;
+}
+
+.contact-grid,
+.welcome-grid {
+    grid-template-columns: 1fr;
+}
+
+}
+
+/* =========================================================
+RESPONSIVE — PHONES
+========================================================= */
+
+@media (max-width: 768px) {
+
+.top-bar {
+    display: none;
+}
+
+.desktop-nav {
+    display: none;
+}
+
+.mobile-menu-button {
+    display: flex;
+}
+
+.mobile-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 100%;
+    max-height: calc(100vh - 70px);
+    overflow-y: auto;
+    flex-direction: column;
+    z-index: 999;
+}
+
+.mobile-nav.open {
+    display: flex;
+    top: var(--header-height, 70px);
+}
+
+.mobile-nav a {
+    padding: 15px 20px;
+}
+
+.hero h1 {
+    font-size: clamp(
+        2.1rem,
+        9vw,
+        3.5rem
+    );
+}
+
+.hero-content {
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+.section {
+    padding-top: 55px;
+    padding-bottom: 55px;
+}
+
+.feature-grid {
+    grid-template-columns: 1fr;
+}
+
+.cta-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 25px;
+}
+
+.footer-grid {
+    grid-template-columns: 1fr;
+    gap: 35px;
+}
+
+}
+
+/* =========================================================
+RESPONSIVE — SMALL PHONES
+========================================================= */
+
+@media (max-width: 480px) {
+
+.container {
+    width: 90%;
+}
+
+.brand-name strong {
+    font-size: 0.95rem;
+}
+
+.brand-name span {
+    font-size: 0.65rem;
+}
+
+.school-logo {
+    max-width: 48px;
+}
+
+.hero {
+    min-height: 430px;
+}
+
+.hero p {
+    font-size: 0.95rem;
+}
+
+.btn,
+.apply-button {
+    width: 100%;
+    text-align: center;
+}
+
+.contact-form-wrapper {
+    padding: 20px;
+}
+
+}
+
+/* =========================================================
+TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) {
+
+.feature-card:hover {
+    transform: none;
+}
+
+.btn-primary:hover,
+.apply-button:hover {
+    transform: none;
+}
+
+    }
