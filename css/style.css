@@ -2237,3 +2237,6 @@ body.launch-locked {
     }
 
        }
+body.opening-active {
+    overflow: hidden;
+}
