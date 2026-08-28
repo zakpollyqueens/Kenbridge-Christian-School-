@@ -1633,3 +1633,479 @@ tr:hover td{background:var(--orange-light)}
     }
 
    }
+/* =========================================================
+   KENBRIDGE — OUR JOURNEY
+   2008 → GROWTH → TODAY → FUTURE
+   ========================================================= */
+
+.journey-section{
+    background:var(--light);
+}
+
+.journey-timeline{
+    position:relative;
+    max-width:1000px;
+    margin:0 auto;
+}
+
+/* Vertical timeline line */
+.journey-timeline::before{
+    content:"";
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:105px;
+    width:3px;
+    background:linear-gradient(
+        to bottom,
+        var(--orange),
+        var(--green),
+        var(--orange)
+    );
+    opacity:.45;
+}
+
+.journey-item{
+    position:relative;
+    display:grid;
+    grid-template-columns:150px 1fr;
+    gap:35px;
+    margin-bottom:45px;
+}
+
+.journey-item:last-child{
+    margin-bottom:0;
+}
+
+/* YEAR / STAGE */
+.journey-year{
+    position:relative;
+    z-index:2;
+    width:105px;
+    min-height:55px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    align-self:start;
+    padding:10px;
+    color:var(--white);
+    background:var(--green);
+    border:4px solid var(--white);
+    border-radius:8px;
+    box-shadow:0 5px 18px rgba(0,0,0,.12);
+    font-size:14px;
+    font-weight:800;
+    letter-spacing:.8px;
+    text-align:center;
+}
+
+.journey-item:first-child .journey-year{
+    background:var(--orange);
+}
+
+.journey-future .journey-year{
+    background:var(--orange);
+}
+
+/* TIMELINE CONTENT */
+.journey-content{
+    position:relative;
+    padding:28px 30px;
+    background:var(--white);
+    border:1px solid var(--border);
+    border-left:5px solid var(--green);
+    border-radius:var(--radius);
+    box-shadow:0 5px 20px rgba(0,0,0,.05);
+    transition:var(--transition);
+}
+
+.journey-content:hover{
+    transform:translateY(-3px);
+    border-left-color:var(--orange);
+    box-shadow:var(--shadow);
+}
+
+.journey-content::before{
+    content:"";
+    position:absolute;
+    left:-14px;
+    top:22px;
+    width:20px;
+    height:20px;
+    background:var(--orange);
+    border:4px solid var(--white);
+    border-radius:50%;
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+
+.journey-label{
+    display:inline-block;
+    margin-bottom:7px;
+    color:var(--orange);
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:1.3px;
+}
+
+.journey-content h3{
+    margin-bottom:12px;
+    color:var(--green);
+    font-family:Georgia,serif;
+    font-size:25px;
+    line-height:1.2;
+}
+
+.journey-content p{
+    margin-bottom:13px;
+    color:var(--muted);
+    font-size:15px;
+}
+
+.journey-content p:last-child{
+    margin-bottom:0;
+}
+
+.journey-content strong{
+    color:var(--green);
+}
+
+.journey-future .journey-content{
+    background:linear-gradient(
+        135deg,
+        var(--white),
+        var(--orange-light)
+    );
+    border-left-color:var(--orange);
+}
+
+
+/* =========================================================
+   LEADERSHIP & IMPACT
+   ========================================================= */
+
+.leadership-impact-section{
+    background:var(--white);
+}
+
+.leadership-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:25px;
+    align-items:stretch;
+}
+
+.leader-card{
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    background:var(--white);
+    border:1px solid var(--border);
+    border-top:5px solid var(--green);
+    border-radius:10px;
+    box-shadow:0 6px 22px rgba(0,0,0,.07);
+    transition:var(--transition);
+}
+
+.leader-card:hover{
+    transform:translateY(-6px);
+    border-top-color:var(--orange);
+    box-shadow:var(--shadow);
+}
+
+.leader-current{
+    border-top-color:var(--orange);
+}
+
+
+/* LEADER IMAGE */
+
+.leader-image{
+    position:relative;
+    width:100%;
+    height:245px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    background:
+        linear-gradient(
+            135deg,
+            var(--green-light),
+            var(--orange-light)
+        );
+}
+
+.leader-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/*
+   Placeholder styling:
+   This keeps the area attractive even before
+   the genuine photographs are added.
+*/
+
+.leader-image img[src*="placeholder"]{
+    object-fit:contain;
+    width:72%;
+    height:72%;
+    opacity:.75;
+}
+
+
+/* CURRENT BADGE */
+
+.current-badge{
+    position:absolute;
+    top:15px;
+    right:15px;
+    padding:6px 11px;
+    color:var(--white);
+    background:var(--orange);
+    border-radius:20px;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:1px;
+    box-shadow:0 3px 10px rgba(0,0,0,.18);
+}
+
+
+/* LEADER CONTENT */
+
+.leader-content{
+    display:flex;
+    flex-direction:column;
+    flex:1;
+    padding:25px;
+}
+
+.leader-role{
+    display:inline-block;
+    margin-bottom:7px;
+    color:var(--orange);
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:1.2px;
+}
+
+.leader-content h3{
+    margin-bottom:7px;
+    color:var(--green);
+    font-family:Georgia,serif;
+    font-size:23px;
+    line-height:1.2;
+}
+
+.leader-period{
+    display:block;
+    margin-bottom:20px;
+    color:var(--muted);
+    font-size:13px;
+    font-style:italic;
+}
+
+
+/* IMPACT BOX */
+
+.leader-impact{
+    margin-top:auto;
+    padding:18px;
+    background:var(--light);
+    border-left:3px solid var(--orange);
+    border-radius:5px;
+}
+
+.leader-impact h4{
+    margin-bottom:10px;
+    color:var(--green);
+    font-size:15px;
+    font-weight:800;
+}
+
+.leader-impact p{
+    margin-bottom:11px;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.65;
+}
+
+.leader-impact p:last-child{
+    margin-bottom:0;
+}
+
+
+/* =========================================================
+   LEADERSHIP SECTION — VISUAL DIFFERENCES
+   ========================================================= */
+
+.leader-card:first-child .leader-image{
+    background:var(--green-light);
+}
+
+.leader-card:nth-child(2) .leader-image{
+    background:#f4f7f5;
+}
+
+.leader-current .leader-image{
+    background:var(--orange-light);
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLETS
+   ========================================================= */
+
+@media(max-width:1000px){
+
+    .leadership-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .leader-card:last-child{
+        grid-column:1 / -1;
+        max-width:500px;
+        width:100%;
+        margin:0 auto;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+   ========================================================= */
+
+@media(max-width:768px){
+
+    .journey-timeline{
+        padding-left:0;
+    }
+
+    .journey-timeline::before{
+        left:23px;
+    }
+
+    .journey-item{
+        grid-template-columns:1fr;
+        gap:0;
+        margin-bottom:30px;
+        padding-left:50px;
+    }
+
+    .journey-year{
+        position:relative;
+        width:auto;
+        min-height:auto;
+        justify-content:flex-start;
+        display:inline-flex;
+        justify-self:start;
+        margin-bottom:15px;
+        padding:8px 14px;
+        border-width:3px;
+        font-size:12px;
+    }
+
+    .journey-content{
+        padding:22px 20px;
+        border-left:4px solid var(--green);
+    }
+
+    .journey-content::before{
+        left:-39px;
+        top:18px;
+        width:17px;
+        height:17px;
+        border-width:3px;
+    }
+
+    .journey-content h3{
+        font-size:22px;
+    }
+
+    .journey-content p{
+        font-size:14px;
+    }
+
+    .leadership-grid{
+        grid-template-columns:1fr;
+        gap:25px;
+    }
+
+    .leader-card:last-child{
+        grid-column:auto;
+        max-width:none;
+    }
+
+    .leader-image{
+        height:230px;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — SMALL PHONES
+   ========================================================= */
+
+@media(max-width:480px){
+
+    .journey-item{
+        padding-left:42px;
+    }
+
+    .journey-timeline::before{
+        left:18px;
+    }
+
+    .journey-content{
+        padding:19px 17px;
+    }
+
+    .journey-content::before{
+        left:-34px;
+        width:15px;
+        height:15px;
+    }
+
+    .journey-content h3{
+        font-size:20px;
+    }
+
+    .journey-content p{
+        font-size:13px;
+    }
+
+    .leader-content{
+        padding:21px;
+    }
+
+    .leader-image{
+        height:210px;
+    }
+
+    .leader-content h3{
+        font-size:21px;
+    }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY / REDUCED MOTION
+   ========================================================= */
+
+@media(prefers-reduced-motion:reduce){
+
+    .journey-content,
+    .leader-card{
+        transition:none;
+    }
+
+    .journey-content:hover,
+    .leader-card:hover{
+        transform:none;
+    }
+
+   }
