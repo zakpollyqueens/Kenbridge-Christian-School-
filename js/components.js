@@ -30,6 +30,30 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(function (footerHTML) {
 
             footerContainer.innerHTML = footerHTML;
+            const developerButton =
+    footerContainer.querySelector("#developerButton");
+
+const developerContacts =
+    footerContainer.querySelector("#developerContacts");
+
+if (developerButton && developerContacts) {
+
+    developerButton.addEventListener("click", function () {
+
+        const isOpen =
+            developerContacts.classList.toggle("show");
+
+        developerButton.setAttribute(
+            "aria-expanded",
+            isOpen ? "true" : "false"
+        );
+
+        developerButton.innerHTML =
+            isOpen
+                ? "✕ Close Developer Contact"
+                : "👨‍💻 Meet the Developer";
+    });
+}
 
             /*
              * Correct paths for pages inside /page/
