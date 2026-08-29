@@ -481,3 +481,30 @@ function setupImageErrors() {
         });
     });
 }
+function loadFooter() {
+    const footerContainer = document.getElementById("site-footer");
+
+    if (!footerContainer) {
+        console.log("Footer container not found");
+        return;
+    }
+
+    fetch("components/footer.html")
+        .then(function(response) {
+            console.log("Footer response:", response.status);
+
+            if (!response.ok) {
+                throw new Error("Footer file not found");
+            }
+
+            return response.text();
+        })
+        .then(function(html) {
+            footerContainer.innerHTML = html;
+            console.log("Footer loaded successfully");
+            setupFooterYear();
+        })
+        .catch(function(error) {
+            console.error("FOOTER ERROR:", error);
+        });
+}
