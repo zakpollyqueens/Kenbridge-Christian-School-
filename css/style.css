@@ -2683,3 +2683,263 @@ tr:hover td{background:var(--orange-light)}
     }
 
        }
+/* =========================================================
+   ZAKMOLANITECH SOLUTIONS — DEVELOPER
+========================================================= */
+
+.developer-section{
+    padding:45px 0;
+    background:var(--green-dark);
+    border-top:1px solid rgba(255,255,255,.12);
+}
+
+.developer-container{
+    width:min(92%,var(--container));
+    margin:auto;
+}
+
+.developer-card{
+    display:flex;
+    align-items:center;
+    gap:30px;
+    max-width:900px;
+    margin:auto;
+    padding:25px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:12px;
+}
+
+.developer-photo-wrap{
+    width:150px;
+    height:150px;
+    flex-shrink:0;
+    overflow:hidden;
+    border:4px solid var(--orange);
+    border-radius:50%;
+}
+
+.developer-photo{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.developer-info{
+    color:var(--white);
+}
+
+.developer-label{
+    display:inline-block;
+    margin-bottom:7px;
+    color:var(--orange);
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:1.5px;
+}
+
+.developer-info h2{
+    margin-bottom:8px;
+    color:var(--white);
+    font-family:Georgia,serif;
+    font-size:30px;
+}
+
+.developer-info p{
+    margin-bottom:18px;
+    color:rgba(255,255,255,.75);
+}
+
+.developer-button{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:46px;
+    padding:11px 22px;
+    color:var(--white);
+    background:var(--orange);
+    border:2px solid var(--orange);
+    border-radius:5px;
+    font-weight:700;
+    transition:var(--transition);
+}
+
+.developer-button:hover{
+    color:var(--white);
+    background:var(--green);
+    border-color:var(--green);
+    transform:translateY(-2px);
+}
+
+
+/* =========================================================
+   DEVELOPER MODAL
+========================================================= */
+
+.developer-modal{
+    position:fixed;
+    inset:0;
+    z-index:20000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+    transition:opacity .25s ease,visibility .25s ease;
+}
+
+.developer-modal.show{
+    opacity:1;
+    visibility:visible;
+    pointer-events:auto;
+}
+
+.developer-modal-overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.72);
+}
+
+.developer-modal-box{
+    position:relative;
+    z-index:2;
+    width:min(480px,100%);
+    max-height:90vh;
+    overflow-y:auto;
+    padding:35px 25px 25px;
+    background:var(--white);
+    border-top:5px solid var(--orange);
+    border-radius:12px;
+    box-shadow:0 20px 60px rgba(0,0,0,.3);
+    text-align:center;
+}
+
+.developer-close{
+    position:absolute;
+    top:10px;
+    right:12px;
+    width:38px;
+    height:38px;
+    border:0;
+    border-radius:50%;
+    color:var(--white);
+    background:var(--green);
+    font-size:27px;
+    line-height:1;
+}
+
+.developer-close:hover{
+    background:var(--orange);
+}
+
+.developer-modal-photo{
+    width:110px;
+    height:110px;
+    margin:0 auto 15px;
+    object-fit:cover;
+    border:4px solid var(--orange);
+    border-radius:50%;
+}
+
+.developer-modal-box h2{
+    margin:5px 0 8px;
+    color:var(--green);
+    font-family:Georgia,serif;
+    font-size:27px;
+}
+
+.developer-modal-text{
+    margin-bottom:20px;
+    color:var(--muted);
+}
+
+.developer-contact-link{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    width:100%;
+    margin-bottom:10px;
+    padding:13px;
+    color:var(--green)!important;
+    background:var(--green-light);
+    border:1px solid rgba(8,120,63,.12);
+    border-radius:7px;
+    text-align:left;
+    transition:var(--transition);
+}
+
+.developer-contact-link:hover{
+    color:var(--white)!important;
+    background:var(--green);
+    transform:translateY(-2px);
+}
+
+.developer-contact-icon{
+    width:42px;
+    height:42px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    background:var(--orange);
+    border-radius:50%;
+    font-size:19px;
+}
+
+.developer-contact-link strong{
+    display:block;
+    font-size:14px;
+}
+
+.developer-contact-link small{
+    display:block;
+    margin-top:2px;
+    color:var(--muted);
+    font-size:12px;
+}
+
+.developer-contact-link:hover small{
+    color:rgba(255,255,255,.8);
+}
+
+body.developer-modal-open{
+    overflow:hidden;
+}
+
+
+/* =========================================================
+   DEVELOPER MOBILE
+========================================================= */
+
+@media(max-width:600px){
+
+    .developer-card{
+        flex-direction:column;
+        padding:25px 18px;
+        text-align:center;
+    }
+
+    .developer-photo-wrap{
+        width:125px;
+        height:125px;
+    }
+
+    .developer-info h2{
+        font-size:25px;
+    }
+
+    .developer-button{
+        width:100%;
+    }
+
+    .developer-modal{
+        padding:12px;
+    }
+
+    .developer-modal-box{
+        padding:32px 17px 20px;
+    }
+
+   }
