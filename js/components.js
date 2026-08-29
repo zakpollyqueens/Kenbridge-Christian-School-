@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
 
 
-                const images =
+          const images =
                     footerContainer.querySelectorAll(
                         "img[src]"
                     );
