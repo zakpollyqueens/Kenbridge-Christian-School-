@@ -4193,3 +4193,32 @@ body{
     }
 
    }
+/* =========================================================
+   OPENING SCREEN — SCHOOL LOGO BACKGROUND
+========================================================= */
+
+.opening-screen{
+    position:relative;
+    background-image:
+        linear-gradient(
+            rgba(8,120,63,.82),
+            rgba(8,120,63,.82)
+        ),
+        url("../images/logo.jpg");
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+}
+
+.opening-screen::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.15);
+    pointer-events:none;
+}
+
+.opening-content{
+    position:relative;
+    z-index:2;
+       }
