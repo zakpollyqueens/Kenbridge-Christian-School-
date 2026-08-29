@@ -1,9 +1,4 @@
-/* =========================================================
-   KENBRIDGE CHRISTIAN SCHOOL
-   REUSABLE WEBSITE COMPONENTS
-   ========================================================= */
-
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
 
     const footerContainer = document.getElementById("site-footer");
 
@@ -11,70 +6,50 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    /*
-       Work out whether the current page is inside
-       /page/ or at the root of the website.
-    */
+    try {
 
-    const isPageFolder =
-        window.location.pathname.includes("/page/");
+        const isPageFolder =
+            window.location.pathname.includes("/page/");
 
-    const footerPath = isPageFolder
-        ? "../components/footer.html"
-        : "components/footer.html";
+        const footerPath = isPageFolder
+            ? "../components/footer.html"
+            : "components/footer.html";
 
+        const response = await fetch(footerPath);
 
-    fetch(footerPath)
+        if (!response.ok) {
+            throw new Error(
+                `Footer request failed: ${response.status}`
+            );
+        }
 
-        .then(function (response) {
+        const footerHTML = await response.text();
 
-            if (!response.ok) {
-                throw new Error(
-                    "Footer could not be loaded."
-                );
-            }
-
-            return response.text();
-
-        })
-
-        .then(function (html) {
-
-            footerContainer.innerHTML = html;
+        footerContainer.innerHTML = footerHTML;
 
 
-            /*
-               The footer component uses paths beginning
-               with "page/" and "images/".
-               
-               When the component is loaded on a page
-               inside /page/, those paths need "../".
-            */
+        /* Fix links when footer is used inside /page/ */
 
-            if (isPageFolder) {
+        if (isPageFolder) {
 
-                const footerLinks =
-                    footerContainer.querySelectorAll(
-                        'a[href], img[src]'
-                    );
-
-                footerLinks.forEach(function (element) {
+            footerContainer
+                .querySelectorAll("a[href], img[src]")
+                .forEach(function (element) {
 
                     const attribute =
-                        element.tagName.toLowerCase() === "img"
+                        element.tagName === "IMG"
                             ? "src"
                             : "href";
 
                     const value =
                         element.getAttribute(attribute);
 
-                    if (!value) {
-                        return;
-                    }
-
                     if (
-                        value.startsWith("page/") ||
-                        value.startsWith("images/")
+                        value &&
+                        (
+                            value.startsWith("page/") ||
+                            value.startsWith("images/")
+                        )
                     ) {
 
                         element.setAttribute(
@@ -86,34 +61,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 });
 
-            }
+        }
 
 
-            /*
-               Automatic copyright year.
-            */
+        /* Automatic year */
 
-            const yearElement =
-                footerContainer.querySelector(
-                    "#currentYear"
-                );
+        const year =
+            footerContainer.querySelector("#currentYear");
 
-            if (yearElement) {
+        if (year) {
+            year.textContent =
+                new Date().getFullYear();
+        }
 
-                yearElement.textContent =
-                    new Date().getFullYear();
+    } catch (error) {
 
-            }
+        console.error(
+            "Kenbridge footer failed to load:",
+            error
+        );
 
-        })
-
-        .catch(function (error) {
-
-            console.error(
-                "Kenbridge footer error:",
-                error
-            );
-
-        });
+    }
 
 });
