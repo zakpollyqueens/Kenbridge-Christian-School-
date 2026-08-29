@@ -23,7 +23,7 @@ function loadFooter() {
 
     if (!footerContainer) return;
 
-    fetch("../components/footer.html")
+    fetch("components/footer.html")
         .then(function(response) {
             if (!response.ok) {
                 throw new Error("Footer could not be loaded.");
