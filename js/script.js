@@ -590,3 +590,347 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 });
+/* =========================================================
+   AUTOMATIC SHARED FOOTER
+   ---------------------------------------------------------
+   This section is ONLY for loading the shared footer.
+   DO NOT CHANGE THE HAMBURGER CODE ABOVE.
+   ========================================================= */
+
+(function () {
+
+    function loadSharedFooter() {
+
+        /* If the page already has the shared footer,
+           leave it completely alone. */
+        if (document.getElementById("site-footer")) {
+            return;
+        }
+
+
+        /*
+         * Find the location of script.js so this works
+         * from both:
+         *
+         * index.html
+         * page/about.html
+         * page/contact.html
+         * etc.
+         */
+        const script =
+            document.querySelector(
+                'script[src*="js/script.js"]'
+            );
+
+
+        if (!script) {
+            return;
+        }
+
+
+        const scriptURL =
+            new URL(
+                script.getAttribute("src"),
+                document.baseURI
+            );
+
+
+        /*
+         * Go from:
+         *
+         * /js/script.js
+         *
+         * back to project root.
+         */
+        const projectRoot =
+            new URL(
+                "../",
+                scriptURL
+            );
+
+
+        /*
+         * Shared footer location.
+         */
+        const footerURL =
+            new URL(
+                "components/footer.html",
+                projectRoot
+            );
+
+
+        /*
+         * Create the footer container automatically.
+         */
+        const footerContainer =
+            document.createElement("div");
+
+        footerContainer.id =
+            "site-footer";
+
+
+        /*
+         * Remove an old hard-coded footer if
+         * the page has one.
+         *
+         * This allows the new master footer
+         * to replace the old footer automatically.
+         */
+        document.querySelectorAll(
+            "footer:not(.site-footer)"
+        ).forEach(function (oldFooter) {
+
+            oldFooter.remove();
+
+        });
+
+
+        /*
+         * Put the new shared footer at the
+         * bottom of the page.
+         */
+        document.body.appendChild(
+            footerContainer
+        );
+
+
+        /*
+         * Load the master footer.
+         */
+        fetch(
+            footerURL.href,
+            {
+                cache: "no-cache"
+            }
+        )
+
+        .then(function (response) {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Footer could not be loaded: " +
+                    response.status
+                );
+
+            }
+
+            return response.text();
+
+        })
+
+        .then(function (html) {
+
+            footerContainer.innerHTML =
+                html;
+
+
+            /*
+             * Update footer year.
+             */
+            const year =
+                document.getElementById(
+                    "footer-year"
+                );
+
+
+            if (year) {
+
+                year.textContent =
+                    new Date().getFullYear();
+
+            }
+
+
+            /*
+             * Fix images inside the footer.
+             */
+            footerContainer
+                .querySelectorAll(
+                    "[data-asset]"
+                )
+                .forEach(function (element) {
+
+                    const asset =
+                        element.getAttribute(
+                            "data-asset"
+                        );
+
+
+                    if (!asset) {
+                        return;
+                    }
+
+
+                    element.src =
+                        new URL(
+                            asset.replace(
+                                /^\/+/,
+                                ""
+                            ),
+                            projectRoot
+                        ).href;
+
+                });
+
+
+            /*
+             * Fix developer button if the
+             * developer section exists.
+             */
+            const developerButton =
+                document.getElementById(
+                    "developerButton"
+                );
+
+
+            const developerModal =
+                document.getElementById(
+                    "developerContact"
+                );
+
+
+            const developerClose =
+                document.getElementById(
+                    "developerClose"
+                );
+
+
+            const developerOverlay =
+                document.getElementById(
+                    "developerOverlay"
+                );
+
+
+            if (
+                developerButton &&
+                developerModal &&
+                developerButton.dataset
+                    .developerReady !== "true"
+            ) {
+
+                developerButton.dataset
+                    .developerReady =
+                    "true";
+
+
+                function openDeveloper() {
+
+                    developerModal
+                        .classList
+                        .add("show");
+
+
+                    developerModal.setAttribute(
+                        "aria-hidden",
+                        "false"
+                    );
+
+
+                    document.body.classList.add(
+                        "developer-modal-open"
+                    );
+
+                }
+
+
+                function closeDeveloper() {
+
+                    developerModal
+                        .classList
+                        .remove("show");
+
+
+                    developerModal.setAttribute(
+                        "aria-hidden",
+                        "true"
+                    );
+
+
+                    document.body.classList.remove(
+                        "developer-modal-open"
+                    );
+
+                }
+
+
+                developerButton.addEventListener(
+                    "click",
+                    openDeveloper
+                );
+
+
+                if (developerClose) {
+
+                    developerClose.addEventListener(
+                        "click",
+                        closeDeveloper
+                    );
+
+                }
+
+
+                if (developerOverlay) {
+
+                    developerOverlay.addEventListener(
+                        "click",
+                        closeDeveloper
+                    );
+
+                }
+
+
+                document.addEventListener(
+                    "keydown",
+                    function (event) {
+
+                        if (
+                            event.key === "Escape" &&
+                            developerModal
+                                .classList
+                                .contains("show")
+                        ) {
+
+                            closeDeveloper();
+
+                        }
+
+                    }
+                );
+
+            }
+
+        })
+
+        .catch(function (error) {
+
+            console.error(
+                "Kenbridge shared footer error:",
+                error
+            );
+
+        });
+
+    }
+
+
+    /*
+     * Run after the page has loaded.
+     */
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            loadSharedFooter
+        );
+
+    } else {
+
+        loadSharedFooter();
+
+    }
+
+})();
