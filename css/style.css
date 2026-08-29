@@ -2912,3 +2912,662 @@ body{
         font-size:12px;
     }
    }
+/* =========================================================
+   KENBRIDGE MOBILE MENU + MOBILE FOOTER
+   ADD THIS SECTION AT THE VERY END OF style.css
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    /* -----------------------------------------------------
+       MOBILE NAVIGATION PANEL
+    ----------------------------------------------------- */
+
+    .mobile-nav {
+        background:
+            linear-gradient(
+                180deg,
+                var(--green, #08783f) 0%,
+                #075f34 58%,
+                var(--orange, #f28c28) 100%
+            );
+
+        color: #ffffff;
+
+        padding: 22px 18px 28px;
+
+        box-shadow:
+            0 12px 30px rgba(0, 0, 0, 0.25);
+
+        overflow-y: auto;
+
+        max-height: calc(100vh - 70px);
+
+        scrollbar-width: thin;
+
+        scrollbar-color:
+            #f28c28
+            #075f34;
+    }
+
+
+    /* -----------------------------------------------------
+       MOBILE NAVIGATION LINKS
+    ----------------------------------------------------- */
+
+    .mobile-nav > a,
+    .mobile-nav .mobile-menu-link {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        width: 100%;
+
+        min-height: 48px;
+
+        margin-bottom: 9px;
+
+        padding: 13px 16px;
+
+        background: rgba(
+            255,
+            255,
+            255,
+            0.96
+        );
+
+        color:
+            var(--green, #08783f);
+
+        border-left:
+            5px solid
+            var(--orange, #f28c28);
+
+        border-radius: 8px;
+
+        font-weight: 700;
+
+        text-decoration: none;
+
+        box-sizing: border-box;
+
+        transition:
+            transform 0.2s ease,
+            background 0.2s ease,
+            color 0.2s ease,
+            border-color 0.2s ease;
+    }
+
+
+    .mobile-nav > a:hover,
+    .mobile-nav > a:focus,
+    .mobile-nav .mobile-menu-link:hover,
+    .mobile-nav .mobile-menu-link:focus {
+
+        background:
+            var(--orange, #f28c28);
+
+        color: #ffffff;
+
+        border-left-color:
+            #ffffff;
+
+        transform:
+            translateX(4px);
+
+        outline: none;
+    }
+
+
+    /* -----------------------------------------------------
+       ACTIVE MOBILE LINK
+    ----------------------------------------------------- */
+
+    .mobile-nav > a.active,
+    .mobile-nav .mobile-menu-link.active {
+
+        background:
+            var(--orange, #f28c28);
+
+        color: #ffffff;
+
+        border-left-color:
+            #ffffff;
+
+        box-shadow:
+            0 4px 12px rgba(
+                0,
+                0,
+                0,
+                0.15
+            );
+    }
+
+
+    /* -----------------------------------------------------
+       MOBILE APPLY BUTTON
+    ----------------------------------------------------- */
+
+    .mobile-nav .mobile-apply {
+
+        background:
+            #ffffff;
+
+        color:
+            var(--green, #08783f);
+
+        border:
+            3px solid
+            var(--orange, #f28c28);
+
+        justify-content: center;
+
+        text-align: center;
+
+        margin-top: 12px;
+
+        font-size: 1rem;
+    }
+
+
+    .mobile-nav .mobile-apply:hover,
+    .mobile-nav .mobile-apply:focus {
+
+        background:
+            var(--orange, #f28c28);
+
+        color: #ffffff;
+    }
+
+
+    /* =====================================================
+       MOBILE FOOTER INSIDE HAMBURGER
+       ===================================================== */
+
+    .mobile-menu-footer {
+
+        position: relative;
+
+        margin-top: 24px;
+
+        padding-top: 24px;
+
+        border-top:
+            2px solid
+            rgba(
+                255,
+                255,
+                255,
+                0.45
+            );
+    }
+
+
+    /* -----------------------------------------------------
+       COLOUR ACCENT
+    ----------------------------------------------------- */
+
+    .mobile-menu-footer::before {
+
+        content: "";
+
+        display: block;
+
+        width: 70px;
+
+        height: 5px;
+
+        margin:
+            0 auto 18px;
+
+        border-radius: 10px;
+
+        background:
+            linear-gradient(
+                90deg,
+                #f28c28 0 33%,
+                #ffffff 33% 66%,
+                #08783f 66% 100%
+            );
+    }
+
+
+    /* -----------------------------------------------------
+       SCHOOL NAME
+    ----------------------------------------------------- */
+
+    .mobile-footer-brand {
+
+        text-align: center;
+
+        padding:
+            8px 8px 18px;
+    }
+
+
+    .mobile-footer-brand h3 {
+
+        margin:
+            0 0 5px;
+
+        color: #ffffff;
+
+        font-size: 1.05rem;
+
+        font-weight: 800;
+
+        text-transform: uppercase;
+
+        letter-spacing:
+            0.5px;
+    }
+
+
+    .mobile-footer-brand p {
+
+        margin: 0;
+
+        color:
+            rgba(
+                255,
+                255,
+                255,
+                0.88
+            );
+
+        font-size: 0.82rem;
+
+        line-height: 1.5;
+    }
+
+
+    /* -----------------------------------------------------
+       MOBILE FOOTER CONTACT DETAILS
+    ----------------------------------------------------- */
+
+    .mobile-footer-contact {
+
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 8px;
+
+        margin-top: 5px;
+    }
+
+
+    .mobile-footer-contact a,
+    .mobile-footer-contact .mobile-footer-info {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 10px;
+
+        min-height: 42px;
+
+        padding:
+            9px 11px;
+
+        background:
+            rgba(
+                255,
+                255,
+                255,
+                0.95
+            );
+
+        color:
+            var(--green, #08783f);
+
+        border-radius: 7px;
+
+        text-decoration: none;
+
+        font-size: 0.82rem;
+
+        line-height: 1.35;
+
+        box-sizing: border-box;
+    }
+
+
+    .mobile-footer-contact a:hover,
+    .mobile-footer-contact a:focus {
+
+        background:
+            var(--orange, #f28c28);
+
+        color: #ffffff;
+
+        outline: none;
+    }
+
+
+    /* -----------------------------------------------------
+       FOOTER ICON
+    ----------------------------------------------------- */
+
+    .mobile-footer-icon {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        flex: 0 0 28px;
+
+        width: 28px;
+
+        height: 28px;
+
+        background:
+            var(--orange, #f28c28);
+
+        color: #ffffff;
+
+        border-radius: 50%;
+
+        font-size: 0.85rem;
+    }
+
+
+    /* -----------------------------------------------------
+       MOBILE FOOTER LINKS
+    ----------------------------------------------------- */
+
+    .mobile-footer-links {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 7px;
+
+        margin-top: 15px;
+    }
+
+
+    .mobile-footer-links a {
+
+        display: block;
+
+        padding:
+            9px 7px;
+
+        background:
+            rgba(
+                255,
+                255,
+                255,
+                0.92
+            );
+
+        color:
+            var(--green, #08783f);
+
+        border-radius: 6px;
+
+        text-align: center;
+
+        font-size: 0.75rem;
+
+        font-weight: 700;
+
+        text-decoration: none;
+
+        transition:
+            background 0.2s ease,
+            color 0.2s ease;
+    }
+
+
+    .mobile-footer-links a:hover,
+    .mobile-footer-links a:focus {
+
+        background:
+            var(--orange, #f28c28);
+
+        color: #ffffff;
+
+        outline: none;
+    }
+
+
+    /* =====================================================
+       MEET THE DEVELOPER BUTTON
+       ===================================================== */
+
+    .mobile-developer-button {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        width: 100%;
+
+        margin-top: 16px;
+
+        padding:
+            13px 15px;
+
+        background:
+            var(--orange, #f28c28);
+
+        color: #ffffff;
+
+        border:
+            2px solid #ffffff;
+
+        border-radius: 8px;
+
+        font-size: 0.9rem;
+
+        font-weight: 800;
+
+        text-decoration: none;
+
+        cursor: pointer;
+
+        box-shadow:
+            0 5px 14px rgba(
+                0,
+                0,
+                0,
+                0.18
+            );
+
+        transition:
+            transform 0.2s ease,
+            background 0.2s ease;
+    }
+
+
+    .mobile-developer-button:hover,
+    .mobile-developer-button:focus {
+
+        background:
+            #ffffff;
+
+        color:
+            var(--green, #08783f);
+
+        transform:
+            translateY(-2px);
+
+        outline: none;
+    }
+
+
+    /* -----------------------------------------------------
+       DEVELOPER MINI PROFILE
+    ----------------------------------------------------- */
+
+    .mobile-developer-profile {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 11px;
+
+        margin-top: 14px;
+
+        padding:
+            10px;
+
+        background:
+            rgba(
+                0,
+                0,
+                0,
+                0.16
+            );
+
+        border-radius: 8px;
+    }
+
+
+    .mobile-developer-profile img {
+
+        width: 48px;
+
+        height: 48px;
+
+        flex: 0 0 48px;
+
+        object-fit: cover;
+
+        border-radius: 50%;
+
+        border:
+            2px solid #ffffff;
+
+        background:
+            #ffffff;
+    }
+
+
+    .mobile-developer-profile strong {
+
+        display: block;
+
+        color: #ffffff;
+
+        font-size: 0.82rem;
+    }
+
+
+    .mobile-developer-profile span {
+
+        display: block;
+
+        margin-top: 2px;
+
+        color:
+            rgba(
+                255,
+                255,
+                255,
+                0.78
+            );
+
+        font-size: 0.7rem;
+    }
+
+
+    /* =====================================================
+       MOBILE MENU FOOTER COPYRIGHT
+       ===================================================== */
+
+    .mobile-footer-copyright {
+
+        margin-top: 18px;
+
+        padding-top: 13px;
+
+        border-top:
+            1px solid
+            rgba(
+                255,
+                255,
+                255,
+                0.25
+            );
+
+        text-align: center;
+
+        color:
+            rgba(
+                255,
+                255,
+                255,
+                0.75
+            );
+
+        font-size: 0.68rem;
+
+        line-height: 1.5;
+    }
+
+
+    .mobile-footer-copyright a {
+
+        color: #ffffff;
+
+        font-weight: 700;
+
+        text-decoration: none;
+    }
+
+
+    .mobile-footer-copyright a:hover {
+
+        color:
+            var(--orange, #f28c28);
+    }
+
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .mobile-nav {
+
+        padding-left: 13px;
+        padding-right: 13px;
+    }
+
+
+    .mobile-nav > a,
+    .mobile-nav .mobile-menu-link {
+
+        min-height: 45px;
+
+        padding:
+            11px 13px;
+
+        font-size: 0.9rem;
+    }
+
+
+    .mobile-footer-links {
+
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+           }
