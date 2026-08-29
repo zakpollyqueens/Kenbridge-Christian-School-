@@ -4222,3 +4222,73 @@ body{
     position:relative;
     z-index:2;
        }
+/* =========================================================
+   OPENING SCREEN — FINAL MOBILE/LAPTOP FIX
+   ========================================================= */
+
+body.opening-active{
+    overflow:hidden !important;
+    height:100vh;
+}
+
+.opening-screen{
+    position:fixed !important;
+    inset:0 !important;
+    width:100% !important;
+    height:100dvh !important;
+    min-height:100vh !important;
+    z-index:999999 !important;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background-image:
+        linear-gradient(
+            rgba(8,120,63,.82),
+            rgba(8,120,63,.82)
+        ),
+        url("../images/logo.jpg");
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+
+    opacity:1;
+    visibility:visible;
+    pointer-events:auto;
+
+    transition:
+        opacity .7s ease,
+        visibility .7s ease;
+}
+
+.opening-screen.hide{
+    opacity:0 !important;
+    visibility:hidden !important;
+    pointer-events:none !important;
+}
+
+.opening-content{
+    position:relative;
+    z-index:2;
+    width:90%;
+    max-width:700px;
+    text-align:center;
+}
+
+/* Extra protection for phones */
+@media(max-width:480px){
+
+    .opening-screen{
+        height:100dvh !important;
+        min-height:100dvh !important;
+
+        background-size:cover;
+        background-position:center;
+    }
+
+    .opening-content{
+        width:92%;
+    }
+}
