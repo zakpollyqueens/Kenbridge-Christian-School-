@@ -4292,3 +4292,66 @@ body.opening-active{
         width:92%;
     }
 }
+/* =========================================================
+   FINAL FIX — HOMEPAGE MUST NOT SHOW DURING COUNTDOWN
+========================================================= */
+
+html,
+body{
+    margin:0 !important;
+    padding:0 !important;
+}
+
+body.opening-active{
+    overflow:hidden !important;
+    height:100vh !important;
+}
+
+/* Hide EVERYTHING except the opening screen */
+body.opening-active > *:not(#openingScreen){
+    visibility:hidden !important;
+    opacity:0 !important;
+    pointer-events:none !important;
+}
+
+/* Opening screen itself stays completely visible */
+body.opening-active > #openingScreen{
+    position:fixed !important;
+    top:0 !important;
+    left:0 !important;
+    right:0 !important;
+    bottom:0 !important;
+
+    width:100vw !important;
+    height:100vh !important;
+    height:100dvh !important;
+
+    display:flex !important;
+    visibility:visible !important;
+    opacity:1 !important;
+    pointer-events:auto !important;
+
+    z-index:2147483647 !important;
+
+    background-image:
+        linear-gradient(
+            rgba(8,120,63,.80),
+            rgba(8,120,63,.80)
+        ),
+        url("../images/logo.jpg");
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+}
+
+/* When countdown finishes */
+#openingScreen.hide{
+    opacity:0 !important;
+    visibility:hidden !important;
+    pointer-events:none !important;
+}
+
+body:not(.opening-active) > #openingScreen{
+    display:none !important;
+}
