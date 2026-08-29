@@ -3571,3 +3571,625 @@ body{
     }
 
            }
+/* =========================================================
+   KENBRIDGE FEEDBACK FORM — PREMIUM DESIGN
+   ADD THIS SECTION AT THE VERY END OF style.css
+   ========================================================= */
+
+.feedback-form-wrapper,
+.contact-form-wrapper {
+
+    position: relative;
+
+    max-width: 850px;
+
+    margin: 35px auto 0;
+
+    padding: 4px;
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--green, #08783f),
+            var(--orange, #f28c28),
+            #ffffff,
+            var(--green, #08783f)
+        );
+
+    background-size: 300% 300%;
+
+    animation:
+        feedbackBorderMove 8s ease infinite;
+
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.14);
+
+}
+
+
+/* ---------------------------------------------------------
+   FORM BODY
+--------------------------------------------------------- */
+
+.feedback-form-wrapper .contact-form,
+.contact-form-wrapper .contact-form {
+
+    position: relative;
+
+    background: #ffffff;
+
+    padding: 38px;
+
+    border-radius: 19px;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    animation:
+        feedbackFormAppear 0.8s ease both;
+}
+
+
+/* ---------------------------------------------------------
+   DECORATIVE TOP ACCENT
+--------------------------------------------------------- */
+
+.feedback-form-wrapper .contact-form::before,
+.contact-form-wrapper .contact-form::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 5px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--orange, #f28c28),
+            var(--green, #08783f),
+            var(--orange, #f28c28)
+        );
+
+    background-size: 200% 100%;
+
+    animation:
+        feedbackAccentMove 4s linear infinite;
+}
+
+
+/* ---------------------------------------------------------
+   FORM GROUP
+--------------------------------------------------------- */
+
+.feedback-form-wrapper .form-group,
+.contact-form-wrapper .form-group {
+
+    position: relative;
+
+    margin-bottom: 22px;
+
+    animation:
+        feedbackFieldAppear 0.55s ease both;
+}
+
+
+/* ---------------------------------------------------------
+   LABELS
+--------------------------------------------------------- */
+
+.feedback-form-wrapper label,
+.contact-form-wrapper label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color:
+        var(--green, #08783f);
+
+    font-weight: 800;
+
+    font-size: 0.9rem;
+
+    letter-spacing: 0.2px;
+}
+
+
+/* ---------------------------------------------------------
+   INPUTS / SELECT / TEXTAREA
+--------------------------------------------------------- */
+
+.feedback-form-wrapper input,
+.feedback-form-wrapper select,
+.feedback-form-wrapper textarea,
+.contact-form-wrapper input,
+.contact-form-wrapper select,
+.contact-form-wrapper textarea {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    border: 2px solid #dce7e1;
+
+    border-radius: 11px;
+
+    background: #fbfdfc;
+
+    color: #222;
+
+    padding: 13px 15px;
+
+    font-family: inherit;
+
+    font-size: 0.95rem;
+
+    outline: none;
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+/* ---------------------------------------------------------
+   TEXTAREA
+--------------------------------------------------------- */
+
+.feedback-form-wrapper textarea,
+.contact-form-wrapper textarea {
+
+    min-height: 150px;
+
+    resize: vertical;
+
+    line-height: 1.6;
+}
+
+
+/* ---------------------------------------------------------
+   PLACEHOLDER
+--------------------------------------------------------- */
+
+.feedback-form-wrapper input::placeholder,
+.feedback-form-wrapper textarea::placeholder,
+.contact-form-wrapper input::placeholder,
+.contact-form-wrapper textarea::placeholder {
+
+    color: #9aa8a1;
+
+    transition:
+        opacity 0.2s ease;
+}
+
+
+.feedback-form-wrapper input:focus::placeholder,
+.feedback-form-wrapper textarea:focus::placeholder,
+.contact-form-wrapper input:focus::placeholder,
+.contact-form-wrapper textarea:focus::placeholder {
+
+    opacity: 0.35;
+}
+
+
+/* ---------------------------------------------------------
+   FOCUS EFFECT
+--------------------------------------------------------- */
+
+.feedback-form-wrapper input:focus,
+.feedback-form-wrapper select:focus,
+.feedback-form-wrapper textarea:focus,
+.contact-form-wrapper input:focus,
+.contact-form-wrapper select:focus,
+.contact-form-wrapper textarea:focus {
+
+    border-color:
+        var(--orange, #f28c28);
+
+    background: #ffffff;
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 0 0 4px rgba(242, 140, 40, 0.12),
+        0 8px 22px rgba(8, 120, 63, 0.10);
+}
+
+
+/* ---------------------------------------------------------
+   VALID INPUT
+--------------------------------------------------------- */
+
+.feedback-form-wrapper input:valid:not(:placeholder-shown),
+.feedback-form-wrapper textarea:valid:not(:placeholder-shown) {
+
+    border-color:
+        rgba(8, 120, 63, 0.45);
+}
+
+
+/* ---------------------------------------------------------
+   CHECKBOX AREA
+--------------------------------------------------------- */
+
+.feedback-form-wrapper .form-checkbox,
+.contact-form-wrapper .form-checkbox {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+    margin:
+        8px 0 24px;
+
+    padding: 13px;
+
+    background:
+        rgba(8, 120, 63, 0.055);
+
+    border-left:
+        4px solid
+        var(--orange, #f28c28);
+
+    border-radius: 8px;
+}
+
+
+.feedback-form-wrapper .form-checkbox input,
+.contact-form-wrapper .form-checkbox input {
+
+    width: 18px;
+
+    height: 18px;
+
+    flex: 0 0 18px;
+
+    margin-top: 2px;
+
+    accent-color:
+        var(--green, #08783f);
+
+    cursor: pointer;
+}
+
+
+.feedback-form-wrapper .form-checkbox label,
+.contact-form-wrapper .form-checkbox label {
+
+    margin: 0;
+
+    color: #526159;
+
+    font-size: 0.82rem;
+
+    font-weight: 500;
+
+    line-height: 1.5;
+
+    cursor: pointer;
+}
+
+
+/* ---------------------------------------------------------
+   SUBMIT BUTTON
+--------------------------------------------------------- */
+
+.feedback-form-wrapper button[type="submit"],
+.contact-form-wrapper button[type="submit"] {
+
+    position: relative;
+
+    width: 100%;
+
+    min-height: 52px;
+
+    border: none;
+
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--green, #08783f),
+            #075f34
+        );
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 1rem;
+
+    font-weight: 800;
+
+    letter-spacing: 0.3px;
+
+    cursor: pointer;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 8px 20px rgba(8, 120, 63, 0.22);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+/* Animated shine */
+
+.feedback-form-wrapper button[type="submit"]::before,
+.contact-form-wrapper button[type="submit"]::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: -100%;
+
+    width: 70%;
+
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,0.30),
+            transparent
+        );
+
+    transform: skewX(-20deg);
+
+    transition:
+        left 0.65s ease;
+}
+
+
+.feedback-form-wrapper button[type="submit"]:hover::before,
+.contact-form-wrapper button[type="submit"]:hover::before {
+
+    left: 140%;
+}
+
+
+.feedback-form-wrapper button[type="submit"]:hover,
+.contact-form-wrapper button[type="submit"]:hover {
+
+    transform:
+        translateY(-3px);
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--orange, #f28c28),
+            #d97518
+        );
+
+    box-shadow:
+        0 12px 28px rgba(242, 140, 40, 0.28);
+}
+
+
+.feedback-form-wrapper button[type="submit"]:active,
+.contact-form-wrapper button[type="submit"]:active {
+
+    transform:
+        translateY(0);
+}
+
+
+/* ---------------------------------------------------------
+   SUCCESS MESSAGE
+--------------------------------------------------------- */
+
+.feedback-form-wrapper .form-status,
+.contact-form-wrapper .form-status {
+
+    margin-top: 15px;
+
+    min-height: 24px;
+
+    text-align: center;
+
+    color:
+        var(--green, #08783f);
+
+    font-size: 0.9rem;
+
+    font-weight: 700;
+}
+
+
+.feedback-form-wrapper .form-status.success,
+.contact-form-wrapper .form-status.success {
+
+    padding: 12px 15px;
+
+    background:
+        rgba(8, 120, 63, 0.08);
+
+    border:
+        1px solid
+        rgba(8, 120, 63, 0.20);
+
+    border-radius: 9px;
+
+    animation:
+        feedbackSuccess 0.45s ease both;
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes feedbackBorderMove {
+
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+
+}
+
+
+@keyframes feedbackAccentMove {
+
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 200% 50%;
+    }
+
+}
+
+
+@keyframes feedbackFormAppear {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(25px)
+            scale(0.985);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+@keyframes feedbackFieldAppear {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+
+}
+
+
+@keyframes feedbackSuccess {
+
+    from {
+        opacity: 0;
+
+        transform:
+            scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            scale(1);
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE FEEDBACK FORM
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .feedback-form-wrapper,
+    .contact-form-wrapper {
+
+        margin-top: 25px;
+
+        padding: 3px;
+
+        border-radius: 17px;
+    }
+
+
+    .feedback-form-wrapper .contact-form,
+    .contact-form-wrapper .contact-form {
+
+        padding: 24px 18px;
+
+        border-radius: 14px;
+    }
+
+
+    .feedback-form-wrapper .form-group,
+    .contact-form-wrapper .form-group {
+
+        margin-bottom: 18px;
+    }
+
+
+    .feedback-form-wrapper input,
+    .feedback-form-wrapper select,
+    .feedback-form-wrapper textarea,
+    .contact-form-wrapper input,
+    .contact-form-wrapper select,
+    .contact-form-wrapper textarea {
+
+        padding: 12px 13px;
+
+        font-size: 0.9rem;
+    }
+
+
+    .feedback-form-wrapper textarea,
+    .contact-form-wrapper textarea {
+
+        min-height: 135px;
+    }
+
+
+    .feedback-form-wrapper button[type="submit"],
+    .contact-form-wrapper button[type="submit"] {
+
+        min-height: 50px;
+
+        font-size: 0.92rem;
+    }
+
+   }
