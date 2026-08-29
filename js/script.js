@@ -1,5 +1,131 @@
 /* =========================================================
    KENBRIDGE CHRISTIAN SCHOOL
+   OPENING SCREEN / COUNTDOWN
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const openingScreen = document.getElementById("openingScreen");
+    const openingCounter = document.getElementById("openingCounter");
+    const openingMessage = document.getElementById("openingMessage");
+    const openingProgress = document.getElementById("openingProgress");
+
+    if (!openingScreen) {
+        return;
+    }
+
+    let countdown = 10;
+    const totalTime = 10;
+
+    /* Keep the homepage completely locked underneath */
+    document.body.classList.add("opening-active");
+    document.body.style.overflow = "hidden";
+
+    /* Make absolutely sure the opening screen covers the viewport */
+    openingScreen.style.position = "fixed";
+    openingScreen.style.inset = "0";
+    openingScreen.style.width = "100%";
+    openingScreen.style.height = "100dvh";
+    openingScreen.style.minHeight = "100vh";
+    openingScreen.style.zIndex = "999999";
+    openingScreen.style.opacity = "1";
+    openingScreen.style.visibility = "visible";
+    openingScreen.style.pointerEvents = "all";
+
+    /* Starting state */
+    openingCounter.textContent = countdown;
+
+    if (openingMessage) {
+        openingMessage.textContent = "Preparing your experience...";
+    }
+
+    if (openingProgress) {
+        openingProgress.style.width = "0%";
+    }
+
+    /* Countdown */
+    const countdownTimer = setInterval(function () {
+
+        countdown--;
+
+        if (openingCounter) {
+            openingCounter.textContent = countdown;
+        }
+
+        /* Progress bar */
+        if (openingProgress) {
+            const progress =
+                ((totalTime - countdown) / totalTime) * 100;
+
+            openingProgress.style.width = progress + "%";
+        }
+
+        /* Messages */
+        if (openingMessage) {
+
+            if (countdown > 7) {
+                openingMessage.textContent =
+                    "Preparing your experience...";
+            }
+
+            else if (countdown > 4) {
+                openingMessage.textContent =
+                    "Welcome to Kenbridge...";
+            }
+
+            else if (countdown > 1) {
+                openingMessage.textContent =
+                    "Learning with Purpose...";
+            }
+
+            else if (countdown === 1) {
+                openingMessage.textContent =
+                    "Almost ready...";
+            }
+        }
+
+        /* Finish */
+        if (countdown <= 0) {
+
+            clearInterval(countdownTimer);
+
+            if (openingCounter) {
+                openingCounter.textContent = "0";
+            }
+
+            if (openingProgress) {
+                openingProgress.style.width = "100%";
+            }
+
+            if (openingMessage) {
+                openingMessage.textContent =
+                    "Welcome to Kenbridge Christian School";
+            }
+
+            /* Give the final message a moment */
+            setTimeout(function () {
+
+                openingScreen.classList.add("hide");
+
+                document.body.classList.remove(
+                    "opening-active"
+                );
+
+                document.body.style.overflow = "";
+
+                /* Completely remove the opening layer */
+                setTimeout(function () {
+                    openingScreen.style.display = "none";
+                }, 700);
+
+            }, 500);
+        }
+
+    }, 1000);
+
+});
+/* =========================================================
+   KENBRIDGE CHRISTIAN SCHOOL
    MAIN JAVASCRIPT
    ========================================================= */
 
