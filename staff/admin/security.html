@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security | Kenbridge Administrator</title>
+<meta name="description" content="Kenbridge Christian School administrator account security.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.admin-page{min-height:100vh;background:#f5f7f6}
+.admin-header{background:#08783f;color:#fff;padding:18px 0}
+.admin-header-inner{width:min(1200px,92%);margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.admin-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}
+.admin-brand img{width:52px;height:52px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}
+.admin-brand strong{display:block;font-size:18px}
+.admin-brand span{display:block;font-size:12px;margin-top:3px;opacity:.85}
+.admin-logout{padding:10px 16px;border:2px solid #f28c28;border-radius:8px;background:#f28c28;color:#fff;text-decoration:none;font-size:14px;font-weight:700}
+.admin-logout:hover{background:#fff;color:#08783f}
+.admin-container{width:min(1200px,92%);margin:auto;padding:40px 0 60px}
+.admin-heading{margin-bottom:25px}
+.admin-heading small{display:block;color:#08783f;font-size:12px;font-weight:700;letter-spacing:1.5px;margin-bottom:8px}
+.admin-heading h1{margin:0 0 8px;color:#16352a;font-size:clamp(28px,4vw,40px)}
+.admin-heading p{margin:0;color:#64736c;line-height:1.7}
+.admin-nav{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px}
+.admin-nav a{padding:10px 14px;border:1px solid #dce5e0;border-radius:8px;background:#fff;color:#315244;text-decoration:none;font-size:13px;font-weight:600}
+.admin-nav a:hover,.admin-nav a.active{background:#08783f;border-color:#08783f;color:#fff}
+.security-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.security-card{background:#fff;border:1px solid #e1e8e4;border-radius:12px;padding:24px;box-shadow:0 8px 25px rgba(0,0,0,.05)}
+.security-card h2{margin:0 0 8px;color:#173a2c;font-size:20px}
+.security-card p{margin:0 0 18px;color:#68766f;font-size:14px;line-height:1.6}
+.security-form{display:grid;gap:14px}
+.security-form label{font-weight:700;color:#315244;font-size:13px}
+.security-form input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #d6e0da;border-radius:8px;font:inherit}
+.security-form input:focus{outline:none;border-color:#08783f;box-shadow:0 0 0 3px rgba(8,120,63,.1)}
+.security-button{padding:12px 16px;border:0;border-radius:8px;background:#08783f;color:#fff;font-weight:700;cursor:pointer}
+.security-button:hover{background:#f28c28}
+.security-warning{margin-top:20px;padding:18px;border:1px solid #eee0ae;border-radius:10px;background:#fff8e7;color:#6b5b24;font-size:13px;line-height:1.7}
+@media(max-width:700px){
+.admin-header-inner{align-items:flex-start}
+.admin-brand img{width:44px;height:44px}
+.admin-brand strong{font-size:15px}
+.admin-brand span{font-size:11px}
+.admin-logout{padding:8px 11px;font-size:12px}
+.admin-container{padding-top:30px}
+.security-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="admin-page">
+<header class="admin-header">
+<div class="admin-header-inner">
+<a href="admin-dashboard.html" class="admin-brand">
+<img src="../../images/logo.png" alt="Kenbridge Christian School Logo">
+<div><strong>Kenbridge Christian School</strong><span>Administrator Portal</span></div>
+</a>
+<a href="../login.html" class="admin-logout">Logout</a>
+</div>
+</header>
+<main class="admin-container">
+<div class="admin-heading">
+<small>ADMINISTRATOR</small>
+<h1>Security</h1>
+<p>Manage administrator account security and password settings.</p>
+</div>
+<nav class="admin-nav">
+<a href="admin-dashboard.html">Dashboard</a>
+<a href="staff-accounts.html">Staff Accounts</a>
+<a href="add-staff.html">Add Staff</a>
+<a href="pending-content.html">Pending Content</a>
+<a href="admin-profile.html">My Profile</a>
+<a href="notifications.html">Notifications</a>
+<a href="activity-log.html">Activity Log</a>
+<a href="reports.html">Reports</a>
+<a href="files.html">Files</a>
+<a href="security.html" class="active">Security</a>
+<a href="settings.html">Settings</a>
+</nav>
+<div class="security-grid">
+<section class="security-card">
+<h2>🔐 Change Password</h2>
+<p>Update the administrator password. The actual password change will be handled securely by the backend.</p>
+<form class="security-form" id="securityForm">
+<div><label for="currentPassword">Current Password</label><input type="password" id="currentPassword" required></div>
+<div><label for="newPassword">New Password</label><input type="password" id="newPassword" required></div>
+<div><label for="confirmPassword">Confirm New Password</label><input type="password" id="confirmPassword" required></div>
+<button class="security-button" type="submit">Change Password</button>
+</form>
+</section>
+<section class="security-card">
+<h2>🛡️ Account Security</h2>
+<p>Important administrator security controls prepared for backend integration.</p>
+<ul>
+<li>Secure authentication</li>
+<li>Strong password protection</li>
+<li>Administrator-only access</li>
+<li>Account session management</li>
+<li>Login activity monitoring</li>
+</ul>
+</section>
+</div>
+<div class="security-warning"><strong>Security notice:</strong> Never place real administrator passwords directly inside HTML or JavaScript. Password authentication will be handled securely by the backend.</div>
+</main>
+</div>
+<script>
+document.getElementById("securityForm").addEventListener("submit",function(e){
+e.preventDefault();
+const a=document.getElementById("newPassword").value;
+const b=document.getElementById("confirmPassword").value;
+if(a!==b){alert("New passwords do not match.");return}
+alert("Password changing will be connected securely through the backend.");
+});
+</script>
+</body>
+</html>
