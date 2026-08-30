@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Resources | Kenbridge Staff Portal</title>
+<meta name="description" content="Staff teaching and school resources for Kenbridge Christian School.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.staff-page{min-height:100vh;background:#f4f8f5}
+.staff-header{background:#08783f;color:#fff;padding:18px 0}
+.staff-header-inner{width:min(1150px,92%);margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.staff-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}
+.staff-brand img{width:48px;height:48px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}
+.staff-brand strong{display:block;font-size:17px}
+.staff-brand span{display:block;font-size:12px;opacity:.85;margin-top:3px}
+.staff-logout{padding:10px 15px;border:1px solid rgba(255,255,255,.5);border-radius:8px;color:#fff;text-decoration:none;font-size:13px;font-weight:700}
+.staff-logout:hover{background:rgba(255,255,255,.12)}
+.staff-container{width:min(1100px,92%);margin:auto;padding:40px 0 60px}
+.staff-heading{margin-bottom:25px}
+.staff-heading small{display:block;color:#08783f;font-size:12px;font-weight:800;letter-spacing:1.5px;margin-bottom:7px}
+.staff-heading h1{margin:0 0 7px;color:#173a2c;font-size:clamp(28px,4vw,40px)}
+.staff-heading p{margin:0;color:#68776f;line-height:1.6}
+.staff-nav{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:25px}
+.staff-nav a{padding:10px 14px;border:1px solid #dce5e0;border-radius:8px;background:#fff;color:#315244;text-decoration:none;font-size:13px;font-weight:700}
+.staff-nav a:hover,.staff-nav a.active{background:#08783f;border-color:#08783f;color:#fff}
+.resource-card{background:#fff;border:1px solid #e1e8e4;border-radius:14px;padding:25px;box-shadow:0 8px 25px rgba(0,0,0,.05);margin-bottom:22px}
+.resource-card h2{margin:0 0 7px;color:#173a2c}
+.resource-card>p{margin:0 0 20px;color:#718079;line-height:1.6}
+.resource-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.resource-item{padding:20px;border:1px solid #e1e8e4;border-radius:12px;background:#f9fcfa}
+.resource-icon{font-size:28px;margin-bottom:10px}
+.resource-item h3{margin:0 0 7px;color:#173a2c}
+.resource-item p{margin:0;color:#68776f;font-size:13px;line-height:1.6}
+.resource-link{display:inline-block;margin-top:13px;padding:8px 11px;border-radius:7px;background:#08783f;color:#fff;text-decoration:none;font-size:12px;font-weight:700}
+.resource-link:hover{filter:brightness(.95)}
+.resource-search{width:100%;box-sizing:border-box;padding:12px 13px;margin-bottom:18px;border:1px solid #d6e0da;border-radius:8px;font:inherit;outline:none}
+.resource-search:focus{border-color:#08783f;box-shadow:0 0 0 3px rgba(8,120,63,.1)}
+.resource-notice{padding:17px;border-radius:10px;background:#fffdf4;border:1px solid #eee4bd;color:#6d623b;font-size:13px;line-height:1.7}
+@media(max-width:850px){.resource-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){
+.staff-header-inner{align-items:flex-start}
+.staff-brand img{width:42px;height:42px}
+.staff-brand strong{font-size:14px}
+.staff-brand span{font-size:10px}
+.staff-logout{padding:8px 11px;font-size:12px}
+.staff-container{padding-top:30px}
+.resource-card{padding:20px 16px}
+.resource-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="staff-page">
+<header class="staff-header">
+<div class="staff-header-inner">
+<a href="staff-dashboard.html" class="staff-brand">
+<img src="../images/logo.png" alt="Kenbridge Christian School Logo">
+<div>
+<strong>Kenbridge Christian School</strong>
+<span>Staff Portal</span>
+</div>
+</a>
+<a href="login.html" class="staff-logout" id="logoutButton">Log Out</a>
+</div>
+</header>
+
+<main class="staff-container">
+<div class="staff-heading">
+<small>STAFF PORTAL</small>
+<h1>Resources</h1>
+<p>Access teaching materials, school documents, forms and useful staff resources.</p>
+</div>
+
+<nav class="staff-nav">
+<a href="staff-dashboard.html">Dashboard</a>
+<a href="students.html">Students</a>
+<a href="attendance.html">Attendance</a>
+<a href="announcements.html">Announcements</a>
+<a href="articles.html">Articles</a>
+<a href="reports.html">Reports</a>
+<a href="files.html">Files</a>
+<a href="calendar.html">Calendar</a>
+<a href="messages.html">Messages</a>
+<a href="tasks.html">Tasks</a>
+<a href="leave.html">Leave</a>
+<a href="payroll.html">Payroll</a>
+<a href="training.html">Training</a>
+<a href="resources.html" class="active">Resources</a>
+<a href="profile.html">My Profile</a>
+</nav>
+
+<section class="resource-card">
+<h2>Staff Resources</h2>
+<p>Useful categories for school staff. Actual documents can be connected when the backend and file storage are ready.</p>
+
+<input type="search" id="resourceSearch" class="resource-search" placeholder="Search resources..." aria-label="Search staff resources">
+
+<div class="resource-grid" id="resourceGrid">
+<article class="resource-item" data-search="lesson plans teaching academic">
+<div class="resource-icon">📚</div>
+<h3>Lesson Plans</h3>
+<p>Teaching plans, classroom preparation materials and academic resources.</p>
+<a href="#" class="resource-link resource-demo">Open Resource</a>
+</article>
+
+<article class="resource-item" data-search="school policies guidelines rules">
+<div class="resource-icon">📋</div>
+<h3>School Policies</h3>
+<p>Important school policies, staff guidelines and administrative procedures.</p>
+<a href="#" class="resource-link resource-demo">View Guidelines</a>
+</article>
+
+<article class="resource-item" data-search="forms documents applications">
+<div class="resource-icon">📝</div>
+<h3>Staff Forms</h3>
+<p>Common forms and documents required for staff administrative activities.</p>
+<a href="#" class="resource-link resource-demo">View Forms</a>
+</article>
+
+<article class="resource-item" data-search="exams assessment tests">
+<div class="resource-icon">📖</div>
+<h3>Assessment Resources</h3>
+<p>Assessment materials and resources for preparing and evaluating learners.</p>
+<a href="#" class="resource-link resource-demo">View Resources</a>
+</article>
+
+<article class="resource-item" data-search="christian bible faith devotion">
+<div class="resource-icon">✝️</div>
+<h3>Christian Education</h3>
+<p>Bible study, devotion and Christian education materials for school activities.</p>
+<a href="#" class="resource-link resource-demo">Open Resources</a>
+</article>
+
+<article class="resource-item" data-search="computer digital technology ict">
+<div class="resource-icon">💻</div>
+<h3>Digital Resources</h3>
+<p>Computer, ICT and other digital resources useful for teaching and administration.</p>
+<a href="#" class="resource-link resource-demo">View Resources</a>
+</article>
+</div>
+</section>
+
+<section class="resource-card">
+<h2>Important Documents</h2>
+<p>Documents uploaded by authorized school administrators can appear here.</p>
+<div class="resource-notice">
+<strong>Backend preparation:</strong> When the backend is connected, administrators can upload, categorize and manage resources while authorized staff members can securely view or download the resources available to them.
+</div>
+</section>
+</main>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+const search=document.getElementById("resourceSearch");
+const items=document.querySelectorAll(".resource-item");
+
+search.addEventListener("input",function(){
+const term=search.value.toLowerCase().trim();
+items.forEach(item=>{
+item.style.display=item.dataset.search.includes(term)?"":"none";
+});
+});
+
+document.querySelectorAll(".resource-demo").forEach(link=>{
+link.addEventListener("click",function(event){
+event.preventDefault();
+alert("This resource will be connected to the school's resource library when the backend is available.");
+});
+});
+
+document.getElementById("logoutButton").addEventListener("click",function(){
+sessionStorage.removeItem("kenbridgeStaffLoggedIn");
+});
+});
+</script>
+</body>
+  </html>
