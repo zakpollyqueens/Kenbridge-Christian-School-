@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>My Profile | Kenbridge Staff Portal</title>
+
+    <meta
+        name="description"
+        content="Staff profile management for Kenbridge Christian School."
+    >
+
+    <meta
+        name="theme-color"
+        content="#08783f"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <style>
+
+        /* =====================================================
+           STAFF PROFILE PAGE
+        ===================================================== */
+
+        .staff-page {
+            min-height: 100vh;
+            background: #f5f7f6;
+        }
+
+
+        /* =====================================================
+           STAFF HEADER
+        ===================================================== */
+
+        .staff-header {
+            background: #08783f;
+
+            color: #ffffff;
+
+            padding: 18px 0;
+        }
+
+
+        .staff-header-inner {
+            width: min(1200px, 92%);
+
+            margin: 0 auto;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+
+        .staff-brand {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            color: #ffffff;
+
+            text-decoration: none;
+        }
+
+
+        .staff-brand img {
+            width: 52px;
+            height: 52px;
+
+            object-fit: contain;
+
+            background: #ffffff;
+
+            border-radius: 50%;
+
+            padding: 5px;
+        }
+
+
+        .staff-brand-text strong {
+            display: block;
+
+            font-size: 18px;
+        }
+
+
+        .staff-brand-text span {
+            display: block;
+
+            font-size: 12px;
+
+            opacity: .85;
+
+            margin-top: 3px;
+        }
+
+
+        .staff-logout {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 10px 16px;
+
+            border: 1px solid rgba(255,255,255,.5);
+
+            border-radius: 8px;
+
+            color: #ffffff;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+
+        .staff-logout:hover {
+            background: rgba(255,255,255,.12);
+        }
+
+
+        /* =====================================================
+           PAGE CONTAINER
+        ===================================================== */
+
+        .staff-container {
+            width: min(1000px, 92%);
+
+            margin: 0 auto;
+
+            padding: 40px 0 60px;
+        }
+
+
+        .staff-page-heading {
+            margin-bottom: 28px;
+        }
+
+
+        .staff-page-heading small {
+            display: block;
+
+            color: #08783f;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            letter-spacing: 1.5px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .staff-page-heading h1 {
+            margin: 0 0 8px;
+
+            color: #16352a;
+
+            font-size: clamp(28px, 4vw, 40px);
+        }
+
+
+        .staff-page-heading p {
+            margin: 0;
+
+            color: #64736c;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           PROFILE CARD
+        ===================================================== */
+
+        .profile-card {
+            background: #ffffff;
+
+            border: 1px solid #e1e8e4;
+
+            border-radius: 14px;
+
+            padding: 30px;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,.05);
+        }
+
+
+        .profile-top {
+            display: flex;
+
+            align-items: center;
+
+            gap: 22px;
+
+            padding-bottom: 25px;
+
+            border-bottom: 1px solid #edf1ef;
+
+            margin-bottom: 25px;
+        }
+
+
+        .profile-avatar {
+            width: 90px;
+            height: 90px;
+
+            border-radius: 50%;
+
+            background: #e8f5ed;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            color: #08783f;
+
+            font-size: 38px;
+
+            font-weight: 700;
+
+            flex-shrink: 0;
+        }
+
+
+        .profile-top h2 {
+            margin: 0 0 6px;
+
+            color: #173a2c;
+
+            font-size: 25px;
+        }
+
+
+        .profile-role {
+            color: #08783f;
+
+            font-size: 13px;
+
+            font-weight: 700;
+        }
+
+
+        /* =====================================================
+           PROFILE DETAILS
+        ===================================================== */
+
+        .profile-details {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 20px;
+        }
+
+
+        .profile-field {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+
+        .profile-field.full {
+            grid-column: 1 / -1;
+        }
+
+
+        .profile-field label {
+            color: #52635b;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            letter-spacing: .5px;
+        }
+
+
+        .profile-field input,
+        .profile-field select {
+            width: 100%;
+
+            box-sizing: border-box;
+
+            padding: 12px 13px;
+
+            border: 1px solid #d8e0dc;
+
+            border-radius: 8px;
+
+            background: #ffffff;
+
+            color: #263d33;
+
+            font-size: 14px;
+        }
+
+
+        .profile-field input:focus,
+        .profile-field select:focus {
+            outline: none;
+
+            border-color: #08783f;
+
+            box-shadow:
+                0 0 0 3px rgba(8,120,63,.10);
+        }
+
+
+        /* =====================================================
+           PROFILE ACTIONS
+        ===================================================== */
+
+        .profile-actions {
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 10px;
+
+            margin-top: 28px;
+
+            padding-top: 22px;
+
+            border-top: 1px solid #edf1ef;
+        }
+
+
+        .profile-button {
+            border: 1px solid #d7e0db;
+
+            background: #ffffff;
+
+            color: #315244;
+
+            padding: 11px 17px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+
+        .profile-button.primary {
+            border-color: #08783f;
+
+            background: #08783f;
+
+            color: #ffffff;
+        }
+
+
+        .profile-button:hover {
+            opacity: .9;
+        }
+
+
+        /* =====================================================
+           SECURITY NOTE
+        ===================================================== */
+
+        .profile-security {
+            margin-top: 22px;
+
+            padding: 20px;
+
+            border-radius: 10px;
+
+            background: #fbfcfb;
+
+            border: 1px solid #e1e8e4;
+
+            color: #66766f;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 650px) {
+
+            .staff-header-inner {
+                align-items: flex-start;
+            }
+
+
+            .staff-brand img {
+                width: 44px;
+                height: 44px;
+            }
+
+
+            .staff-brand-text strong {
+                font-size: 15px;
+            }
+
+
+            .staff-brand-text span {
+                font-size: 11px;
+            }
+
+
+            .staff-logout {
+                padding: 8px 11px;
+
+                font-size: 12px;
+            }
+
+
+            .staff-container {
+                padding-top: 30px;
+            }
+
+
+            .profile-card {
+                padding: 20px;
+            }
+
+
+            .profile-top {
+                align-items: flex-start;
+            }
+
+
+            .profile-avatar {
+                width: 70px;
+                height: 70px;
+
+                font-size: 28px;
+            }
+
+
+            .profile-top h2 {
+                font-size: 20px;
+            }
+
+
+            .profile-details {
+                grid-template-columns: 1fr;
+            }
+
+
+            .profile-field.full {
+                grid-column: auto;
+            }
+
+
+            .profile-actions {
+                flex-direction: column;
+            }
+
+
+            .profile-button {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="staff-page">
+
+
+    <!-- =====================================================
+         STAFF HEADER
+    ====================================================== -->
+
+    <header class="staff-header">
+
+        <div class="staff-header-inner">
+
+
+            <a
+                href="staff-dashboard.html"
+                class="staff-brand"
+            >
+
+                <img
+                    src="../images/logo.png"
+                    alt="Kenbridge Christian School Logo"
+                >
+
+                <div class="staff-brand-text">
+
+                    <strong>
+                        Kenbridge Christian School
+                    </strong>
+
+                    <span>
+                        Staff Portal
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <a
+                href="login.html"
+                class="staff-logout"
+            >
+                Logout
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="staff-container">
+
+
+        <div class="staff-page-heading">
+
+            <small>
+                STAFF PORTAL
+            </small>
+
+            <h1>
+                My Profile
+            </h1>
+
+            <p>
+                View and manage your staff account
+                information.
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             PROFILE CARD
+        ================================================== -->
+
+        <section class="profile-card">
+
+
+            <div class="profile-top">
+
+                <div class="profile-avatar">
+                    S
+                </div>
+
+
+                <div>
+
+                    <h2>
+                        Staff Member
+                    </h2>
+
+                    <span class="profile-role">
+                        School Staff
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 PROFILE DETAILS
+            ================================================== -->
+
+            <div class="profile-details">
+
+
+                <div class="profile-field">
+
+                    <label for="staffName">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="staffName"
+                        value="Staff Member"
+                    >
+
+                </div>
+
+
+                <div class="profile-field">
+
+                    <label for="staffRole">
+                        Staff Role
+                    </label>
+
+                    <input
+                        type="text"
+                        id="staffRole"
+                        value="School Staff"
+                        readonly
+                    >
+
+                </div>
+
+
+                <div class="profile-field">
+
+                    <label for="staffEmail">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="staffEmail"
+                        placeholder="staff@kenbridgechristianschool.com"
+                    >
+
+                </div>
+
+
+                <div class="profile-field">
+
+                    <label for="staffPhone">
+                        Phone Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="staffPhone"
+                        placeholder="+256..."
+                    >
+
+                </div>
+
+
+                <div class="profile-field full">
+
+                    <label for="staffDepartment">
+                        Department
+                    </label>
+
+                    <select id="staffDepartment">
+
+                        <option>
+                            Select Department
+                        </option>
+
+                        <option>
+                            Administration
+                        </option>
+
+                        <option>
+                            Academics
+                        </option>
+
+                        <option>
+                            Boarding
+                        </option>
+
+                        <option>
+                            Sports
+                        </option>
+
+                        <option>
+                            ICT
+                        </option>
+
+                        <option>
+                            Support Staff
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 ACTIONS
+            ================================================== -->
+
+            <div class="profile-actions">
+
+                <button
+                    type="button"
+                    class="profile-button"
+                    id="cancelProfile"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="button"
+                    class="profile-button primary"
+                    id="saveProfile"
+                >
+                    Save Changes
+                </button>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================================
+             SECURITY NOTE
+        ================================================== -->
+
+        <div class="profile-security">
+
+            <strong>
+                Account security:
+            </strong>
+
+            Staff profile information is currently
+            displayed as front-end content. Login
+            authentication, password management and
+            secure profile storage will be connected
+            to the backend system in a later stage.
+
+        </div>
+
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     PROFILE SCRIPT
+========================================================= -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const saveButton =
+            document.getElementById(
+                "saveProfile"
+            );
+
+
+        const cancelButton =
+            document.getElementById(
+                "cancelProfile"
+            );
+
+
+        if (saveButton) {
+
+            saveButton.addEventListener(
+                "click",
+                function () {
+
+                    alert(
+                        "Profile saving will be connected to the secure staff system in the next stage."
+                    );
+
+                }
+            );
+
+        }
+
+
+        if (cancelButton) {
+
+            cancelButton.addEventListener(
+                "click",
+                function () {
+
+                    window.location.href =
+                        "staff-dashboard.html";
+
+                }
+            );
+
+        }
+
+    }
+);
+
+</script>
+
+
+</body>
+
+  </html>
