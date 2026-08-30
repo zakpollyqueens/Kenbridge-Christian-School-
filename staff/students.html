@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Students | Kenbridge Staff Portal</title>
+
+    <meta
+        name="description"
+        content="Student records management for Kenbridge Christian School staff."
+    >
+
+    <meta
+        name="theme-color"
+        content="#08783f"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <style>
+
+        /* =====================================================
+           STAFF STUDENTS PAGE
+        ===================================================== */
+
+        .staff-page {
+            min-height: 100vh;
+            background: #f5f7f6;
+        }
+
+
+        /* =====================================================
+           STAFF HEADER
+        ===================================================== */
+
+        .staff-header {
+            background: #08783f;
+            color: #ffffff;
+            padding: 18px 0;
+        }
+
+        .staff-header-inner {
+            width: min(1200px, 92%);
+            margin: 0 auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+
+        .staff-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+
+        .staff-brand img {
+            width: 52px;
+            height: 52px;
+
+            object-fit: contain;
+
+            background: #ffffff;
+            border-radius: 50%;
+            padding: 5px;
+        }
+
+
+        .staff-brand-text strong {
+            display: block;
+            font-size: 18px;
+        }
+
+
+        .staff-brand-text span {
+            display: block;
+            font-size: 12px;
+            opacity: .85;
+            margin-top: 3px;
+        }
+
+
+        .staff-logout {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 10px 16px;
+
+            border: 1px solid rgba(255,255,255,.5);
+            border-radius: 8px;
+
+            color: #ffffff;
+            text-decoration: none;
+
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+
+        .staff-logout:hover {
+            background: rgba(255,255,255,.12);
+        }
+
+
+        /* =====================================================
+           PAGE CONTAINER
+        ===================================================== */
+
+        .staff-container {
+            width: min(1200px, 92%);
+            margin: 0 auto;
+
+            padding: 40px 0 60px;
+        }
+
+
+        .staff-page-heading {
+            margin-bottom: 28px;
+        }
+
+
+        .staff-page-heading small {
+            display: block;
+
+            color: #08783f;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            letter-spacing: 1.5px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .staff-page-heading h1 {
+            margin: 0 0 8px;
+
+            color: #16352a;
+
+            font-size: clamp(28px, 4vw, 40px);
+        }
+
+
+        .staff-page-heading p {
+            margin: 0;
+
+            color: #64736c;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           ACTION BAR
+        ===================================================== */
+
+        .students-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-bottom: 25px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .student-search {
+            flex: 1;
+            min-width: 240px;
+
+            padding: 13px 15px;
+
+            border: 1px solid #d8e0dc;
+            border-radius: 8px;
+
+            background: #ffffff;
+
+            font-size: 14px;
+        }
+
+
+        .student-search:focus {
+            outline: none;
+            border-color: #08783f;
+
+            box-shadow:
+                0 0 0 3px rgba(8,120,63,.10);
+        }
+
+
+        .add-student-button {
+            border: none;
+
+            background: #08783f;
+            color: #ffffff;
+
+            padding: 13px 18px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+
+        .add-student-button:hover {
+            opacity: .9;
+        }
+
+
+        /* =====================================================
+           STUDENT TABLE
+        ===================================================== */
+
+        .students-card {
+            background: #ffffff;
+
+            border: 1px solid #e1e8e4;
+
+            border-radius: 12px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,.05);
+        }
+
+
+        .students-table-wrap {
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+
+        .students-table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 720px;
+        }
+
+
+        .students-table th {
+            background: #f0f5f2;
+
+            color: #29463a;
+
+            text-align: left;
+
+            padding: 15px;
+
+            font-size: 13px;
+
+            white-space: nowrap;
+        }
+
+
+        .students-table td {
+            padding: 15px;
+
+            border-top: 1px solid #edf1ef;
+
+            color: #52635b;
+
+            font-size: 14px;
+        }
+
+
+        .students-table tbody tr:hover {
+            background: #fafcfb;
+        }
+
+
+        .student-name {
+            color: #173a2c;
+
+            font-weight: 700;
+        }
+
+
+        .student-status {
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            background: #e8f5ed;
+
+            color: #08783f;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+
+        .student-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+
+        .student-action {
+            border: 1px solid #d7e0db;
+
+            background: #ffffff;
+
+            color: #315244;
+
+            padding: 7px 10px;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-size: 12px;
+        }
+
+
+        .student-action:hover {
+            border-color: #08783f;
+            color: #08783f;
+        }
+
+
+        /* =====================================================
+           EMPTY / INFORMATION MESSAGE
+        ===================================================== */
+
+        .students-note {
+            padding: 22px;
+
+            border-top: 1px solid #edf1ef;
+
+            background: #fbfcfb;
+
+            color: #66766f;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 650px) {
+
+            .staff-header-inner {
+                align-items: flex-start;
+            }
+
+
+            .staff-brand-text strong {
+                font-size: 15px;
+            }
+
+
+            .staff-brand-text span {
+                font-size: 11px;
+            }
+
+
+            .staff-brand img {
+                width: 44px;
+                height: 44px;
+            }
+
+
+            .staff-logout {
+                padding: 8px 11px;
+                font-size: 12px;
+            }
+
+
+            .staff-container {
+                padding-top: 30px;
+            }
+
+
+            .students-actions {
+                align-items: stretch;
+            }
+
+
+            .student-search,
+            .add-student-button {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="staff-page">
+
+
+    <!-- =====================================================
+         STAFF HEADER
+    ====================================================== -->
+
+    <header class="staff-header">
+
+        <div class="staff-header-inner">
+
+
+            <a
+                href="staff-dashboard.html"
+                class="staff-brand"
+            >
+
+                <img
+                    src="../images/logo.png"
+                    alt="Kenbridge Christian School Logo"
+                >
+
+                <div class="staff-brand-text">
+
+                    <strong>
+                        Kenbridge Christian School
+                    </strong>
+
+                    <span>
+                        Staff Portal
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <a
+                href="login.html"
+                class="staff-logout"
+            >
+                Logout
+            </a>
+
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="staff-container">
+
+
+        <div class="staff-page-heading">
+
+            <small>
+                STAFF PORTAL
+            </small>
+
+            <h1>
+                Student Records
+            </h1>
+
+            <p>
+                View and manage learner information
+                from the staff portal.
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             SEARCH / ADD
+        ================================================== -->
+
+        <div class="students-actions">
+
+            <input
+                type="search"
+                id="studentSearch"
+                class="student-search"
+                placeholder="Search student by name or admission number..."
+                aria-label="Search students"
+            >
+
+
+            <button
+                type="button"
+                class="add-student-button"
+                id="addStudentButton"
+            >
+                + Add Student
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             STUDENTS TABLE
+        ================================================== -->
+
+        <section class="students-card">
+
+            <div class="students-table-wrap">
+
+                <table class="students-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Admission No.
+                            </th>
+
+                            <th>
+                                Student Name
+                            </th>
+
+                            <th>
+                                Class
+                            </th>
+
+                            <th>
+                                Gender
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="studentsTableBody">
+
+
+                        <tr>
+
+                            <td>
+                                KCS-001
+                            </td>
+
+                            <td class="student-name">
+                                Sample Student
+                            </td>
+
+                            <td>
+                                Primary 5
+                            </td>
+
+                            <td>
+                                —
+                            </td>
+
+                            <td>
+
+                                <span class="student-status">
+                                    Active
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <div class="student-actions">
+
+                                    <button
+                                        type="button"
+                                        class="student-action"
+                                    >
+                                        View
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="student-action"
+                                    >
+                                        Edit
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div class="students-note">
+
+                <strong>
+                    Staff note:
+                </strong>
+
+                Student records will be connected to
+                the secure staff database when the
+                backend system is added. This page is
+                currently the front-end structure of
+                the staff portal.
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+</div>
+
+
+<!-- =========================================================
+     STUDENT SEARCH
+========================================================= -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const search =
+            document.getElementById(
+                "studentSearch"
+            );
+
+        const tableBody =
+            document.getElementById(
+                "studentsTableBody"
+            );
+
+
+        if (search && tableBody) {
+
+            search.addEventListener(
+                "input",
+                function () {
+
+                    const query =
+                        search.value
+                            .toLowerCase()
+                            .trim();
+
+
+                    const rows =
+                        tableBody.querySelectorAll(
+                            "tr"
+                        );
+
+
+                    rows.forEach(
+                        function (row) {
+
+                            const text =
+                                row.textContent
+                                    .toLowerCase();
+
+
+                            row.style.display =
+                                text.includes(query)
+                                    ? ""
+                                    : "none";
+
+                        }
+                    );
+
+                }
+            );
+
+        }
+
+
+        const addButton =
+            document.getElementById(
+                "addStudentButton"
+            );
+
+
+        if (addButton) {
+
+            addButton.addEventListener(
+                "click",
+                function () {
+
+                    alert(
+                        "Student registration will be connected to the secure staff system in the next stage."
+                    );
+
+                }
+            );
+
+        }
+
+    }
+);
+
+</script>
+
+
+</body>
+
+  </html>
