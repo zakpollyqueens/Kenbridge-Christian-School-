@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Manage Staff | Kenbridge Staff Portal</title>
+
+    <meta
+        name="description"
+        content="Administrator staff account management for Kenbridge Christian School."
+    >
+
+    <meta
+        name="theme-color"
+        content="#08783f"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <style>
+
+        /* =====================================================
+           PAGE
+        ===================================================== */
+
+        .staff-page {
+            min-height: 100vh;
+            background: #f5f7f6;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .staff-header {
+            background: #08783f;
+            color: #ffffff;
+            padding: 18px 0;
+        }
+
+
+        .staff-header-inner {
+            width: min(1200px, 92%);
+            margin: 0 auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+
+        .staff-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+
+        .staff-brand img {
+            width: 52px;
+            height: 52px;
+
+            object-fit: contain;
+
+            background: #ffffff;
+            border-radius: 50%;
+            padding: 5px;
+        }
+
+
+        .staff-brand-text strong {
+            display: block;
+            font-size: 18px;
+        }
+
+
+        .staff-brand-text span {
+            display: block;
+
+            margin-top: 3px;
+
+            font-size: 12px;
+            opacity: .85;
+        }
+
+
+        .staff-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+
+        .staff-dashboard-link,
+        .staff-logout {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 10px 15px;
+
+            border: 1px solid rgba(255,255,255,.5);
+            border-radius: 8px;
+
+            color: #ffffff;
+            text-decoration: none;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+
+        .staff-dashboard-link:hover,
+        .staff-logout:hover {
+            background: rgba(255,255,255,.12);
+        }
+
+
+        /* =====================================================
+           CONTAINER
+        ===================================================== */
+
+        .staff-container {
+            width: min(1200px, 92%);
+            margin: 0 auto;
+
+            padding: 40px 0 60px;
+        }
+
+
+        .staff-page-heading {
+            margin-bottom: 28px;
+        }
+
+
+        .staff-page-heading small {
+            display: block;
+
+            color: #08783f;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            letter-spacing: 1.5px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .staff-page-heading h1 {
+            margin: 0 0 8px;
+
+            color: #16352a;
+
+            font-size: clamp(28px, 4vw, 40px);
+        }
+
+
+        .staff-page-heading p {
+            margin: 0;
+
+            color: #64736c;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           ADMIN NOTICE
+        ===================================================== */
+
+        .admin-notice {
+            display: flex;
+            align-items: flex-start;
+
+            gap: 12px;
+
+            margin-bottom: 25px;
+
+            padding: 17px 18px;
+
+            border: 1px solid #d7eadf;
+            border-left: 4px solid #08783f;
+
+            border-radius: 9px;
+
+            background: #f2faf5;
+        }
+
+
+        .admin-notice-icon {
+            font-size: 22px;
+        }
+
+
+        .admin-notice strong {
+            display: block;
+
+            margin-bottom: 4px;
+
+            color: #174632;
+        }
+
+
+        .admin-notice p {
+            margin: 0;
+
+            color: #5e7067;
+
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+
+        /* =====================================================
+           ACTION BAR
+        ===================================================== */
+
+        .staff-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-bottom: 20px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .staff-search {
+            flex: 1;
+
+            min-width: 240px;
+
+            padding: 13px 15px;
+
+            border: 1px solid #d8e0dc;
+            border-radius: 8px;
+
+            background: #ffffff;
+
+            font-size: 14px;
+        }
+
+
+        .staff-search:focus {
+            outline: none;
+
+            border-color: #08783f;
+
+            box-shadow:
+                0 0 0 3px rgba(8,120,63,.10);
+        }
+
+
+        .add-staff-button {
+            border: none;
+
+            background: #08783f;
+            color: #ffffff;
+
+            padding: 13px 18px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+
+        .add-staff-button:hover {
+            opacity: .9;
+        }
+
+
+        /* =====================================================
+           STAFF TABLE
+        ===================================================== */
+
+        .staff-card {
+            background: #ffffff;
+
+            border: 1px solid #e1e8e4;
+
+            border-radius: 12px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,.05);
+        }
+
+
+        .staff-table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+
+        .staff-table {
+            width: 100%;
+
+            min-width: 760px;
+
+            border-collapse: collapse;
+        }
+
+
+        .staff-table th {
+            padding: 15px;
+
+            background: #f0f5f2;
+
+            color: #29463a;
+
+            text-align: left;
+
+            font-size: 13px;
+
+            white-space: nowrap;
+        }
+
+
+        .staff-table td {
+            padding: 15px;
+
+            border-top: 1px solid #edf1ef;
+
+            color: #52635b;
+
+            font-size: 14px;
+        }
+
+
+        .staff-table tbody tr:hover {
+            background: #fafcfb;
+        }
+
+
+        .staff-name {
+            color: #173a2c;
+
+            font-weight: 700;
+        }
+
+
+        .staff-username {
+            color: #6a7a72;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           ROLE
+        ===================================================== */
+
+        .staff-role {
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            background: #edf4ff;
+
+            color: #315f9c;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+
+        /* =====================================================
+           STATUS
+        ===================================================== */
+
+        .staff-status {
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            background: #e8f5ed;
+
+            color: #08783f;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+
+        .staff-status.disabled {
+            background: #f5eaea;
+
+            color: #a44848;
+        }
+
+
+        /* =====================================================
+           ACTIONS
+        ===================================================== */
+
+        .staff-row-actions {
+            display: flex;
+
+            gap: 7px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .staff-row-button {
+            padding: 7px 10px;
+
+            border: 1px solid #d7e0db;
+
+            border-radius: 6px;
+
+            background: #ffffff;
+
+            color: #315244;
+
+            font-size: 12px;
+            font-weight: 600;
+
+            cursor: pointer;
+        }
+
+
+        .staff-row-button:hover {
+            border-color: #08783f;
+
+            color: #08783f;
+        }
+
+
+        .staff-row-button.danger:hover {
+            border-color: #b94a48;
+
+            color: #b94a48;
+        }
+
+
+        /* =====================================================
+           INFORMATION
+        ===================================================== */
+
+        .staff-note {
+            padding: 20px;
+
+            border-top: 1px solid #edf1ef;
+
+            background: #fbfcfb;
+
+            color: #66766f;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           ADD STAFF MODAL
+        ===================================================== */
+
+        .staff-modal {
+            position: fixed;
+
+            inset: 0;
+
+            display: none;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            background: rgba(12,30,22,.65);
+
+            z-index: 9999;
+        }
+
+
+        .staff-modal.show {
+            display: flex;
+        }
+
+
+        .staff-modal-box {
+            position: relative;
+
+            width: min(560px, 100%);
+
+            max-height: 90vh;
+
+            overflow-y: auto;
+
+            padding: 30px;
+
+            border-radius: 14px;
+
+            background: #ffffff;
+
+            box-shadow:
+                0 25px 70px rgba(0,0,0,.25);
+        }
+
+
+        .staff-modal-close {
+            position: absolute;
+
+            top: 12px;
+            right: 15px;
+
+            width: 36px;
+            height: 36px;
+
+            border: none;
+
+            border-radius: 50%;
+
+            background: #f1f4f2;
+
+            color: #40564b;
+
+            font-size: 24px;
+
+            cursor: pointer;
+        }
+
+
+        .staff-modal-close:hover {
+            background: #e6ece8;
+        }
+
+
+        .staff-modal-label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #08783f;
+
+            font-size: 11px;
+            font-weight: 800;
+
+            letter-spacing: 1.3px;
+        }
+
+
+        .staff-modal-box h2 {
+            margin: 0 0 8px;
+
+            color: #173a2c;
+        }
+
+
+        .staff-modal-box > p {
+            margin: 0 0 22px;
+
+            color: #687870;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =====================================================
+           FORM
+        ===================================================== */
+
+        .staff-form-group {
+            margin-bottom: 17px;
+        }
+
+
+        .staff-form-group label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #29463a;
+
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+
+        .staff-form-group input,
+        .staff-form-group select {
+            width: 100%;
+
+            box-sizing: border-box;
+
+            padding: 12px 13px;
+
+            border: 1px solid #d8e0dc;
+
+            border-radius: 7px;
+
+            background: #ffffff;
+
+            color: #273d33;
+
+            font-size: 14px;
+        }
+
+
+        .staff-form-group input:focus,
+        .staff-form-group select:focus {
+            outline: none;
+
+            border-color: #08783f;
+
+            box-shadow:
+                0 0 0 3px rgba(8,120,63,.09);
+        }
+
+
+        .staff-form-grid {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 15px;
+        }
+
+
+        .staff-form-submit {
+            width: 100%;
+
+            margin-top: 5px;
+
+            padding: 13px 18px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #08783f;
+
+            color: #ffffff;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+
+        .staff-form-submit:hover {
+            opacity: .9;
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 650px) {
+
+            .staff-header-inner {
+                align-items: flex-start;
+            }
+
+
+            .staff-brand-text strong {
+                font-size: 15px;
+            }
+
+
+            .staff-brand-text span {
+                font-size: 11px;
+            }
+
+
+            .staff-brand img {
+                width: 44px;
+                height: 44px;
+            }
+
+
+            .staff-header-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+
+            .staff-dashboard-link,
+            .staff-logout {
+                padding: 8px 11px;
+
+                font-size: 12px;
+            }
+
+
+            .staff-container {
+                padding-top: 30px;
+            }
+
+
+            .staff-actions {
+                align-items: stretch;
+            }
+
+
+            .staff-search,
+            .add-staff-button {
+                width: 100%;
+            }
+
+
+            .staff-form-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .staff-modal-box {
+                padding: 25px 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="staff-page">
+
+
+    <!-- =====================================================
+         STAFF HEADER
+    ====================================================== -->
+
+    <header class="staff-header">
+
+        <div class="staff-header-inner">
+
+
+            <a
+                href="staff-dashboard.html"
+                class="staff-brand"
+            >
+
+                <img
+                    src="../images/logo.png"
+                    alt="Kenbridge Christian School Logo"
+                >
+
+                <div class="staff-brand-text">
+
+                    <strong>
+                        Kenbridge Christian School
+                    </strong>
+
+                    <span>
+                        Administrator Portal
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <div class="staff-header-actions">
+
+                <a
+                    href="staff-dashboard.html"
+                    class="staff-dashboard-link"
+                >
+                    Dashboard
+                </a>
+
+
+                <a
+                    href="login.html"
+                    class="staff-logout"
+                >
+                    Logout
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="staff-container">
+
+
+        <div class="staff-page-heading">
+
+            <small>
+                ADMINISTRATION
+            </small>
+
+            <h1>
+                Manage Staff
+            </h1>
+
+            <p>
+                Create and manage staff accounts
+                for the Kenbridge Christian School
+                staff portal.
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             ADMIN NOTICE
+        ================================================== -->
+
+        <div class="admin-notice">
+
+            <div class="admin-notice-icon">
+                🔐
+            </div>
+
+            <div>
+
+                <strong>
+                    Administrator access
+                </strong>
+
+                <p>
+                    Only authorized administrators should
+                    use this page. Staff accounts will be
+                    securely connected to the backend system
+                    when the server endpoint is available.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             SEARCH / ADD STAFF
+        ================================================== -->
+
+        <div class="staff-actions">
+
+            <input
+                type="search"
+                id="staffSearch"
+                class="staff-search"
+                placeholder="Search staff by name, username or role..."
+                aria-label="Search staff"
+            >
+
+
+            <button
+                type="button"
+                class="add-staff-button"
+                id="addStaffButton"
+            >
+                + Add Staff Account
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             STAFF TABLE
+        ================================================== -->
+
+        <section class="staff-card">
+
+
+            <div class="staff-table-wrap">
+
+                <table class="staff-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Name
+                            </th>
+
+                            <th>
+                                Username
+                            </th>
+
+                            <th>
+                                Role
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="staffTableBody">
+
+
+                        <!-- ADMINISTRATOR -->
+
+                        <tr>
+
+                            <td class="staff-name">
+                                School Administrator
+                            </td>
+
+                            <td class="staff-username">
+                                administrator
+                            </td>
+
+                            <td>
+
+                                <span class="staff-role">
+                                    Administrator
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span class="staff-status">
+                                    Active
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <div class="staff-row-actions">
+
+                                    <button
+                                        type="button"
+                                        class="staff-row-button"
+                                    >
+                                        Edit
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="staff-row-button"
+                                    >
+                                        Reset Password
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+
+                        <!-- SAMPLE TEACHER -->
+
+                        <tr>
+
+                            <td class="staff-name">
+                                Sample Teacher
+                            </td>
+
+                            <td class="staff-username">
+                                teacher01
+                            </td>
+
+                            <td>
+
+                                <span class="staff-role">
+                                    Teacher
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span class="staff-status">
+                                    Active
+                                </span>
+
+                      
