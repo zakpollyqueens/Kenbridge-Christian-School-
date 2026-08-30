@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Notifications | Kenbridge Staff Portal</title>
+<meta name="description" content="Staff notifications for Kenbridge Christian School.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.staff-page{min-height:100vh;background:#f4f8f5}
+.staff-header{background:#08783f;color:#fff;padding:18px 0}
+.staff-header-inner{width:min(1150px,92%);margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.staff-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}
+.staff-brand img{width:48px;height:48px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}
+.staff-brand strong{display:block;font-size:17px}
+.staff-brand span{display:block;font-size:12px;opacity:.85;margin-top:3px}
+.staff-logout{padding:10px 15px;border:1px solid rgba(255,255,255,.5);border-radius:8px;color:#fff;text-decoration:none;font-size:13px;font-weight:700}
+.staff-logout:hover{background:rgba(255,255,255,.12)}
+.staff-container{width:min(1100px,92%);margin:auto;padding:40px 0 60px}
+.staff-heading{margin-bottom:25px}
+.staff-heading small{display:block;color:#08783f;font-size:12px;font-weight:800;letter-spacing:1.5px;margin-bottom:7px}
+.staff-heading h1{margin:0 0 7px;color:#173a2c;font-size:clamp(28px,4vw,40px)}
+.staff-heading p{margin:0;color:#68776f;line-height:1.6}
+.staff-nav{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:25px}
+.staff-nav a{padding:10px 14px;border:1px solid #dce5e0;border-radius:8px;background:#fff;color:#315244;text-decoration:none;font-size:13px;font-weight:700}
+.staff-nav a:hover,.staff-nav a.active{background:#08783f;border-color:#08783f;color:#fff}
+.notification-card{background:#fff;border:1px solid #e1e8e4;border-radius:14px;padding:25px;box-shadow:0 8px 25px rgba(0,0,0,.05);margin-bottom:22px}
+.notification-card h2{margin:0 0 7px;color:#173a2c}
+.notification-card>p{margin:0 0 20px;color:#718079;line-height:1.6}
+.notification-tools{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px;flex-wrap:wrap}
+.notification-count{font-size:13px;color:#68776f;font-weight:700}
+.mark-read{border:0;border-radius:8px;padding:10px 14px;background:#f28c28;color:#fff;font-weight:800;cursor:pointer}
+.mark-read:hover{filter:brightness(.95)}
+.notification-list{display:flex;flex-direction:column;gap:12px}
+.notification-item{display:flex;gap:14px;align-items:flex-start;padding:17px;border:1px solid #e1e8e4;border-radius:11px;background:#f9fcfa}
+.notification-item.unread{border-left:4px solid #f28c28;background:#fffaf3}
+.notification-icon{font-size:22px;line-height:1}
+.notification-content{flex:1}
+.notification-content h3{margin:0 0 5px;color:#173a2c;font-size:16px}
+.notification-content p{margin:0;color:#68776f;font-size:13px;line-height:1.6}
+.notification-time{display:block;margin-top:8px;color:#89958f;font-size:11px}
+.notification-empty{text-align:center;padding:30px;color:#718079}
+.notification-notice{padding:17px;border-radius:10px;background:#fffdf4;border:1px solid #eee4bd;color:#6d623b;font-size:13px;line-height:1.7}
+@media(max-width:650px){
+.staff-header-inner{align-items:flex-start}
+.staff-brand img{width:42px;height:42px}
+.staff-brand strong{font-size:14px}
+.staff-brand span{font-size:10px}
+.staff-logout{padding:8px 11px;font-size:12px}
+.staff-container{padding-top:30px}
+.notification-card{padding:20px 16px}
+}
+</style>
+</head>
+<body>
+<div class="staff-page">
+<header class="staff-header">
+<div class="staff-header-inner">
+<a href="staff-dashboard.html" class="staff-brand">
+<img src="../images/logo.png" alt="Kenbridge Christian School Logo">
+<div>
+<strong>Kenbridge Christian School</strong>
+<span>Staff Portal</span>
+</div>
+</a>
+<a href="login.html" class="staff-logout" id="logoutButton">Log Out</a>
+</div>
+</header>
+
+<main class="staff-container">
+<div class="staff-heading">
+<small>STAFF PORTAL</small>
+<h1>Notifications</h1>
+<p>Stay updated with important school and portal notifications.</p>
+</div>
+
+<nav class="staff-nav">
+<a href="staff-dashboard.html">Dashboard</a>
+<a href="students.html">Students</a>
+<a href="attendance.html">Attendance</a>
+<a href="announcements.html">Announcements</a>
+<a href="articles.html">Articles</a>
+<a href="reports.html">Reports</a>
+<a href="files.html">Files</a>
+<a href="calendar.html">Calendar</a>
+<a href="messages.html">Messages</a>
+<a href="tasks.html">Tasks</a>
+<a href="leave.html">Leave</a>
+<a href="payroll.html">Payroll</a>
+<a href="training.html">Training</a>
+<a href="resources.html">Resources</a>
+<a href="notifications.html" class="active">Notifications</a>
+<a href="profile.html">My Profile</a>
+</nav>
+
+<section class="notification-card">
+<h2>My Notifications</h2>
+<p>Important updates and alerts related to your staff account will appear here.</p>
+
+<div class="notification-tools">
+<span class="notification-count" id="notificationCount">0 unread notifications</span>
+<button type="button" class="mark-read" id="markRead">Mark All as Read</button>
+</div>
+
+<div class="notification-list" id="notificationList"></div>
+</section>
+
+<section class="notification-card">
+<h2>Notification System</h2>
+<p>This section is prepared for the school's backend notification system.</p>
+<div class="notification-notice">
+<strong>Backend preparation:</strong> When the backend is connected, this page can receive real-time or server-based notifications for announcements, article approvals, leave decisions, tasks, messages, training, reports and other authorized staff activities.
+</div>
+</section>
+</main>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+const list=document.getElementById("notificationList");
+const count=document.getElementById("notificationCount");
+const markRead=document.getElementById("markRead");
+let notifications=JSON.parse(localStorage.getItem("kenbridgeStaffNotifications")||"[]");
+
+function escapeHTML(value){
+return String(value).replace(/[&<>"']/g,function(c){
+return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c];
+});
+}
+
+function render(){
+list.innerHTML="";
+if(!notifications.length){
+list.innerHTML='<div class="notification-empty">You have no notifications yet.</div>';
+count.textContent="0 unread notifications";
+return;
+}
+let unread=notifications.filter(n=>!n.read).length;
+count.textContent=unread+" unread notification"+(unread===1?"":"s");
+notifications.slice().reverse().forEach((n,index)=>{
+const item=document.createElement("article");
+item.className="notification-item"+(n.read?"":" unread");
+item.innerHTML='<div class="notification-icon">'+escapeHTML(n.icon||"🔔")+'</div><div class="notification-content"><h3>'+escapeHTML(n.title||"Notification")+'</h3><p>'+escapeHTML(n.message||"")+'</p><span class="notification-time">'+escapeHTML(n.time||"")+'</span></div>';
+item.addEventListener("click",function(){
+const actualIndex=notifications.length-1-index;
+notifications[actualIndex].read=true;
+localStorage.setItem("kenbridgeStaffNotifications",JSON.stringify(notifications));
+render();
+});
+list.appendChild(item);
+});
+}
+
+markRead.addEventListener("click",function(){
+notifications.forEach(n=>n.read=true);
+localStorage.setItem("kenbridgeStaffNotifications",JSON.stringify(notifications));
+render();
+});
+
+document.getElementById("logoutButton").addEventListener("click",function(){
+sessionStorage.removeItem("kenbridgeStaffLoggedIn");
+});
+
+render();
+});
+</script>
+</body>
+  </html>
