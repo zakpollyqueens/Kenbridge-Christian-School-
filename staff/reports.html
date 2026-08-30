@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Reports | Kenbridge Staff Portal</title>
+
+    <meta
+        name="description"
+        content="Student reports and academic records for Kenbridge Christian School staff."
+    >
+
+    <meta
+        name="theme-color"
+        content="#08783f"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <style>
+
+        /* =====================================================
+           STAFF REPORTS PAGE
+        ===================================================== */
+
+        .staff-page {
+            min-height: 100vh;
+            background: #f5f7f6;
+        }
+
+
+        /* =====================================================
+           STAFF HEADER
+        ===================================================== */
+
+        .staff-header {
+            background: #08783f;
+            color: #ffffff;
+            padding: 18px 0;
+        }
+
+
+        .staff-header-inner {
+            width: min(1200px, 92%);
+            margin: 0 auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+
+        .staff-brand {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+
+        .staff-brand img {
+            width: 52px;
+            height: 52px;
+
+            object-fit: contain;
+
+            background: #ffffff;
+            border-radius: 50%;
+
+            padding: 5px;
+        }
+
+
+        .staff-brand-text strong {
+            display: block;
+
+            font-size: 18px;
+        }
+
+
+        .staff-brand-text span {
+            display: block;
+
+            font-size: 12px;
+
+            opacity: .85;
+
+            margin-top: 3px;
+        }
+
+
+        .staff-logout {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 10px 16px;
+
+            border: 1px solid rgba(255,255,255,.5);
+
+            border-radius: 8px;
+
+            color: #ffffff;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+
+        .staff-logout:hover {
+            background: rgba(255,255,255,.12);
+        }
+
+
+        /* =====================================================
+           MAIN CONTAINER
+        ===================================================== */
+
+        .staff-container {
+            width: min(1200px, 92%);
+
+            margin: 0 auto;
+
+            padding: 40px 0 60px;
+        }
+
+
+        .staff-page-heading {
+            margin-bottom: 28px;
+        }
+
+
+        .staff-page-heading small {
+            display: block;
+
+            color: #08783f;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            letter-spacing: 1.5px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .staff-page-heading h1 {
+            margin: 0 0 8px;
+
+            color: #16352a;
+
+            font-size: clamp(28px, 4vw, 40px);
+        }
+
+
+        .staff-page-heading p {
+            margin: 0;
+
+            color: #64736c;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           REPORT SUMMARY
+        ===================================================== */
+
+        .report-summary {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 28px;
+        }
+
+
+        .summary-card {
+            background: #ffffff;
+
+            border: 1px solid #e1e8e4;
+
+            border-radius: 12px;
+
+            padding: 22px;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,.04);
+        }
+
+
+        .summary-card span {
+            display: block;
+
+            color: #6a7972;
+
+            font-size: 13px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .summary-card strong {
+            display: block;
+
+            color: #173a2c;
+
+            font-size: 28px;
+        }
+
+
+        /* =====================================================
+           FILTER BAR
+        ===================================================== */
+
+        .reports-toolbar {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            flex-wrap: wrap;
+
+            margin-bottom: 22px;
+        }
+
+
+        .report-search,
+        .report-filter {
+            padding: 13px 15px;
+
+            border: 1px solid #d8e0dc;
+
+            border-radius: 8px;
+
+            background: #ffffff;
+
+            font-size: 14px;
+        }
+
+
+        .report-search {
+            flex: 1;
+
+            min-width: 230px;
+        }
+
+
+        .report-filter {
+            min-width: 160px;
+        }
+
+
+        .report-search:focus,
+        .report-filter:focus {
+            outline: none;
+
+            border-color: #08783f;
+
+            box-shadow:
+                0 0 0 3px rgba(8,120,63,.10);
+        }
+
+
+        /* =====================================================
+           REPORT TABLE
+        ===================================================== */
+
+        .reports-card {
+            background: #ffffff;
+
+            border: 1px solid #e1e8e4;
+
+            border-radius: 12px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,.05);
+        }
+
+
+        .reports-table-wrap {
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+
+        .reports-table {
+            width: 100%;
+
+            min-width: 760px;
+
+            border-collapse: collapse;
+        }
+
+
+        .reports-table th {
+            background: #f0f5f2;
+
+            color: #29463a;
+
+            text-align: left;
+
+            padding: 15px;
+
+            font-size: 13px;
+
+            white-space: nowrap;
+        }
+
+
+        .reports-table td {
+            padding: 15px;
+
+            border-top: 1px solid #edf1ef;
+
+            color: #52635b;
+
+            font-size: 14px;
+        }
+
+
+        .reports-table tbody tr:hover {
+            background: #fafcfb;
+        }
+
+
+        .student-name {
+            color: #173a2c;
+
+            font-weight: 700;
+        }
+
+
+        .report-status {
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            background: #e8f5ed;
+
+            color: #08783f;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+
+        .report-actions {
+            display: flex;
+
+            gap: 8px;
+        }
+
+
+        .report-button {
+            border: 1px solid #d7e0db;
+
+            background: #ffffff;
+
+            color: #315244;
+
+            padding: 7px 11px;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-size: 12px;
+        }
+
+
+        .report-button:hover {
+            border-color: #08783f;
+
+            color: #08783f;
+        }
+
+
+        /* =====================================================
+           INFORMATION NOTE
+        ===================================================== */
+
+        .reports-note {
+            padding: 22px;
+
+            border-top: 1px solid #edf1ef;
+
+            background: #fbfcfb;
+
+            color: #66766f;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 750px) {
+
+            .report-summary {
+                grid-template-columns: 1fr;
+            }
+
+
+            .reports-toolbar {
+                align-items: stretch;
+            }
+
+
+            .report-search,
+            .report-filter {
+                width: 100%;
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .staff-header-inner {
+                align-items: flex-start;
+            }
+
+
+            .staff-brand img {
+                width: 44px;
+                height: 44px;
+            }
+
+
+            .staff-brand-text strong {
+                font-size: 15px;
+            }
+
+
+            .staff-brand-text span {
+                font-size: 11px;
+            }
+
+
+            .staff-logout {
+                padding: 8px 11px;
+
+                font-size: 12px;
+            }
+
+
+            .staff-container {
+                padding-top: 30px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="staff-page">
+
+
+    <!-- =====================================================
+         STAFF HEADER
+    ====================================================== -->
+
+    <header class="staff-header">
+
+        <div class="staff-header-inner">
+
+
+            <a
+                href="staff-dashboard.html"
+                class="staff-brand"
+            >
+
+                <img
+                    src="../images/logo.png"
+                    alt="Kenbridge Christian School Logo"
+                >
+
+                <div class="staff-brand-text">
+
+                    <strong>
+                        Kenbridge Christian School
+                    </strong>
+
+                    <span>
+                        Staff Portal
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <a
+                href="login.html"
+                class="staff-logout"
+            >
+                Logout
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="staff-container">
+
+
+        <div class="staff-page-heading">
+
+            <small>
+                STAFF PORTAL
+            </small>
+
+            <h1>
+                Student Reports
+            </h1>
+
+            <p>
+                View and manage academic report
+                records for learners.
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             SUMMARY
+        ================================================== -->
+
+        <section class="report-summary">
+
+
+            <div class="summary-card">
+
+                <span>
+                    Total Reports
+                </span>
+
+                <strong id="totalReports">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <span>
+                    Published
+                </span>
+
+                <strong id="publishedReports">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <span>
+                    Pending
+                </span>
+
+                <strong id="pendingReports">
+                    0
+                </strong>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================================
+             SEARCH / FILTER
+        ================================================== -->
+
+        <div class="reports-toolbar">
+
+
+            <input
+                type="search"
+                id="reportSearch"
+                class="report-search"
+                placeholder="Search student or admission number..."
+                aria-label="Search reports"
+            >
+
+
+            <select
+                id="reportTerm"
+                class="report-filter"
+                aria-label="Filter reports by term"
+            >
+
+                <option value="all">
+                    All Terms
+                </option>
+
+                <option value="Term 1">
+                    Term 1
+                </option>
+
+                <option value="Term 2">
+                    Term 2
+                </option>
+
+                <option value="Term 3">
+                    Term 3
+                </option>
+
+            </select>
+
+
+        </div>
+
+
+        <!-- =================================================
+             REPORT TABLE
+        ================================================== -->
+
+        <section class="reports-card">
+
+
+            <div class="reports-table-wrap">
+
+                <table class="reports-table">
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Admission No.
+                            </th>
+
+                            <th>
+                                Student Name
+                            </th>
+
+                            <th>
+                                Class
+                            </th>
+
+                            <th>
+                                Term
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="reportsTableBody">
+
+
+                        <tr>
+
+                            <td>
+                                KCS-001
+                            </td>
+
+                            <td class="student-name">
+                                Sample Student
+                            </td>
+
+                            <td>
+                                Primary 5
+                            </td>
+
+                            <td>
+                                Term 1
+                            </td>
+
+                            <td>
+
+                                <span class="report-status">
+                                    Published
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <div class="report-actions">
+
+                                    <button
+                                        type="button"
+                                        class="report-button"
+                                    >
+                                        View
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="report-button"
+                                    >
+                                        Download
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div class="reports-note">
+
+                <strong>
+                    Staff note:
+                </strong>
+
+                Report records are currently sample
+                front-end data. They will be connected
+                to the secure student database and
+                authenticated staff system when the
+                backend is implemented.
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+</div>
+
+
+<!-- =========================================================
+     REPORT PAGE SCRIPT
+========================================================= -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const search =
+            document.getElementById(
+                "reportSearch"
+            );
+
+
+        const term =
+            document.getElementById(
+                "reportTerm"
+            );
+
+
+        const tableBody =
+            document.getElementById(
+                "reportsTableBody"
+            );
+
+
+        const total =
+            document.getElementById(
+                "totalReports"
+            );
+
+
+        const published =
+            document.getElementById(
+                "publishedReports"
+            );
+
+
+        const pending =
+            document.getElementById(
+                "pendingReports"
+            );
+
+
+        function updateReports() {
+
+            if (!tableBody) return;
+
+
+            const rows =
+                tableBody.querySelectorAll(
+                    "tr"
+                );
+
+
+            let visible = 0;
+
+            let publishedCount = 0;
+
+            let pendingCount = 0;
+
+
+            const query =
+                search
+                    ? search.value
+                        .toLowerCase()
+                        .trim()
+                    : "";
+
+
+            const selectedTerm =
+                term
+                    ? term.value
+                    : "all";
+
+
+            rows.forEach(
+                function (row) {
+
+                    const text =
+                        row.textContent
+                            .toLowerCase();
+
+
+                    const matchesSearch =
+                        text.includes(query);
+
+
+                    const rowTerm =
+                        row.children[3]
+                            ?.textContent
+                            .trim();
+
+
+                    const matchesTerm =
+                        selectedTerm === "all" ||
+                        rowTerm === selectedTerm;
+
+
+                    const show =
+                        matchesSearch &&
+                        matchesTerm;
+
+
+                    row.style.display =
+                        show ? "" : "none";
+
+
+                    if (show) {
+
+                        visible++;
+
+
+                        const status =
+                            row.children[4]
+                                ?.textContent
+                                .toLowerCase();
+
+
+                        if (
+                            status &&
+                            status.includes("published")
+                        ) {
+                            publishedCount++;
+                        }
+
+
+                        if (
+                            status &&
+                            status.includes("pending")
+                        ) {
+                            pendingCount++;
+                        }
+
+                    }
+
+                }
+            );
+
+
+            if (total) {
+                total.textContent = visible;
+            }
+
+
+            if (published) {
+                published.textContent =
+                    publishedCount;
+            }
+
+
+            if (pending) {
+                pending.textContent =
+                    pendingCount;
+            }
+
+        }
+
+
+        search?.addEventListener(
+            "input",
+            updateReports
+        );
+
+
+        term?.addEventListener(
+            "change",
+            updateReports
+        );
+
+
+        updateReports();
+
+
+        document
+            .querySelectorAll(".report-button")
+            .forEach(
+                function (button) {
+
+                    button.addEventListener(
+                        "click",
+                        function () {
+
+                            alert(
+                                "Report management will be connected to the secure staff system in the next stage."
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+    }
+);
+
+</script>
+
+
+</body>
+
+      </html>
