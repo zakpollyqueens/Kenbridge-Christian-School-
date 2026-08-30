@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Upload Centre | Kenbridge Christian School
+    </title>
+
+    <meta
+        name="description"
+        content="Staff document upload centre for Kenbridge Christian School."
+    >
+
+    <meta
+        name="theme-color"
+        content="#08783f"
+    >
+
+    <style>
+
+        /* =====================================================
+           RESET
+        ===================================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f4f8f5;
+
+            color: #29463a;
+        }
+
+
+        a {
+            text-decoration: none;
+        }
+
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .staff-header {
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1000;
+
+            background: #08783f;
+
+            color: #ffffff;
+
+            box-shadow:
+                0 4px 18px
+                rgba(0, 0, 0, .14);
+        }
+
+
+        .staff-header-inner {
+            width: min(1200px, 94%);
+
+            min-height: 70px;
+
+            margin: auto;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+        }
+
+
+        .staff-brand {
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+
+            color: #ffffff;
+
+            min-width: 0;
+        }
+
+
+        .staff-brand img {
+            width: 46px;
+
+            height: 46px;
+
+            object-fit: contain;
+
+            padding: 5px;
+
+            background: #ffffff;
+
+            border-radius: 50%;
+        }
+
+
+        .staff-brand strong {
+            display: block;
+
+            font-size: 15px;
+
+            white-space: nowrap;
+        }
+
+
+        .staff-brand span {
+            display: block;
+
+            margin-top: 3px;
+
+            font-size: 11px;
+
+            opacity: .85;
+        }
+
+
+
+        /* =====================================================
+           HEADER BUTTONS
+        ===================================================== */
+
+        .staff-header-actions {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+        }
+
+
+        .staff-home {
+            padding: 9px 13px;
+
+            border: 1px solid
+                rgba(255,255,255,.5);
+
+            border-radius: 8px;
+
+            color: #ffffff;
+
+            font-size: 12px;
+
+            font-weight: 800;
+        }
+
+
+        .staff-menu-button {
+            width: 44px;
+
+            height: 44px;
+
+            border: 1px solid
+                rgba(255,255,255,.5);
+
+            border-radius: 9px;
+
+            background: transparent;
+
+            cursor: pointer;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 5px;
+        }
+
+
+        .staff-menu-button span {
+            width: 21px;
+
+            height: 2px;
+
+            background: #ffffff;
+
+            border-radius: 2px;
+
+            transition: .25s;
+        }
+
+
+        .staff-menu-button.open
+        span:nth-child(1) {
+            transform:
+                translateY(7px)
+                rotate(45deg);
+        }
+
+
+        .staff-menu-button.open
+        span:nth-child(2) {
+            opacity: 0;
+        }
+
+
+        .staff-menu-button.open
+        span:nth-child(3) {
+            transform:
+                translateY(-7px)
+                rotate(-45deg);
+        }
+
+
+
+        /* =====================================================
+           STAFF MENU
+        ===================================================== */
+
+        .staff-menu {
+            position: absolute;
+
+            top: 70px;
+
+            right: 3%;
+
+            width: 300px;
+
+            max-height:
+                calc(100vh - 85px);
+
+            overflow-y: auto;
+
+            display: none;
+
+            padding: 12px;
+
+            background: #ffffff;
+
+            border-radius:
+                0 0 14px 14px;
+
+            box-shadow:
+                0 12px 30px
+                rgba(0,0,0,.18);
+        }
+
+
+        .staff-menu.show {
+            display: block;
+        }
+
+
+        .staff-menu-title {
+            padding: 10px 12px;
+
+            color: #08783f;
+
+            font-size: 12px;
+
+            font-weight: 900;
+
+            letter-spacing: 1px;
+        }
+
+
+        .staff-menu a {
+            display: block;
+
+            padding: 11px 12px;
+
+            border-radius: 8px;
+
+            color: #29463a;
+
+            font-size: 14px;
+
+            font-weight: 700;
+        }
+
+
+        .staff-menu a:hover,
+        .staff-menu a.active {
+            background: #eef6f1;
+
+            color: #08783f;
+        }
+
+
+        .menu-divider {
+            height: 1px;
+
+            background: #e5ebe7;
+
+            margin: 8px 0;
+        }
+
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .upload-container {
+            width: min(1050px, 92%);
+
+            margin: auto;
+
+            padding:
+                38px 0 40px;
+        }
+
+
+        .page-heading {
+            margin-bottom: 25px;
+        }
+
+
+        .page-heading small {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #08783f;
+
+            font-size: 12px;
+
+            font-weight: 900;
+
+            letter-spacing: 1.5px;
+        }
+
+
+        .page-heading h1 {
+            margin: 0 0 8px;
+
+            color: #173a2c;
+
+            font-size:
+                clamp(28px, 5vw, 40px);
+        }
+
+
+        .page-heading p {
+            margin: 0;
+
+            color: #68776f;
+
+            line-height: 1.6;
+        }
+
+
+
+        /* =====================================================
+           UPLOAD CARD
+        ===================================================== */
+
+        .upload-card {
+            background: #ffffff;
+
+            border:
+                1px solid #dfe8e2;
+
+            border-radius: 16px;
+
+            padding: 27px;
+
+            box-shadow:
+                0 8px 28px
+                rgba(0,0,0,.06);
+        }
+
+
+
+        /* =====================================================
+           FILE DROP AREA
+        ===================================================== */
+
+        .drop-zone {
+            position: relative;
+
+            border:
+                2px dashed #9dbbad;
+
+            border-radius: 14px;
+
+            padding: 38px 20px;
+
+            text-align: center;
+
+            background: #f9fcfa;
+
+            cursor: pointer;
+
+            transition:
+                border-color .2s,
+                background .2s;
+        }
+
+
+        .drop-zone:hover,
+        .drop-zone.dragover {
+            border-color: #08783f;
+
+            background: #eef8f1;
+        }
+
+
+        .upload-icon {
+            font-size: 45px;
+
+            margin-bottom: 9px;
+        }
+
+
+        .drop-zone h2 {
+            margin:
+                0 0 7px;
+
+            color: #173a2c;
+
+            font-size: 21px;
+        }
+
+
+        .drop-zone p {
+            margin:
+                0 0 15px;
+
+            color: #718079;
+
+            font-size: 13px;
+        }
+
+
+        .choose-file {
+            display: inline-block;
+
+            padding: 11px 17px;
+
+            border-radius: 8px;
+
+            background: #08783f;
+
+            color: #ffffff;
+
+            font-size: 13px;
+
+            font-weight: 800;
+        }
+
+
+        #fileInput {
+            display: none;
+        }
+
+
+
+        /* =====================================================
+           SELECTED FILE
+        ===================================================== */
+
+        .selected-file {
+            display: none;
+
+            margin-top: 15px;
+
+            padding: 13px 15px;
+
+            border-radius: 9px;
+
+            background: #eef6f1;
+
+            border: 1px solid #d5e7db;
+        }
+
+
+        .selected-file.show {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 10px;
+        }
+
+
+        .selected-file strong {
+            color: #08783f;
+
+            word-break: break-word;
+        }
+
+
+        .remove-file {
+            border: none;
+
+            background: transparent;
+
+            color: #a62929;
+
+            cursor: pointer;
+
+            font-weight: 800;
+        }
+
+
+
+        /* =====================================================
+           FORM
+        ===================================================== */
+
+        .upload-form {
+            margin-top: 25px;
+        }
+
+
+        .form-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 18px;
+        }
+
+
+        .form-group {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+
+        .form-group label {
+            color: #29463a;
+
+            font-size: 13px;
+
+            font-weight: 800;
+        }
+
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+
+            width: 100%;
+
+            padding: 12px 13px;
+
+            border:
+                1px solid #d2ded7;
+
+            border-radius: 8px;
+
+            background: #ffffff;
+
+            color: #29463a;
+
+            outline: none;
+        }
+
+
+        .form-group textarea {
+            min-height: 115px;
+
+            resize: vertical;
+        }
+
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+
+            border-color: #08783f;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(8,120,63,.10);
+        }
+
+
+        .required {
+            color: #a62929;
+        }
+
+
+
+        /* =====================================================
+           PRIVATE RECORD NOTICE
+        ===================================================== */
+
+        .privacy-notice {
+            margin-top: 20px;
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            background: #fffdf4;
+
+            border:
+                1px solid #eee4bd;
+
+            color: #6d623b;
+
+            font-size: 12px;
+
+            line-height: 1.6;
+        }
+
+
+
+        /* =====================================================
+           SUBMIT
+        ===================================================== */
+
+        .submit-row {
+            display: flex;
+
+            justify-content: flex-end;
+
+            margin-top: 22px;
+        }
+
+
+        .upload-button {
+            border: none;
+
+            padding:
+                13px 22px;
+
+            border-radius: 9px;
+
+            background: #08783f;
+
+            color: #ffffff;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            font-weight: 900;
+        }
+
+
+        .upload-button:hover {
+            filter: brightness(.94);
+        }
+
+
+        .upload-button:disabled {
+            opacity: .6;
+
+            cursor: not-allowed;
+        }
+
+
+
+        /* =====================================================
+           RESULT MESSAGE
+        ===================================================== */
+
+        .upload-result {
+            display: none;
+
+            margin-top: 18px;
+
+            padding: 14px;
+
+            border-radius: 9px;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
+
+        .upload-result.show {
+            display: block;
+        }
+
+
+        .upload-result.success {
+            background: #e9f7ee;
+
+            color: #08783f;
+
+            border:
+                1px solid #cce8d5;
+        }
+
+
+        .upload-result.error {
+            background: #fbeaea;
+
+            color: #a62929;
+
+            border:
+                1px solid #efcccc;
+        }
+
+
+
+        /* =====================================================
+           SUPPORTED FILES
+        ===================================================== */
+
+        .supported-section {
+            margin-top: 25px;
+        }
+
+
+        .supported-section h2 {
+            margin:
+                0 0 15px;
+
+            color: #173a2c;
+
+            font-size: 20px;
+        }
+
+
+        .file-types {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 13px;
+        }
+
+
+        .file-type {
+            padding: 17px;
+
+            background: #ffffff;
+
+            border:
+                1px solid #e1e8e4;
+
+            border-radius: 12px;
+        }
+
+
+        .file-type-icon {
+            font-size: 25px;
+
+            margin-bottom: 7px;
+        }
+
+
+        .file-type strong {
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: #173a2c;
+
+            font-size: 14px;
+        }
+
+
+        .file-type span {
+            color: #718079;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+        }
+
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .portal-footer {
+            margin-top: 20px;
+
+            padding: 16px 15px;
+
+            text-align: center;
+
+            background: #08783f;
+
+            color: #ffffff;
+
+            font-size: 12px;
+
+            line-height: 1.6;
+        }
+
+
+        .portal-footer p {
+            margin: 2px 0;
+        }
+
+
+        .portal-footer strong {
+            color: #f28c28;
+        }
+
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 700px) {
+
+            .staff-header-inner {
+                min-height: 64px;
+            }
+
+
+            .staff-brand img {
+                width: 40px;
+
+                height: 40px;
+            }
+
+
+            .staff-brand strong {
+                font-size: 13px;
+            }
+
+
+            .staff-brand span {
+                font-size: 10px;
+            }
+
+
+            .staff-home {
+                display: none;
+            }
+
+
+            .staff-menu {
+                top: 64px;
+
+                right: 0;
+
+                width:
+                    min(310px, 88vw);
+
+                border-radius:
+                    0 0 0 14px;
+            }
+
+
+            .upload-container {
+                width:
+                    calc(100% - 28px);
+
+                padding-top: 27px;
+            }
+
+
+            .upload-card {
+                padding:
+                    20px 15px;
+            }
+
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+
+            .file-types {
+                grid-template-columns: 1fr;
+            }
+
+
+            .submit-row {
+                justify-content: stretch;
+            }
+
+
+            .upload-button {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================== -->
+
+<header class="staff-header">
+
+    <div class="staff-header-inner">
+
+
+        <a
+            href="staff-dashboard.html"
+            class="staff-brand"
+        >
+
+            <img
+                src="images/logo.png"
+                alt="Kenbridge Christian School Logo"
+            >
+
+            <div>
+
+                <strong>
+                    Kenbridge Christian School
+                </strong>
+
+                <span>
+                    Staff Portal
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <div class="staff-header-actions">
+
+            <a
+                href="staff-dashboard.html"
+                class="staff-home"
+            >
+                Dashboard
+            </a>
+
+
+            <button
+                type="button"
+                class="staff-menu-button"
+                id="staffMenuButton"
+                aria-label="Open Staff Portal Menu"
+                aria-expanded="false"
+                aria-controls="staffMenu"
+            >
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         STAFF MENU
+    ====================================================== -->
+
+    <nav
+        class="staff-menu"
+        id="staffMenu"
+    >
+
+        <div class="staff-menu-title">
+            STAFF PORTAL MENU
+        </div>
+
+
+        <a href="staff-dashboard.html">
+            🏠 Dashboard
+        </a>
+
+
+        <a href="announcements.html">
+            📢 Announcements
+        </a>
+
+
+        <a href="articles.html">
+            📰 Articles
+        </a>
+
+
+        <a
+            href="uploads.html"
+            class="active"
+        >
+            📤 Upload Documents
+        </a>
+
+
+        <a href="attendance.html">
+            🧑‍🎓 Attendance
+        </a>
+
+
+        <a href="calendar.html">
+            📅 Calendar
+        </a>
+
+
+        <a href="files.html">
+            📁 Files
+        </a>
+
+
+        <a href="messages.html">
+            💬 Messages
+        </a>
+
+
+        <a href="reports.html">
+            📊 Reports
+        </a>
+
+
+        <a href="students.html">
+            👨‍🎓 Students
+        </a>
+
+
+        <a href="tasks.html">
+            ✅ Tasks
+        </a>
+
+
+        <div class="menu-divider"></div>
+
+
+        <a href="profile.html">
+            👤 My Profile
+        </a>
+
+
+        <a href="login.html">
+            🚪 Log Out
+        </a>
+
+    </nav>
+
+</header>
+
+
+
+<!-- =========================================================
+     MAIN
+========================================================== -->
+
+<main class="upload-container">
+
+
+    <section class="page-heading">
+
+        <small>
+            STAFF PORTAL
+        </small>
+
+        <h1>
+            Upload Centre
+        </h1>
+
+        <p>
+            Upload student records, reports,
+            articles, announcements and other
+            school documents.
+        </p>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         UPLOAD CARD
+    ====================================================== -->
+
+    <section class="upload-card">
+
+
+        <!-- =================================================
+             FILE DROP
+        ================================================== -->
+
+        <div
+            class="drop-zone"
+            id="dropZone"
+        >
+
+            <div class="upload-icon">
+                📤
+            </div>
+
+
+            <h2>
+                Select Your Document
+            </h2>
+
+
+            <p>
+                Drag and drop a file here,
+                or choose one from your device.
+            </p>
+
+
+            <label
+                for="fileInput"
+                class="choose-file"
+            >
+                Choose File
+            </label>
+
+
+            <input
+                type="file"
+                id="fileInput"
+                accept=".xlsx,.xls,.csv,.doc,.docx,.pdf,.ppt,.pptx,.txt,.jpg,.jpeg,.png"
+            >
+
+        </div>
+
+
+
+        <!-- =================================================
+             SELECTED FILE
+        ================================================== -->
+
+        <div
+            class="selected-file"
+            id="selectedFile"
+        >
+
+            <strong id="fileName">
+                No file selected
+           
