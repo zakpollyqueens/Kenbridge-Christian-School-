@@ -455,24 +455,16 @@ function createMobileMenuFooter() {
 
 
     const links = [
-
-        ["About", "page/about.html"],
-
-        ["Academics", "page/academics.html"],
-
-        ["Admissions", "page/admissions.html"],
-
-        ["Boarding", "page/boarding.html"],
-
-        ["Gallery", "page/gallery.html"],
-
-        ["Sports", "page/sports.html"],
-
-        ["Contact", "page/contact.html"],
-
-        ["Feedback", "page/feedback.html"]
-
-    ];
+    ["About", "page/about.html"],
+    ["Academics", "page/academics.html"],
+    ["Admissions", "page/admissions.html"],
+    ["Boarding", "page/boarding.html"],
+    ["Gallery", "page/gallery.html"],
+    ["Sports", "page/sports.html"],
+    ["Contact", "page/contact.html"],
+    ["Feedback", "page/feedback.html"],
+    ["🔐 Staff Login", "staff/login.html"]
+];
 
 
     footer.innerHTML = `
