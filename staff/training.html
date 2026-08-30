@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Training | Kenbridge Staff Portal</title>
+<meta name="description" content="Staff training and professional development for Kenbridge Christian School.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.staff-page{min-height:100vh;background:#f4f8f5}
+.staff-header{background:#08783f;color:#fff;padding:18px 0}
+.staff-header-inner{width:min(1150px,92%);margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.staff-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}
+.staff-brand img{width:48px;height:48px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}
+.staff-brand strong{display:block;font-size:17px}
+.staff-brand span{display:block;font-size:12px;opacity:.85;margin-top:3px}
+.staff-logout{padding:10px 15px;border:1px solid rgba(255,255,255,.5);border-radius:8px;color:#fff;text-decoration:none;font-size:13px;font-weight:700}
+.staff-logout:hover{background:rgba(255,255,255,.12)}
+.staff-container{width:min(1100px,92%);margin:auto;padding:40px 0 60px}
+.staff-heading{margin-bottom:25px}
+.staff-heading small{display:block;color:#08783f;font-size:12px;font-weight:800;letter-spacing:1.5px;margin-bottom:7px}
+.staff-heading h1{margin:0 0 7px;color:#173a2c;font-size:clamp(28px,4vw,40px)}
+.staff-heading p{margin:0;color:#68776f;line-height:1.6}
+.staff-nav{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:25px}
+.staff-nav a{padding:10px 14px;border:1px solid #dce5e0;border-radius:8px;background:#fff;color:#315244;text-decoration:none;font-size:13px;font-weight:700}
+.staff-nav a:hover,.staff-nav a.active{background:#08783f;border-color:#08783f;color:#fff}
+.training-card{background:#fff;border:1px solid #e1e8e4;border-radius:14px;padding:25px;box-shadow:0 8px 25px rgba(0,0,0,.05);margin-bottom:22px}
+.training-card h2{margin:0 0 7px;color:#173a2c}
+.training-card>p{margin:0 0 20px;color:#718079;line-height:1.6}
+.training-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.training-item{padding:20px;border:1px solid #e1e8e4;border-radius:12px;background:#f9fcfa}
+.training-icon{font-size:25px;margin-bottom:10px}
+.training-item h3{margin:0 0 7px;color:#173a2c}
+.training-item p{margin:0;color:#68776f;font-size:13px;line-height:1.6}
+.training-meta{margin-top:12px;font-size:12px;color:#08783f;font-weight:800}
+.training-status{display:inline-block;margin-top:12px;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:800}
+.training-status.upcoming{background:#fff1d9;color:#956400}
+.training-status.completed{background:#e8f5ed;color:#08783f}
+.training-status.progress{background:#eaf1ff;color:#315da8}
+.training-table-wrap{width:100%;overflow-x:auto}
+.training-table{width:100%;min-width:650px;border-collapse:collapse}
+.training-table th,.training-table td{padding:13px;text-align:left;border-bottom:1px solid #e6ece8}
+.training-table th{background:#eef6f1;color:#164d32;font-size:13px}
+.training-table td{font-size:14px;color:#52635b}
+.training-notice{padding:17px;border-radius:10px;background:#fffdf4;border:1px solid #eee4bd;color:#6d623b;font-size:13px;line-height:1.7}
+@media(max-width:700px){.training-grid{grid-template-columns:1fr}}
+@media(max-width:650px){
+.staff-header-inner{align-items:flex-start}
+.staff-brand img{width:42px;height:42px}
+.staff-brand strong{font-size:14px}
+.staff-brand span{font-size:10px}
+.staff-logout{padding:8px 11px;font-size:12px}
+.staff-container{padding-top:30px}
+.training-card{padding:20px 16px}
+}
+</style>
+</head>
+<body>
+<div class="staff-page">
+<header class="staff-header">
+<div class="staff-header-inner">
+<a href="staff-dashboard.html" class="staff-brand">
+<img src="../images/logo.png" alt="Kenbridge Christian School Logo">
+<div>
+<strong>Kenbridge Christian School</strong>
+<span>Staff Portal</span>
+</div>
+</a>
+<a href="login.html" class="staff-logout" id="logoutButton">Log Out</a>
+</div>
+</header>
+
+<main class="staff-container">
+<div class="staff-heading">
+<small>STAFF PORTAL</small>
+<h1>Training & Development</h1>
+<p>View professional development opportunities, training sessions and completed training.</p>
+</div>
+
+<nav class="staff-nav">
+<a href="staff-dashboard.html">Dashboard</a>
+<a href="students.html">Students</a>
+<a href="attendance.html">Attendance</a>
+<a href="announcements.html">Announcements</a>
+<a href="articles.html">Articles</a>
+<a href="reports.html">Reports</a>
+<a href="files.html">Files</a>
+<a href="calendar.html">Calendar</a>
+<a href="messages.html">Messages</a>
+<a href="tasks.html">Tasks</a>
+<a href="leave.html">Leave</a>
+<a href="payroll.html">Payroll</a>
+<a href="training.html" class="active">Training</a>
+<a href="profile.html">My Profile</a>
+</nav>
+
+<section class="training-card">
+<h2>Training Opportunities</h2>
+<p>Training programs and professional development activities will appear here.</p>
+
+<div class="training-grid">
+<article class="training-item">
+<div class="training-icon">📚</div>
+<h3>Teaching Methods</h3>
+<p>Professional development focused on effective classroom teaching and learner engagement.</p>
+<div class="training-meta">Training Date: To Be Announced</div>
+<span class="training-status upcoming">Upcoming</span>
+</article>
+
+<article class="training-item">
+<div class="training-icon">💻</div>
+<h3>Digital Skills</h3>
+<p>Training designed to improve the use of computers and digital tools in school activities.</p>
+<div class="training-meta">Training Date: To Be Announced</div>
+<span class="training-status upcoming">Upcoming</span>
+</article>
+
+<article class="training-item">
+<div class="training-icon">🛡️</div>
+<h3>Child Protection</h3>
+<p>Staff development covering learner safety, safeguarding and responsible school practices.</p>
+<div class="training-meta">Training Date: To Be Announced</div>
+<span class="training-status upcoming">Upcoming</span>
+</article>
+
+<article class="training-item">
+<div class="training-icon">✝️</div>
+<h3>Christian Education</h3>
+<p>Professional development supporting Christian values and faith-based education.</p>
+<div class="training-meta">Training Date: To Be Announced</div>
+<span class="training-status upcoming">Upcoming</span>
+</article>
+</div>
+</section>
+
+<section class="training-card">
+<h2>My Training History</h2>
+<p>Completed staff training and certificates will be displayed here.</p>
+
+<div class="training-table-wrap">
+<table class="training-table">
+<thead>
+<tr>
+<th>Training</th>
+<th>Date</th>
+<th>Provider</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="trainingHistory">
+<tr>
+<td colspan="4">No completed training records are available yet.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="training-card">
+<h2>Certificates</h2>
+<p>Certificates and professional development documents can be connected here when the backend and file storage are available.</p>
+
+<div class="training-notice">
+<strong>Backend preparation:</strong> When the backend is connected, administrators can create training programs, enroll staff members, record completion and make certificates available securely to authorized staff.
+</div>
+</section>
+</main>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+document.getElementById("logoutButton").addEventListener("click",function(){
+sessionStorage.removeItem("kenbridgeStaffLoggedIn");
+});
+});
+</script>
+</body>
+  </html>
