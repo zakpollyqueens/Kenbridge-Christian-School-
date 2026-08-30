@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Add Staff | Kenbridge Administrator</title>
+
+    <meta
+        name="description"
+        content="Add a new staff account to the Kenbridge Christian School staff portal."
+    >
+
+    <meta
+        name="theme-color"
+        content="#08783f"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../../css/style.css"
+    >
+
+    <style>
+
+        /* =====================================================
+           ADD STAFF PAGE
+        ===================================================== */
+
+        .admin-page {
+            min-height: 100vh;
+            background: #f5f7f6;
+        }
+
+
+        /* =====================================================
+           ADMIN HEADER
+        ===================================================== */
+
+        .admin-header {
+            background: #08783f;
+            color: #ffffff;
+            padding: 18px 0;
+        }
+
+
+        .admin-header-inner {
+            width: min(1200px, 92%);
+            margin: 0 auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+
+        .admin-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+
+        .admin-brand img {
+            width: 52px;
+            height: 52px;
+
+            object-fit: contain;
+
+            background: #ffffff;
+            border-radius: 50%;
+            padding: 5px;
+        }
+
+
+        .admin-brand-text strong {
+            display: block;
+            font-size: 18px;
+        }
+
+
+        .admin-brand-text span {
+            display: block;
+
+            margin-top: 3px;
+
+            font-size: 12px;
+
+            opacity: .85;
+        }
+
+
+        .admin-logout {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 10px 16px;
+
+            border: 1px solid rgba(255,255,255,.5);
+
+            border-radius: 8px;
+
+            color: #ffffff;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+
+        .admin-logout:hover {
+            background: rgba(255,255,255,.12);
+        }
+
+
+        /* =====================================================
+           MAIN CONTAINER
+        ===================================================== */
+
+        .admin-container {
+            width: min(1000px, 92%);
+
+            margin: 0 auto;
+
+            padding: 40px 0 60px;
+        }
+
+
+        /* =====================================================
+           PAGE HEADING
+        ===================================================== */
+
+        .admin-heading {
+            margin-bottom: 28px;
+        }
+
+
+        .admin-heading small {
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #08783f;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            letter-spacing: 1.5px;
+        }
+
+
+        .admin-heading h1 {
+            margin: 0 0 8px;
+
+            color: #16352a;
+
+            font-size: clamp(28px, 4vw, 40px);
+        }
+
+
+        .admin-heading p {
+            margin: 0;
+
+            color: #64736c;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           ADMIN NAVIGATION
+        ===================================================== */
+
+        .admin-nav {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+            margin-bottom: 28px;
+        }
+
+
+        .admin-nav a {
+            display: inline-flex;
+
+            align-items: center;
+
+            padding: 10px 14px;
+
+            border-radius: 8px;
+
+            background: #ffffff;
+
+            border: 1px solid #dce5e0;
+
+            color: #315244;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+
+        .admin-nav a:hover,
+        .admin-nav a.active {
+            background: #08783f;
+
+            border-color: #08783f;
+
+            color: #ffffff;
+        }
+
+
+        /* =====================================================
+           FORM CARD
+        ===================================================== */
+
+        .staff-form-card {
+            background: #ffffff;
+
+            border: 1px solid #e1e8e4;
+
+            border-radius: 12px;
+
+            padding: 30px;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,.05);
+        }
+
+
+        .staff-form-card h2 {
+            margin: 0 0 8px;
+
+            color: #16352a;
+
+            font-size: 24px;
+        }
+
+
+        .staff-form-card-intro {
+            margin: 0 0 28px;
+
+            color: #64736c;
+
+            font-size: 14px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           FORM
+        ===================================================== */
+
+        .staff-form {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 20px;
+        }
+
+
+        .form-group {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+
+        .form-group label {
+            color: #315244;
+
+            font-size: 13px;
+
+            font-weight: 700;
+        }
+
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+
+            box-sizing: border-box;
+
+            padding: 13px 14px;
+
+            border: 1px solid #d8e0dc;
+
+            border-radius: 8px;
+
+            background: #ffffff;
+
+            color: #243b31;
+
+            font-size: 14px;
+        }
+
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+
+            border-color: #08783f;
+
+            box-shadow:
+                0 0 0 3px rgba(8,120,63,.10);
+        }
+
+
+        .form-help {
+            margin: 0;
+
+            color: #7a8982;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =====================================================
+           PASSWORD AREA
+        ===================================================== */
+
+        .password-wrapper {
+            position: relative;
+        }
+
+
+        .password-wrapper input {
+            padding-right: 90px;
+        }
+
+
+        .show-password {
+            position: absolute;
+
+            right: 8px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            border: none;
+
+            background: transparent;
+
+            color: #08783f;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+
+        /* =====================================================
+           PERMISSIONS
+        ===================================================== */
+
+        .permissions-box {
+            padding: 18px;
+
+            border: 1px solid #e1e8e4;
+
+            border-radius: 9px;
+
+            background: #f8faf9;
+        }
+
+
+        .permissions-title {
+            margin: 0 0 12px;
+
+            color: #315244;
+
+            font-size: 13px;
+
+            font-weight: 700;
+        }
+
+
+        .permission-list {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 10px;
+        }
+
+
+        .permission-item {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: #52635b;
+
+            font-size: 13px;
+        }
+
+
+        .permission-item input {
+            width: 16px;
+            height: 16px;
+
+            accent-color: #08783f;
+        }
+
+
+        /* =====================================================
+           FORM BUTTONS
+        ===================================================== */
+
+        .form-buttons {
+            grid-column: 1 / -1;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin-top: 8px;
+
+            padding-top: 20px;
+
+            border-top: 1px solid #edf1ef;
+        }
+
+
+        .save-staff-button,
+        .cancel-staff-button {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 12px 18px;
+
+            border-radius: 8px;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            text-decoration: none;
+        }
+
+
+        .save-staff-button {
+            border: none;
+
+            background: #08783f;
+
+            color: #ffffff;
+        }
+
+
+        .save-staff-button:hover {
+            opacity: .9;
+        }
+
+
+        .cancel-staff-button {
+            border: 1px solid #d7e0db;
+
+            background: #ffffff;
+
+            color: #315244;
+        }
+
+
+        .cancel-staff-button:hover {
+            border-color: #08783f;
+
+            color: #08783f;
+        }
+
+
+        /* =====================================================
+           SECURITY NOTICE
+        ===================================================== */
+
+        .security-note {
+            margin-top: 22px;
+
+            padding: 20px;
+
+            border-radius: 10px;
+
+            background: #fffdf4;
+
+            border: 1px solid #eee4bd;
+
+            color: #6d623b;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+
+        .security-note strong {
+            color: #4e4528;
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 700px) {
+
+            .admin-header-inner {
+                align-items: flex-start;
+            }
+
+
+            .admin-brand img {
+                width: 44px;
+                height: 44px;
+            }
+
+
+            .admin-brand-text strong {
+                font-size: 15px;
+            }
+
+
+            .admin-brand-text span {
+                font-size: 11px;
+            }
+
+
+            .admin-logout {
+                padding: 8px 11px;
+
+                font-size: 12px;
+            }
+
+
+            .admin-container {
+                padding-top: 30px;
+            }
+
+
+            .staff-form-card {
+                padding: 22px 18px;
+            }
+
+
+            .staff-form {
+                grid-template-columns: 1fr;
+            }
+
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+
+            .permission-list {
+                grid-template-columns: 1fr;
+            }
+
+
+            .form-buttons {
+                grid-column: auto;
+
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+
+            .save-staff-button,
+            .cancel-staff-button {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="admin-page">
+
+
+    <!-- =====================================================
+         ADMIN HEADER
+    ====================================================== -->
+
+    <header class="admin-header">
+
+        <div class="admin-header-inner">
+
+
+            <a
+                href="../staff-dashboard.html"
+                class="admin-brand"
+            >
+
+                <img
+                    src="../../images/logo.png"
+                    alt="Kenbridge Christian School Logo"
+                >
+
+
+                <div class="admin-brand-text">
+
+                    <strong>
+                        Kenbridge Christian School
+                    </strong>
+
+                    <span>
+                        Administrator Portal
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <a
+                href="../login.html"
+                class="admin-logout"
+            >
+                Logout
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="admin-container">
+
+
+        <!-- PAGE HEADING -->
+
+        <div class="admin-heading">
+
+            <small>
+                ADMINISTRATOR
+            </small>
+
+            <h1>
+                Add Staff Account
+            </h1>
+
+            <p>
+                Create an account for a teacher or
+                authorised member of the Kenbridge
+                Christian School staff.
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             ADMIN NAVIGATION
+        ================================================== -->
+
+        <nav class="admin-nav">
+
+            <a href="staff-accounts.html">
+                Staff Accounts
+            </a>
+
+            <a href="add-staff.html" class="active">
+                Add Staff
+            </a>
+
+            <a href="../students.html">
+                Students
+            </a>
+
+            <a href="../announcements.html">
+                Announcements
+            </a>
+
+            <a href="../profile.html">
+                My Profile
+            </a>
+
+        </nav>
+
+
+        <!-- =================================================
+             FORM CARD
+        ================================================== -->
+
+        <section class="staff-form-card">
+
+
+            <h2>
+                New Staff Member
+            </h2>
+
+
+            <p class="staff-form-card-intro">
+                Enter the details below. In the final
+                backend version, the account will be
+                securely created and the staff member
+                will be able to use these credentials
+                to access the staff portal.
+            </p>
+
+
+            <!-- =================================================
+                 STAFF FORM
+            ================================================== -->
+
+            <form
+                class="staff-form"
+                id="addStaffForm"
+            >
+
+
+                <!-- FULL NAME -->
+
+                <div class="form-group">
+
+                    <label for="staffName">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="staffName"
+                        name="staffName"
+                        placeholder="e.g. John Doe"
+                        autocomplete="name"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- USERNAME -->
+
+                <div class="form-group">
+
+                    <label for="staffUsername">
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        id="staffUsername"
+                        name="staffUsername"
+                        placeholder="e.g. john.doe"
+                        autocomplete="username"
+                        required
+                    >
+
+                    <p class="form-help">
+                        This will be used when the staff
+                        member logs in.
+                    </p>
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="staffEmail">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="staffEmail"
+                        name="staffEmail"
+                        placeholder="e.g. john@example.com"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- PHONE -->
+
+                <div class="form-group">
+
+                    <label for="staffPhone">
+                        Phone Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="staffPhone"
+                        name="staffPhone"
+                        placeholder="+256 7XX XXX XXX"
+                        autocomplete="tel"
+                    >
+
+                </div>
+
+
+                <!-- ROLE -->
+
+                <div class="form-group">
+
+                    <label for="staffRole">
+                        Staff Role
+                    </label>
+
+                    <select
+                        id="staffRole"
+                        name="staffRole"
+                        required
+                    >
+
+                        <option value="">
+                            Select staff role
+                        </option>
+
+                        <option value="Teacher">
+                            Teacher
+                        </option>
+
+                        <option value="Head Teacher">
+                            Head Teacher
+                        </option>
+
+                        <option value="Deputy Head Teacher">
+                            Deputy Head Teacher
+                        </option>
+
+                        <option value="Administrator">
+                            Administrator
+                        </option>
+
+                        <option value="Accountant">
+                            Accountant
+                        </option>
+
+                        <option value="Secretary">
+                            Secretary
+                        </option>
+
+                        <option value="Other Staff">
+                            Other Staff
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- DEPARTMENT -->
+
+                <div class="form-group">
+
+                    <label for="staffDepartment">
+                        Department
+                    </label>
+
+                    <select
+                        id="staffDepartment"
+                        name="staffDepartment"
+                    >
+
+                        <option value="">
+                            Select department
+                        </option>
+
+                        <option value="Administration">
+                            Administration
+                        </option>
+
+                        <option value="Academics">
+                            Academics
+                        </option>
+
+                        <option value="Finance">
+                            Finance
+                        </option>
+
+                        <option value="Sports">
+                            Sports
+                        </option>
+
+                        <option value="Boarding">
+                            Boarding
+                        </option>
+
+                        <option value="Support">
+                            Support
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="staffPassword">
+                        Temporary Password
+                    </label>
+
+                    <div class="password-wrapper">
+
+                        <input
+                            type="password"
+                            id="staffPassword"
+                            name="staffPassword"
+                            placeholder="Enter temporary password"
+                            autocomplete="new-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="show-password"
+                            id="showPassword"
+                        >
+                    
