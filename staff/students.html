@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Student Records | Kenbridge Staff Portal</title>
+
+    <meta
+        name="description"
+        content="Student records management for Kenbridge Christian School staff."
+    >
+
+    <meta
+        name="theme-color"
+        content="#08783f"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+
+    <style>
+
+        /* =====================================================
+           STAFF STUDENT RECORDS
+        ===================================================== */
+
+        .staff-page {
+            min-height: 100vh;
+            background: #f5f7f6;
+        }
+
+
+        /* =====================================================
+           STAFF HEADER
+        ===================================================== */
+
+        .staff-header {
+            background: #08783f;
+            color: #ffffff;
+            padding: 18px 0;
+        }
+
+
+        .staff-header-inner {
+            width: min(1200px, 92%);
+            margin: 0 auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+
+        .staff-brand {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+
+        .staff-brand img {
+            width: 52px;
+            height: 52px;
+
+            object-fit: contain;
+
+            background: #ffffff;
+
+            border-radius: 50%;
+
+            padding: 5px;
+        }
+
+
+        .staff-brand-text strong {
+            display: block;
+
+            font-size: 18px;
+        }
+
+
+        .staff-brand-text span {
+            display: block;
+
+            font-size: 12px;
+
+            opacity: .85;
+
+            margin-top: 3px;
+        }
+
+
+        .staff-logout {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 10px 16px;
+
+            border: 1px solid rgba(255,255,255,.5);
+
+            border-radius: 8px;
+
+            color: #ffffff;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+
+        .staff-logout:hover {
+            background: rgba(255,255,255,.12);
+        }
+
+
+        /* =====================================================
+           PAGE CONTAINER
+        ===================================================== */
+
+        .staff-container {
+            width: min(1200px, 92%);
+
+            margin: 0 auto;
+
+            padding: 40px 0 60px;
+        }
+
+
+        .staff-page-heading {
+            margin-bottom: 28px;
+        }
+
+
+        .staff-page-heading small {
+            display: block;
+
+            color: #08783f;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            letter-spacing: 1.5px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .staff-page-heading h1 {
+            margin: 0 0 8px;
+
+            color: #16352a;
+
+            font-size: clamp(28px, 4vw, 40px);
+        }
+
+
+        .staff-page-heading p {
+            margin: 0;
+
+            color: #64736c;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           ACTION BAR
+        ===================================================== */
+
+        .students-actions {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-bottom: 25px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .student-search {
+            flex: 1;
+
+            min-width: 240px;
+
+            padding: 13px 15px;
+
+            border: 1px solid #d8e0dc;
+
+            border-radius: 8px;
+
+            background: #ffffff;
+
+            font-size: 14px;
+        }
+
+
+        .student-search:focus {
+            outline: none;
+
+            border-color: #08783f;
+
+            box-shadow:
+                0 0 0 3px rgba(8,120,63,.10);
+        }
+
+
+        .add-student-button {
+            border: none;
+
+            background: #08783f;
+
+            color: #ffffff;
+
+            padding: 13px 18px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+
+        .add-student-button:hover {
+            opacity: .9;
+        }
+
+
+        /* =====================================================
+           STUDENT TABLE
+        ===================================================== */
+
+        .students-card {
+            background: #ffffff;
+
+            border: 1px solid #e1e8e4;
+
+            border-radius: 12px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,.05);
+        }
+
+
+        .students-table-wrap {
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+
+        .students-table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 760px;
+        }
+
+
+        .students-table th {
+            background: #f0f5f2;
+
+            color: #29463a;
+
+            text-align: left;
+
+            padding: 15px;
+
+            font-size: 13px;
+
+            white-space: nowrap;
+        }
+
+
+        .students-table td {
+            padding: 15px;
+
+            border-top: 1px solid #edf1ef;
+
+            color: #52635b;
+
+            font-size: 14px;
+        }
+
+
+        .students-table tbody tr:hover {
+            background: #fafcfb;
+        }
+
+
+        .student-name {
+            color: #173a2c;
+
+            font-weight: 700;
+        }
+
+
+        .student-status {
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            background: #e8f5ed;
+
+            color: #08783f;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+
+        .student-status.inactive {
+            background: #f4eaea;
+
+            color: #a33a3a;
+        }
+
+
+        .student-actions {
+            display: flex;
+
+            gap: 8px;
+        }
+
+
+        .student-action {
+            border: 1px solid #d7e0db;
+
+            background: #ffffff;
+
+            color: #315244;
+
+            padding: 7px 10px;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-size: 12px;
+        }
+
+
+        .student-action:hover {
+            border-color: #08783f;
+
+            color: #08783f;
+        }
+
+
+        .student-action.delete:hover {
+            border-color: #b83232;
+
+            color: #b83232;
+        }
+
+
+        /* =====================================================
+           EMPTY MESSAGE
+        ===================================================== */
+
+        .students-empty {
+            padding: 35px 20px;
+
+            text-align: center;
+
+            color: #718078;
+
+            display: none;
+        }
+
+
+        .students-empty strong {
+            display: block;
+
+            color: #29463a;
+
+            margin-bottom: 6px;
+        }
+
+
+        /* =====================================================
+           STAFF NOTE
+        ===================================================== */
+
+        .students-note {
+            padding: 22px;
+
+            border-top: 1px solid #edf1ef;
+
+            background: #fbfcfb;
+
+            color: #66766f;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           MODAL
+        ===================================================== */
+
+        .student-modal {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 9999;
+
+            display: none;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 20px;
+
+            background: rgba(0,0,0,.55);
+        }
+
+
+        .student-modal.show {
+            display: flex;
+        }
+
+
+        .student-modal-box {
+            width: min(650px, 100%);
+
+            max-height: 90vh;
+
+            overflow-y: auto;
+
+            background: #ffffff;
+
+            border-radius: 14px;
+
+            box-shadow:
+                0 20px 60px rgba(0,0,0,.25);
+
+            padding: 28px;
+        }
+
+
+        .student-modal-header {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .student-modal-header h2 {
+            margin: 0;
+
+            color: #16352a;
+
+            font-size: 24px;
+        }
+
+
+        .student-close {
+            width: 38px;
+
+            height: 38px;
+
+            border: none;
+
+            border-radius: 50%;
+
+            background: #eef3f0;
+
+            color: #29463a;
+
+            font-size: 24px;
+
+            cursor: pointer;
+        }
+
+
+        .student-close:hover {
+            background: #e1e9e5;
+        }
+
+
+        /* =====================================================
+           FORM
+        ===================================================== */
+
+        .student-form-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 18px;
+        }
+
+
+        .student-form-group {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+
+        .student-form-group.full {
+            grid-column: 1 / -1;
+        }
+
+
+        .student-form-group label {
+            color: #29463a;
+
+            font-size: 13px;
+
+            font-weight: 700;
+        }
+
+
+        .student-form-group input,
+        .student-form-group select,
+        .student-form-group textarea {
+            width: 100%;
+
+            box-sizing: border-box;
+
+            padding: 12px 13px;
+
+            border: 1px solid #d8e0dc;
+
+            border-radius: 8px;
+
+            background: #ffffff;
+
+            color: #263c32;
+
+            font-family: inherit;
+
+            font-size: 14px;
+        }
+
+
+        .student-form-group textarea {
+            min-height: 90px;
+
+            resize: vertical;
+        }
+
+
+        .student-form-group input:focus,
+        .student-form-group select:focus,
+        .student-form-group textarea:focus {
+            outline: none;
+
+            border-color: #08783f;
+
+            box-shadow:
+                0 0 0 3px rgba(8,120,63,.10);
+        }
+
+
+        .student-form-actions {
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 10px;
+
+            margin-top: 25px;
+        }
+
+
+        .form-button {
+            border: none;
+
+            padding: 11px 18px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+
+        .form-cancel {
+            background: #edf1ef;
+
+            color: #40564c;
+        }
+
+
+        .form-save {
+            background: #08783f;
+
+            color: #ffffff;
+        }
+
+
+        /* =====================================================
+           VIEW STUDENT
+        ===================================================== */
+
+        .student-details {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 15px;
+        }
+
+
+        .student-detail {
+            padding: 14px;
+
+            background: #f6f9f7;
+
+            border-radius: 8px;
+        }
+
+
+        .student-detail.full {
+            grid-column: 1 / -1;
+        }
+
+
+        .student-detail small {
+            display: block;
+
+            color: #718078;
+
+            font-size: 11px;
+
+            text-transform: uppercase;
+
+            letter-spacing: .7px;
+
+            margin-bottom: 5px;
+        }
+
+
+        .student-detail strong {
+            color: #29463a;
+
+            font-size: 14px;
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 650px) {
+
+            .staff-header-inner {
+                align-items: flex-start;
+            }
+
+
+            .staff-brand-text strong {
+                font-size: 15px;
+            }
+
+
+            .staff-brand-text span {
+                font-size: 11px;
+            }
+
+
+            .staff-brand img {
+                width: 44px;
+
+                height: 44px;
+            }
+
+
+            .staff-logout {
+                padding: 8px 11px;
+
+                font-size: 12px;
+            }
+
+
+            .staff-container {
+                padding-top: 30px;
+            }
+
+
+            .students-actions {
+                align-items: stretch;
+            }
+
+
+            .student-search,
+            .add-student-button {
+                width: 100%;
+            }
+
+
+            .student-form-grid,
+            .student-details {
+                grid-template-columns: 1fr;
+            }
+
+
+            .student-form-group.full,
+            .student-detail.full {
+                grid-column: auto;
+            }
+
+
+            .student-modal-box {
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="staff-page">
+
+
+    <!-- =====================================================
+         STAFF HEADER
+    ====================================================== -->
+
+    <header class="staff-header">
+
+        <div class="staff-header-inner">
+
+
+            <a
+                href="staff-dashboard.html"
+                class="staff-brand"
+            >
+
+                <img
+                    src="../images/logo.png"
+                    alt="Kenbridge Christian School Logo"
+                >
+
+                <div class="staff-brand-text">
+
+                    <strong>
+                        Kenbridge Christian School
+                    </strong>
+
+                    <span>
+                        Staff Portal
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <a
+                href="login.html"
+                class="staff-logout"
+            >
+                Logout
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="staff-container">
+
+
+        <div class="staff-page-heading">
+
+            <small>
+                STAFF PORTAL
+            </small>
+
+            <h1>
+                Student Records
+            </h1>
+
+            <p>
+                View and manage learner information
+                from the staff portal.
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             SEARCH / ADD
+        ================================================== -->
+
+        <div class="students-actions">
+
+            <input
+                type="search"
+                id="studentSearch"
+                class="student-search"
+                placeholder="Search student by name, admission number or class..."
+                aria-label="Search students"
+            >
+
+
+            <button
+                type="button"
+                class="add-student-button"
+                id="addStudentButton"
+            >
+                + Add Student
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             STUDENTS TABLE
+        ================================================== -->
+
+        <section class="students-card">
+
+
+            <div class="students-table-wrap">
+
+                <table class="students-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Admission No.
+                            </th>
+
+                            <th>
+                                Student Name
+                            </th>
+
+                            <th>
+                                Class
+                            </th>
+
+                            <th>
+                                Gender
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="studentsTableBody">
+
+                    </tbody>
+
+                </table>
+
+
+                <div
+                    class="students-empty"
+                    id="studentsEmpty"
+                >
+
+                    <strong>
+                        No student records found.
+                    </strong>
+
+                    <span>
+                        Add a student or change your search.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="students-note">
+
+                <strong>
+                    Staff note:
+                </strong>
+
+                Student information is currently
+                stored locally in this browser for
+                development purposes. A secure school
+                database will replace this temporary
+                storage when the backend system is
+                connected.
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+</div>
+
+
+<!-- =========================================================
+     ADD / EDIT STUDENT MODAL
+========================================================= -->
+
+<div
+    class="student-modal"
+    id="studentFormModal"
+    aria-hidden="true"
+>
+
+    <div class="student-modal-box">
+
+
+        <div class="student-modal-header">
+
+            <h2 id="studentFormTitle">
+                Add Student
+            </h2>
+
+            <button
+                type="button"
+                class="student-close"
+                id="studentFormClose"
+                aria-label="Close"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="studentForm">
+
+
+            <div class="student-form-grid">
+
+
+                <div class="student-form-group">
+
+                    <label for="admissionNumber">
+                        Admission Number
+                    </label>
+
+                    <input
+                        type="text"
+                        id="admissionNumber"
+                        required
+                        placeholder="e.g. KCS-002"
+                    >
+
+                </div>
+
+
+                <div class="student-form-group">
+
+                    <label for="studentName">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="studentName"
+                        required
+                        placeholder="Student full name"
+                    >
+
+                </div>
+
+
+                <div class="student-form-group">
+
+                    <label for="studentGender">
+                        Gender
+                    </label>
+
+                    <select
+                        id="studentGender"
+                        required
+                    >
+
+                        <option value="">
+                            Select gender
+                        </option>
+
+                        <option value="Male">
+                            Male
+                        </option>
+
+                        <option value="Female">
+                            Female
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="student-form-group">
+
+                    <label for="studentDob">
+                        Date of Birth
+                    </label>
+
+                    <input
+                        type="date"
+                        id="studentDob"
+                    >
+
+                </div>
+
+
+                <div class=
