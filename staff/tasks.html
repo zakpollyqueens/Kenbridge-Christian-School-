@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Tasks | Kenbridge Staff Portal</title>
+<meta name="description" content="Staff task management for Kenbridge Christian School.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.staff-page{min-height:100vh;background:#f4f8f5}
+.staff-header{background:#08783f;color:#fff;padding:18px 0}
+.staff-header-inner{width:min(1150px,92%);margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.staff-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}
+.staff-brand img{width:48px;height:48px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}
+.staff-brand strong{display:block;font-size:17px}
+.staff-brand span{display:block;font-size:12px;opacity:.85;margin-top:3px}
+.staff-logout{padding:10px 15px;border:1px solid rgba(255,255,255,.5);border-radius:8px;color:#fff;text-decoration:none;font-size:13px;font-weight:700}
+.staff-logout:hover{background:rgba(255,255,255,.12)}
+.staff-container{width:min(1050px,92%);margin:auto;padding:40px 0 60px}
+.staff-heading{margin-bottom:25px}
+.staff-heading small{display:block;color:#08783f;font-size:12px;font-weight:800;letter-spacing:1.5px;margin-bottom:7px}
+.staff-heading h1{margin:0 0 7px;color:#173a2c;font-size:clamp(28px,4vw,40px)}
+.staff-heading p{margin:0;color:#68776f;line-height:1.6}
+.staff-nav{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:25px}
+.staff-nav a{padding:10px 14px;border:1px solid #dce5e0;border-radius:8px;background:#fff;color:#315244;text-decoration:none;font-size:13px;font-weight:700}
+.staff-nav a:hover,.staff-nav a.active{background:#08783f;border-color:#08783f;color:#fff}
+.task-card{background:#fff;border:1px solid #e1e8e4;border-radius:14px;padding:25px;box-shadow:0 8px 25px rgba(0,0,0,.05);margin-bottom:22px}
+.task-card h2{margin:0 0 7px;color:#173a2c}
+.task-card>p{margin:0 0 20px;color:#718079;line-height:1.6}
+.task-form{display:grid;grid-template-columns:1fr 1fr;gap:17px}
+.form-group{display:flex;flex-direction:column}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-weight:700;color:#29463a;margin-bottom:7px}
+.form-group input,.form-group select,.form-group textarea{width:100%;box-sizing:border-box;padding:12px 13px;border:1px solid #d6e0da;border-radius:8px;font:inherit;outline:none;background:#fff}
+.form-group textarea{min-height:120px;resize:vertical}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:#08783f;box-shadow:0 0 0 3px rgba(8,120,63,.1)}
+.task-button{grid-column:1/-1;width:max-content;border:0;border-radius:8px;padding:12px 18px;background:#08783f;color:#fff;font-weight:800;cursor:pointer}
+.task-button:hover{filter:brightness(.95)}
+.task-message{grid-column:1/-1;min-height:20px;margin:0;color:#08783f;font-size:13px;font-weight:700}
+.task-list{display:grid;gap:12px}
+.task-item{padding:17px;border:1px solid #e1e8e4;border-radius:10px;background:#f9fcfa}
+.task-item strong{display:block;color:#173a2c;margin-bottom:6px}
+.task-meta{font-size:12px;color:#08783f;font-weight:700}
+.task-description{margin:8px 0;color:#68776f;line-height:1.5;font-size:13px}
+.task-status{display:inline-block;margin-top:7px;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:800}
+.task-status.pending{background:#fff1d9;color:#9a6200}
+.task-status.progress{background:#eaf1ff;color:#315da8}
+.task-status.complete{background:#e8f5ed;color:#08783f}
+.security-note{padding:17px;border-radius:10px;background:#fffdf4;border:1px solid #eee4bd;color:#6d623b;font-size:13px;line-height:1.7}
+@media(max-width:650px){
+.staff-header-inner{align-items:flex-start}
+.staff-brand img{width:42px;height:42px}
+.staff-brand strong{font-size:14px}
+.staff-brand span{font-size:10px}
+.staff-logout{padding:8px 11px;font-size:12px}
+.staff-container{padding-top:30px}
+.task-card{padding:20px 16px}
+.task-form{grid-template-columns:1fr}
+.form-group.full,.task-button,.task-message{grid-column:auto}
+}
+</style>
+</head>
+<body>
+<div class="staff-page">
+<header class="staff-header">
+<div class="staff-header-inner">
+<a href="staff-dashboard.html" class="staff-brand">
+<img src="../images/logo.png" alt="Kenbridge Christian School Logo">
+<div>
+<strong>Kenbridge Christian School</strong>
+<span>Staff Portal</span>
+</div>
+</a>
+<a href="login.html" class="staff-logout" id="logoutButton">Log Out</a>
+</div>
+</header>
+
+<main class="staff-container">
+<div class="staff-heading">
+<small>STAFF PORTAL</small>
+<h1>Tasks</h1>
+<p>View and manage tasks related to your school responsibilities.</p>
+</div>
+
+<nav class="staff-nav">
+<a href="staff-dashboard.html">Dashboard</a>
+<a href="students.html">Students</a>
+<a href="announcements.html">Announcements</a>
+<a href="articles.html">Articles</a>
+<a href="reports.html">Reports</a>
+<a href="files.html">Files</a>
+<a href="calendar.html">Calendar</a>
+<a href="messages.html">Messages</a>
+<a href="tasks.html" class="active">Tasks</a>
+<a href="profile.html">My Profile</a>
+</nav>
+
+<section class="task-card">
+<h2>Create Task</h2>
+<p>Record a school task that needs to be completed.</p>
+
+<form id="taskForm" class="task-form">
+<div class="form-group">
+<label for="taskTitle">Task Title</label>
+<input type="text" id="taskTitle" required placeholder="Enter task title">
+</div>
+
+<div class="form-group">
+<label for="taskPriority">Priority</label>
+<select id="taskPriority" required>
+<option value="">Select Priority</option>
+<option>Low</option>
+<option>Normal</option>
+<option>High</option>
+<option>Urgent</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="taskDueDate">Due Date</label>
+<input type="date" id="taskDueDate" required>
+</div>
+
+<div class="form-group">
+<label for="taskStatus">Status</label>
+<select id="taskStatus">
+<option>Pending</option>
+<option>In Progress</option>
+<option>Completed</option>
+</select>
+</div>
+
+<div class="form-group full">
+<label for="taskDescription">Task Description</label>
+<textarea id="taskDescription" placeholder="Describe the task and any important instructions..."></textarea>
+</div>
+
+<button type="submit" class="task-button">Save Task</button>
+<p id="taskMessage" class="task-message"></p>
+</form>
+</section>
+
+<section class="task-card">
+<h2>My Tasks</h2>
+<p>Tasks saved during this frontend stage.</p>
+<div id="taskList" class="task-list"></div>
+</section>
+
+<div class="security-note">
+<strong>Backend preparation:</strong> This frontend version stores tasks locally for testing. When the backend is connected, administrators can assign tasks to specific staff members and staff can update their progress securely.
+</div>
+</main>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+const form=document.getElementById("taskForm");
+const list=document.getElementById("taskList");
+const message=document.getElementById("taskMessage");
+let tasks=JSON.parse(localStorage.getItem("kenbridgeStaffTasks")||"[]");
+
+function escapeHTML(value){
+return String(value).replace(/[&<>"']/g,function(c){
+return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c];
+});
+}
+
+function statusClass(status){
+if(status==="Completed")return"complete";
+if(status==="In Progress")return"progress";
+return"pending";
+}
+
+function render(){
+list.innerHTML="";
+if(!tasks.length){
+list.innerHTML='<div class="task-item"><span class="task-meta">No tasks have been created yet.</span></div>';
+return;
+}
+tasks.slice().reverse().forEach(task=>{
+const item=document.createElement("div");
+item.className="task-item";
+item.innerHTML='<strong>'+escapeHTML(task.title)+'</strong><div class="task-meta">Due: '+escapeHTML(task.due)+' • Priority: '+escapeHTML(task.priority)+'</div><div class="task-description">'+escapeHTML(task.description||"No description provided.")+'</div><span class="task-status '+statusClass(task.status)+'">'+escapeHTML(task.status)+'</span>';
+list.appendChild(item);
+});
+}
+
+form.addEventListener("submit",function(e){
+e.preventDefault();
+tasks.push({
+title:document.getElementById("taskTitle").value.trim(),
+priority:document.getElementById("taskPriority").value,
+due:document.getElementById("taskDueDate").value,
+status:document.getElementById("taskStatus").value,
+description:document.getElementById("taskDescription").value.trim()
+});
+localStorage.setItem("kenbridgeStaffTasks",JSON.stringify(tasks));
+form.reset();
+message.textContent="Task saved successfully.";
+render();
+});
+
+document.getElementById("logoutButton").addEventListener("click",function(){
+sessionStorage.removeItem("kenbridgeStaffLoggedIn");
+});
+
+render();
+});
+</script>
+</body>
+  </html>
