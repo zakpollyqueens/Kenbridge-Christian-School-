@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Staff Login | Kenbridge Christian School
+    </title>
+
+    <meta
+        name="description"
+        content="Kenbridge Christian School staff portal login."
+    >
+
+    <meta
+        name="theme-color"
+        content="#08783f"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <style>
+
+        /* =====================================================
+           STAFF LOGIN PAGE
+        ===================================================== */
+
+        .staff-login-page {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 40px 16px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f4faf7,
+                    #e8f4ed
+                );
+
+        }
+
+
+        /* =====================================================
+           LOGIN CARD
+        ===================================================== */
+
+        .staff-login-card {
+
+            width: 100%;
+
+            max-width: 450px;
+
+            background: #ffffff;
+
+            padding: 35px;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 18px 55px
+                rgba(0, 0, 0, 0.12);
+
+        }
+
+
+        /* =====================================================
+           LOGO
+        ===================================================== */
+
+        .staff-login-logo {
+
+            width: 90px;
+
+            height: 90px;
+
+            object-fit: contain;
+
+            display: block;
+
+            margin: 0 auto 20px;
+
+        }
+
+
+        /* =====================================================
+           TITLE
+        ===================================================== */
+
+        .staff-login-card h1 {
+
+            text-align: center;
+
+            margin: 0 0 8px;
+
+        }
+
+
+        .staff-login-subtitle {
+
+            text-align: center;
+
+            margin: 0 0 28px;
+
+            opacity: 0.7;
+
+        }
+
+
+        /* =====================================================
+           FORM GROUP
+        ===================================================== */
+
+        .staff-login-field {
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .staff-login-field label {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-weight: 700;
+
+        }
+
+
+        .staff-login-field input {
+
+            width: 100%;
+
+            box-sizing: border-box;
+
+            padding: 13px 14px;
+
+            border: 1px solid #d7e2dc;
+
+            border-radius: 10px;
+
+            font-size: 1rem;
+
+            font-family: inherit;
+
+            outline: none;
+
+        }
+
+
+        .staff-login-field input:focus {
+
+            border-color: #08783f;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(8, 120, 63, 0.12);
+
+        }
+
+
+        /* =====================================================
+           LOGIN BUTTON
+        ===================================================== */
+
+        .staff-login-button {
+
+            width: 100%;
+
+            border: none;
+
+            border-radius: 10px;
+
+            padding: 14px;
+
+            background: #08783f;
+
+            color: #ffffff;
+
+            font-size: 1rem;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+        }
+
+
+        .staff-login-button:hover {
+
+            filter: brightness(0.94);
+
+        }
+
+
+        /* =====================================================
+           LOGIN MESSAGE
+        ===================================================== */
+
+        .staff-login-message {
+
+            min-height: 22px;
+
+            margin-top: 14px;
+
+            text-align: center;
+
+            font-weight: 700;
+
+        }
+
+
+        .staff-login-message.error {
+
+            color: #b42318;
+
+        }
+
+
+        /* =====================================================
+           SECURITY NOTICE
+        ===================================================== */
+
+        .staff-login-notice {
+
+            margin-top: 22px;
+
+            padding: 14px;
+
+            border-radius: 10px;
+
+            background: #fff8e7;
+
+            color: #6b5300;
+
+            font-size: 0.88rem;
+
+            line-height: 1.5;
+
+        }
+
+
+        /* =====================================================
+           BACK LINK
+        ===================================================== */
+
+        .staff-login-back {
+
+            display: block;
+
+            margin-top: 22px;
+
+            text-align: center;
+
+            color: #08783f;
+
+            font-weight: 700;
+
+            text-decoration: none;
+
+        }
+
+
+        .staff-login-back:hover {
+
+            text-decoration: underline;
+
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 600px) {
+
+            .staff-login-page {
+
+                padding: 25px 14px;
+
+            }
+
+
+            .staff-login-card {
+
+                padding: 26px 20px;
+
+                border-radius: 16px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         STAFF LOGIN
+    ====================================================== -->
+
+    <main class="staff-login-page">
+
+
+        <section
+            class="staff-login-card"
+            aria-labelledby="staffLoginTitle"
+        >
+
+
+            <!-- SCHOOL LOGO -->
+
+            <img
+                src="../images/logo.png"
+                alt="Kenbridge Christian School Logo"
+                class="staff-login-logo"
+            >
+
+
+            <!-- TITLE -->
+
+            <h1 id="staffLoginTitle">
+                Staff Login
+            </h1>
+
+
+            <p class="staff-login-subtitle">
+                Kenbridge Christian School
+                Staff Portal
+            </p>
+
+
+            <!-- LOGIN FORM -->
+
+            <form
+                id="staffLoginForm"
+                autocomplete="off"
+            >
+
+
+                <!-- USERNAME -->
+
+                <div class="staff-login-field">
+
+                    <label for="staffUsername">
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        id="staffUsername"
+                        name="username"
+                        autocomplete="username"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="staff-login-field">
+
+                    <label for="staffPassword">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="staffPassword"
+                        name="password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- BUTTON -->
+
+                <button
+                    type="submit"
+                    class="staff-login-button"
+                >
+                    Sign In
+                </button>
+
+
+                <!-- MESSAGE -->
+
+                <p
+                    id="staffLoginMessage"
+                    class="staff-login-message"
+                    role="alert"
+                ></p>
+
+
+            </form>
+
+
+            <!-- NOTICE -->
+
+            <div class="staff-login-notice">
+
+                <strong>
+                    Staff Portal Notice
+                </strong>
+
+                <br>
+
+                This is the initial staff portal
+                prototype. Secure server-side
+                authentication and database storage
+                will be connected in a later stage.
+
+            </div>
+
+
+            <!-- BACK -->
+
+            <a
+                href="../index.html"
+                class="staff-login-back"
+            >
+                ← Back to Kenbridge Website
+            </a>
+
+
+        </section>
+
+
+    </main>
+
+
+    <!-- =====================================================
+         TEMPORARY LOGIN SCRIPT
+    ====================================================== -->
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+
+                const form =
+                    document.getElementById(
+                        "staffLoginForm"
+                    );
+
+
+                const message =
+                    document.getElementById(
+                        "staffLoginMessage"
+                    );
+
+
+                form.addEventListener(
+                    "submit",
+                    function (event) {
+
+                        event.preventDefault();
+
+
+                        const username =
+                            document
+                                .getElementById(
+                                    "staffUsername"
+                                )
+                                .value
+                                .trim();
+
+
+                        const password =
+                            document
+                                .getElementById(
+                                    "staffPassword"
+                                )
+                                .value;
+
+
+                        /*
+                         * TEMPORARY DEMO LOGIN
+                         *
+                         * This will be replaced with
+                         * proper secure authentication
+                         * when we connect a backend.
+                         */
+
+                        if (
+                            username === "staff" &&
+                            password === "kenbridge-demo"
+                        ) {
+
+                            sessionStorage.setItem(
+                                "kenbridgeStaffLoggedIn",
+                                "true"
+                            );
+
+
+                            window.location.href =
+                                "staff-dashboard.html";
+
+
+                            return;
+
+                        }
+
+
+                        message.textContent =
+                            "Incorrect username or password.";
+
+
+                        message.className =
+                            "staff-login-message error";
+
+                    }
+                );
+
+            }
+        );
+
+    </script>
+
+
+</body>
+
+  </html>
