@@ -29,287 +29,88 @@
         href="../css/style.css"
     >
 
-    <style>
-
-        /* =====================================================
-           STAFF LOGIN PAGE
-        ===================================================== */
-
-        .staff-login-page {
-
-            min-height: 100vh;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            padding: 40px 16px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #f4faf7,
-                    #e8f4ed
-                );
-
-        }
-
-
-        /* =====================================================
-           LOGIN CARD
-        ===================================================== */
-
-        .staff-login-card {
-
-            width: 100%;
-
-            max-width: 450px;
-
-            background: #ffffff;
-
-            padding: 35px;
-
-            border-radius: 20px;
-
-            box-shadow:
-                0 18px 55px
-                rgba(0, 0, 0, 0.12);
-
-        }
-
-
-        /* =====================================================
-           LOGO
-        ===================================================== */
-
-        .staff-login-logo {
-
-            width: 90px;
-
-            height: 90px;
-
-            object-fit: contain;
-
-            display: block;
-
-            margin: 0 auto 20px;
-
-        }
-
-
-        /* =====================================================
-           TITLE
-        ===================================================== */
-
-        .staff-login-card h1 {
-
-            text-align: center;
-
-            margin: 0 0 8px;
-
-        }
-
-
-        .staff-login-subtitle {
-
-            text-align: center;
-
-            margin: 0 0 28px;
-
-            opacity: 0.7;
-
-        }
-
-
-        /* =====================================================
-           FORM GROUP
-        ===================================================== */
-
-        .staff-login-field {
-
-            margin-bottom: 18px;
-
-        }
-
-
-        .staff-login-field label {
-
-            display: block;
-
-            margin-bottom: 7px;
-
-            font-weight: 700;
-
-        }
-
-
-        .staff-login-field input {
-
-            width: 100%;
-
-            box-sizing: border-box;
-
-            padding: 13px 14px;
-
-            border: 1px solid #d7e2dc;
-
-            border-radius: 10px;
-
-            font-size: 1rem;
-
-            font-family: inherit;
-
-            outline: none;
-
-        }
-
-
-        .staff-login-field input:focus {
-
-            border-color: #08783f;
-
-            box-shadow:
-                0 0 0 3px
-                rgba(8, 120, 63, 0.12);
-
-        }
-
-
-        /* =====================================================
-           LOGIN BUTTON
-        ===================================================== */
-
-        .staff-login-button {
-
-            width: 100%;
-
-            border: none;
-
-            border-radius: 10px;
-
-            padding: 14px;
-
-            background: #08783f;
-
-            color: #ffffff;
-
-            font-size: 1rem;
-
-            font-weight: 800;
-
-            cursor: pointer;
-
-        }
-
-
-        .staff-login-button:hover {
-
-            filter: brightness(0.94);
-
-        }
-
-
-        /* =====================================================
-           LOGIN MESSAGE
-        ===================================================== */
-
-        .staff-login-message {
-
-            min-height: 22px;
-
-            margin-top: 14px;
-
-            text-align: center;
-
-            font-weight: 700;
-
-        }
-
-
-        .staff-login-message.error {
-
-            color: #b42318;
-
-        }
-
-
-        /* =====================================================
-           SECURITY NOTICE
-        ===================================================== */
-
-        .staff-login-notice {
-
-            margin-top: 22px;
-
-            padding: 14px;
-
-            border-radius: 10px;
-
-            background: #fff8e7;
-
-            color: #6b5300;
-
-            font-size: 0.88rem;
-
-            line-height: 1.5;
-
-        }
-
-
-        /* =====================================================
-           BACK LINK
-        ===================================================== */
-
-        .staff-login-back {
-
-            display: block;
-
-            margin-top: 22px;
-
-            text-align: center;
-
-            color: #08783f;
-
-            font-weight: 700;
-
-            text-decoration: none;
-
-        }
-
-
-        .staff-login-back:hover {
-
-            text-decoration: underline;
-
-        }
-
-
-        /* =====================================================
-           MOBILE
-        ===================================================== */
-
-        @media (max-width: 600px) {
-
-            .staff-login-page {
-
-                padding: 25px 14px;
-
-            }
-
-
-            .staff-login-card {
-
-                padding: 26px 20px;
-
-                border-radius: 16px;
-
-            }
-
-        }
-
-    </style>
+    /* =====================================================
+   STAFF LOGIN ANIMATED BACKGROUND
+   ===================================================== */
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #071b12;
+    overflow-x: hidden;
+}
+
+.staff-login-page {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 15% 20%, rgba(8,120,63,.45), transparent 35%),
+        radial-gradient(circle at 85% 75%, rgba(245,140,35,.38), transparent 35%),
+        linear-gradient(135deg, #071b12, #0b5f35, #10281d);
+}
+
+/* Animated background glow */
+.staff-login-page::before,
+.staff-login-page::after {
+    content: "";
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: .55;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.staff-login-page::before {
+    background: #08783f;
+    top: -150px;
+    left: -120px;
+    animation: greenGlow 10s ease-in-out infinite alternate;
+}
+
+.staff-login-page::after {
+    background: #f28c28;
+    right: -140px;
+    bottom: -160px;
+    animation: orangeGlow 12s ease-in-out infinite alternate;
+}
+
+@keyframes greenGlow {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(120px, 80px) scale(1.2);
+    }
+
+    100% {
+        transform: translate(30px, 180px) scale(.9);
+    }
+}
+
+@keyframes orangeGlow {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(-120px, -100px) scale(1.25);
+    }
+
+    100% {
+        transform: translate(-40px, -180px) scale(.9);
+    }
+}
+
+/* Keep login content above animation */
+.staff-login-page > * {
+    position: relative;
+    z-index: 2;
+}
 
 </head>
 
