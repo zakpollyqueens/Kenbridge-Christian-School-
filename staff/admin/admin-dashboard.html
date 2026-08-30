@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Admin Dashboard | Kenbridge Christian School</title>
+<meta name="description" content="Kenbridge Christian School Administration Portal.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.admin-page{min-height:100vh;background:#f4f8f5}
+.admin-topbar{position:sticky;top:0;z-index:1000;background:#08783f;color:#fff;box-shadow:0 4px 18px rgba(0,0,0,.12)}
+.admin-topbar-inner{width:min(1200px,94%);height:72px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.admin-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none;min-width:0}
+.admin-brand img{width:48px;height:48px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}
+.admin-brand strong{display:block;font-size:16px;white-space:nowrap}
+.admin-brand span{display:block;font-size:12px;opacity:.85;margin-top:3px}
+.admin-actions{display:flex;align-items:center;gap:10px}
+.admin-logout{padding:10px 15px;border:1px solid rgba(255,255,255,.5);border-radius:8px;color:#fff;text-decoration:none;font-size:13px;font-weight:800}
+.admin-logout:hover{background:rgba(255,255,255,.12)}
+.admin-menu-button{width:44px;height:44px;border:1px solid rgba(255,255,255,.5);border-radius:9px;background:transparent;color:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.admin-menu-button span{width:21px;height:2px;background:#fff;border-radius:2px;transition:.25s}
+.admin-menu-button.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.admin-menu-button.open span:nth-child(2){opacity:0}
+.admin-menu-button.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.admin-menu{position:absolute;top:72px;right:3%;width:300px;max-height:calc(100vh - 90px);overflow-y:auto;background:#fff;border-radius:0 0 14px 14px;box-shadow:0 12px 30px rgba(0,0,0,.18);padding:12px;display:none}
+.admin-menu.show{display:block}
+.admin-menu-title{padding:10px 12px;color:#08783f;font-size:12px;font-weight:900;letter-spacing:1px}
+.admin-menu a{display:block;padding:11px 12px;border-radius:8px;color:#29463a;text-decoration:none;font-size:14px;font-weight:700}
+.admin-menu a:hover,.admin-menu a.active{background:#eef6f1;color:#08783f}
+.admin-menu-divider{height:1px;background:#e5ebe7;margin:8px 0}
+.admin-container{width:min(1150px,92%);margin:auto;padding:38px 0 60px}
+.admin-welcome{margin-bottom:25px}
+.admin-welcome small{display:block;color:#08783f;font-size:12px;font-weight:900;letter-spacing:1.5px;margin-bottom:7px}
+.admin-welcome h1{margin:0 0 7px;color:#173a2c;font-size:clamp(28px,4vw,40px)}
+.admin-welcome p{margin:0;color:#68776f;line-height:1.6}
+.admin-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:17px;margin-bottom:28px}
+.admin-stat{background:#fff;border:1px solid #e1e8e4;border-radius:14px;padding:21px;box-shadow:0 8px 25px rgba(0,0,0,.05)}
+.admin-stat strong{display:block;color:#08783f;font-size:29px;margin-bottom:5px}
+.admin-stat span{color:#718079;font-size:13px}
+.admin-title{margin:28px 0 15px;color:#173a2c}
+.admin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}
+.admin-card{display:block;background:#fff;border:1px solid #e1e8e4;border-radius:14px;padding:21px;color:#29463a;text-decoration:none;box-shadow:0 7px 22px rgba(0,0,0,.045);transition:.2s}
+.admin-card:hover{transform:translateY(-3px);border-color:#08783f;box-shadow:0 12px 28px rgba(0,0,0,.09)}
+.admin-icon{font-size:27px;margin-bottom:12px}
+.admin-card h3{margin:0 0 6px;color:#173a2c;font-size:17px}
+.admin-card p{margin:0;color:#718079;font-size:13px;line-height:1.55}
+.admin-badge{display:inline-block;margin-top:12px;padding:5px 9px;border-radius:20px;background:#eef6f1;color:#08783f;font-size:11px;font-weight:800}
+.admin-panel{margin-top:25px;background:#fff;border:1px solid #e1e8e4;border-radius:14px;padding:24px;box-shadow:0 8px 25px rgba(0,0,0,.05)}
+.admin-panel h2{margin:0 0 7px;color:#173a2c}
+.admin-panel p{margin:0;color:#718079;line-height:1.6}
+.admin-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.admin-links a{padding:10px 14px;border-radius:8px;background:#08783f;color:#fff;text-decoration:none;font-size:13px;font-weight:800}
+.admin-links a:hover{filter:brightness(.94)}
+.admin-security{margin-top:22px;padding:16px;border-radius:10px;background:#fffdf4;border:1px solid #eee4bd;color:#6d623b;font-size:13px;line-height:1.6}
+@media(max-width:950px){
+.admin-stats{grid-template-columns:repeat(2,1fr)}
+.admin-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:650px){
+.admin-topbar-inner{height:64px}
+.admin-brand img{width:40px;height:40px}
+.admin-brand strong{font-size:13px}
+.admin-brand span{font-size:10px}
+.admin-logout{display:none}
+.admin-menu{top:64px;right:0;width:min(310px,88vw);max-height:calc(100vh - 64px);border-radius:0 0 0 14px}
+.admin-container{width:calc(100% - 28px);padding:28px 0 50px}
+.admin-stats{grid-template-columns:1fr}
+.admin-grid{grid-template-columns:1fr}
+.admin-panel{padding:20px 16px}
+}
+</style>
+</head>
+<body>
+<div class="admin-page">
+
+<header class="admin-topbar">
+<div class="admin-topbar-inner">
+<a href="admin-dashboard.html" class="admin-brand">
+<img src="../images/logo.png" alt="Kenbridge Christian School Logo">
+<div>
+<strong>Kenbridge Christian School</strong>
+<span>Administration Portal</span>
+</div>
+</a>
+
+<div class="admin-actions">
+<a href="login.html" class="admin-logout" id="logoutButton">Log Out</a>
+<button type="button" class="admin-menu-button" id="adminMenuButton" aria-label="Open Admin Portal Menu" aria-expanded="false" aria-controls="adminMenu">
+<span></span>
+<span></span>
+<span></span>
+</button>
+</div>
+</div>
+
+<nav class="admin-menu" id="adminMenu">
+<div class="admin-menu-title">ADMIN PORTAL MENU</div>
+<a href="admin-dashboard.html" class="active">🏠 Dashboard</a>
+<a href="staff-accounts.html">👥 Staff Accounts</a>
+<a href="add-staff.html">➕ Add Staff</a>
+<a href="edit-staff.html">✏️ Edit Staff</a>
+<a href="pending-content.html">📝 Pending Content</a>
+<div class="admin-menu-divider"></div>
+<a href="admin-profile.html">👤 My Profile</a>
+<a href="settings.html">⚙️ Settings</a>
+<div class="admin-menu-divider"></div>
+<a href="login.html" id="menuLogout">🚪 Log Out</a>
+</nav>
+</header>
+
+<main class="admin-container">
+
+<section class="admin-welcome">
+<small>ADMINISTRATION PORTAL</small>
+<h1>Admin Dashboard</h1>
+<p>Manage Kenbridge Christian School staff, content, accounts and administration from one place.</p>
+</section>
+
+<section class="admin-stats">
+<div class="admin-stat">
+<strong id="staffCount">0</strong>
+<span>Staff Accounts</span>
+</div>
+<div class="admin-stat">
+<strong id="pendingCount">0</strong>
+<span>Pending Content</span>
+</div>
+<div class="admin-stat">
+<strong id="announcementCount">0</strong>
+<span>Announcements</span>
+</div>
+<div class="admin-stat">
+<strong id="articleCount">0</strong>
+<span>Articles</span>
+</div>
+</section>
+
+<h2 class="admin-title">Administration</h2>
+
+<section class="admin-grid">
+
+<a href="staff-accounts.html" class="admin-card">
+<div class="admin-icon">👥</div>
+<h3>Staff Accounts</h3>
+<p>View and manage staff portal accounts and access.</p>
+<span class="admin-badge">Manage Accounts</span>
+</a>
+
+<a href="add-staff.html" class="admin-card">
+<div class="admin-icon">➕</div>
+<h3>Add Staff</h3>
+<p>Create a new authorized staff portal account.</p>
+<span class="admin-badge">Add Staff</span>
+</a>
+
+<a href="edit-staff.html" class="admin-card">
+<div class="admin-icon">✏️</div>
+<h3>Edit Staff</h3>
+<p>Update staff information and account details.</p>
+<span class="admin-badge">Edit Records</span>
+</a>
+
+<a href="pending-content.html" class="admin-card">
+<div class="admin-icon">📝</div>
+<h3>Pending Content</h3>
+<p>Review announcements and articles submitted by staff.</p>
+<span class="admin-badge" id="pendingBadge">Review Content</span>
+</a>
+
+<a href="admin-profile.html" class="admin-card">
+<div class="admin-icon">👤</div>
+<h3>Admin Profile</h3>
+<p>View and manage your administrator profile.</p>
+<span class="admin-badge">My Profile</span>
+</a>
+
+<a href="settings.html" class="admin-card">
+<div class="admin-icon">⚙️</div>
+<h3>Settings</h3>
+<p>Manage security, appearance, notifications and portal preferences.</p>
+<span class="admin-badge">Portal Settings</span>
+</a>
+
+</section>
+
+<section class="admin-panel">
+<h2>Quick Access</h2>
+<p>Frequently used administration controls.</p>
+<div class="admin-links">
+<a href="pending-content.html">📝 Review Content</a>
+<a href="staff-accounts.html">👥 Staff Accounts</a>
+<a href="add-staff.html">➕ Add Staff</a>
+<a href="admin-profile.html">👤 Profile</a>
+<a href="settings.html">⚙️ Settings</a>
+</div>
+</section>
+
+<section class="admin-panel">
+<h2>Content Approval</h2>
+<p>Staff-submitted announcements and articles can be reviewed here before publication.</p>
+<div class="admin-security">
+<strong>Backend-ready workflow:</strong> When the backend is connected, approved content can automatically be published to the appropriate public announcements or articles page. Rejected or returned submissions can remain in the staff portal for correction.
+</div>
+</section>
+
+<section class="admin-panel">
+<h2>Security</h2>
+<p>Administrator authentication and permissions will be securely connected to the backend.</p>
+<div class="admin-security">
+<strong>Important:</strong> Real passwords, authentication, sessions, permissions and security controls must be handled by the backend. This frontend provides the interface ready for those endpoints.
+</div>
+</section>
+
+</main>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+const button=document.getElementById("adminMenuButton");
+const menu=document.getElementById("adminMenu");
+
+function closeMenu(){
+menu.classList.remove("show");
+button.classList.remove("open");
+button.setAttribute("aria-expanded","false");
+}
+
+button.addEventListener("click",function(event){
+event.stopPropagation();
+const open=menu.classList.toggle("show");
+button.classList.toggle("open",open);
+button.setAttribute("aria-expanded",open?"true":"false");
+});
+
+document.addEventListener("click",function(event){
+if(!menu.contains(event.target)&&!button.contains(event.target))closeMenu();
+});
+
+menu.querySelectorAll("a").forEach(function(link){
+link.addEventListener("click",closeMenu);
+});
+
+function readArray(key){
+try{
+return JSON.parse(localStorage.getItem(key)||"[]");
+}catch(error){
+return[];
+}
+}
+
+const staff=readArray("kenbridgeStaffAccounts");
+const pending=readArray("kenbridgePendingContent");
+const announcements=readArray("kenbridgeAnnouncements");
+const articles=readArray("kenbridgeArticles");
+
+document.getElementById("staffCount").textContent=staff.length;
+document.getElementById("pendingCount").textContent=pending.length;
+document.getElementById("announcementCount").textContent=announcements.length;
+document.getElementById("articleCount").textContent=articles.length;
+
+if(pending.length){
+document.getElementById("pendingBadge").textContent=pending.length+" Pending";
+}
+
+function logout(){
+sessionStorage.removeItem("kenbridgeAdminLoggedIn");
+sessionStorage.removeItem("kenbridgeStaffLoggedIn");
+window.location.href="login.html";
+}
+
+document.getElementById("logoutButton").addEventListener("click",function(event){
+event.preventDefault();
+logout();
+});
+
+document.getElementById("menuLogout").addEventListener("click",function(event){
+event.preventDefault();
+logout();
+});
+});
+</script>
+</body>
+  </html>
