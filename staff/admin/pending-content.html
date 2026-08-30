@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pending Content | Kenbridge Administrator</title>
+<meta name="description" content="Review and approve staff announcements and articles for Kenbridge Christian School.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../../css/style.css">
+
+<style>
+.admin-page{
+    min-height:100vh;
+    background:#f5f7f6;
+}
+
+.admin-header{
+    background:#08783f;
+    color:#fff;
+    padding:18px 0;
+}
+
+.admin-header-inner{
+    width:min(1200px,92%);
+    margin:0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.admin-brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#fff;
+    text-decoration:none;
+}
+
+.admin-brand img{
+    width:52px;
+    height:52px;
+    object-fit:contain;
+    background:#fff;
+    border-radius:50%;
+    padding:5px;
+}
+
+.admin-brand-text strong{
+    display:block;
+    font-size:18px;
+}
+
+.admin-brand-text span{
+    display:block;
+    margin-top:3px;
+    font-size:12px;
+    opacity:.85;
+}
+
+.admin-logout{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:10px 16px;
+    border:1px solid rgba(255,255,255,.5);
+    border-radius:8px;
+    color:#fff;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:600;
+}
+
+.admin-logout:hover{
+    background:rgba(255,255,255,.12);
+}
+
+.admin-container{
+    width:min(1200px,92%);
+    margin:0 auto;
+    padding:40px 0 60px;
+}
+
+.admin-heading{
+    margin-bottom:25px;
+}
+
+.admin-heading small{
+    display:block;
+    margin-bottom:8px;
+    color:#08783f;
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:1.5px;
+}
+
+.admin-heading h1{
+    margin:0 0 8px;
+    color:#16352a;
+    font-size:clamp(28px,4vw,40px);
+}
+
+.admin-heading p{
+    margin:0;
+    color:#64736c;
+    line-height:1.7;
+}
+
+.admin-nav{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:28px;
+}
+
+.admin-nav a{
+    display:inline-flex;
+    align-items:center;
+    padding:10px 14px;
+    border-radius:8px;
+    background:#fff;
+    border:1px solid #dce5e0;
+    color:#315244;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:600;
+}
+
+.admin-nav a:hover,
+.admin-nav a.active{
+    background:#08783f;
+    border-color:#08783f;
+    color:#fff;
+}
+
+.content-summary{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.summary-card{
+    background:#fff;
+    border:1px solid #e1e8e4;
+    border-radius:12px;
+    padding:20px;
+    box-shadow:0 8px 25px rgba(0,0,0,.05);
+}
+
+.summary-card strong{
+    display:block;
+    color:#08783f;
+    font-size:28px;
+    margin-bottom:5px;
+}
+
+.summary-card span{
+    color:#64736c;
+    font-size:13px;
+}
+
+.content-card{
+    background:#fff;
+    border:1px solid #e1e8e4;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 8px 25px rgba(0,0,0,.05);
+}
+
+.content-toolbar{
+    padding:18px;
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    border-bottom:1px solid #edf1ef;
+}
+
+.content-search{
+    flex:1;
+    min-width:240px;
+    padding:12px 14px;
+    border:1px solid #d8e0dc;
+    border-radius:8px;
+    font:inherit;
+}
+
+.content-search:focus{
+    outline:none;
+    border-color:#08783f;
+    box-shadow:0 0 0 3px rgba(8,120,63,.1);
+}
+
+.filter-select{
+    padding:12px 14px;
+    border:1px solid #d8e0dc;
+    border-radius:8px;
+    background:#fff;
+    font:inherit;
+    color:#315244;
+}
+
+.content-list{
+    display:flex;
+    flex-direction:column;
+}
+
+.content-item{
+    padding:22px;
+    border-bottom:1px solid #edf1ef;
+}
+
+.content-item:last-child{
+    border-bottom:none;
+}
+
+.content-item-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:15px;
+}
+
+.content-title{
+    margin:0 0 7px;
+    color:#173a2c;
+    font-size:18px;
+}
+
+.content-meta{
+    margin:0;
+    color:#77867f;
+    font-size:12px;
+    line-height:1.6;
+}
+
+.content-excerpt{
+    margin:15px 0;
+    color:#52635b;
+    font-size:14px;
+    line-height:1.7;
+}
+
+.content-badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    margin-top:12px;
+}
+
+.content-badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+}
+
+.badge-type{
+    background:#eef3f0;
+    color:#315244;
+}
+
+.badge-pending{
+    background:#fff3d8;
+    color:#856500;
+}
+
+.content-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:18px;
+}
+
+.content-button{
+    border:1px solid #d7e0db;
+    background:#fff;
+    color:#315244;
+    padding:9px 12px;
+    border-radius:7px;
+    cursor:pointer;
+    font-size:12px;
+    font-weight:700;
+}
+
+.content-button:hover{
+    border-color:#08783f;
+    color:#08783f;
+}
+
+.content-button.approve{
+    background:#08783f;
+    border-color:#08783f;
+    color:#fff;
+}
+
+.content-button.approve:hover{
+    background:#066632;
+}
+
+.content-button.reject:hover{
+    border-color:#b33b3b;
+    color:#b33b3b;
+}
+
+.content-empty{
+    display:none;
+    padding:45px 20px;
+    text-align:center;
+    color:#718079;
+    font-size:14px;
+}
+
+.content-note{
+    margin-top:22px;
+    padding:20px;
+    border-radius:10px;
+    background:#fffdf4;
+    border:1px solid #eee4bd;
+    color:#6d623b;
+    font-size:13px;
+    line-height:1.7;
+}
+
+.content-note strong{
+    color:#4e4528;
+}
+
+@media(max-width:800px){
+    .content-summary{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:650px){
+    .admin-header-inner{
+        align-items:flex-start;
+    }
+
+    .admin-brand img{
+        width:44px;
+        height:44px;
+    }
+
+    .admin-brand-text strong{
+        font-size:15px;
+    }
+
+    .admin-brand-text span{
+        font-size:11px;
+    }
+
+    .admin-logout{
+        padding:8px 11px;
+        font-size:12px;
+    }
+
+    .admin-container{
+        padding-top:30px;
+    }
+
+    .content-item-header{
+        flex-direction:column;
+    }
+
+    .content-toolbar{
+        align-items:stretch;
+    }
+
+    .content-search,
+    .filter-select{
+        width:100%;
+    }
+
+    .content-button{
+        flex:1;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="admin-page">
+
+<header class="admin-header">
+<div class="admin-header-inner">
+
+<a href="../staff-dashboard.html" class="admin-brand">
+<img src="../../images/logo.png" alt="Kenbridge Christian School Logo">
+<div class="admin-brand-text">
+<strong>Kenbridge Christian School</strong>
+<span>Administrator Portal</span>
+</div>
+</a>
+
+<a href="../login.html" class="admin-logout">Logout</a>
+
+</div>
+</header>
+
+<main class="admin-container">
+
+<div class="admin-heading">
+<small>ADMINISTRATOR</small>
+<h1>Pending Content</h1>
+<p>Review staff announcements and articles before they are published on the public website.</p>
+</div>
+
+<nav class="admin-nav">
+<a href="staff-accounts.html">Staff Accounts</a>
+<a href="add-staff.html">Add Staff</a>
+<a href="../students.html">Students</a>
+<a href="../announcements.html">Announcements</a>
+<a href="pending-content.html" class="active">Pending Content</a>
+<a href="../profile.html">My Profile</a>
+</nav>
+
+<section class="content-summary">
+
+<div class="summary-card">
+<strong id="pendingCount">0</strong>
+<span>Pending Approval</span>
+</div>
+
+<div class="summary-card">
+<strong id="announcementCount">0</strong>
+<span>Announcements</span>
+</div>
+
+<div class="summary-card">
+<strong id="articleCount">0</strong>
+<span>Articles</span>
+</div>
+
+</section>
+
+<section class="content-card">
+
+<div class="content-toolbar">
+
+<input
+type="search"
+id="contentSearch"
+class="content-search"
+placeholder="Search pending content..."
+aria-label="Search pending content"
+>
+
+<select id="contentFilter" class="filter-select" aria-label="Filter content">
+<option value="all">All Content</option>
+<option value="announcement">Announcements</option>
+<option value="article">Articles</option>
+</select>
+
+</div>
+
+<div id="contentList" class="content-list"></div>
+
+<div id="contentEmpty" class="content-empty">
+No pending content found.
+</div>
+
+</section>
+
+<div class="content-note">
+<strong>Administrator approval:</strong>
+Staff members can submit announcements and articles, but they will not appear publicly until an administrator approves them. Once the backend is connected, approved content will be published through the central database.
+</div>
+
+</main>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+
+const contentList=document.getElementById("contentList");
+const contentEmpty=document.getElementById("contentEmpty");
+const search=document.getElementById("contentSearch");
+const filter=document.getElementById("contentFilter");
+const pendingCount=document.getElementById("pendingCount");
+const announcementCount=document.getElementById("announcementCount");
+const articleCount=document.getElementById("articleCount");
+
+const demoContent=[
+{
+id:1,
+type:"announcement",
+title:"Mid-Term Examination Notice",
+author:"Sample Teacher",
+username:"teacher01",
+date:"30 August 2026",
+excerpt:"Students and parents are reminded that the mid-term examinations will begin according to the school examination timetable."
+},
+{
+id:2,
+type:"article",
+title:"Kenbridge Students Excel in Football",
+author:"Sample Teacher",
+username:"teacher02",
+date:"29 August 2026",
+excerpt:"Our students represented Kenbridge Christian School with determination during the recent football competition."
+}
+];
+
+let content=JSON.parse(localStorage.getItem("kenbridgePendingContent")||"null");
+
+if(!Array.isArray(content)){
+content=demoContent;
+localStorage.setItem("kenbridgePendingContent",JSON.stringify(content));
+}
+
+function render(){
+
+const query=search.value.toLowerCase().trim();
+const selectedType=filter.value;
+
+const filtered=content.filter(function(item){
+
+const matchesSearch=
+item.title.toLowerCase().includes(query)||
+item.author.toLowerCase().includes(query)||
+item.username.toLowerCase().includes(query)||
+item.excerpt.toLowerCase().includes(query);
+
+const matchesType=
+selectedType==="all"||
+item.type===selectedType;
+
+return matchesSearch&&matchesType;
+});
+
+pendingCount.textContent=content.length;
+
+announcementCount.textContent=
+content.filter(item=>item.type==="announcement").length;
+
+articleCount.textContent=
+content.filter(item=>item.type==="article").length;
+
+contentList.innerHTML="";
+
+if(filtered.length===0){
+contentEmpty.style.display="block";
+return;
+}
+
+contentEmpty.style.display="none";
+
+filtered.forEach(function(item){
+
+const article=document.createElement("article");
+article.className="content-item";
+
+const typeName=
+item.type==="announcement"
+?"Announcement"
+:"Article";
+
+article.innerHTML=`
+<div class="content-item-header">
+<div>
+<h2 class="content-title">${escapeHtml(item.title)}</h2>
+<p class="content-meta">
+Submitted by <strong>${escapeHtml(item.author)}</strong>
+(${escapeHtml(item.username)})<br>
+Submitted: ${escapeHtml(item.date)}
+</p>
+</div>
+</div>
+
+<div class="content-badges">
+<span class="content-badge badge-type">${typeName}</span>
+<span class="content-badge badge-pending">Pending Approval</span>
+</div>
+
+<p class="content-excerpt">${escapeHtml(item.excerpt)}</p>
+
+<div class="content-actions">
+<button type="button" class="content-button" data-action="preview" data-id="${item.id}">Preview</button>
+<button type="button" class="content-button approve" data-action="approve" data-id="${item.id}">Approve & Publish</button>
+<button type="button" class="content-button reject" data-action="reject" data-id="${item.id}">Reject</button>
+</div>
+`;
+
+contentList.appendChild(article);
+
+});
+
+}
+
+function escapeHtml(value){
+return String(value)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+}
+
+contentList.addEventListener("click",function(event){
+
+const button=event.target.closest("button");
+
+if(!button)return;
+
+const id=Number(button.dataset.id);
+const action=button.dataset.action;
+const item=content.find(contentItem=>contentItem.id===id);
+
+if(!item)return;
+
+if(action==="preview"){
+
+alert(
+"PREVIEW\n\n"+
+item.title+
+"\n\n"+
+item.excerpt+
+"\n\nSubmitted by: "+
+item.author
+);
+
+return;
+}
+
+if(action==="approve"){
+
+const confirmed=confirm(
+"Approve and publish this content?\n\n"+
+item.title
+);
+
+if(!confirmed)return;
+
+content=content.filter(contentItem=>contentItem.id!==id);
+
+localStorage.setItem(
+"kenbridgePendingContent",
+JSON.stringify(content)
+);
+
+alert(
+"Content approved successfully.\n\n"+
+"After the backend is connected, this action will publish the content to the public website."
+);
+
+render();
+return;
+}
+
+if(action==="reject"){
+
+const confirmed=confirm(
+"Reject this submission?\n\n"+
+item.title
+);
+
+if(!confirmed)return;
+
+content=content.filter(contentItem=>contentItem.id!==id);
+
+localStorage.setItem(
+"kenbridgePendingContent",
+JSON.stringify(content)
+);
+
+alert("Content rejected.");
+
+render();
+
+}
+
+});
+
+search.addEventListener("input",render);
+filter.addEventListener("change",render);
+
+render();
+
+});
+</script>
+
+</body>
+  </html>
