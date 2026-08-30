@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Staff Portal Login | Kenbridge Christian School</title>
+<meta name="description" content="Kenbridge Christian School staff and administrator portal login.">
+<meta name="theme-color" content="#08783f">
+
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{font-family:Arial,Helvetica,sans-serif;color:#fff;background:#06150e;overflow-x:hidden}
+
+.staff-login-page{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:30px 18px;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 15% 15%,rgba(8,120,63,.45),transparent 30%),
+        radial-gradient(circle at 85% 80%,rgba(242,140,40,.35),transparent 30%),
+        linear-gradient(135deg,#03110a,#08783f 48%,#071c12);
+}
+
+.staff-login-page:before,
+.staff-login-page:after{
+    content:"";
+    position:absolute;
+    border-radius:50%;
+    pointer-events:none;
+    filter:blur(5px);
+}
+
+.staff-login-page:before{
+    width:520px;
+    height:520px;
+    top:-280px;
+    left:-180px;
+    background:radial-gradient(circle,rgba(8,120,63,.9),rgba(8,120,63,.35) 35%,transparent 70%);
+    animation:greenMove 12s ease-in-out infinite alternate;
+}
+
+.staff-login-page:after{
+    width:500px;
+    height:500px;
+    right:-180px;
+    bottom:-260px;
+    background:radial-gradient(circle,rgba(242,140,40,.85),rgba(242,140,40,.3) 38%,transparent 70%);
+    animation:orangeMove 14s ease-in-out infinite alternate;
+}
+
+@keyframes greenMove{
+    0%{transform:translate(0,0) scale(1)}
+    50%{transform:translate(180px,120px) scale(1.15)}
+    100%{transform:translate(80px,280px) scale(.9)}
+}
+
+@keyframes orangeMove{
+    0%{transform:translate(0,0) scale(1)}
+    50%{transform:translate(-160px,-130px) scale(1.2)}
+    100%{transform:translate(-60px,-260px) scale(.9)}
+}
+
+.background-orb{
+    position:absolute;
+    border-radius:50%;
+    pointer-events:none;
+    opacity:.45;
+}
+
+.orb-one{
+    width:10px;
+    height:10px;
+    background:#f28c28;
+    top:18%;
+    left:12%;
+    animation:floatOne 8s ease-in-out infinite;
+}
+
+.orb-two{
+    width:8px;
+    height:8px;
+    background:#63d39a;
+    top:70%;
+    left:18%;
+    animation:floatTwo 10s ease-in-out infinite;
+}
+
+.orb-three{
+    width:12px;
+    height:12px;
+    background:#f28c28;
+    top:28%;
+    right:15%;
+    animation:floatThree 9s ease-in-out infinite;
+}
+
+.orb-four{
+    width:7px;
+    height:7px;
+    background:#8de0b4;
+    bottom:20%;
+    right:22%;
+    animation:floatFour 11s ease-in-out infinite;
+}
+
+@keyframes floatOne{
+    0%,100%{transform:translate(0,0)}
+    50%{transform:translate(70px,100px)}
+}
+
+@keyframes floatTwo{
+    0%,100%{transform:translate(0,0)}
+    50%{transform:translate(-50px,-80px)}
+}
+
+@keyframes floatThree{
+    0%,100%{transform:translate(0,0)}
+    50%{transform:translate(-80px,90px)}
+}
+
+@keyframes floatFour{
+    0%,100%{transform:translate(0,0)}
+    50%{transform:translate(60px,-70px)}
+}
+
+.staff-login-card{
+    position:relative;
+    z-index:5;
+    width:min(440px,100%);
+    padding:38px 34px;
+    border:1px solid rgba(255,255,255,.22);
+    border-radius:24px;
+    background:rgba(5,28,18,.78);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    box-shadow:0 25px 70px rgba(0,0,0,.42),0 0 45px rgba(8,120,63,.18);
+}
+
+.staff-login-card:before{
+    content:"";
+    position:absolute;
+    inset:-1px;
+    z-index:-1;
+    border-radius:24px;
+    padding:1px;
+    background:linear-gradient(135deg,rgba(8,120,63,.9),rgba(242,140,40,.8),rgba(8,120,63,.4));
+    -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+    -webkit-mask-composite:xor;
+    mask-composite:exclude;
+}
+
+.staff-login-logo{
+    display:block;
+    width:88px;
+    height:88px;
+    object-fit:contain;
+    margin:0 auto 22px;
+    padding:8px;
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 0 0 5px rgba(8,120,63,.3),0 0 25px rgba(242,140,40,.3);
+}
+
+.staff-login-card h1{
+    margin:0;
+    text-align:center;
+    font-size:clamp(30px,8vw,42px);
+    letter-spacing:.5px;
+}
+
+.staff-login-subtitle{
+    margin:10px 0 30px;
+    text-align:center;
+    color:#f3c28f;
+    font-size:15px;
+    line-height:1.5;
+}
+
+.staff-login-field{
+    margin-bottom:20px;
+}
+
+.staff-login-field label{
+    display:block;
+    margin-bottom:8px;
+    color:#fff;
+    font-size:15px;
+    font-weight:700;
+}
+
+.staff-login-field input{
+    width:100%;
+    height:54px;
+    padding:0 16px;
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:12px;
+    outline:none;
+    background:rgba(255,255,255,.08);
+    color:#fff;
+    font-size:16px;
+    transition:.25s ease;
+}
+
+.staff-login-field input::placeholder{
+    color:rgba(255,255,255,.45);
+}
+
+.staff-login-field input:focus{
+    border-color:#f28c28;
+    background:rgba(255,255,255,.12);
+    box-shadow:0 0 0 3px rgba(242,140,40,.14);
+}
+
+.staff-login-button{
+    width:100%;
+    height:56px;
+    margin-top:5px;
+    border:0;
+    border-radius:12px;
+    cursor:pointer;
+    color:#fff;
+    background:linear-gradient(135deg,#08783f,#0a9a52);
+    font-size:17px;
+    font-weight:800;
+    box-shadow:0 10px 25px rgba(8,120,63,.3);
+    transition:.25s ease;
+}
+
+.staff-login-button:hover{
+    transform:translateY(-2px);
+    background:linear-gradient(135deg,#f28c28,#e8750e);
+    box-shadow:0 12px 28px rgba(242,140,40,.3);
+}
+
+.staff-login-button:active{
+    transform:translateY(0);
+}
+
+.staff-login-message{
+    min-height:22px;
+    margin:12px 0 0;
+    text-align:center;
+    font-size:13px;
+}
+
+.staff-login-message.error{color:#ff9c9c}
+.staff-login-message.success{color:#8de0b4}
+
+.staff-login-notice{
+    margin-top:25px;
+    padding:17px;
+    border-left:4px solid #f28c28;
+    border-radius:10px;
+    background:rgba(242,140,40,.1);
+    color:#e8eee9;
+    font-size:13px;
+    line-height:1.65;
+}
+
+.staff-login-notice strong{
+    display:block;
+    margin-bottom:5px;
+    color:#f5ad68;
+    font-size:15px;
+}
+
+.staff-login-back{
+    display:block;
+    margin-top:22px;
+    text-align:center;
+    color:#a9e5c3;
+    text-decoration:none;
+    font-size:13px;
+}
+
+.staff-login-back:hover{color:#f28c28}
+
+@media(max-width:480px){
+    .staff-login-page{padding:20px 14px}
+    .staff-login-card{padding:30px 22px;border-radius:20px}
+    .staff-login-logo{width:76px;height:76px}
+    .staff-login-card h1{font-size:32px}
+    .staff-login-subtitle{font-size:14px}
+}
+
+@media(prefers-reduced-motion:reduce){
+    .staff-login-page:before,
+    .staff-login-page:after,
+    .background-orb{animation:none}
+    .staff-login-button{transition:none}
+}
+</style>
+</head>
+
+<body>
+
+<main class="staff-login-page">
+
+<span class="background-orb orb-one"></span>
+<span class="background-orb orb-two"></span>
+<span class="background-orb orb-three"></span>
+<span class="background-orb orb-four"></span>
+
+<section class="staff-login-card" aria-labelledby="staffLoginTitle">
+
+<img src="../images/logo.png" alt="Kenbridge Christian School Logo" class="staff-login-logo">
+
+<h1 id="staffLoginTitle">Staff Portal</h1>
+
+<p class="staff-login-subtitle">
+Kenbridge Christian School<br>
+Staff & Administrator Access
+</p>
+
+<form id="staffLoginForm" autocomplete="off">
+
+<div class="staff-login-field">
+<label for="staffUsername">Username</label>
+<input
+    type="text"
+    id="staffUsername"
+    name="username"
+    autocomplete="username"
+    placeholder="Enter your username"
+    required
+>
+</div>
+
+<div class="staff-login-field">
+<label for="staffPassword">Password</label>
+<input
+    type="password"
+    id="staffPassword"
+    name="password"
+    autocomplete="current-password"
+    placeholder="Enter your password"
+    required
+>
+</div>
+
+<button type="submit" class="staff-login-button">
+Sign In
+</button>
+
+<p id="staffLoginMessage" class="staff-login-message" role="alert"></p>
+
+</form>
+
+<div class="staff-login-notice">
+<strong>Staff Portal</strong>
+Use your authorised school account to access the staff or administrator area.
+Secure server-side authentication and database storage will replace these
+temporary credentials when the backend is connected.
+</div>
+
+<a href="../index.html" class="staff-login-back">
+← Back to Kenbridge Website
+</a>
+
+</section>
+
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+
+    const form=document.getElementById("staffLoginForm");
+    const message=document.getElementById("staffLoginMessage");
+
+    if(!form||!message)return;
+
+    form.addEventListener("submit",function(event){
+
+        event.preventDefault();
+
+        const username=document.getElementById("staffUsername").value.trim();
+        const password=document.getElementById("staffPassword").value;
+
+        message.textContent="";
+        message.className="staff-login-message";
+
+        if(username==="admin"&&password==="kenbridge-admin"){
+
+            sessionStorage.setItem("kenbridgeStaffLoggedIn","true");
+            sessionStorage.setItem("kenbridgeUserRole","admin");
+
+            message.textContent="Administrator access granted.";
+            message.className="staff-login-message success";
+
+            setTimeout(function(){
+                window.location.href="admin/staff-accounts.html";
+            },300);
+
+            return;
+        }
+
+        if(username==="staff"&&password==="kenbridge-demo"){
+
+            sessionStorage.setItem("kenbridgeStaffLoggedIn","true");
+            sessionStorage.setItem("kenbridgeUserRole","staff");
+
+            message.textContent="Staff access granted.";
+            message.className="staff-login-message success";
+
+            setTimeout(function(){
+                window.location.href="staff-dashboard.html";
+            },300);
+
+            return;
+        }
+
+        message.textContent="Incorrect username or password.";
+        message.className="staff-login-message error";
+    });
+});
+</script>
+
+</body>
+  </html>
