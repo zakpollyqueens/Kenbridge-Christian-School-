@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Staff Portal Login | Kenbridge Christian School</title>
+<meta name="description" content="Kenbridge Christian School staff portal login.">
+<meta name="theme-color" content="#08783f">
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}body{font-family:Arial;color:#fff;background:#06150e}
+.staff-login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px 14px;background:radial-gradient(circle at 15% 15%,rgba(8,120,63,.45),transparent 30%),radial-gradient(circle at 85% 80%,rgba(242,140,40,.35),transparent 30%),linear-gradient(135deg,#03110a,#08783f 48%,#071c12)}
+.staff-login-card{width:min(440px,100%);padding:30px 22px;border:1px solid #ffffff38;border-radius:20px;background:#051c12c7;backdrop-filter:blur(18px);box-shadow:0 25px 70px #0000006b}
+.staff-login-logo{display:block;width:76px;height:76px;object-fit:contain;margin:0 auto 22px;padding:8px;border-radius:50%;background:#fff}
+h1{margin:0;text-align:center;font-size:32px}.staff-login-subtitle{margin:10px 0 30px;text-align:center;color:#f3c28f;font-size:14px;line-height:1.5}
+.staff-login-field{margin-bottom:20px}.staff-login-field label{display:block;margin-bottom:8px;font-size:15px;font-weight:700}.staff-login-field input{width:100%;height:54px;padding:0 16px;border:1px solid #ffffff33;border-radius:12px;outline:0;background:#ffffff14;color:#fff;font-size:16px}.staff-login-field input:focus{border-color:#f28c28;box-shadow:0 0 0 3px #f28c2824}
+.staff-login-button{width:100%;height:56px;border:0;border-radius:12px;cursor:pointer;color:#fff;background:linear-gradient(135deg,#08783f,#0a9a52);font-size:17px;font-weight:800}.staff-login-button:hover{background:linear-gradient(135deg,#f28c28,#e8750e)}.staff-login-button:disabled{cursor:not-allowed;opacity:.7}
+.staff-login-message{min-height:22px;margin:12px 0 0;text-align:center;font-size:13px}.error{color:#ff9c9c}.success{color:#8de0b4}
+.staff-login-notice{margin-top:25px;padding:17px;border-left:4px solid #f28c28;border-radius:10px;background:#f28c281a;color:#e8eee9;font-size:13px;line-height:1.65}.staff-login-notice strong{display:block;margin-bottom:5px;color:#f5ad68;font-size:15px}
+.staff-login-back{display:block;margin-top:22px;text-align:center;color:#a9e5c3;text-decoration:none;font-size:13px}.staff-login-back:hover{color:#f28c28}
+</style>
+</head>
+<body>
+<main class="staff-login-page">
+<section class="staff-login-card" aria-labelledby="staffLoginTitle">
+<img src="../images/logo.png" alt="Kenbridge Christian School Logo" class="staff-login-logo">
+<h1 id="staffLoginTitle">Staff Portal</h1>
+<p class="staff-login-subtitle">Kenbridge Christian School<br>Staff & Administrator Access</p>
+<form id="staffLoginForm" autocomplete="on">
+<div class="staff-login-field"><label for="staffEmail">Email Address</label><input type="email" id="staffEmail" name="email" autocomplete="email" placeholder="Enter your email address" required></div>
+<div class="staff-login-field"><label for="staffPassword">Password</label><input type="password" id="staffPassword" name="password" autocomplete="current-password" placeholder="Enter your password" required></div>
+<button type="submit" class="staff-login-button">Sign In</button>
+<p id="staffLoginMessage" class="staff-login-message" role="alert"></p>
+</form>
+<div class="staff-login-notice"><strong>Secure Staff Portal</strong>Use your authorised school email and password to access the portal.</div>
+<a href="../index.html" class="staff-login-back">← Back to Kenbridge Website</a>
+</section>
+</main>
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+const API=""https://kenbridge-christian-school.onrender.com/api" (https://kenbridge-christian-school.onrender.com/api)",form=document.getElementById("staffLoginForm"),msg=document.getElementById("staffLoginMessage"),btn=form.querySelector("button"),clear=()=>{["kenbridgeAccessToken","kenbridgeRefreshToken","kenbridgeUser"].forEach(k=>localStorage.removeItem(k));["kenbridgeStaffLoggedIn","kenbridgeUserRole"].forEach(k=>sessionStorage.removeItem(k))},show=(text,type)=>{msg.textContent=text;msg.className="staff-login-message "+type},redirect=user=>{const role=String(user.role||"").toUpperCase();if(role==="ADMIN")location.href="admin/staff-accounts.html";else if(role==="STAFF")location.href="staff-dashboard.html";else{clear();show("Your account does not have a recognised portal role.","error")}};
+const token=localStorage.getItem("kenbridgeAccessToken");if(token)fetch(API+"/auth/me",{headers:{Authorization:"Bearer "+token}}).then(r=>r.ok?r.json():Promise.reject()).then(r=>r.success&&redirect(r.user)).catch(clear);
+form.addEventListener("submit",async e=>{
+e.preventDefault();const email=staffEmail.value.trim(),password=staffPassword.value;if(!email||!password)return show("Please enter your email address and password.","error");btn.disabled=true;btn.textContent="Signing In...";
+try{let r=await fetch(API+"/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,password})}),d=await r.json();if(!r.ok||!d.success||!d.user||!d.session?.access_token)throw Error(d.message||"Login failed. Please check your details.");localStorage.setItem("kenbridgeAccessToken",d.session.access_token);if(d.session.refresh_token)localStorage.setItem("kenbridgeRefreshToken",d.session.refresh_token);let v=await fetch(API+"/auth/me",{headers:{Authorization:"Bearer "+d.session.access_token}}),u=await v.json();if(!v.ok||!u.success||!u.user)throw Error(u.message||"Your login session could not be verified.");localStorage.setItem("kenbridgeUser",JSON.stringify(u.user));sessionStorage.setItem("kenbridgeStaffLoggedIn","true");sessionStorage.setItem("kenbridgeUserRole",String(u.user.role).toLowerCase());show("Login successful. Opening your portal...","success");setTimeout(()=>redirect(u.user),500)}catch(err){clear();show(err.message||"Unable to sign in. Please try again.","error")}finally{btn.disabled=false;btn.textContent="Sign In"}
+});
+});
+</script>
+</body>
+</html>
