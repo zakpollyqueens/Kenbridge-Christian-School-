@@ -37,14 +37,351 @@ h1{margin:0;text-align:center;font-size:32px}.staff-login-subtitle{margin:10px 0
 </section>
 </main>
 <script>
-document.addEventListener("DOMContentLoaded",()=>{
-const API=""https://kenbridge-christian-school.onrender.com/api" (https://kenbridge-christian-school.onrender.com/api)",form=document.getElementById("staffLoginForm"),msg=document.getElementById("staffLoginMessage"),btn=form.querySelector("button"),clear=()=>{["kenbridgeAccessToken","kenbridgeRefreshToken","kenbridgeUser"].forEach(k=>localStorage.removeItem(k));["kenbridgeStaffLoggedIn","kenbridgeUserRole"].forEach(k=>sessionStorage.removeItem(k))},show=(text,type)=>{msg.textContent=text;msg.className="staff-login-message "+type},redirect=user=>{const role=String(user.role||"").toUpperCase();if(role==="ADMIN")location.href="admin/staff-accounts.html";else if(role==="STAFF")location.href="staff-dashboard.html";else{clear();show("Your account does not have a recognised portal role.","error")}};
-const token=localStorage.getItem("kenbridgeAccessToken");if(token)fetch(API+"/auth/me",{headers:{Authorization:"Bearer "+token}}).then(r=>r.ok?r.json():Promise.reject()).then(r=>r.success&&redirect(r.user)).catch(clear);
-form.addEventListener("submit",async e=>{
-e.preventDefault();const email=staffEmail.value.trim(),password=staffPassword.value;if(!email||!password)return show("Please enter your email address and password.","error");btn.disabled=true;btn.textContent="Signing In...";
-try{let r=await fetch(API+"/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,password})}),d=await r.json();if(!r.ok||!d.success||!d.user||!d.session?.access_token)throw Error(d.message||"Login failed. Please check your details.");localStorage.setItem("kenbridgeAccessToken",d.session.access_token);if(d.session.refresh_token)localStorage.setItem("kenbridgeRefreshToken",d.session.refresh_token);let v=await fetch(API+"/auth/me",{headers:{Authorization:"Bearer "+d.session.access_token}}),u=await v.json();if(!v.ok||!u.success||!u.user)throw Error(u.message||"Your login session could not be verified.");localStorage.setItem("kenbridgeUser",JSON.stringify(u.user));sessionStorage.setItem("kenbridgeStaffLoggedIn","true");sessionStorage.setItem("kenbridgeUserRole",String(u.user.role).toLowerCase());show("Login successful. Opening your portal...","success");setTimeout(()=>redirect(u.user),500)}catch(err){clear();show(err.message||"Unable to sign in. Please try again.","error")}finally{btn.disabled=false;btn.textContent="Sign In"}
+document.addEventListener("DOMContentLoaded", function () {
+
+    const API =
+        "https://kenbridge-christian-school.onrender.com/api";
+
+    const form =
+        document.getElementById("staffLoginForm");
+
+    const msg =
+        document.getElementById("staffLoginMessage");
+
+    const btn =
+        form.querySelector("button[type='submit']");
+
+
+    function clearSession() {
+
+        localStorage.removeItem(
+            "kenbridgeAccessToken"
+        );
+
+        localStorage.removeItem(
+            "kenbridgeRefreshToken"
+        );
+
+        localStorage.removeItem(
+            "kenbridgeUser"
+        );
+
+        sessionStorage.removeItem(
+            "kenbridgeStaffLoggedIn"
+        );
+
+        sessionStorage.removeItem(
+            "kenbridgeUserRole"
+        );
+    }
+
+
+    function show(text, type) {
+
+        msg.textContent = text;
+
+        msg.className =
+            "staff-login-message " + type;
+    }
+
+
+    function redirect(user) {
+
+        const role =
+            String(user.role || "").toUpperCase();
+
+
+        if (role === "ADMIN") {
+
+            window.location.href =
+                "admin/staff-accounts.html";
+
+            return;
+        }
+
+
+        if (role === "STAFF") {
+
+            window.location.href =
+                "staff-dashboard.html";
+
+            return;
+        }
+
+
+        clearSession();
+
+        show(
+            "Your account does not have a recognised portal role.",
+            "error"
+        );
+    }
+
+
+    /*
+      CHECK EXISTING LOGIN SESSION
+    */
+
+    const token =
+        localStorage.getItem(
+            "kenbridgeAccessToken"
+        );
+
+
+    if (token) {
+
+        fetch(
+            API + "/auth/me",
+            {
+                headers: {
+                    Authorization:
+                        "Bearer " + token
+                }
+            }
+        )
+        .then(function (response) {
+
+            if (!response.ok) {
+                throw new Error();
+            }
+
+            return response.json();
+        })
+        .then(function (data) {
+
+            if (
+                data.success &&
+                data.user
+            ) {
+
+                redirect(data.user);
+            }
+        })
+        .catch(function () {
+
+            clearSession();
+        });
+    }
+
+
+    /*
+      LOGIN
+    */
+
+    form.addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+
+            const email =
+                document
+                .getElementById("staffEmail")
+                .value
+                .trim();
+
+
+            const password =
+                document
+                .getElementById("staffPassword")
+                .value;
+
+
+            if (!email || !password) {
+
+                show(
+                    "Please enter your email address and password.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            btn.disabled = true;
+
+            btn.textContent =
+                "Signing In...";
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        API + "/auth/login",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                email: email,
+                                password: password
+                            })
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (
+                    !response.ok ||
+                    !data.success
+                ) {
+
+                    throw new Error(
+                        data.message ||
+                        "Login failed. Please check your details."
+                    );
+                }
+
+
+                if (
+                    !data.user ||
+                    !data.session ||
+                    !data.session.access_token
+                ) {
+
+                    throw new Error(
+                        "The server returned an incomplete login session."
+                    );
+                }
+
+
+                /*
+                  SAVE TOKEN
+                */
+
+                localStorage.setItem(
+                    "kenbridgeAccessToken",
+                    data.session.access_token
+                );
+
+
+                if (
+                    data.session.refresh_token
+                ) {
+
+                    localStorage.setItem(
+                        "kenbridgeRefreshToken",
+                        data.session.refresh_token
+                    );
+                }
+
+
+                /*
+                  VERIFY TOKEN
+                */
+
+                const verifyResponse =
+                    await fetch(
+                        API + "/auth/me",
+                        {
+                            headers: {
+                                Authorization:
+                                    "Bearer " +
+                                    data.session.access_token
+                            }
+                        }
+                    );
+
+
+                const verifyData =
+                    await verifyResponse.json();
+
+
+                if (
+                    !verifyResponse.ok ||
+                    !verifyData.success ||
+                    !verifyData.user
+                ) {
+
+                    throw new Error(
+                        verifyData.message ||
+                        "Your login session could not be verified."
+                    );
+                }
+
+
+                /*
+                  SAVE VERIFIED USER
+                */
+
+                localStorage.setItem(
+                    "kenbridgeUser",
+                    JSON.stringify(
+                        verifyData.user
+                    )
+                );
+
+
+                sessionStorage.setItem(
+                    "kenbridgeStaffLoggedIn",
+                    "true"
+                );
+
+
+                sessionStorage.setItem(
+                    "kenbridgeUserRole",
+                    String(
+                        verifyData.user.role
+                    ).toLowerCase()
+                );
+
+
+                show(
+                    "Login successful. Opening your portal...",
+                    "success"
+                );
+
+
+                setTimeout(
+                    function () {
+
+                        redirect(
+                            verifyData.user
+                        );
+
+                    },
+                    500
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "LOGIN ERROR:",
+                    error
+                );
+
+
+                clearSession();
+
+
+                show(
+                    error.message ||
+                    "Unable to sign in. Please try again.",
+                    "error"
+                );
+
+
+            } finally {
+
+                btn.disabled = false;
+
+                btn.textContent =
+                    "Sign In";
+            }
+        }
+    );
+
 });
-});
-</script>
+  </script>
 </body>
 </html>
