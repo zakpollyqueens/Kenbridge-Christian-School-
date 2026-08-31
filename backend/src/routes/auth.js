@@ -690,5 +690,241 @@ message:"Unable to delete staff account."
 });
 }
 });
+router.get("/staff/:id", async (req, res) => {
+try {
+const authorization = req.headers.authorization;
 
+if (!authorization?.startsWith("Bearer ")) {
+return res.status(401).json({
+success: false,
+message: "Administrator authorization token is required."
+});
+}
+
+const token = authorization.replace("Bearer ", "");
+
+const { data: authData, error: authError } =
+await supabase.auth.getUser(token);
+
+if (authError || !authData?.user) {
+return res.status(401).json({
+success: false,
+message: "Invalid or expired administrator session."
+});
+}
+
+const { rows: adminRows } = await pool.query(
+`SELECT id, role, is_active
+FROM users
+WHERE id = $1
+LIMIT 1`,
+[authData.user.id]
+);
+
+const administrator = adminRows[0];
+
+if (!administrator ||
+!administrator.is_active ||
+String(administrator.role).toUpperCase() !== "ADMIN") {
+return res.status(403).json({
+success: false,
+message: "Only active administrators can view staff accounts."
+});
+}
+
+const { rows } = await pool.query(
+`SELECT
+id,
+full_name,
+username,
+email,
+role,
+position,
+department,
+phone,
+notes,
+is_active,
+created_at,
+updated_at
+FROM users
+WHERE id = $1
+LIMIT 1`,
+[req.params.id]
+);
+
+const staff = rows[0];
+
+if (!staff) {
+return res.status(404).json({
+success: false,
+message: "Staff account was not found."
+});
+}
+
+return res.status(200).json({
+success: true,
+staff
+});
+
+} catch (error) {
+console.error("GET STAFF ACCOUNT ERROR:", error.message);
+
+return res.status(500).json({
+success: false,
+message: "Unable to retrieve the staff account."
+});
+}
+});
+router.put("/staff/:id", async (req, res) => {
+try {
+const authorization = req.headers.authorization;
+
+if (!authorization?.startsWith("Bearer ")) {
+return res.status(401).json({
+success: false,
+message: "Administrator authorization token is required."
+});
+}
+
+const token = authorization.replace("Bearer ", "");
+
+const { data: authData, error: authError } =
+await supabase.auth.getUser(token);
+
+if (authError || !authData?.user) {
+return res.status(401).json({
+success: false,
+message: "Invalid or expired administrator session."
+});
+}
+
+const { rows: adminRows } = await pool.query(
+`SELECT id, role, is_active
+FROM users
+WHERE id = $1
+LIMIT 1`,
+[authData.user.id]
+);
+
+const administrator = adminRows[0];
+
+if (!administrator ||
+!administrator.is_active ||
+String(administrator.role).toUpperCase() !== "ADMIN") {
+return res.status(403).json({
+success: false,
+message: "Only active administrators can update staff accounts."
+});
+}
+
+const {
+full_name,
+username,
+position,
+department,
+email,
+phone,
+notes,
+is_active
+} = req.body || {};
+
+if (!full_name ||
+!username ||
+!position ||
+!department ||
+!email) {
+return res.status(400).json({
+success: false,
+message: "Full name, username, position, department and email are required."
+});
+}
+
+const normalizedEmail = String(email).trim().toLowerCase();
+
+const duplicateResult = await pool.query(
+`SELECT id
+FROM users
+WHERE email = $1
+AND id <> $2
+LIMIT 1`,
+[normalizedEmail, req.params.id]
+);
+
+if (duplicateResult.rows.length > 0) {
+return res.status(400).json({
+success: false,
+message: "Another staff account already uses this email address."
+});
+}
+
+const portalRole =
+String(position).trim().toLowerCase() === "administrator"
+? "ADMIN"
+: "STAFF";
+
+const { rows } = await pool.query(
+`UPDATE users
+SET
+full_name = $1,
+username = $2,
+email = $3,
+role = $4,
+position = $5,
+department = $6,
+phone = $7,
+notes = $8,
+is_active = $9,
+updated_at = NOW()
+WHERE id = $10
+RETURNING
+id,
+full_name,
+username,
+email,
+role,
+position,
+department,
+phone,
+notes,
+is_active,
+created_at,
+updated_at`,
+[
+String(full_name).trim(),
+String(username).trim(),
+normalizedEmail,
+portalRole,
+String(position).trim(),
+String(department).trim(),
+phone ? String(phone).trim() : null,
+notes ? String(notes).trim() : null,
+is_active !== false,
+req.params.id
+]
+);
+
+const updatedStaff = rows[0];
+
+if (!updatedStaff) {
+return res.status(404).json({
+success: false,
+message: "Staff account was not found."
+});
+}
+
+return res.status(200).json({
+success: true,
+message: "Staff account updated successfully.",
+staff: updatedStaff
+});
+
+} catch (error) {
+console.error("UPDATE STAFF ACCOUNT ERROR:", error.message);
+
+return res.status(500).json({
+success: false,
+message: "Unable to update the staff account."
+});
+}
+});
 module.exports=router;
