@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Edit Staff | Kenbridge Administrator</title>
+<meta name="description" content="Edit a staff account for Kenbridge Christian School.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.admin-page{min-height:100vh;background:#f5f7f6}
+.admin-header{background:#08783f;color:#fff;padding:18px 0}
+.admin-header-inner,.admin-container{width:min(900px,92%);margin:auto}
+.admin-header-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.admin-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}
+.admin-brand img{width:52px;height:52px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}
+.admin-brand-text strong,.admin-brand-text span{display:block}
+.admin-brand-text strong{font-size:18px}
+.admin-brand-text span{margin-top:3px;font-size:12px;opacity:.85}
+.admin-logout,.submit-button,.cancel-button{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-weight:600}
+.admin-logout{padding:10px 16px;border:1px solid #ffffff80;border-radius:8px;color:#fff;font-size:14px}
+.admin-container{padding:40px 0 60px}
+.admin-heading{margin-bottom:28px}
+.admin-heading small{display:block;margin-bottom:8px;color:#08783f;font-size:12px;font-weight:700;letter-spacing:1.5px}
+.admin-heading h1{margin:0 0 8px;color:#16352a;font-size:clamp(28px,4vw,40px)}
+.admin-heading p{margin:0;color:#64736c;line-height:1.7}
+.staff-form-card{padding:28px;border:1px solid #e1e8e4;border-radius:12px;background:#fff;box-shadow:0 8px 25px #0000000d}
+.staff-form{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.form-group{display:flex;flex-direction:column}
+.form-group.full,.form-actions,.form-message{grid-column:1/-1}
+.form-group label{margin-bottom:7px;color:#29463a;font-size:13px;font-weight:700}
+.form-group input,.form-group select,.form-group textarea{width:100%;box-sizing:border-box;padding:13px 14px;border:1px solid #d8e0dc;border-radius:8px;background:#fff;color:#243b31;font:inherit}
+.form-group textarea{min-height:110px;resize:vertical}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#08783f;box-shadow:0 0 0 3px #08783f1a}
+.form-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:5px}
+.submit-button,.cancel-button{padding:13px 20px;border-radius:8px;font-size:14px;cursor:pointer}
+.submit-button{border:0;background:#08783f;color:#fff}
+.submit-button:disabled{opacity:.65;cursor:not-allowed}
+.cancel-button{border:1px solid #d7e0db;background:#fff;color:#315244}
+.form-message{display:none;padding:14px 16px;border-radius:8px;font-size:13px;line-height:1.5}
+.form-message.success{display:block;background:#e8f5ed;color:#08783f;border:1px solid #c9e6d3}
+.form-message.error{display:block;background:#fbeaea;color:#a33a3a;border:1px solid #edcaca}
+.page-loading{text-align:center;padding:40px;color:#64736c}
+@media(max-width:700px){
+.admin-header-inner{align-items:flex-start}
+.admin-brand img{width:44px;height:44px}
+.admin-brand-text strong{font-size:15px}
+.admin-container{padding-top:30px}
+.staff-form{grid-template-columns:1fr}
+.form-group.full,.form-actions,.form-message{grid-column:auto}
+.staff-form-card{padding:20px}
+}
+</style>
+<script src="../../js/portal-auth.js"></script>
+</head>
+<body>
+<div class="admin-page">
+<header class="admin-header">
+<div class="admin-header-inner">
+<a href="admin-dashboard.html" class="admin-brand">
+<img src="../../images/logo.png" alt="Kenbridge Christian School Logo">
+<div class="admin-brand-text">
+<strong>Kenbridge Christian School</strong>
+<span>Administrator Portal</span>
+</div>
+</a>
+<a href="../login.html" class="admin-logout" id="logoutButton">Logout</a>
+</div>
+</header>
+
+<main class="admin-container">
+<div class="admin-heading">
+<small>ADMINISTRATOR</small>
+<h1>Edit Staff Account</h1>
+<p>Update the selected staff member's authorised portal account.</p>
+</div>
+
+<div id="pageLoading" class="page-loading">Loading staff account...</div>
+
+<section class="staff-form-card" id="staffCard" style="display:none">
+<form class="staff-form" id="staffForm">
+
+<div class="form-group">
+<label for="staffName">Full Name</label>
+<input type="text" id="staffName" required>
+</div>
+
+<div class="form-group">
+<label for="staffUsername">Username</label>
+<input type="text" id="staffUsername" required>
+</div>
+
+<div class="form-group">
+<label for="staffRole">Position</label>
+<select id="staffRole" required>
+<option value="">Select position</option>
+<option>Administrator</option>
+<option>Teacher</option>
+<option>Head Teacher</option>
+<option>Deputy Head Teacher</option>
+<option>Bursar</option>
+<option>Secretary</option>
+<option>Staff</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="staffDepartment">Department</label>
+<select id="staffDepartment" required>
+<option value="">Select department</option>
+<option>Administration</option>
+<option>Academics</option>
+<option>Finance</option>
+<option>Admissions</option>
+<option>Boarding</option>
+<option>Sports</option>
+<option>General Staff</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="staffEmail">Email Address</label>
+<input type="email" id="staffEmail" required>
+</div>
+
+<div class="form-group">
+<label for="staffPhone">Phone Number</label>
+<input type="tel" id="staffPhone">
+</div>
+
+<div class="form-group">
+<label for="staffStatus">Account Status</label>
+<select id="staffStatus">
+<option value="Active">Active</option>
+<option value="Disabled">Disabled</option>
+</select>
+</div>
+
+<div class="form-group full">
+<label for="staffNotes">Additional Notes</label>
+<textarea id="staffNotes"></textarea>
+</div>
+
+<div class="form-message" id="formMessage"></div>
+
+<div class="form-actions">
+<button type="submit" class="submit-button" id="submitButton">Save Changes</button>
+<a href="staff-accounts.html" class="cancel-button">Cancel</a>
+</div>
+
+</form>
+</section>
+</main>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+const API_BASE="https://kenbridge-christian-school.onrender.com";
+const staffId=new URLSearchParams(window.location.search).get("id");
+
+const pageLoading=document.getElementById("pageLoading");
+const staffCard=document.getElementById("staffCard");
+const form=document.getElementById("staffForm");
+const message=document.getElementById("formMessage");
+const button=document.getElementById("submitButton");
+
+const name=document.getElementById("staffName");
+const username=document.getElementById("staffUsername");
+const position=document.getElementById("staffRole");
+const department=document.getElementById("staffDepartment");
+const email=document.getElementById("staffEmail");
+const phone=document.getElementById("staffPhone");
+const status=document.getElementById("staffStatus");
+const notes=document.getElementById("staffNotes");
+
+function getAccessToken(){
+for(const key of["access_token","kenbridge_access_token","kenbridgeAccessToken","token"]){
+const token=localStorage.getItem(key)||sessionStorage.getItem(key);
+if(token)return token;
+}
+return null;
+}
+
+function show(text,type){
+message.textContent=text;
+message.className="form-message "+type;
+}
+
+async function loadStaff(){
+if(!staffId){
+pageLoading.textContent="No staff account was selected.";
+return;
+}
+
+const token=getAccessToken();
+
+if(!token){
+pageLoading.textContent="Your administrator session was not found. Please log in again.";
+return;
+}
+
+try{
+const response=await fetch(API_BASE+"/api/auth/staff/"+encodeURIComponent(staffId),{
+headers:{
+Authorization:"Bearer "+token
+}
+});
+
+const result=await response.json();
+
+if(!response.ok||!result.success){
+throw new Error(result.message||"Unable to load staff account.");
+}
+
+const staff=result.staff;
+
+name.value=staff.full_name||"";
+username.value=staff.username||"";
+position.value=staff.position||"";
+department.value=staff.department||"";
+email.value=staff.email||"";
+phone.value=staff.phone||"";
+status.value=staff.is_active!==false?"Active":"Disabled";
+notes.value=staff.notes||"";
+
+pageLoading.style.display="none";
+staffCard.style.display="block";
+
+}catch(error){
+pageLoading.textContent=error.message||"Unable to load the staff account.";
+}
+}
+
+form.addEventListener("submit",async e=>{
+e.preventDefault();
+
+const token=getAccessToken();
+
+if(!token){
+show("Your administrator session was not found. Please log in again.","error");
+return;
+}
+
+button.disabled=true;
+button.textContent="Saving Changes...";
+
+try{
+const response=await fetch(
+API_BASE+"/api/auth/staff/"+encodeURIComponent(staffId),
+{
+method:"PUT",
+headers:{
+"Content-Type":"application/json",
+Authorization:"Bearer "+token
+},
+body:JSON.stringify({
+full_name:name.value.trim(),
+username:username.value.trim(),
+position:position.value,
+department:department.value,
+email:email.value.trim().toLowerCase(),
+phone:phone.value.trim(),
+notes:notes.value.trim(),
+is_active:status.value==="Active"
+})
+}
+);
+
+const result=await response.json();
+
+if(!response.ok||!result.success){
+throw new Error(result.message||"Staff account could not be updated.");
+}
+
+show(result.message||"Staff account updated successfully.","success");
+
+setTimeout(()=>{
+window.location.href="staff-accounts.html";
+},1200);
+
+}catch(error){
+show(error.message||"Unable to update staff account.","error");
+}finally{
+button.disabled=false;
+button.textContent="Save Changes";
+}
+});
+
+document.getElementById("logoutButton").addEventListener("click",()=>{
+["access_token","refresh_token","kenbridge_access_token","kenbridgeAccessToken","token","user","kenbridge_user"].forEach(key=>{
+localStorage.removeItem(key);
+sessionStorage.removeItem(key);
+});
+});
+
+loadStaff();
+});
+</script>
+</body>
+  </html>
