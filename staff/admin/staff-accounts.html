@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Staff Accounts | Kenbridge Administrator</title>
+<meta name="description" content="Manage authorised staff accounts for Kenbridge Christian School.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.admin-page{min-height:100vh;background:#f4f8f5}.admin-topbar{position:sticky;top:0;z-index:1000;background:#08783f;color:#fff;box-shadow:0 4px 18px #0002}.admin-topbar-inner,.admin-container{width:min(1200px,94%);margin:auto}.admin-topbar-inner{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:18px}.admin-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}.admin-brand img{width:48px;height:48px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}.admin-brand strong,.admin-brand span{display:block}.admin-brand strong{font-size:16px;white-space:nowrap}.admin-brand span{margin-top:3px;font-size:12px;opacity:.85}.admin-actions{display:flex;align-items:center;gap:10px}.admin-logout,.admin-menu-button{border:1px solid #ffffff80;border-radius:8px;color:#fff}.admin-logout{padding:10px 15px;text-decoration:none;font-size:13px;font-weight:800}.admin-logout:hover{background:#ffffff1f}.admin-menu-button{width:44px;height:44px;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}.admin-menu-button span{width:21px;height:2px;background:#fff;border-radius:2px;transition:.25s}.admin-menu-button.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}.admin-menu-button.open span:nth-child(2){opacity:0}.admin-menu-button.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}.admin-menu{position:absolute;top:72px;right:3%;width:300px;max-height:calc(100vh - 90px);overflow-y:auto;background:#fff;border-radius:0 0 14px 14px;box-shadow:0 12px 30px #0003;padding:12px;display:none}.admin-menu.show{display:block}.admin-menu-title{padding:10px 12px;color:#08783f;font-size:12px;font-weight:900;letter-spacing:1px}.admin-menu a{display:block;padding:11px 12px;border-radius:8px;color:#29463a;text-decoration:none;font-size:14px;font-weight:700}.admin-menu a:hover,.admin-menu a.active{background:#eef6f1;color:#08783f}.admin-menu-divider{height:1px;background:#e5ebe7;margin:8px 0}.admin-container{width:min(1150px,92%);padding:38px 0 30px}.admin-heading{margin-bottom:25px}.admin-heading small{display:block;color:#08783f;font-size:12px;font-weight:900;letter-spacing:1.5px;margin-bottom:7px}.admin-heading h1{margin:0 0 7px;color:#173a2c;font-size:clamp(28px,4vw,40px)}.admin-heading p{margin:0;color:#68776f;line-height:1.6}.staff-accounts-panel{background:#fff;border:1px solid #e1e8e4;border-radius:14px;padding:24px;box-shadow:0 8px 25px #0000000d}.staff-toolbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:20px;flex-wrap:wrap}.staff-search{flex:1;min-width:220px;box-sizing:border-box;padding:13px 14px;border:1px solid #d6e0da;border-radius:9px;font:inherit;outline:none}.staff-search:focus{border-color:#08783f;box-shadow:0 0 0 3px #08783f1a}.add-staff-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 17px;border-radius:9px;background:#08783f;color:#fff;text-decoration:none;font-size:13px;font-weight:800;white-space:nowrap}.add-staff-button:hover{filter:brightness(.94)}.staff-table-wrapper{width:100%;overflow-x:auto}.staff-table{width:100%;min-width:1000px;border-collapse:collapse}.staff-table th,.staff-table td{padding:13px 12px;text-align:left;border-bottom:1px solid #e6ece8;vertical-align:middle}.staff-table th{background:#eef6f1;color:#164d32;font-weight:800;font-size:13px}.staff-table td{color:#40564b;font-size:13px}.staff-table tbody tr:hover td{background:#fafdfb}.status{display:inline-block;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:800}.status.active{background:#e8f7ed;color:#08783f}.status.disabled{background:#f8eaea;color:#a62929}.staff-empty{display:none;padding:25px;text-align:center;color:#718079;font-size:14px}.staff-loading{padding:25px;text-align:center;color:#68776f;font-size:14px}.staff-error{display:none;margin-bottom:18px;padding:14px 16px;border-radius:9px;background:#fbeaea;border:1px solid #edcaca;color:#a62929;font-size:13px}.action-buttons{display:flex;flex-wrap:wrap;gap:7px}.action-button{border:0;border-radius:7px;padding:8px 10px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap}.action-button:hover{filter:brightness(.96)}.action-button:disabled{opacity:.55;cursor:not-allowed}.edit-button{background:#eaf3ff;color:#1765ad}.status-button.disable{background:#fff4df;color:#9a6300}.status-button.enable{background:#e8f7ed;color:#08783f}.delete-button{background:#fbeaea;color:#a62929}.security-notice{margin-top:22px;padding:16px;border-radius:10px;background:#fffdf4;border:1px solid #eee4bd;color:#6d623b;font-size:13px;line-height:1.6}.portal-footer{margin-top:20px;padding:16px 15px;text-align:center;background:#08783f;color:#fff;font-size:12px;line-height:1.6}.portal-footer p{margin:2px 0}.portal-footer strong{color:#f28c28}@media(max-width:650px){.admin-topbar-inner{min-height:64px}.admin-brand img{width:40px;height:40px}.admin-brand strong{font-size:13px}.admin-brand span{font-size:10px}.admin-logout{display:none}.admin-menu{top:64px;right:0;width:min(310px,88vw);max-height:calc(100vh - 64px);border-radius:0 0 0 14px}.admin-container{width:calc(100% - 28px);padding:28px 0 25px}.staff-accounts-panel{padding:20px 16px}.staff-toolbar{align-items:stretch}.staff-search{width:100%;min-width:0}.add-staff-button{width:100%}}
+</style>
+<script src="../../js/portal-auth.js"></script>
+</head>
+<body>
+<div class="admin-page">
+<header class="admin-topbar">
+<div class="admin-topbar-inner">
+<a href="admin-dashboard.html" class="admin-brand">
+<img src="../../images/logo.png" alt="Kenbridge Christian School Logo">
+<div><strong>Kenbridge Christian School</strong><span>Administration Portal</span></div>
+</a>
+<div class="admin-actions">
+<a href="../login.html" class="admin-logout" id="logoutButton">Log Out</a>
+<button type="button" class="admin-menu-button" id="adminMenuButton" aria-label="Open Admin Portal Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</div>
+</div>
+<nav class="admin-menu" id="adminMenu">
+<div class="admin-menu-title">ADMIN PORTAL MENU</div>
+<a href="admin-dashboard.html">🏠 Dashboard</a>
+<a href="staff-accounts.html" class="active">👥 Staff Accounts</a>
+<a href="add-staff.html">➕ Add Staff</a>
+<a href="../uploads.html">📤 Upload Documents</a>
+<a href="edit-staff.html">✏️ Edit Staff</a>
+<a href="pending-content.html">📝 Pending Content</a>
+<div class="admin-menu-divider"></div>
+<a href="admin-profile.html">👤 My Profile</a>
+<a href="settings.html">⚙️ Settings</a>
+<div class="admin-menu-divider"></div>
+<a href="../login.html" id="menuLogout">🚪 Log Out</a>
+</nav>
+</header>
+<main class="admin-container">
+<section class="admin-heading">
+<small>ADMINISTRATOR</small>
+<h1>Staff Accounts</h1>
+<p>Manage authorised staff members with access to the Kenbridge staff portal.</p>
+</section>
+<section class="staff-accounts-panel">
+<div class="staff-error" id="staffError"></div>
+<div class="staff-toolbar">
+<input type="search" id="staffSearch" class="staff-search" placeholder="Search staff..." aria-label="Search staff accounts">
+<a href="add-staff.html" class="add-staff-button">➕ Add Staff</a>
+</div>
+<div class="staff-loading" id="staffLoading">Loading staff accounts...</div>
+<div class="staff-table-wrapper">
+<table class="staff-table">
+<thead><tr><th>Staff Member</th><th>Username</th><th>Position</th><th>Department</th><th>Status</th><th>Actions</th></tr></thead>
+<tbody id="staffTableBody"></tbody>
+</table>
+</div>
+<div id="staffEmpty" class="staff-empty">No staff accounts were found.</div>
+<div class="security-notice"><strong>Staff account management:</strong> Accounts load from the Kenbridge backend database.<br><br><strong>Security notice:</strong> Passwords are securely handled by Supabase Authentication and never displayed.</div>
+</section>
+</main>
+<footer class="portal-footer">
+<p>© <span id="portalFooterYear"></span> Kenbridge Christian School. All Rights Reserved.</p>
+<p>Designed by <strong>Zakmolanitech Solutions</strong></p>
+</footer>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded",()=>{const API_BASE=""https://kenbridge-christian-school.onrender.com" (https://kenbridge-christian-school.onrender.com)",menuButton=document.getElementById("adminMenuButton"),menu=document.getElementById("adminMenu"),tableBody=document.getElementById("staffTableBody"),staffSearch=document.getElementById("staffSearch"),emptyMessage=document.getElementById("staffEmpty"),loadingMessage=document.getElementById("staffLoading"),errorMessage=document.getElementById("staffError");let staffAccounts=[];
+function getAccessToken(){for(const key of["access_token","kenbridge_access_token","kenbridgeAccessToken","token"]){const token=localStorage.getItem(key)||sessionStorage.getItem(key);if(token)return token}return null}
+function escapeHTML(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&","<":"<",">":">",'"':""","'":"'"}[c]))}
+function showError(text){errorMessage.textContent=text;errorMessage.style.display="block"}function clearError(){errorMessage.textContent="";errorMessage.style.display="none"}
+function closeMenu(){menu.classList.remove("show");menuButton.classList.remove("open");menuButton.setAttribute("aria-expanded","false")}
+menuButton.addEventListener("click",e=>{e.stopPropagation();const open=menu.classList.toggle("show");menuButton.classList.toggle("open",open);menuButton.setAttribute("aria-expanded",open?"true":"false")});document.addEventListener("click",e=>{if(!menu.contains(e.target)&&!menuButton.contains(e.target))closeMenu()});menu.querySelectorAll("a").forEach(link=>link.addEventListener("click",closeMenu));
+function renderStaff(searchTerm=""){tableBody.innerHTML="";const term=searchTerm.trim().toLowerCase(),filtered=staffAccounts.filter(staff=>[staff.full_name,staff.username,staff.position,staff.department,staff.email,staff.role].some(value=>String(value||"").toLowerCase().includes(term)));emptyMessage.style.display=filtered.length?"none":"block";filtered.forEach(staff=>{const active=staff.is_active!==false,row=document.createElement("tr");row.innerHTML=`<td><strong>${escapeHTML(staff.full_name||"Unnamed Staff")}</strong></td><td>${escapeHTML(staff.username||"—")}</td><td>${escapeHTML(staff.position||staff.role||"Staff")}</td><td>${escapeHTML(staff.department||"—")}</td><td><span class="status ${active?"active":"disabled"}">${active?"Active":"Disabled"}</span></td><td><div class="action-buttons"><button type="button" class="action-button edit-button" data-action="edit" data-id="${escapeHTML(staff.id)}">Edit</button><button type="button" class="action-button status-button ${active?"disable":"enable"}" data-action="status" data-id="${escapeHTML(staff.id)}" data-active="${active}">${active?"Disable":"Enable"}</button><button type="button" class="action-button delete-button" data-action="delete" data-id="${escapeHTML(staff.id)}">Delete</button></div></td>`;tableBody.appendChild(row)})}
+async function loadStaffAccounts(){loadingMessage.style.display="block";emptyMessage.style.display="none";clearError();tableBody.innerHTML="";const token=getAccessToken();if(!token){loadingMessage.style.display="none";showError("Your administrator session was not found. Please log in again.");return}try{const response=await fetch(API_BASE+"/api/auth/staff",{headers:{Authorization:"Bearer "+token}}),result=await response.json();if(!response.ok||!result.success)throw new Error(result.message||"Unable to retrieve staff accounts.");staffAccounts=Array.isArray(result.staff)?result.staff:[];renderStaff(staffSearch.value)}catch(error){console.error("STAFF LOADING ERROR:",error);staffAccounts=[];renderStaff();showError(error.message||"Unable to load staff accounts.")}finally{loadingMessage.style.display="none"}}
+async function updateStaffStatus(id,isActive,button){const token=getAccessToken();if(!token){showError("Your administrator session was not found. Please log in again.");return}const action=isActive?"disable":"enable";if(!confirm(`Are you sure you want to ${action} this staff account?`))return;button.disabled=true;const originalText=button.textContent;button.textContent=isActive?"Disabling...":"Enabling...";try{const response=await fetch(API_BASE+"/api/auth/staff/"+encodeURIComponent(id)+"/status",{method:"PATCH",headers:{"Content-Type":"application/json",Authorization:"Bearer "+token},body:JSON.stringify({is_active:!isActive})}),result=await response.json();if(!response.ok||!result.success)throw new Error(result.message||"Unable to update staff status.");await loadStaffAccounts()}catch(error){console.error("STAFF STATUS ERROR:",error);showError(error.message||"Unable to update staff status.")}finally{button.disabled=false;button.textContent=originalText}}
+async function deleteStaff(id,button){const token=getAccessToken();if(!token){showError("Your administrator session was not found. Please log in again.");return}if(!confirm("Are you sure you want to permanently delete this staff account? This action cannot be undone."))return;button.disabled=true;button.textContent="Deleting...";try{const response=await fetch(API_BASE+"/api/auth/staff/"+encodeURIComponent(id),{method:"DELETE",headers:{Authorization:"Bearer "+token}}),result=await response.json();if(!response.ok||!result.success)throw new Error(result.message||"Unable to delete staff account.");await loadStaffAccounts()}catch(error){console.error("DELETE STAFF ERROR:",error);showError(error.message||"Unable to delete staff account.")}finally{button.disabled=false;button.textContent="Delete"}}
+tableBody.addEventListener("click",async event=>{const button=event.target.closest("button[data-action]");if(!button)return;const action=button.dataset.action,id=button.dataset.id;if(!id)return;clearError();if(action==="edit"){window.location.href="edit-staff.html?id="+encodeURIComponent(id);return}if(action==="status"){await updateStaffStatus(id,button.dataset.active==="true",button);return}if(action==="delete")await deleteStaff(id,button)});
+staffSearch.addEventListener("input",function(){renderStaff(this.value)});
+function logout(){for(const key of["access_token","refresh_token","kenbridge_access_token","kenbridgeAccessToken","token","user","kenbridge_user","kenbridgeAdminLoggedIn","kenbridgeStaffLoggedIn"]){localStorage.removeItem(key);sessionStorage.removeItem(key)}window.location.href="../login.html"}
+["logoutButton","menuLogout"].forEach(id=>{const button=document.getElementById(id);if(button)button.addEventListener("click",event=>{event.preventDefault();logout()})});
+document.getElementById("portalFooterYear").textContent=new Date().getFullYear();loadStaffAccounts()});
+</script>
+</body>
+  </html>
