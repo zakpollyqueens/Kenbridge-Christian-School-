@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require("cors");
 
 const pool = require("./db");
+const authRoutes = require("./routes/auth");
 
 const app = express();
 
@@ -17,6 +18,9 @@ app.use(
 
 app.use(express.json());
 
+/*
+  Basic API test
+*/
 app.get("/", (req, res) => {
   res.json({
     success: true,
@@ -24,6 +28,9 @@ app.get("/", (req, res) => {
   });
 });
 
+/*
+  Server health test
+*/
 app.get("/api/health", (req, res) => {
   res.json({
     success: true,
@@ -32,9 +39,14 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+/*
+  Database connection test
+*/
 app.get("/api/health/database", async (req, res) => {
   try {
-    const result = await pool.query("SELECT NOW() AS current_time");
+    const result = await pool.query(
+      "SELECT NOW() AS current_time"
+    );
 
     res.json({
       success: true,
@@ -45,13 +57,22 @@ app.get("/api/health/database", async (req, res) => {
     console.error("Database connection error:", error);
 
     res.status(500).json({
-  success: false,
-  database: "disconnected",
-  error: error.message
-});
+      success: false,
+      database: "disconnected"
+    });
   }
 });
 
+/*
+  Authentication routes
+*/
+app.use("/api/auth", authRoutes);
+
+/*
+  Start server
+*/
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Kenbridge backend running on port ${PORT}`);
+  console.log(
+    `Kenbridge backend running on port ${PORT}`
+  );
 });
