@@ -1,16 +1,92 @@
 const express = require("express");
 const supabase = require("../supabase");
+const pool = require("../db");
 
 const router = express.Router();
 
+
+/*
+  TEMPORARY INITIAL ADMIN SETUP
+
+  Requires:
+  x-setup-secret: SETUP_SECRET
+*/
+
+router.post("/setup-admin", async (req, res) => {
+  try {
+    const setupSecret = req.headers["x-setup-secret"];
+
+    if (!setupSecret || setupSecret !== process.env.SETUP_SECRET) {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized setup request."
+      });
+    }
+
+    const { full_name, email, password } = req.body;
+
+    if (!full_name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Full name, email and password are required."
+      });
+    }
+
+    const { data, error } = await supabase.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true
+    });
+
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: error.message
+      });
+    }
+
+    const user = data.user;
+
+    try {
+      await pool.query(
+        `INSERT INTO users (id, full_name, email, role)
+         VALUES ($1, $2, $3, $4)`,
+        [user.id, full_name, email, "ADMIN"]
+      );
+    } catch (databaseError) {
+      /*
+        If the profile creation fails, remove the Auth user
+        so we don't leave an incomplete account behind.
+      */
+      await supabase.auth.admin.deleteUser(user.id);
+
+      throw databaseError;
+    }
+
+    return res.status(201).json({
+      success: true,
+      message: "Administrator account created successfully.",
+      user: {
+        id: user.id,
+        full_name,
+        email,
+        role: "ADMIN"
+      }
+    });
+
+  } catch (error) {
+    console.error("Admin setup error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to create administrator account."
+    });
+  }
+});
+
+
 /*
   POST /api/auth/login
-
-  Body:
-  {
-    "email": "user@example.com",
-    "password": "password"
-  }
 */
 
 router.post("/login", async (req, res) => {
@@ -24,10 +100,11 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
+    const { data, error } =
+      await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
 
     if (error) {
       return res.status(401).json({
@@ -49,6 +126,7 @@ router.post("/login", async (req, res) => {
         expires_at: data.session.expires_at
       }
     });
+
   } catch (error) {
     console.error("Login error:", error);
 
@@ -62,16 +140,16 @@ router.post("/login", async (req, res) => {
 
 /*
   GET /api/auth/me
-
-  Requires:
-  Authorization: Bearer ACCESS_TOKEN
 */
 
 router.get("/me", async (req, res) => {
   try {
     const authorization = req.headers.authorization;
 
-    if (!authorization || !authorization.startsWith("Bearer ")) {
+    if (
+      !authorization ||
+      !authorization.startsWith("Bearer ")
+    ) {
       return res.status(401).json({
         success: false,
         message: "Authorization token is required."
@@ -80,7 +158,8 @@ router.get("/me", async (req, res) => {
 
     const token = authorization.replace("Bearer ", "");
 
-    const { data, error } = await supabase.auth.getUser(token);
+    const { data, error } =
+      await supabase.auth.getUser(token);
 
     if (error || !data.user) {
       return res.status(401).json({
@@ -96,6 +175,7 @@ router.get("/me", async (req, res) => {
         email: data.user.email
       }
     });
+
   } catch (error) {
     console.error("Authentication error:", error);
 
@@ -105,5 +185,6 @@ router.get("/me", async (req, res) => {
     });
   }
 });
+
 
 module.exports = router;
