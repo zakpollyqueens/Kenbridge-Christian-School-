@@ -45,9 +45,10 @@ app.get("/api/health/database", async (req, res) => {
     console.error("Database connection error:", error);
 
     res.status(500).json({
-      success: false,
-      database: "disconnected"
-    });
+  success: false,
+  database: "disconnected",
+  error: error.message
+});
   }
 });
 
