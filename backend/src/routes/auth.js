@@ -232,5 +232,205 @@ console.error("AUTHENTICATION ERROR:", error.message);
 return res.status(500).json({ success: false, message: "Authentication failed." });
 }
 });
+/*
+GET STAFF ACCOUNTS
+
+GET /api/auth/staff
+
+Only authenticated administrators
+can view the staff accounts list.
+*/
+
+router.get("/staff", async (req, res) => {
+
+try {
+
+/*
+CHECK AUTHORIZATION HEADER
+*/
+
+const authorization =
+  req.headers.authorization;
+
+
+if (
+  !authorization ||
+  !authorization.startsWith("Bearer ")
+) {
+
+  return res.status(401).json({
+    success: false,
+    message:
+      "Administrator authorization token is required."
+  });
+
+}
+
+
+/*
+VERIFY USER WITH SUPABASE
+*/
+
+const token =
+  authorization.replace(
+    "Bearer ",
+    ""
+  );
+
+
+const {
+  data: authData,
+  error: authError
+} =
+  await supabase.auth.getUser(
+    token
+  );
+
+
+if (
+  authError ||
+  !authData?.user
+) {
+
+  return res.status(401).json({
+    success: false,
+    message:
+      "Invalid or expired administrator session."
+  });
+
+}
+
+
+/*
+CHECK IF THE USER IS
+AN ACTIVE ADMINISTRATOR
+*/
+
+const adminResult =
+  await pool.query(
+
+    `
+    SELECT
+      id,
+      role,
+      is_active
+    FROM users
+    WHERE id = $1
+    LIMIT 1
+    `,
+
+    [
+      authData.user.id
+    ]
+
+  );
+
+
+const administrator =
+  adminResult.rows[0];
+
+
+if (
+  !administrator
+) {
+
+  return res.status(403).json({
+    success: false,
+    message:
+      "Administrator profile was not found."
+  });
+
+}
+
+
+if (
+  !administrator.is_active
+) {
+
+  return res.status(403).json({
+    success: false,
+    message:
+      "Your administrator account is inactive."
+  });
+
+}
+
+
+if (
+  String(
+    administrator.role
+  ).toUpperCase()
+  !==
+  "ADMIN"
+) {
+
+  return res.status(403).json({
+    success: false,
+    message:
+      "Only administrators can view staff accounts."
+  });
+
+}
+
+
+/*
+GET STAFF ACCOUNTS
+*/
+
+const staffResult =
+  await pool.query(
+
+    `
+    SELECT
+      id,
+      full_name,
+      email,
+      role,
+      is_active
+    FROM users
+    ORDER BY
+      full_name ASC
+    `
+
+  );
+
+
+/*
+RETURN STAFF LIST
+*/
+
+return res.status(200).json({
+
+  success: true,
+
+  staff:
+    staffResult.rows
+
+});
+
+}
+
+catch (
+error
+) {
+
+console.error(
+  "GET STAFF ACCOUNTS ERROR:",
+  error.message
+);
+
+
+return res.status(500).json({
+
+  success: false,
+
+  message:
+    "Unable to retrieve staff accounts."
+
+});
+
+}
+
+});
 
 module.exports = router;
