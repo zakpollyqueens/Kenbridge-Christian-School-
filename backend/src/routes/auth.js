@@ -39,10 +39,13 @@ router.post("/setup-admin", async (req, res) => {
     });
 
     if (error) {
-      return res.status(400).json({
-        success: false,
-        message: error.message
-      });
+  console.error("SUPABASE ADMIN CREATION ERROR:", error);
+
+  return res.status(400).json({
+    success: false,
+    message: error.message
+  });
+    }
     }
 
     const user = data.user;
