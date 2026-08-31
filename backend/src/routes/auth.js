@@ -49,10 +49,11 @@ router.post("/setup-admin", async (req, res) => {
 
     try {
       await pool.query(
-        `INSERT INTO users (id, full_name, email, role)
-         VALUES ($1, $2, $3, $4)`,
-        [user.id, full_name, email, "ADMIN"]
-      );
+  `INSERT INTO users
+   (id, full_name, email, role, password_hash, is_active)
+   VALUES ($1, $2, $3, $4, $5, $6)`,
+  [user.id, full_name, email, "ADMIN", null, true]
+);
     } catch (databaseError) {
       /*
         If the profile creation fails, remove the Auth user
