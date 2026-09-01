@@ -89,10 +89,10 @@ return res.status(400).json({success:false,message:"Image title is required."});
 const description=String(req.body.description||"").trim()||null;
 const category=String(req.body.category||"School Life").trim();
 const isPublished=String(req.body.is_published||"true")!=="false";
-
 const extension=path.extname(req.file.originalname)||".jpg";
-const fileName=`${Date.now()}-${Math.random().toString(36).slice(2)}-${safeFileName(req.file.originalname)}`;
-const storagePath=`${admin.id}/${fileName}${extension&&fileName.endsWith(extension)?"":extension}`;
+const baseName=safeFileName(path.basename(req.file.originalname,extension));
+const fileName=`${Date.now()}-${Math.random().toString(36).slice(2)}-${baseName}${extension}`;
+const storagePath=`${admin.id}/${fileName}`;
 
 const {error:uploadError}=await supabase.storage
 .from("school-gallery")
