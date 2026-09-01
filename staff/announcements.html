@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Announcements | Kenbridge Staff Portal</title>
+<meta name="description" content="Create and manage school announcements through the Kenbridge Christian School staff portal.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/portal-auth.js"></script>
+
+<style>
+*{box-sizing:border-box}
+
+.staff-page{
+  min-height:100vh;
+  background:#f5f7f6;
+}
+
+.staff-header{
+  background:#08783f;
+  color:#fff;
+  padding:18px 0;
+}
+
+.staff-header-inner,
+.staff-container{
+  width:min(1200px,92%);
+  margin:auto;
+}
+
+.staff-header-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.staff-brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:#fff;
+  text-decoration:none;
+}
+
+.staff-brand img{
+  width:52px;
+  height:52px;
+  object-fit:contain;
+  margin:0;
+  padding:5px;
+  border-radius:50%;
+  background:#fff;
+}
+
+.staff-brand-text strong,
+.staff-brand-text span{
+  display:block;
+}
+
+.staff-brand-text strong{
+  font-size:18px;
+}
+
+.staff-brand-text span{
+  margin-top:3px;
+  font-size:12px;
+  opacity:.85;
+}
+
+.staff-logout{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px 16px;
+  border:1px solid rgba(255,255,255,.5);
+  border-radius:8px;
+  color:#fff;
+  text-decoration:none;
+  font-size:14px;
+  font-weight:600;
+}
+
+.staff-logout:hover{
+  background:rgba(255,255,255,.12);
+}
+
+.staff-container{
+  padding:40px 0 60px;
+}
+
+.staff-page-heading{
+  margin-bottom:28px;
+}
+
+.staff-page-heading small{
+  display:block;
+  margin-bottom:8px;
+  color:#08783f;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:1.5px;
+}
+
+.staff-page-heading h1{
+  margin:0 0 8px;
+  color:#16352a;
+  font-size:clamp(28px,4vw,40px);
+}
+
+.staff-page-heading p{
+  margin:0;
+  color:#64736c;
+  line-height:1.7;
+}
+
+.announcement-actions{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:15px;
+  margin-bottom:25px;
+}
+
+.announcement-search{
+  flex:1;
+  min-width:240px;
+  padding:13px 15px;
+  border:1px solid #d8e0dc;
+  border-radius:8px;
+  background:#fff;
+  font-size:14px;
+}
+
+.announcement-search:focus{
+  outline:none;
+  border-color:#08783f;
+  box-shadow:0 0 0 3px rgba(8,120,63,.10);
+}
+
+.add-announcement-button{
+  border:0;
+  padding:13px 18px;
+  border-radius:8px;
+  background:#08783f;
+  color:#fff;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.add-announcement-button:hover{
+  opacity:.9;
+}
+
+.add-announcement-button:disabled{
+  opacity:.65;
+  cursor:not-allowed;
+}
+
+.announcement-message{
+  display:none;
+  margin-bottom:20px;
+  padding:14px 16px;
+  border-radius:9px;
+  font-size:13px;
+  line-height:1.6;
+}
+
+.announcement-message.success{
+  display:block;
+  background:#e8f5ed;
+  color:#08783f;
+  border:1px solid #c9e6d3;
+}
+
+.announcement-message.error{
+  display:block;
+  background:#fbeaea;
+  color:#a62929;
+  border:1px solid #edcaca;
+}
+
+.announcements-list{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:20px;
+}
+
+.announcement-card{
+  padding:24px;
+  border:1px solid #e1e8e4;
+  border-radius:12px;
+  background:#fff;
+  box-shadow:0 8px 25px rgba(0,0,0,.05);
+  transition:.2s;
+}
+
+.announcement-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 30px rgba(0,0,0,.07);
+}
+
+.announcement-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:14px;
+}
+
+.announcement-category,
+.announcement-status{
+  display:inline-block;
+  padding:5px 10px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.4px;
+}
+
+.announcement-category{
+  background:#e8f5ed;
+  color:#08783f;
+}
+
+.announcement-status{
+  background:#fff4df;
+  color:#8a6200;
+}
+
+.announcement-status.published{
+  background:#e8f5ed;
+  color:#08783f;
+}
+
+.announcement-card h2{
+  margin:0 0 10px;
+  color:#173a2c;
+  font-size:21px;
+}
+
+.announcement-card p{
+  margin:0 0 18px;
+  color:#64736c;
+  line-height:1.7;
+  font-size:14px;
+  white-space:pre-line;
+}
+
+.announcement-meta{
+  margin-bottom:18px;
+  color:#7a8781;
+  font-size:12px;
+}
+
+.announcement-actions-small{
+  display:flex;
+  gap:8px;
+}
+
+.announcement-action{
+  padding:7px 11px;
+  border:1px solid #d7e0db;
+  border-radius:6px;
+  background:#fff;
+  color:#315244;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:600;
+}
+
+.announcement-action:hover{
+  border-color:#08783f;
+  color:#08783f;
+}
+
+.announcement-loading,
+.announcement-empty{
+  grid-column:1/-1;
+  padding:40px 20px;
+  border:1px solid #e1e8e4;
+  border-radius:12px;
+  background:#fff;
+  color:#718079;
+  text-align:center;
+}
+
+.staff-note{
+  margin-top:25px;
+  padding:20px;
+  border:1px solid #eee4bd;
+  border-radius:10px;
+  background:#fffdf4;
+  color:#6d623b;
+  font-size:13px;
+  line-height:1.7;
+}
+
+.announcement-modal{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(4,25,16,.65);
+}
+
+.announcement-modal.show{
+  display:flex;
+}
+
+.announcement-modal-card{
+  width:min(700px,100%);
+  max-height:90vh;
+  overflow-y:auto;
+  padding:26px;
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 25px 70px rgba(0,0,0,.3);
+}
+
+.announcement-modal-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:20px;
+  margin-bottom:22px;
+}
+
+.announcement-modal-header h2{
+  margin:0 0 6px;
+  color:#173a2c;
+}
+
+.announcement-modal-header p{
+  margin:0;
+  color:#718079;
+  font-size:13px;
+  line-height:1.6;
+}
+
+.close-modal-button{
+  width:38px;
+  height:38px;
+  border:1px solid #d7e0db;
+  border-radius:8px;
+  background:#fff;
+  color:#315244;
+  font-size:22px;
+  cursor:pointer;
+}
+
+.announcement-form{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.form-group{
+  display:flex;
+  flex-direction:column;
+}
+
+.form-group.full,
+.form-actions{
+  grid-column:1/-1;
+}
+
+.form-group label{
+  margin-bottom:7px;
+  color:#29463a;
+  font-size:13px;
+  font-weight:700;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+  width:100%;
+  padding:13px 14px;
+  border:1px solid #d8e0dc;
+  border-radius:8px;
+  background:#fff;
+  color:#243b31;
+  font:inherit;
+}
+
+.form-group textarea{
+  min-height:180px;
+  resize:vertical;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+  outline:none;
+  border-color:#08783f;
+  box-shadow:0 0 0 3px rgba(8,120,63,.10);
+}
+
+.form-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:4px;
+}
+
+.cancel-button,
+.submit-button{
+  padding:12px 18px;
+  border-radius:8px;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.cancel-button{
+  border:1px solid #d7e0db;
+  background:#fff;
+  color:#315244;
+}
+
+.submit-button{
+  border:0;
+  background:#08783f;
+  color:#fff;
+}
+
+.submit-button:disabled{
+  opacity:.65;
+  cursor:not-allowed;
+}
+
+@media(max-width:700px){
+  .staff-header-inner{
+    align-items:flex-start;
+  }
+
+  .staff-brand img{
+    width:44px;
+    height:44px;
+  }
+
+  .staff-brand-text strong{
+    font-size:15px;
+  }
+
+  .staff-brand-text span{
+    font-size:11px;
+  }
+
+  .staff-logout{
+    padding:8px 11px;
+    font-size:12px;
+  }
+
+  .staff-container{
+    padding-top:30px;
+  }
+
+  .announcement-actions{
+    align-items:stretch;
+  }
+
+  .announcement-search,
+  .add-announcement-button{
+    width:100%;
+  }
+
+  .announcements-list{
+    grid-template-columns:1fr;
+  }
+
+  .announcement-form{
+    grid-template-columns:1fr;
+  }
+
+  .form-group.full,
+  .form-actions{
+    grid-column:auto;
+  }
+
+  .announcement-modal-card{
+    padding:20px;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="staff-page">
+
+<header class="staff-header">
+<div class="staff-header-inner">
+
+<a href="staff-dashboard.html" class="staff-brand">
+<img src="../images/logo.png" alt="Kenbridge Christian School Logo">
+<div class="staff-brand-text">
+<strong>Kenbridge Christian School</strong>
+<span>Staff Portal</span>
+</div>
+</a>
+
+<a href="login.html" class="staff-logout" id="logoutButton">Logout</a>
+
+</div>
+</header>
+
+<main class="staff-container">
+
+<div class="staff-page-heading">
+<small>STAFF PORTAL</small>
+<h1>Announcements</h1>
+<p>Create school announcements and submit them for administrator review and approval.</p>
+</div>
+
+<div class="announcement-actions">
+<input
+type="search"
+id="announcementSearch"
+class="announcement-search"
+placeholder="Search announcements..."
+aria-label="Search announcements"
+>
+
+<button
+type="button"
+class="add-announcement-button"
+id="addAnnouncementButton"
+>
++ New Announcement
+</button>
+</div>
+
+<div
+id="announcementMessage"
+class="announcement-message"
+role="alert"
+></div>
+
+<section
+class="announcements-list"
+id="announcementsList"
+>
+<div class="announcement-loading">
+Loading announcements...
+</div>
+</section>
+
+<div class="staff-note">
+<strong>Staff announcement workflow:</strong>
+Announcements created by staff are submitted to the Kenbridge backend for administrator review. They remain pending until an administrator approves them for publication.
+</div>
+
+</main>
+</div>
+
+<div
+class="announcement-modal"
+id="announcementModal"
+aria-hidden="true"
+>
+<div
+class="announcement-modal-card"
+role="dialog"
+aria-modal="true"
+aria-labelledby="announcementModalTitle"
+>
+
+<div class="announcement-modal-header">
+<div>
+<h2 id="announcementModalTitle">Create Announcement</h2>
+<p>Submit a school announcement for administrator approval.</p>
+</div>
+
+<button
+type="button"
+class="close-modal-button"
+id="closeAnnouncementModal"
+aria-label="Close"
+>
+×
+</button>
+</div>
+
+<form
+id="announcementForm"
+class="announcement-form"
+>
+
+<div class="form-group full">
+<label for="announcementTitle">Announcement Title</label>
+<input
+type="text"
+id="announcementTitle"
+required
+maxlength="200"
+placeholder="Enter announcement title"
+>
+</div>
+
+<div class="form-group">
+<label for="announcementCategory">Category</label>
+<select id="announcementCategory" required>
+<option value="General">General</option>
+<option value="School News">School News</option>
+<option value="Academics">Academics</option>
+<option value="Sports">Sports</option>
+<option value="Events">Events</option>
+<option value="Administration">Administration</option>
+<option value="Boarding">Boarding</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Publication Status</label>
+<input
+type="text"
+value="Pending Administrator Approval"
+disabled
+>
+</div>
+
+<div class="form-group full">
+<label for="announcementContent">Announcement Content</label>
+<textarea
+id="announcementContent"
+required
+placeholder="Write the announcement here..."
+></textarea>
+</div>
+
+<div class="form-actions">
+<button
+type="button"
+class="cancel-button"
+id="cancelAnnouncementButton"
+>
+Cancel
+</button>
+
+<button
+type="submit"
+class="submit-button"
+id="submitAnnouncementButton"
+>
+Submit for Approval
+</button>
+</div>
+
+</form>
+</div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+
+const API_BASE="https://kenbridge-christian-school.onrender.com";
+const API_URL=API_BASE+"/api/staff-content/announcements";
+
+const announcementsList=document.getElementById("announcementsList");
+const announcementSearch=document.getElementById("announcementSearch");
+const announcementMessage=document.getElementById("announcementMessage");
+const addAnnouncementButton=document.getElementById("addAnnouncementButton");
+const announcementModal=document.getElementById("announcementModal");
+const closeAnnouncementModal=document.getElementById("closeAnnouncementModal");
+const cancelAnnouncementButton=document.getElementById("cancelAnnouncementButton");
+const announcementForm=document.getElementById("announcementForm");
+const announcementTitle=document.getElementById("announcementTitle");
+const announcementCategory=document.getElementById("announcementCategory");
+const announcementContent=document.getElementById("announcementContent");
+const submitAnnouncementButton=document.getElementById("submitAnnouncementButton");
+const logoutButton=document.getElementById("logoutButton");
+
+let announcements=[];
+
+function getAccessToken(){
+  const keys=[
+    "kenbridgeAccessToken",
+    "access_token",
+    "kenbridge_access_token",
+    "token"
+  ];
+
+  for(const key of keys){
+    const token=
+      localStorage.getItem(key)||
+      sessionStorage.getItem(key);
+
+    if(token)return token;
+  }
+
+  return null;
+}
+
+function showMessage(text,type){
+  announcementMessage.textContent=text;
+  announcementMessage.className="announcement-message "+type;
+}
+
+function clearMessage(){
+  announcementMessage.textContent="";
+  announcementMessage.className="announcement-message";
+}
+
+function escapeHTML(value){
+  return String(value??"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function formatDate(value){
+  if(!value)return "Recently created";
+
+  const date=new Date(value);
+
+  if(Number.isNaN(date.getTime())){
+    return "Recently created";
+  }
+
+  return date.toLocaleDateString(
+    undefined,
+    {
+      year:"numeric",
+      month:"short",
+      day:"numeric"
+    }
+  );
+}
+
+function openAnnouncementModal(){
+  clearMessage();
+  announcementModal.classList.add("show");
+  announcementModal.setAttribute("aria-hidden","false");
+
+  setTimeout(()=>{
+    announcementTitle.focus();
+  },100);
+}
+
+function closeModal(){
+  announcementModal.classList.remove("show");
+  announcementModal.setAttribute("aria-hidden","true");
+}
+
+addAnnouncementButton.addEventListener(
+  "click",
+  openAnnouncementModal
+);
+
+closeAnnouncementModal.addEventListener(
+  "click",
+  closeModal
+);
+
+cancelAnnouncementButton.addEventListener(
+  "click",
+  closeModal
+);
+
+announcementModal.addEventListener(
+  "click",
+  event=>{
+    if(event.target===announcementModal){
+      closeModal();
+    }
+  }
+);
+
+document.addEventListener(
+  "keydown",
+  event=>{
+    if(
+      event.key==="Escape"&&
+      announcementModal.classList.contains("show")
+    ){
+      closeModal();
+    }
+  }
+);
+
+function renderAnnouncements(searchTerm=""){
+  announcementsList.innerHTML="";
+
+  const term=searchTerm.trim().toLowerCase();
+
+  const filtered=announcements.filter(announcement=>{
+    return [
+      announcement.title,
+      announcement.content,
+      announcement.category,
+      announcement.author_name
+    ].some(value=>
+      String(value||"")
+        .toLowerCase()
+        .includes(term)
+    );
+  });
+
+  if(!filtered.length){
+    announcementsList.innerHTML=`
+      <div class="announcement-empty">
+        No announcements were found.
+      </div>
+    `;
+    return;
+  }
+
+  filtered.forEach(announcement=>{
+
+    const published=
+      announcement.is_published===true;
+
+    const card=document.createElement("article");
+
+    card.className="announcement-card";
+
+    card.innerHTML=`
+      <div class="announcement-top">
+        <span class="announcement-category">
+          ${escapeHTML(
+            announcement.category||"General"
+          )}
+        </span>
+
+        <span class="announcement-status ${
+          published?"published":""
+        }">
+          ${published?"PUBLISHED":"PENDING"}
+        </span>
+      </div>
+
+      <h2>
+        ${escapeHTML(announcement.title)}
+      </h2>
+
+      <p>
+        ${escapeHTML(announcement.content)}
+      </p>
+
+      <div class="announcement-meta">
+        Created ${formatDate(announcement.created_at)}
+        ${
+          announcement.author_name
+          ?" by "+escapeHTML(
+            announcement.author_name
+          )
+          :""
+        }
+      </div>
+
+      <div class="announcement-actions-small">
+        <button
+          type="button"
+          class="announcement-action"
+          data-action="view"
+          data-id="${escapeHTML(announcement.id)}"
+        >
+          View
+        </button>
+      </div>
+    `;
+
+    announcementsList.appendChild(card);
+  });
+}
+
+async function loadAnnouncements(){
+  announcementsList.innerHTML=`
+    <div class="announcement-loading">
+      Loading announcements...
+    </div>
+  `;
+
+  clearMessage();
+
+  const token=getAccessToken();
+
+  if(!token){
+    announcementsList.innerHTML=`
+      <div class="announcement-empty">
+        Your staff session was not found.
+        Please log in again.
+      </div>
+    `;
+
+    return;
+  }
+
+  try{
+    const response=await fetch(
+      API_URL,
+      {
+        headers:{
+          Authorization:"Bearer "+token
+        }
+      }
+    );
+
+    const result=await response.json();
+
+    if(!response.ok||!result.success){
+      throw new Error(
+        result.message||
+        "Unable to retrieve announcements."
+      );
+    }
+
+    announcements=
+      Array.isArray(result.announcements)
+      ?result.announcements
+      :[];
+
+    renderAnnouncements(
+      announcementSearch.value
+    );
+
+  }catch(error){
+
+    console.error(
+      "LOAD ANNOUNCEMENTS ERROR:",
+      error
+    );
+
+    announcements=[];
+
+    announcementsList.innerHTML=`
+      <div class="announcement-empty">
+        ${escapeHTML(
+          error.message||
+          "Unable to load announcements."
+        )}
+      </div>
+    `;
+  }
+}
+
+announcementSearch.addEventListener(
+  "input",
+  function(){
+    renderAnnouncements(this.value);
+  }
+);
+
+announcementForm.addEventListener(
+  "submit",
+  async event=>{
+    event.preventDefault();
+
+    clearMessage();
+
+    const title=
+      announcementTitle.value.trim();
+
+    const content=
+      announcementContent.value.trim();
+
+    const category=
+      announcementCategory.value;
+
+    if(!title||!content){
+      showMessage(
+        "Please enter the announcement title and content.",
+        "error"
+      );
+
+      return;
+    }
+
+    const token=getAccessToken();
+
+    if(!token){
+      showMessage(
+        "Your staff session was not found. Please log in again.",
+        "error"
+      );
+
+      return;
+    }
+
+    submitAnnouncementButton.disabled=true;
+
+    submitAnnouncementButton.textContent=
+      "Submitting...";
+
+    try{
+
+      const response=await fetch(
+        API_URL,
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json",
+            Authorization:"Bearer "+token
+          },
+          body:JSON.stringify({
+            title,
+            content,
+            category
+          })
+        }
+      );
+
+      const result=await response.json();
+
+      if(!response.ok||!result.success){
+        throw new Error(
+          result.message||
+          "Announcement could not be submitted."
+        );
+      }
+
+      announcementForm.reset();
+
+      closeModal();
+
+      showMessage(
+        result.message||
+        "Announcement submitted successfully and is awaiting administrator approval.",
+        "success"
+      );
+
+      await loadAnnouncements();
+
+    }catch(error){
+
+      console.error(
+        "CREATE ANNOUNCEMENT ERROR:",
+        error
+      );
+
+      showMessage(
+        error.message||
+        "Unable to submit the announcement.",
+        "error"
+      );
+
+    }finally{
+
+      submitAnnouncementButton.disabled=false;
+
+      submitAnnouncementButton.textContent=
+        "Submit for Approval";
+    }
+  }
+);
+
+announcementsList.addEventListener(
+  "click",
+  event=>{
+    const button=
+      event.target.closest(
+        "button[data-action='view']"
+      );
+
+    if(!button)return;
+
+    const announcement=
+      announcements.find(
+        item=>String(item.id)===
+        String(button.dataset.id)
+      );
+
+    if(!announcement)return;
+
+    alert(
+      announcement.title+
+      "\n\n"+
+      announcement.content
+    );
+  }
+);
+
+function logout(){
+  [
+    "kenbridgeAccessToken",
+    "kenbridgeRefreshToken",
+    "kenbridgeUser",
+    "access_token",
+    "refresh_token",
+    "kenbridge_access_token",
+    "token"
+  ].forEach(key=>{
+    localStorage.removeItem(key);
+    sessionStorage.removeItem(key);
+  });
+
+  window.location.href="login.html";
+}
+
+logoutButton.addEventListener(
+  "click",
+  event=>{
+    event.preventDefault();
+    logout();
+  }
+);
+
+loadAnnouncements();
+
+});
+</script>
+
+</body>
+  </html>
