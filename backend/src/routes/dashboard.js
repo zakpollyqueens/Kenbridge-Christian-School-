@@ -167,7 +167,21 @@ router.get("/staff",async(req,res)=>{
           completed:Number(taskStats.completed_tasks||0),
           total:Number(taskStats.total_tasks||0)
         },
+const notificationResult=await pool.query(
+  `SELECT
+    COUNT(*) FILTER(
+      WHERE is_read=false
+    ) AS unread_notifications,
+    COUNT(*) AS total_notifications
+   FROM staff_notifications
+   WHERE user_id=$1`,
+  [user.id]
+);
 
+const notificationStats=notificationResult.rows[0]||{
+  unread_notifications:0,
+  total_notifications:0
+};
         announcements:{
           total:Number(
             announcementStats.total_announcements||0
