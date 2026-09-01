@@ -78,6 +78,7 @@ app.use("/api/content",contentRoutes);
 app.use("/api/staff-content",staffContentRoutes);
 
 app.use("/api/tasks",tasksRoutes);
+app.use("/api/dashboard",dashboardRoutes);
 
 app.use((req,res)=>{
   console.log(
