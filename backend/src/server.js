@@ -9,7 +9,7 @@ const authRoutes=require("./routes/auth");
 const contentRoutes=require("./routes/content");
 const staffContentRoutes=require("./routes/staff-content");
 const tasksRoutes=require("./routes/tasks");
-
+const notificationsRoutes=require("./routes/notifications");
 const app=express();
 
 const PORT=process.env.PORT||5000;
@@ -79,6 +79,7 @@ app.use("/api/staff-content",staffContentRoutes);
 
 app.use("/api/tasks",tasksRoutes);
 app.use("/api/dashboard",dashboardRoutes);
+app.use("/api/notifications",notificationsRoutes);
 
 app.use((req,res)=>{
   console.log(
