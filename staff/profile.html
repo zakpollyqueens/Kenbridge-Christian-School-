@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile | Kenbridge Staff Portal</title>
+<meta name="description" content="View your Kenbridge Christian School staff profile.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/portal-auth.js"></script>
+
+<style>
+*{box-sizing:border-box}
+
+.staff-page{
+    min-height:100vh;
+    background:#f5f7f6;
+}
+
+.staff-header{
+    background:#08783f;
+    color:#fff;
+    padding:18px 0;
+}
+
+.staff-header-inner{
+    width:min(1200px,92%);
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.staff-brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#fff;
+    text-decoration:none;
+}
+
+.staff-brand img{
+    width:52px;
+    height:52px;
+    object-fit:contain;
+    background:#fff;
+    border-radius:50%;
+    padding:5px;
+}
+
+.staff-brand-text strong,
+.staff-brand-text span{
+    display:block;
+}
+
+.staff-brand-text strong{
+    font-size:18px;
+}
+
+.staff-brand-text span{
+    margin-top:3px;
+    font-size:12px;
+    opacity:.85;
+}
+
+.staff-logout{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:10px 16px;
+    border:1px solid rgba(255,255,255,.5);
+    border-radius:8px;
+    color:#fff;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:700;
+}
+
+.staff-logout:hover{
+    background:rgba(255,255,255,.12);
+}
+
+.staff-container{
+    width:min(1000px,92%);
+    margin:auto;
+    padding:40px 0 60px;
+}
+
+.staff-heading{
+    margin-bottom:28px;
+}
+
+.staff-heading small{
+    display:block;
+    margin-bottom:8px;
+    color:#08783f;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:1.5px;
+}
+
+.staff-heading h1{
+    margin:0 0 8px;
+    color:#16352a;
+    font-size:clamp(28px,4vw,40px);
+}
+
+.staff-heading p{
+    margin:0;
+    color:#64736c;
+    line-height:1.7;
+}
+
+.profile-card{
+    background:#fff;
+    border:1px solid #e1e8e4;
+    border-radius:14px;
+    padding:30px;
+    box-shadow:0 8px 25px rgba(0,0,0,.05);
+}
+
+.profile-header{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    padding-bottom:25px;
+    margin-bottom:25px;
+    border-bottom:1px solid #e5ebe7;
+}
+
+.profile-avatar{
+    width:82px;
+    height:82px;
+    flex:0 0 82px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:#08783f;
+    color:#fff;
+    font-size:30px;
+    font-weight:900;
+}
+
+.profile-header-text h2{
+    margin:0 0 5px;
+    color:#173a2c;
+    font-size:24px;
+}
+
+.profile-header-text p{
+    margin:0;
+    color:#718079;
+    font-size:14px;
+}
+
+.profile-status{
+    display:inline-block;
+    margin-top:9px;
+    padding:5px 10px;
+    border-radius:20px;
+    background:#e8f7ed;
+    color:#08783f;
+    font-size:11px;
+    font-weight:800;
+}
+
+.profile-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+}
+
+.profile-field{
+    padding:16px;
+    border:1px solid #e1e8e4;
+    border-radius:10px;
+    background:#fafcfb;
+}
+
+.profile-field.full{
+    grid-column:1/-1;
+}
+
+.profile-field-label{
+    margin-bottom:6px;
+    color:#718079;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.7px;
+    text-transform:uppercase;
+}
+
+.profile-field-value{
+    min-height:20px;
+    color:#29463a;
+    font-size:15px;
+    font-weight:600;
+    word-break:break-word;
+}
+
+.profile-loading{
+    padding:35px;
+    text-align:center;
+    color:#68776f;
+}
+
+.profile-error{
+    display:none;
+    margin-bottom:20px;
+    padding:14px 16px;
+    border:1px solid #edcaca;
+    border-radius:9px;
+    background:#fbeaea;
+    color:#a62929;
+    font-size:13px;
+    line-height:1.6;
+}
+
+.profile-note{
+    margin-top:22px;
+    padding:18px;
+    border:1px solid #eee4bd;
+    border-radius:10px;
+    background:#fffdf4;
+    color:#6d623b;
+    font-size:13px;
+    line-height:1.7;
+}
+
+.profile-note strong{
+    color:#4e4528;
+}
+
+.profile-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:24px;
+}
+
+.profile-button{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:11px 17px;
+    border-radius:8px;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:800;
+}
+
+.dashboard-button{
+    background:#08783f;
+    color:#fff;
+}
+
+.dashboard-button:hover{
+    opacity:.9;
+}
+
+.logout-button{
+    border:1px solid #d7e0db;
+    background:#fff;
+    color:#315244;
+    cursor:pointer;
+}
+
+.logout-button:hover{
+    border-color:#08783f;
+    color:#08783f;
+}
+
+.portal-footer{
+    margin-top:20px;
+    padding:16px 15px;
+    text-align:center;
+    background:#08783f;
+    color:#fff;
+    font-size:12px;
+    line-height:1.6;
+}
+
+.portal-footer p{
+    margin:2px 0;
+}
+
+.portal-footer strong{
+    color:#f28c28;
+}
+
+@media(max-width:700px){
+    .staff-header-inner{
+        align-items:flex-start;
+    }
+
+    .staff-brand img{
+        width:44px;
+        height:44px;
+    }
+
+    .staff-brand-text strong{
+        font-size:15px;
+    }
+
+    .staff-brand-text span{
+        font-size:11px;
+    }
+
+    .staff-logout{
+        padding:8px 11px;
+        font-size:12px;
+    }
+
+    .staff-container{
+        padding-top:30px;
+    }
+
+    .profile-card{
+        padding:20px;
+    }
+
+    .profile-header{
+        align-items:flex-start;
+    }
+
+    .profile-grid{
+        grid-template-columns:1fr;
+    }
+
+    .profile-field.full{
+        grid-column:auto;
+    }
+
+    .profile-avatar{
+        width:68px;
+        height:68px;
+        flex-basis:68px;
+        font-size:24px;
+    }
+
+    .profile-header-text h2{
+        font-size:20px;
+    }
+
+    .profile-actions{
+        flex-direction:column;
+    }
+
+    .profile-button{
+        width:100%;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="staff-page">
+
+<header class="staff-header">
+<div class="staff-header-inner">
+
+<a href="staff-dashboard.html" class="staff-brand">
+<img src="../images/logo.png" alt="Kenbridge Christian School Logo">
+<div class="staff-brand-text">
+<strong>Kenbridge Christian School</strong>
+<span>Staff Portal</span>
+</div>
+</a>
+
+<a href="login.html" class="staff-logout" id="logoutButton">Logout</a>
+
+</div>
+</header>
+
+<main class="staff-container">
+
+<section class="staff-heading">
+<small>STAFF PORTAL</small>
+<h1>My Profile</h1>
+<p>View your staff information registered in the Kenbridge Christian School system.</p>
+</section>
+
+<section class="profile-card">
+
+<div class="profile-error" id="profileError"></div>
+
+<div class="profile-loading" id="profileLoading">
+Loading your profile...
+</div>
+
+<div id="profileContent" hidden>
+
+<div class="profile-header">
+
+<div class="profile-avatar" id="profileAvatar">
+?
+</div>
+
+<div class="profile-header-text">
+<h2 id="profileName">Staff Member</h2>
+<p id="profilePosition">Staff Member</p>
+<span class="profile-status" id="profileStatus">Active</span>
+</div>
+
+</div>
+
+<div class="profile-grid">
+
+<div class="profile-field">
+<div class="profile-field-label">Full Name</div>
+<div class="profile-field-value" id="profileFullName">—</div>
+</div>
+
+<div class="profile-field">
+<div class="profile-field-label">Username</div>
+<div class="profile-field-value" id="profileUsername">—</div>
+</div>
+
+<div class="profile-field">
+<div class="profile-field-label">Email Address</div>
+<div class="profile-field-value" id="profileEmail">—</div>
+</div>
+
+<div class="profile-field">
+<div class="profile-field-label">Phone Number</div>
+<div class="profile-field-value" id="profilePhone">—</div>
+</div>
+
+<div class="profile-field">
+<div class="profile-field-label">Position</div>
+<div class="profile-field-value" id="profilePositionField">—</div>
+</div>
+
+<div class="profile-field">
+<div class="profile-field-label">Department</div>
+<div class="profile-field-value" id="profileDepartment">—</div>
+</div>
+
+<div class="profile-field">
+<div class="profile-field-label">Portal Role</div>
+<div class="profile-field-value" id="profileRole">—</div>
+</div>
+
+<div class="profile-field">
+<div class="profile-field-label">Account Status</div>
+<div class="profile-field-value" id="profileAccountStatus">—</div>
+</div>
+
+<div class="profile-field full">
+<div class="profile-field-label">Additional Notes</div>
+<div class="profile-field-value" id="profileNotes">No additional notes.</div>
+</div>
+
+</div>
+
+<div class="profile-actions">
+<a href="staff-dashboard.html" class="profile-button dashboard-button">Back to Dashboard</a>
+<button type="button" class="profile-button logout-button" id="profileLogoutButton">Log Out</button>
+</div>
+
+</div>
+
+</section>
+
+<div class="profile-note">
+<strong>Profile information:</strong>
+This information is loaded directly from your authenticated Kenbridge staff account. If any information is incorrect, please contact a school administrator.
+</div>
+
+</main>
+
+<footer class="portal-footer">
+<p>© <span id="portalFooterYear"></span> Kenbridge Christian School. All Rights Reserved.</p>
+<p>Designed by <strong>Zakmolanitech Solutions</strong></p>
+</footer>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+
+const API_BASE="https://kenbridge-christian-school.onrender.com";
+
+const profileLoading=document.getElementById("profileLoading");
+const profileContent=document.getElementById("profileContent");
+const profileError=document.getElementById("profileError");
+
+const profileName=document.getElementById("profileName");
+const profilePosition=document.getElementById("profilePosition");
+const profileAvatar=document.getElementById("profileAvatar");
+
+const profileFullName=document.getElementById("profileFullName");
+const profileUsername=document.getElementById("profileUsername");
+const profileEmail=document.getElementById("profileEmail");
+const profilePhone=document.getElementById("profilePhone");
+const profilePositionField=document.getElementById("profilePositionField");
+const profileDepartment=document.getElementById("profileDepartment");
+const profileRole=document.getElementById("profileRole");
+const profileAccountStatus=document.getElementById("profileAccountStatus");
+const profileNotes=document.getElementById("profileNotes");
+const profileStatus=document.getElementById("profileStatus");
+
+function getAccessToken(){
+    for(const key of [
+        "kenbridgeAccessToken",
+        "access_token",
+        "kenbridge_access_token",
+        "token"
+    ]){
+        const token=
+            localStorage.getItem(key)||
+            sessionStorage.getItem(key);
+
+        if(token)return token;
+    }
+
+    return null;
+}
+
+function clearSession(){
+    for(const key of [
+        "kenbridgeAccessToken",
+        "kenbridgeRefreshToken",
+        "access_token",
+        "refresh_token",
+        "kenbridge_access_token",
+        "kenbridge_refresh_token",
+        "token",
+        "user",
+        "kenbridgeUser",
+        "kenbridge_user",
+        "kenbridgeAdminLoggedIn",
+        "kenbridgeStaffLoggedIn",
+        "kenbridgeUserRole"
+    ]){
+        localStorage.removeItem(key);
+        sessionStorage.removeItem(key);
+    }
+}
+
+function showError(message){
+    profileLoading.style.display="none";
+    profileContent.hidden=true;
+    profileError.textContent=message;
+    profileError.style.display="block";
+}
+
+function displayValue(value,fallback="—"){
+    return value===null||
+           value===undefined||
+           String(value).trim()===""
+        ?fallback
+        :String(value);
+}
+
+function getInitials(name){
+    const clean=String(name||"Staff Member").trim();
+
+    if(!clean)return "?";
+
+    const parts=clean.split(/\s+/).filter(Boolean);
+
+    if(parts.length===1){
+        return parts[0].substring(0,2).toUpperCase();
+    }
+
+    return (
+        parts[0].charAt(0)+
+        parts[parts.length-1].charAt(0)
+    ).toUpperCase();
+}
+
+function populateProfile(user){
+
+    const fullName=
+        displayValue(user.full_name,"Staff Member");
+
+    const position=
+        displayValue(user.position,"Staff Member");
+
+    const active=user.is_active!==false;
+
+    profileName.textContent=fullName;
+    profilePosition.textContent=position;
+    profileAvatar.textContent=getInitials(fullName);
+
+    profileFullName.textContent=fullName;
+    profileUsername.textContent=displayValue(user.username);
+    profileEmail.textContent=displayValue(user.email);
+    profilePhone.textContent=displayValue(user.phone);
+    profilePositionField.textContent=position;
+    profileDepartment.textContent=displayValue(user.department);
+    profileRole.textContent=displayValue(user.role);
+    profileAccountStatus.textContent=active?"Active":"Disabled";
+
+    profileNotes.textContent=
+        displayValue(
+            user.notes,
+            "No additional notes."
+        );
+
+    profileStatus.textContent=
+        active?"Active":"Disabled";
+
+    profileStatus.style.background=
+        active?"#e8f7ed":"#fbeaea";
+
+    profileStatus.style.color=
+        active?"#08783f":"#a62929";
+
+    profileContent.hidden=false;
+    profileLoading.style.display="none";
+}
+
+async function loadProfile(){
+
+    const token=getAccessToken();
+
+    if(!token){
+        showError(
+            "Your staff session was not found. Please sign in again."
+        );
+        return;
+    }
+
+    try{
+
+        const response=
+            await fetch(
+                API_BASE+"/api/auth/me",
+                {
+                    method:"GET",
+                    headers:{
+                        Authorization:"Bearer "+token
+                    }
+                }
+            );
+
+        let result;
+
+        try{
+            result=await response.json();
+        }catch{
+            throw new Error(
+                "The server returned an invalid response."
+            );
+        }
+
+        if(
+            !response.ok||
+            !result.success||
+            !result.user
+        ){
+            throw new Error(
+                result.message||
+                "Unable to load your staff profile."
+            );
+        }
+
+        const user=result.user;
+
+        localStorage.setItem(
+            "kenbridgeUser",
+            JSON.stringify(user)
+        );
+
+        sessionStorage.setItem(
+            "kenbridgeStaffLoggedIn",
+            "true"
+        );
+
+        sessionStorage.setItem(
+            "kenbridgeUserRole",
+            String(user.role||"").toLowerCase()
+        );
+
+        populateProfile(user);
+
+    }catch(error){
+
+        console.error(
+            "STAFF PROFILE ERROR:",
+            error
+        );
+
+        clearSession();
+
+        showError(
+            error.message||
+            "Unable to load your profile. Please sign in again."
+        );
+
+    }
+}
+
+function logout(){
+
+    clearSession();
+
+    window.location.href="login.html";
+}
+
+document
+    .getElementById("logoutButton")
+    ?.addEventListener(
+        "click",
+        event=>{
+            event.preventDefault();
+            logout();
+        }
+    );
+
+document
+    .getElementById("profileLogoutButton")
+    ?.addEventListener(
+        "click",
+        logout
+    );
+
+document
+    .getElementById("portalFooterYear")
+    .textContent=
+        new Date().getFullYear();
+
+loadProfile();
+
+});
+</script>
+
+</body>
+  </html>
