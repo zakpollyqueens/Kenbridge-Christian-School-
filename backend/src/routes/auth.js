@@ -979,5 +979,162 @@ message:"Unable to delete staff account."
 }
 
 });
+router.get("/settings",async(req,res)=>{
+const administrator=await getAdministrator(req,res);
+
+if(!administrator)return;
+
+try{
+
+const{rows}=await pool.query(
+`SELECT
+notifications,
+auto_refresh,
+content_status,
+portal_language
+FROM user_settings
+WHERE user_id=$1
+LIMIT 1`,
+[administrator.id]
+);
+
+const settings=rows[0]||{
+notifications:true,
+auto_refresh:false,
+content_status:"pending",
+portal_language:"en"
+};
+
+return res.status(200).json({
+success:true,
+settings:{
+notifications:settings.notifications,
+autoRefresh:settings.auto_refresh,
+contentStatus:settings.content_status,
+portalLanguage:settings.portal_language
+}
+});
+
+}catch(error){
+
+console.error(
+"GET SETTINGS ERROR:",
+error.message
+);
+
+return res.status(500).json({
+success:false,
+message:"Unable to load administrator settings."
+});
+
+}
+
+});
+
+router.put("/settings",async(req,res)=>{
+const administrator=await getAdministrator(req,res);
+
+if(!administrator)return;
+
+try{
+
+const{
+notifications,
+autoRefresh,
+contentStatus,
+portalLanguage
+}=req.body||{};
+
+if(
+typeof notifications!=="boolean"||
+typeof autoRefresh!=="boolean"
+){
+return res.status(400).json({
+success:false,
+message:"Notifications and auto refresh settings must be true or false."
+});
+}
+
+const allowedStatuses=[
+"pending",
+"draft"
+];
+
+if(!allowedStatuses.includes(contentStatus)){
+return res.status(400).json({
+success:false,
+message:"Invalid default content status."
+});
+}
+
+if(portalLanguage!=="en"){
+return res.status(400).json({
+success:false,
+message:"Invalid portal language."
+});
+}
+
+const{rows}=await pool.query(
+`INSERT INTO user_settings(
+user_id,
+notifications,
+auto_refresh,
+content_status,
+portal_language,
+created_at,
+updated_at
+)
+VALUES(
+$1,$2,$3,$4,$5,NOW(),NOW()
+)
+ON CONFLICT(user_id)
+DO UPDATE SET
+notifications=EXCLUDED.notifications,
+auto_refresh=EXCLUDED.auto_refresh,
+content_status=EXCLUDED.content_status,
+portal_language=EXCLUDED.portal_language,
+updated_at=NOW()
+RETURNING
+notifications,
+auto_refresh,
+content_status,
+portal_language`,
+[
+administrator.id,
+notifications,
+autoRefresh,
+contentStatus,
+portalLanguage
+]
+);
+
+const settings=rows[0];
+
+return res.status(200).json({
+success:true,
+message:"Settings saved successfully.",
+settings:{
+notifications:settings.notifications,
+autoRefresh:settings.auto_refresh,
+contentStatus:settings.content_status,
+portalLanguage:settings.portal_language
+}
+});
+
+}catch(error){
+
+console.error(
+"SAVE SETTINGS ERROR:",
+error.message
+);
+
+return res.status(500).json({
+success:false,
+message:"Unable to save administrator settings."
+});
+
+}
+
+});
 
 module.exports=router;
