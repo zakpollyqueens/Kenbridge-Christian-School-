@@ -7,6 +7,9 @@ const pool=require("./db");
 const authRoutes=require("./routes/auth");
 const contentRoutes=require("./routes/content");
 const staffContentRoutes=require("./routes/staff-content");
+const tasksRoutes = require("./routes/tasks");
+
+app.use("/api/tasks", tasksRoutes);
 
 const app=express();
 
