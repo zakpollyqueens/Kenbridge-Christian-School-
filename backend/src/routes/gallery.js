@@ -102,8 +102,11 @@ upsert:false
 });
 
 if(uploadError){
-console.error("SUPABASE GALLERY UPLOAD ERROR:",uploadError.message);
-return res.status(500).json({success:false,message:"Image could not be uploaded to storage."});
+console.error("SUPABASE GALLERY UPLOAD ERROR:",uploadError);
+return res.status(500).json({
+success:false,
+message:"Image could not be uploaded to storage: "+uploadError.message
+});
 }
 
 const {data:urlData}=supabase.storage
