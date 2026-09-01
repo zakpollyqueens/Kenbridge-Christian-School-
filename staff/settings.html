@@ -1,0 +1,266 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Settings | Kenbridge Administrator</title>
+<meta name="description" content="Administrator settings for Kenbridge Christian School.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+.admin-settings-page{min-height:100vh;background:#f5f7f6}
+.admin-header{background:#08783f;color:#fff;padding:18px 0}
+.admin-header-inner{width:min(1200px,92%);margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.admin-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}
+.admin-brand img{width:52px;height:52px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}
+.admin-brand-text strong,.admin-brand-text span{display:block}
+.admin-brand-text strong{font-size:18px}
+.admin-brand-text span{margin-top:3px;font-size:12px;opacity:.85}
+.admin-logout{padding:10px 16px;border:1px solid #ffffff80;border-radius:8px;color:#fff;text-decoration:none;font-size:14px;font-weight:600}
+.admin-logout:hover{background:#ffffff1f}
+.admin-container{width:min(1000px,92%);margin:auto;padding:40px 0 70px}
+.admin-heading{margin-bottom:28px}
+.admin-heading small{display:block;margin-bottom:8px;color:#08783f;font-size:12px;font-weight:700;letter-spacing:1.5px}
+.admin-heading h1{margin:0 0 8px;color:#16352a;font-size:clamp(28px,4vw,40px)}
+.admin-heading p{margin:0;color:#64736c;line-height:1.7}
+.admin-nav{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px}
+.admin-nav a{display:inline-flex;align-items:center;padding:10px 14px;border-radius:8px;background:#fff;border:1px solid #dce5e0;color:#315244;text-decoration:none;font-size:13px;font-weight:600}
+.admin-nav a:hover,.admin-nav a.active{background:#08783f;border-color:#08783f;color:#fff}
+.settings-card{background:#fff;border:1px solid #e1e8e4;border-radius:14px;padding:25px;margin-bottom:22px;box-shadow:0 8px 25px #0000000d}
+.settings-card h2{margin:0 0 8px;color:#173a2c}
+.settings-card>p{margin:0 0 20px;color:#68776f;line-height:1.6}
+.settings-row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:17px 0;border-top:1px solid #edf1ef}
+.settings-row:first-of-type{border-top:0}
+.settings-info strong{display:block;color:#29463a;margin-bottom:4px}
+.settings-info span{display:block;color:#77847e;font-size:13px;line-height:1.5}
+.settings-control{min-width:150px}
+.settings-control select{width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid #d6e0da;border-radius:8px;background:#fff;font:inherit}
+.toggle{position:relative;width:48px;height:26px}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:#cbd5d0;border-radius:30px;cursor:pointer;transition:.25s}
+.toggle-slider:before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.25s;box-shadow:0 2px 5px #0003}
+.toggle input:checked+.toggle-slider{background:#08783f}
+.toggle input:checked+.toggle-slider:before{transform:translateX(22px)}
+.settings-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.settings-button{border:0;border-radius:8px;padding:12px 18px;background:#08783f;color:#fff;font-weight:700;cursor:pointer}
+.settings-button:hover{filter:brightness(.94)}
+.settings-button.secondary{background:#f28c28}
+.settings-button:disabled{opacity:.65;cursor:not-allowed}
+.settings-message{min-height:20px;margin:14px 0 0;color:#08783f;font-size:13px;font-weight:700}
+.settings-message.error{color:#a62929}
+.security-note{padding:18px;border-radius:10px;background:#fffdf4;border:1px solid #eee4bd;color:#6d623b;font-size:13px;line-height:1.7}
+.security-note strong{color:#4e4528}
+@media(max-width:650px){
+.admin-header-inner{align-items:flex-start}
+.admin-brand img{width:44px;height:44px}
+.admin-brand-text strong{font-size:15px}
+.admin-brand-text span{font-size:11px}
+.admin-logout{padding:8px 11px;font-size:12px}
+.admin-container{padding-top:30px}
+.settings-card{padding:20px 16px}
+.settings-row{align-items:flex-start;flex-direction:column}
+.settings-control{width:100%;min-width:0}
+}
+</style>
+<script src="../../js/portal-auth.js"></script>
+</head>
+<body>
+<div class="admin-settings-page">
+<header class="admin-header">
+<div class="admin-header-inner">
+<a href="admin-dashboard.html" class="admin-brand">
+<img src="../../images/logo.png" alt="Kenbridge Christian School Logo">
+<div class="admin-brand-text">
+<strong>Kenbridge Christian School</strong>
+<span>Administrator Portal</span>
+</div>
+</a>
+<a href="../login.html" class="admin-logout" id="logoutButton">Logout</a>
+</div>
+</header><main class="admin-container">
+<div class="admin-heading">
+<small>ADMINISTRATOR</small>
+<h1>Settings</h1>
+<p>Manage administrator portal preferences and system settings.</p>
+</div><nav class="admin-nav">
+<a href="admin-dashboard.html">Dashboard</a>
+<a href="staff-accounts.html">Staff Accounts</a>
+<a href="add-staff.html">Add Staff</a>
+<a href="pending-content.html">Pending Content</a>
+<a href="admin-profile.html">My Profile</a>
+<a href="settings.html" class="active">Settings</a>
+</nav><section class="settings-card">
+<h2>Portal Preferences</h2>
+<p>Configure basic preferences for the administrator portal.</p><div class="settings-row">
+<div class="settings-info">
+<strong>Portal Notifications</strong>
+<span>Receive notifications when new content requires administrator approval.</span>
+</div>
+<label class="toggle">
+<input type="checkbox" id="notifications" checked>
+<span class="toggle-slider"></span>
+</label>
+</div><div class="settings-row">
+<div class="settings-info">
+<strong>Auto Refresh</strong>
+<span>Refresh pending content information automatically.</span>
+</div>
+<label class="toggle">
+<input type="checkbox" id="autoRefresh">
+<span class="toggle-slider"></span>
+</label>
+</div><div class="settings-row">
+<div class="settings-info">
+<strong>Default Content Status</strong>
+<span>New staff submissions remain pending until an administrator approves them.</span>
+</div>
+<div class="settings-control">
+<select id="contentStatus">
+<option value="pending">Pending Approval</option>
+<option value="draft">Draft</option>
+</select>
+</div>
+</div><div class="settings-row">
+<div class="settings-info">
+<strong>Portal Language</strong>
+<span>Select the language used by the administrator interface.</span>
+</div>
+<div class="settings-control">
+<select id="portalLanguage">
+<option value="en">English</option>
+</select>
+</div>
+</div><div class="settings-actions">
+<button type="button" class="settings-button" id="saveSettings">Save Settings</button>
+<button type="button" class="settings-button secondary" id="resetSettings">Reset</button>
+</div>
+<p id="settingsMessage" class="settings-message"></p>
+</section><section class="settings-card">
+<h2>Security</h2>
+<p>Administrator security is controlled through the Kenbridge backend authentication system.</p><div class="settings-row">
+<div class="settings-info">
+<strong>Secure Authentication</strong>
+<span>Administrator authentication is verified by the Kenbridge backend and Supabase.</span>
+</div>
+<strong>Protected</strong>
+</div><div class="settings-row">
+<div class="settings-info">
+<strong>Session Protection</strong>
+<span>Administrator settings can only be changed by an authenticated administrator.</span>
+</div>
+<strong>Protected</strong>
+</div>
+</section><div class="security-note">
+<strong>Important:</strong> Settings are now stored on the Kenbridge backend for the authenticated administrator instead of being stored only on this device.
+</div>
+</main>
+</div><script>
+document.addEventListener("DOMContentLoaded",function(){
+const API_BASE="https://kenbridge-christian-school.onrender.com";
+const save=document.getElementById("saveSettings");
+const reset=document.getElementById("resetSettings");
+const message=document.getElementById("settingsMessage");
+const notifications=document.getElementById("notifications");
+const autoRefresh=document.getElementById("autoRefresh");
+const contentStatus=document.getElementById("contentStatus");
+const portalLanguage=document.getElementById("portalLanguage");
+const logoutButton=document.getElementById("logoutButton");
+
+function getAccessToken(){
+for(const key of["access_token","kenbridge_access_token","kenbridgeAccessToken","token"]){
+const token=localStorage.getItem(key)||sessionStorage.getItem(key);
+if(token)return token;
+}
+return null;
+}
+
+function showMessage(text,error=false){
+message.textContent=text;
+message.className="settings-message"+(error?" error":"");
+}
+
+function getSettings(){
+return{
+notifications:notifications.checked,
+autoRefresh:autoRefresh.checked,
+contentStatus:contentStatus.value,
+portalLanguage:portalLanguage.value
+};
+}
+
+function applySettings(data){
+notifications.checked=data.notifications!==false;
+autoRefresh.checked=data.autoRefresh===true;
+contentStatus.value=data.contentStatus==="draft"?"draft":"pending";
+portalLanguage.value=data.portalLanguage||"en";
+}
+
+async function loadSettings(){
+const token=getAccessToken();
+if(!token){
+showMessage("Your administrator session was not found. Please log in again.",true);
+return;
+}
+try{
+const response=await fetch(API_BASE+"/api/auth/settings",{headers:{Authorization:"Bearer "+token}});
+const result=await response.json();
+if(!response.ok||!result.success)throw new Error(result.message||"Unable to load settings.");
+applySettings(result.settings||{});
+}catch(error){
+console.error("LOAD SETTINGS ERROR:",error);
+showMessage(error.message||"Unable to load settings.",true);
+}
+}
+
+save.addEventListener("click",async function(){
+const token=getAccessToken();
+if(!token){
+showMessage("Your administrator session was not found. Please log in again.",true);
+return;
+}
+save.disabled=true;
+reset.disabled=true;
+save.textContent="Saving...";
+try{
+const response=await fetch(API_BASE+"/api/auth/settings",{
+method:"PUT",
+headers:{
+"Content-Type":"application/json",
+Authorization:"Bearer "+token
+},
+body:JSON.stringify(getSettings())
+});
+const result=await response.json();
+if(!response.ok||!result.success)throw new Error(result.message||"Unable to save settings.");
+applySettings(result.settings||getSettings());
+showMessage("Settings saved successfully.");
+}catch(error){
+console.error("SAVE SETTINGS ERROR:",error);
+showMessage(error.message||"Unable to save settings.",true);
+}finally{
+save.disabled=false;
+reset.disabled=false;
+save.textContent="Save Settings";
+}
+});
+
+reset.addEventListener("click",async function(){
+notifications.checked=true;
+autoRefresh.checked=false;
+contentStatus.value="pending";
+portalLanguage.value="en";
+showMessage("Default settings restored. Click Save Settings to permanently save them.");
+});
+
+if(logoutButton){
+logoutButton.addEventListener("click",function(){
+for(const key of["access_token","refresh_token","kenbridge_access_token","kenbridgeAccessToken","token","user","kenbridge_user","kenbridgeAdminLoggedIn","kenbridgeStaffLoggedIn"]){
+localStorage.removeItem(key);
+sessionStorage.removeItem(key);
+}
+});
+}
+
+loadSettings();
+});
+</script></body>
+  </html>
