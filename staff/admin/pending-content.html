@@ -1,0 +1,533 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pending Content | Kenbridge Administrator</title>
+<meta name="description" content="Review and approve pending content for Kenbridge Christian School.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../../css/style.css">
+<script src="../../js/portal-auth.js"></script>
+<style>
+*{box-sizing:border-box}
+.admin-page{min-height:100vh;background:#f5f7f6}
+.admin-header{background:#08783f;color:#fff;padding:18px 0}
+.admin-header-inner,.admin-container{width:min(1200px,92%);margin:auto}
+.admin-header-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.admin-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}
+.admin-brand img{width:52px;height:52px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}
+.admin-brand-text strong,.admin-brand-text span{display:block}
+.admin-brand-text strong{font-size:18px}
+.admin-brand-text span{margin-top:3px;font-size:12px;opacity:.85}
+.admin-logout{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border:1px solid #ffffff80;border-radius:8px;color:#fff;text-decoration:none;font-size:14px;font-weight:700}
+.admin-logout:hover{background:#ffffff1f}
+.admin-container{padding:40px 0 60px}
+.admin-heading{margin-bottom:25px}
+.admin-heading small{display:block;margin-bottom:8px;color:#08783f;font-size:12px;font-weight:800;letter-spacing:1.5px}
+.admin-heading h1{margin:0 0 8px;color:#16352a;font-size:clamp(28px,4vw,40px)}
+.admin-heading p{margin:0;color:#64736c;line-height:1.7}
+.admin-nav{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px}
+.admin-nav a{display:inline-flex;align-items:center;padding:10px 14px;border-radius:8px;background:#fff;border:1px solid #dce5e0;color:#315244;text-decoration:none;font-size:13px;font-weight:700}
+.admin-nav a:hover,.admin-nav a.active{background:#08783f;border-color:#08783f;color:#fff}
+.content-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:25px}
+.summary-card{background:#fff;border:1px solid #e1e8e4;border-radius:12px;padding:20px;box-shadow:0 8px 25px #0000000d}
+.summary-card strong{display:block;color:#08783f;font-size:28px;margin-bottom:5px}
+.summary-card span{color:#64736c;font-size:13px}
+.content-card{background:#fff;border:1px solid #e1e8e4;border-radius:12px;overflow:hidden;box-shadow:0 8px 25px #0000000d}
+.content-toolbar{padding:18px;display:flex;gap:12px;flex-wrap:wrap;border-bottom:1px solid #edf1ef}
+.content-search{flex:1;min-width:240px;padding:12px 14px;border:1px solid #d8e0dc;border-radius:8px;font:inherit}
+.content-search:focus{outline:none;border-color:#08783f;box-shadow:0 0 0 3px #08783f1a}
+.filter-select{padding:12px 14px;border:1px solid #d8e0dc;border-radius:8px;background:#fff;font:inherit;color:#315244}
+.content-list{display:flex;flex-direction:column}
+.content-item{padding:22px;border-bottom:1px solid #edf1ef}
+.content-item:last-child{border-bottom:none}
+.content-item-header{display:flex;justify-content:space-between;align-items:flex-start;gap:15px}
+.content-title{margin:0 0 7px;color:#173a2c;font-size:18px}
+.content-meta{margin:0;color:#77867f;font-size:12px;line-height:1.6}
+.content-excerpt{margin:15px 0;color:#52635b;font-size:14px;line-height:1.7;white-space:pre-wrap}
+.content-badges{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.content-badge{display:inline-block;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:800}
+.badge-type{background:#eef3f0;color:#315244}
+.badge-pending{background:#fff3d8;color:#856500}
+.content-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.content-button{border:1px solid #d7e0db;background:#fff;color:#315244;padding:9px 12px;border-radius:7px;cursor:pointer;font-size:12px;font-weight:800}
+.content-button:hover{border-color:#08783f;color:#08783f}
+.content-button:disabled{opacity:.55;cursor:not-allowed}
+.content-button.approve{background:#08783f;border-color:#08783f;color:#fff}
+.content-button.approve:hover{background:#066632}
+.content-button.reject:hover{border-color:#b33b3b;color:#b33b3b}
+.content-empty{display:none;padding:45px 20px;text-align:center;color:#718079;font-size:14px}
+.content-loading{padding:35px 20px;text-align:center;color:#64736c;font-size:14px}
+.content-error{display:none;margin:18px;padding:14px 16px;border-radius:8px;background:#fbeaea;border:1px solid #edcaca;color:#a33a3a;font-size:13px}
+.content-note{margin-top:22px;padding:20px;border-radius:10px;background:#fffdf4;border:1px solid #eee4bd;color:#6d623b;font-size:13px;line-height:1.7}
+.content-note strong{color:#4e4528}
+@media(max-width:800px){.content-summary{grid-template-columns:1fr}}
+@media(max-width:650px){
+.admin-header-inner{align-items:flex-start}
+.admin-brand img{width:44px;height:44px}
+.admin-brand-text strong{font-size:15px}
+.admin-brand-text span{font-size:11px}
+.admin-logout{padding:8px 11px;font-size:12px}
+.admin-container{padding-top:30px}
+.content-item-header{flex-direction:column}
+.content-toolbar{align-items:stretch}
+.content-search,.filter-select{width:100%;min-width:0}
+.content-button{flex:1}
+}
+</style>
+</head><body>
+<div class="admin-page">
+<header class="admin-header">
+<div class="admin-header-inner">
+<a href="admin-dashboard.html" class="admin-brand">
+<img src="../../images/logo.png" alt="Kenbridge Christian School Logo">
+<div class="admin-brand-text">
+<strong>Kenbridge Christian School</strong>
+<span>Administrator Portal</span>
+</div>
+</a>
+<a href="../login.html" class="admin-logout" id="logoutButton">Logout</a>
+</div>
+</header><main class="admin-container">
+<div class="admin-heading">
+<small>ADMINISTRATOR</small>
+<h1>Pending Content</h1>
+<p>Review unpublished announcements and articles before publishing them.</p>
+</div><nav class="admin-nav">
+<a href="admin-dashboard.html">Dashboard</a>
+<a href="staff-accounts.html">Staff Accounts</a>
+<a href="add-staff.html">Add Staff</a>
+<a href="../announcements.html">Announcements</a>
+<a href="pending-content.html" class="active">Pending Content</a>
+<a href="admin-profile.html">My Profile</a>
+</nav><section class="content-summary">
+<div class="summary-card">
+<strong id="pendingCount">0</strong>
+<span>Pending Approval</span>
+</div>
+<div class="summary-card">
+<strong id="announcementCount">0</strong>
+<span>Announcements</span>
+</div>
+<div class="summary-card">
+<strong id="articleCount">0</strong>
+<span>Articles</span>
+</div>
+</section><section class="content-card">
+<div class="content-toolbar">
+<input type="search" id="contentSearch" class="content-search" placeholder="Search pending content..." aria-label="Search pending content">
+<select id="contentFilter" class="filter-select" aria-label="Filter content">
+<option value="all">All Content</option>
+<option value="announcement">Announcements</option>
+<option value="article">Articles</option>
+</select>
+</div><div id="contentError" class="content-error"></div>
+<div id="contentLoading" class="content-loading">Loading pending content...</div>
+<div id="contentList" class="content-list"></div>
+<div id="contentEmpty" class="content-empty">No pending content found.</div>
+</section><div class="content-note">
+<strong>Administrator approval:</strong>
+Only unpublished content is shown here. Approving content publishes it through the Kenbridge backend. Rejecting content permanently deletes the pending submission.
+</div>
+</main>
+</div><script>
+document.addEventListener("DOMContentLoaded",()=>{
+const API_BASE="https://kenbridge-christian-school.onrender.com";
+const contentList=document.getElementById("contentList");
+const contentEmpty=document.getElementById("contentEmpty");
+const contentLoading=document.getElementById("contentLoading");
+const contentError=document.getElementById("contentError");
+const search=document.getElementById("contentSearch");
+const filter=document.getElementById("contentFilter");
+const pendingCount=document.getElementById("pendingCount");
+const announcementCount=document.getElementById("announcementCount");
+const articleCount=document.getElementById("articleCount");
+let content=[];
+
+function getAccessToken(){
+for(const key of["kenbridgeAccessToken","access_token","kenbridge_access_token","token"]){
+const token=localStorage.getItem(key)||sessionStorage.getItem(key);
+if(token)return token;
+}
+return null;
+}
+
+function showError(text){
+contentError.textContent=text;
+contentError.style.display="block";
+}
+
+function clearError(){
+contentError.textContent="";
+contentError.style.display="none";
+}
+
+function escapeHTML(value){
+return String(value??"").replace(/[&<>"']/g,char=>({
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#039;"
+}[char]));
+}
+
+function formatDate(value){
+if(!value)return"Unknown date";
+const date=new Date(value);
+if(Number.isNaN(date.getTime()))return String(value);
+return date.toLocaleDateString("en-GB",{
+day:"numeric",
+month:"short",
+year:"numeric",
+hour:"2-digit",
+minute:"2-digit"
+});
+}
+
+function updateCounts(){
+pendingCount.textContent=content.length;
+announcementCount.textContent=content.filter(item=>item.type==="announcement").length;
+articleCount.textContent=content.filter(item=>item.type==="article").length;
+}
+
+function render(){
+contentList.innerHTML="";
+const query=search.value.trim().toLowerCase();
+const selectedType=filter.value;
+
+const filtered=content.filter(item=>{
+const searchable=[
+item.title,
+item.author,
+item.category,
+item.excerpt,
+item.content
+].join(" ").toLowerCase();
+
+return searchable.includes(query)&&
+(selectedType==="all"||item.type===selectedType);
+});
+
+updateCounts();
+
+if(!filtered.length){
+contentEmpty.style.display="block";
+return;
+}
+
+contentEmpty.style.display="none";
+
+filtered.forEach(item=>{
+const article=document.createElement("article");
+article.className="content-item";
+
+const typeName=item.type==="announcement"?"Announcement":"Article";
+
+article.innerHTML=`
+<div class="content-item-header">
+<div>
+<h2 class="content-title">${escapeHTML(item.title||"Untitled")}</h2>
+<p class="content-meta">
+Submitted by <strong>${escapeHTML(item.author||"Unknown")}</strong><br>
+Submitted: ${escapeHTML(formatDate(item.created_at))}
+${item.category?`<br>Category: ${escapeHTML(item.category)}`:""}
+</p>
+</div>
+</div>
+
+<div class="content-badges">
+<span class="content-badge badge-type">${typeName}</span>
+<span class="content-badge badge-pending">Pending Approval</span>
+</div>
+
+<p class="content-excerpt">${escapeHTML(item.excerpt||item.content||"No preview content available.")}</p>
+
+<div class="content-actions">
+<button type="button" class="content-button" data-action="preview" data-type="${item.type}" data-id="${escapeHTML(item.id)}">Preview</button>
+<button type="button" class="content-button approve" data-action="approve" data-type="${item.type}" data-id="${escapeHTML(item.id)}">Approve & Publish</button>
+<button type="button" class="content-button reject" data-action="reject" data-type="${item.type}" data-id="${escapeHTML(item.id)}">Reject</button>
+</div>
+`;
+
+contentList.appendChild(article);
+});
+}
+
+async function loadPendingContent(){
+const token=getAccessToken();
+
+contentLoading.style.display="block";
+contentEmpty.style.display="none";
+contentList.innerHTML="";
+clearError();
+
+if(!token){
+contentLoading.style.display="none";
+showError("Your administrator session was not found. Please log in again.");
+return;
+}
+
+try{
+const headers={Authorization:"Bearer "+token};
+
+const[announcementResponse,articleResponse]=await Promise.all([
+fetch(API_BASE+"/api/content/announcements",{headers}),
+fetch(API_BASE+"/api/content/articles",{headers})
+]);
+
+const announcementResult=await announcementResponse.json().catch(()=>({}));
+const articleResult=await articleResponse.json().catch(()=>({}));
+
+if(!announcementResponse.ok||!announcementResult.success){
+throw new Error(announcementResult.message||"Unable to retrieve announcements.");
+}
+
+if(!articleResponse.ok||!articleResult.success){
+throw new Error(articleResult.message||"Unable to retrieve articles.");
+}
+
+const pendingAnnouncements=
+(Array.isArray(announcementResult.announcements)?announcementResult.announcements:[])
+.filter(item=>item.is_published===false)
+.map(item=>({
+id:item.id,
+type:"announcement",
+title:item.title,
+author:item.author_name||"Unknown",
+category:item.category||"General",
+excerpt:item.content||"",
+content:item.content||"",
+created_at:item.created_at
+}));
+
+const pendingArticles=
+(Array.isArray(articleResult.articles)?articleResult.articles:[])
+.filter(item=>item.is_published===false)
+.map(item=>({
+id:item.id,
+type:"article",
+title:item.title,
+author:item.author_name||"Unknown",
+category:item.category||"General",
+excerpt:item.excerpt||"",
+content:item.content||"",
+featured_image:item.featured_image||"",
+created_at:item.created_at
+}));
+
+content=[...pendingAnnouncements,...pendingArticles];
+content.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+render();
+}catch(error){
+console.error("PENDING CONTENT LOAD ERROR:",error);
+content=[];
+render();
+showError(error.message||"Unable to load pending content.");
+}finally{
+contentLoading.style.display="none";
+}
+}
+
+function previewContent(item){
+const preview=[
+"TYPE: "+item.type.toUpperCase(),
+"",
+"TITLE:",
+item.title||"Untitled",
+"",
+"AUTHOR:",
+item.author||"Unknown",
+"",
+"CATEGORY:",
+item.category||"General",
+"",
+"CONTENT:",
+item.content||item.excerpt||"No content available."
+].join("\n");
+
+alert(preview);
+}
+
+async function approveContent(item,button){
+const token=getAccessToken();
+
+if(!token){
+showError("Your administrator session was not found. Please log in again.");
+return;
+}
+
+if(!confirm("Approve and publish this "+item.type+"?\n\n"+item.title))return;
+
+button.disabled=true;
+const originalText=button.textContent;
+button.textContent="Publishing...";
+
+try{
+let endpoint;
+let body;
+
+if(item.type==="announcement"){
+endpoint=API_BASE+"/api/content/announcements/"+encodeURIComponent(item.id);
+body={
+title:item.title,
+content:item.content||item.excerpt,
+category:item.category||"General",
+is_published:true
+};
+}else{
+const detailResponse=await fetch(
+API_BASE+"/api/content/articles/"+encodeURIComponent(item.id),
+{headers:{Authorization:"Bearer "+token}}
+);
+
+const detailResult=await detailResponse.json().catch(()=>({}));
+
+if(!detailResponse.ok||!detailResult.success||!detailResult.article){
+throw new Error(detailResult.message||"Unable to retrieve article details.");
+}
+
+const article=detailResult.article;
+
+endpoint=API_BASE+"/api/content/articles/"+encodeURIComponent(item.id);
+body={
+title:article.title,
+slug:article.slug,
+excerpt:article.excerpt,
+content:article.content,
+category:article.category||"General",
+featured_image:article.featured_image||"",
+is_published:true
+};
+}
+
+const response=await fetch(endpoint,{
+method:"PUT",
+headers:{
+"Content-Type":"application/json",
+Authorization:"Bearer "+token
+},
+body:JSON.stringify(body)
+});
+
+const result=await response.json().catch(()=>({}));
+
+if(!response.ok||!result.success){
+throw new Error(result.message||"Unable to publish content.");
+}
+
+await loadPendingContent();
+}catch(error){
+console.error("APPROVE CONTENT ERROR:",error);
+showError(error.message||"Unable to approve content.");
+}finally{
+button.disabled=false;
+button.textContent=originalText;
+}
+}
+
+async function rejectContent(item,button){
+const token=getAccessToken();
+
+if(!token){
+showError("Your administrator session was not found. Please log in again.");
+return;
+}
+
+if(!confirm("Reject and permanently delete this "+item.type+"?\n\n"+item.title))return;
+
+button.disabled=true;
+const originalText=button.textContent;
+button.textContent="Rejecting...";
+
+try{
+const endpoint=item.type==="announcement"
+?API_BASE+"/api/content/announcements/"+encodeURIComponent(item.id)
+:API_BASE+"/api/content/articles/"+encodeURIComponent(item.id);
+
+const response=await fetch(endpoint,{
+method:"DELETE",
+headers:{Authorization:"Bearer "+token}
+});
+
+const result=await response.json().catch(()=>({}));
+
+if(!response.ok||!result.success){
+throw new Error(result.message||"Unable to reject content.");
+}
+
+await loadPendingContent();
+}catch(error){
+console.error("REJECT CONTENT ERROR:",error);
+showError(error.message||"Unable to reject content.");
+}finally{
+button.disabled=false;
+button.textContent=originalText;
+}
+}
+
+contentList.addEventListener("click",async event=>{
+const button=event.target.closest("button[data-action]");
+if(!button)return;
+
+const item=content.find(entry=>
+String(entry.id)===String(button.dataset.id)&&
+entry.type===button.dataset.type
+);
+
+if(!item)return;
+
+clearError();
+
+if(button.dataset.action==="preview"){
+previewContent(item);
+return;
+}
+
+if(button.dataset.action==="approve"){
+await approveContent(item,button);
+return;
+}
+
+if(button.dataset.action==="reject"){
+await rejectContent(item,button);
+}
+});
+
+search.addEventListener("input",render);
+filter.addEventListener("change",render);
+
+function logout(){
+[
+"access_token",
+"refresh_token",
+"kenbridge_access_token",
+"kenbridgeAccessToken",
+"kenbridgeRefreshToken",
+"kenbridgeUser",
+"token",
+"user",
+"kenbridge_user",
+"kenbridgeAdminLoggedIn",
+"kenbridgeStaffLoggedIn",
+"kenbridgeUserRole"
+].forEach(key=>{
+localStorage.removeItem(key);
+sessionStorage.removeItem(key);
+});
+
+window.location.href="../login.html";
+}
+
+const logoutButton=document.getElementById("logoutButton");
+
+if(logoutButton){
+logoutButton.addEventListener("click",event=>{
+event.preventDefault();
+logout();
+});
+}
+
+loadPendingContent();
+});
+</script></body>
+  </html>
