@@ -10,6 +10,7 @@ const contentRoutes=require("./routes/content");
 const staffContentRoutes=require("./routes/staff-content");
 const tasksRoutes=require("./routes/tasks");
 const reportsRoutes=require("./routes/reports");
+const galleryRoutes=require("./routes/gallery");
 const publicContentRoutes=require("./routes/public-content");
 const notificationsRoutes=require("./routes/notifications");
 const app=express();
@@ -84,6 +85,7 @@ app.use("/api/dashboard",dashboardRoutes);
 app.use("/api/notifications",notificationsRoutes);
 app.use("/api/public",publicContentRoutes);
 app.use("/api/reports",reportsRoutes);
+app.use("/api/gallery",galleryRoutes);
 app.use((req,res)=>{
   console.log(
     `[404 NOT FOUND] ${req.method} ${req.originalUrl}`
