@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Staff Dashboard | Kenbridge Christian School</title>
+<meta name="description" content="Kenbridge Christian School Staff Portal Dashboard.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.staff-dashboard-page{min-height:100vh;background:#f4f8f5}
+.staff-topbar{position:sticky;top:0;z-index:1000;background:#08783f;color:#fff;box-shadow:0 4px 18px rgba(0,0,0,.12)}
+.staff-topbar-inner{width:min(1200px,94%);height:72px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.staff-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none;min-width:0}
+.staff-brand img{width:48px;height:48px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}
+.staff-brand strong{display:block;font-size:16px;white-space:nowrap}
+.staff-brand span{display:block;font-size:12px;opacity:.85;margin-top:3px}
+.staff-top-actions{display:flex;align-items:center;gap:10px}
+.staff-menu-button{width:44px;height:44px;border:1px solid rgba(255,255,255,.45);border-radius:9px;background:transparent;color:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.staff-menu-button span{width:21px;height:2px;background:#fff;border-radius:2px;transition:.25s}
+.staff-menu-button.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.staff-menu-button.open span:nth-child(2){opacity:0}
+.staff-menu-button.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.staff-logout{padding:10px 15px;border:1px solid rgba(255,255,255,.5);border-radius:8px;color:#fff;text-decoration:none;font-size:13px;font-weight:800}
+.staff-logout:hover{background:rgba(255,255,255,.12)}
+.staff-menu{position:absolute;top:72px;right:3%;width:290px;max-height:calc(100vh - 90px);overflow-y:auto;background:#fff;border-radius:0 0 14px 14px;box-shadow:0 12px 30px rgba(0,0,0,.18);padding:12px;display:none}
+.staff-menu.show{display:block}
+.staff-menu-title{padding:10px 12px;color:#08783f;font-size:12px;font-weight:900;letter-spacing:1px}
+.staff-menu a{display:block;padding:11px 12px;border-radius:8px;color:#29463a;text-decoration:none;font-size:14px;font-weight:700}
+.staff-menu a:hover,.staff-menu a.active{background:#eef6f1;color:#08783f}
+.staff-menu-divider{height:1px;background:#e5ebe7;margin:8px 0}
+.staff-container{width:min(1150px,92%);margin:auto;padding:38px 0 60px}
+.staff-welcome{margin-bottom:25px}
+.staff-welcome small{display:block;color:#08783f;font-weight:900;font-size:12px;letter-spacing:1.5px;margin-bottom:7px}
+.staff-welcome h1{margin:0 0 7px;color:#173a2c;font-size:clamp(28px,4vw,40px)}
+.staff-welcome p{margin:0;color:#68776f;line-height:1.6}
+.staff-alert{display:none;margin-bottom:20px;padding:14px 16px;border-left:4px solid #f28c28;border-radius:8px;background:#fff8ed;color:#735000;font-size:13px}
+.staff-alert.show{display:block}
+.staff-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:25px}
+.staff-stat-card{background:#fff;padding:22px;border-radius:14px;border:1px solid #e1e8e4;box-shadow:0 8px 25px rgba(0,0,0,.05)}
+.staff-stat-card strong{display:block;color:#08783f;font-size:30px;margin-bottom:5px}
+.staff-stat-card span{color:#718079;font-size:13px}
+.staff-section-title{margin:28px 0 15px;color:#173a2c}
+.staff-control-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}
+.staff-control-card{display:block;background:#fff;border:1px solid #e1e8e4;border-radius:14px;padding:21px;color:#29463a;text-decoration:none;box-shadow:0 7px 22px rgba(0,0,0,.045);transition:transform .2s,box-shadow .2s,border-color .2s}
+.staff-control-card:hover{transform:translateY(-3px);border-color:#08783f;box-shadow:0 12px 28px rgba(0,0,0,.09)}
+.staff-control-icon{font-size:27px;margin-bottom:12px}
+.staff-control-card h3{margin:0 0 6px;color:#173a2c;font-size:17px}
+.staff-control-card p{margin:0;color:#718079;font-size:13px;line-height:1.55}
+.staff-card-badge{display:inline-block;margin-top:12px;padding:5px 9px;border-radius:20px;background:#eef6f1;color:#08783f;font-size:11px;font-weight:800}
+.staff-dashboard-panel{margin-top:25px;background:#fff;border:1px solid #e1e8e4;border-radius:14px;padding:24px;box-shadow:0 8px 25px rgba(0,0,0,.05)}
+.staff-dashboard-panel h2{margin:0 0 7px;color:#173a2c}
+.staff-dashboard-panel p{margin:0;color:#718079;line-height:1.6}
+.staff-quick-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.staff-quick-links a{padding:10px 14px;border-radius:8px;background:#08783f;color:#fff;text-decoration:none;font-size:13px;font-weight:800}
+.staff-quick-links a:hover{filter:brightness(.94)}
+.staff-security{margin-top:25px;padding:16px;border-radius:10px;background:#fffdf4;border:1px solid #eee4bd;color:#6d623b;font-size:13px;line-height:1.6}
+.portal-footer{margin-top:20px;padding:16px 15px;text-align:center;background:#08783f;color:#fff;font-size:12px;line-height:1.6}
+.portal-footer p{margin:2px 0}
+.portal-footer strong{color:#f28c28}
+@media(max-width:850px){
+.staff-stats-grid{grid-template-columns:1fr}
+.staff-control-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:650px){
+.staff-topbar-inner{height:64px}
+.staff-brand img{width:40px;height:40px}
+.staff-brand strong{font-size:13px}
+.staff-brand span{font-size:10px}
+.staff-logout{display:none}
+.staff-menu{top:64px;right:0;width:min(310px,88vw);max-height:calc(100vh - 64px);border-radius:0 0 0 14px}
+.staff-container{width:calc(100% - 28px);padding:28px 0 50px}
+.staff-control-grid{grid-template-columns:1fr}
+.staff-dashboard-panel{padding:20px 16px}
+}
+</style>
+<script src="../js/portal-auth.js"></script>
+</head>
+
+<body>
+<div class="staff-dashboard-page">
+
+<header class="staff-topbar">
+<div class="staff-topbar-inner">
+
+<a href="staff-dashboard.html" class="staff-brand">
+<img src="../images/logo.png" alt="Kenbridge Christian School Logo">
+<div>
+<strong>Kenbridge Christian School</strong>
+<span>Staff Portal</span>
+</div>
+</a>
+
+<div class="staff-top-actions">
+<a href="login.html" class="staff-logout" id="logoutButton">Log Out</a>
+
+<button type="button" class="staff-menu-button" id="staffMenuButton" aria-label="Open Staff Portal Menu" aria-expanded="false" aria-controls="staffMenu">
+<span></span>
+<span></span>
+<span></span>
+</button>
+</div>
+
+</div>
+
+<nav class="staff-menu" id="staffMenu">
+<div class="staff-menu-title">STAFF PORTAL MENU</div>
+<a href="staff-dashboard.html" class="active">🏠 Dashboard</a>
+<a href="students.html">👨‍🎓 Students</a>
+<a href="attendance.html">📋 Attendance</a>
+<a href="announcements.html">📢 Announcements</a>
+<a href="articles.html">📰 Articles</a>
+<a href="reports.html">📊 Reports</a>
+<a href="files.html">📁 Files</a>
+<a href="uploads.html">📤 Upload Documents</a>
+<a href="calendar.html">📅 Calendar</a>
+<a href="messages.html">💬 Messages</a>
+<a href="tasks.html">✅ Tasks</a>
+<a href="leave.html">📝 Leave Requests</a>
+<a href="payroll.html">💰 Payroll</a>
+<a href="training.html">📚 Training</a>
+<a href="resources.html">🧰 Resources</a>
+<a href="notifications.html">🔔 Notifications</a>
+<div class="staff-menu-divider"></div>
+<a href="profile.html">👤 My Profile</a>
+<a href="settings.html">⚙️ Settings</a>
+<div class="staff-menu-divider"></div>
+<a href="login.html" id="menuLogout">🚪 Log Out</a>
+</nav>
+
+</header>
+
+<main class="staff-container">
+
+<section class="staff-welcome">
+<small>STAFF PORTAL</small>
+<h1 id="dashboardTitle">Staff Dashboard</h1>
+<p id="dashboardWelcomeText">Loading your staff dashboard...</p>
+</section>
+
+<div class="staff-alert" id="notificationAlert"></div>
+
+<section class="staff-stats-grid">
+
+<div class="staff-stat-card">
+<strong id="studentCount">...</strong>
+<span>Student Records</span>
+</div>
+
+<div class="staff-stat-card">
+<strong id="taskCount">...</strong>
+<span>Pending Tasks</span>
+</div>
+
+<div class="staff-stat-card">
+<strong id="notificationCount">...</strong>
+<span>Unread Notifications</span>
+</div>
+
+</section>
+
+<h2 class="staff-section-title">Staff Portal</h2>
+
+<section class="staff-control-grid">
+
+<a href="students.html" class="staff-control-card">
+<div class="staff-control-icon">👨‍🎓</div>
+<h3>Students</h3>
+<p>View and manage learner records and student information.</p>
+<span class="staff-card-badge">Manage Students</span>
+</a>
+
+<a href="attendance.html" class="staff-control-card">
+<div class="staff-control-icon">📋</div>
+<h3>Attendance</h3>
+<p>Record and review learner attendance information.</p>
+<span class="staff-card-badge">Attendance</span>
+</a>
+
+<a href="announcements.html" class="staff-control-card">
+<div class="staff-control-icon">📢</div>
+<h3>Announcements</h3>
+<p>Prepare and submit school announcements for publication.</p>
+<span class="staff-card-badge">Submit Announcement</span>
+</a>
+
+<a href="articles.html" class="staff-control-card">
+<div class="staff-control-icon">📰</div>
+<h3>Articles</h3>
+<p>Create and manage articles and school stories.</p>
+<span class="staff-card-badge">Manage Articles</span>
+</a>
+
+<a href="reports.html" class="staff-control-card">
+<div class="staff-control-icon">📊</div>
+<h3>Reports</h3>
+<p>Access academic and staff reports prepared for the portal.</p>
+<span class="staff-card-badge">View Reports</span>
+</a>
+
+<a href="files.html" class="staff-control-card">
+<div class="staff-control-icon">📁</div>
+<h3>Files</h3>
+<p>Access authorized school documents and uploaded files.</p>
+<span class="staff-card-badge">School Files</span>
+</a>
+
+<a href="calendar.html" class="staff-control-card">
+<div class="staff-control-icon">📅</div>
+<h3>Calendar</h3>
+<p>Keep track of school events, meetings and important dates.</p>
+<span class="staff-card-badge">School Calendar</span>
+</a>
+
+<a href="messages.html" class="staff-control-card">
+<div class="staff-control-icon">💬</div>
+<h3>Messages</h3>
+<p>Communicate with authorized staff and school administrators.</p>
+<span class="staff-card-badge">Messages</span>
+</a>
+
+<a href="tasks.html" class="staff-control-card">
+<div class="staff-control-icon">✅</div>
+<h3>Tasks</h3>
+<p>View assigned responsibilities and track outstanding tasks.</p>
+<span class="staff-card-badge">My Tasks</span>
+</a>
+
+<a href="leave.html" class="staff-control-card">
+<div class="staff-control-icon">📝</div>
+<h3>Leave Requests</h3>
+<p>Submit leave requests and monitor their approval status.</p>
+<span class="staff-card-badge">Request Leave</span>
+</a>
+
+<a href="payroll.html" class="staff-control-card">
+<div class="staff-control-icon">💰</div>
+<h3>Payroll</h3>
+<p>View authorized payroll and payment information.</p>
+<span class="staff-card-badge">Payroll</span>
+</a>
+
+<a href="training.html" class="staff-control-card">
+<div class="staff-control-icon">📚</div>
+<h3>Training</h3>
+<p>View staff training and professional development opportunities.</p>
+<span class="staff-card-badge">Development</span>
+</a>
+
+<a href="resources.html" class="staff-control-card">
+<div class="staff-control-icon">🧰</div>
+<h3>Resources</h3>
+<p>Access teaching materials, guidelines, forms and resources.</p>
+<span class="staff-card-badge">Resources</span>
+</a>
+
+<a href="notifications.html" class="staff-control-card">
+<div class="staff-control-icon">🔔</div>
+<h3>Notifications</h3>
+<p>View important alerts, approvals and portal updates.</p>
+<span class="staff-card-badge" id="notificationBadge">Notifications</span>
+</a>
+
+</section>
+
+<section class="staff-dashboard-panel">
+<h2>Quick Access</h2>
+<p>Frequently used staff account and portal controls.</p>
+
+<div class="staff-quick-links">
+<a href="profile.html">👤 My Profile</a>
+<a href="settings.html">⚙️ Settings</a>
+<a href="calendar.html">📅 Calendar</a>
+<a href="messages.html">💬 Messages</a>
+<a href="notifications.html">🔔 Notifications</a>
+</div>
+</section>
+
+<section class="staff-dashboard-panel">
+<h2>Portal Workflow</h2>
+<p>Manage your staff responsibilities and access authorized school services through the Kenbridge Staff Portal.</p>
+
+<div class="staff-security">
+<strong>Secure Staff Portal:</strong>
+Your dashboard information is loaded from the Kenbridge backend using your authenticated staff account.
+</div>
+</section>
+
+</main>
+
+<footer class="portal-footer">
+<p>© <span id="portalFooterYear"></span> Kenbridge Christian School. All Rights Reserved.</p>
+<p>Designed with ❤️ by <strong>Zakmolanitech Solutions</strong></p>
+</footer>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+const API_BASE="https://kenbridge-christian-school.onrender.com";
+
+const menuButton=document.getElementById("staffMenuButton");
+const menu=document.getElementById("staffMenu");
+const studentCount=document.getElementById("studentCount");
+const taskCount=document.getElementById("taskCount");
+const notificationCount=document.getElementById("notificationCount");
+const notificationAlert=document.getElementById("notificationAlert");
+const notificationBadge=document.getElementById("notificationBadge");
+const dashboardWelcomeText=document.getElementById("dashboardWelcomeText");
+const logoutButton=document.getElementById("logoutButton");
+const menuLogout=document.getElementById("menuLogout");
+
+function getAccessToken(){
+for(const key of[
+"kenbridgeAccessToken",
+"access_token",
+"kenbridge_access_token",
+"token"
+]){
+const token=localStorage.getItem(key)||sessionStorage.getItem(key);
+if(token)return token;
+}
+return null;
+}
+
+function clearSession(){
+[
+"kenbridgeAccessToken",
+"kenbridgeRefreshToken",
+"kenbridgeUser",
+"access_token",
+"refresh_token",
+"kenbridge_access_token",
+"token",
+"user",
+"kenbridge_user"
+].forEach(key=>localStorage.removeItem(key));
+
+[
+"kenbridgeStaffLoggedIn",
+"kenbridgeUserRole"
+].forEach(key=>sessionStorage.removeItem(key));
+}
+
+function logout(){
+clearSession();
+window.location.href="login.html";
+}
+
+function closeMenu(){
+menu.classList.remove("show");
+menuButton.classList.remove("open");
+menuButton.setAttribute("aria-expanded","false");
+}
+
+menuButton.addEventListener("click",event=>{
+event.stopPropagation();
+const open=menu.classList.toggle("show");
+menuButton.classList.toggle("open",open);
+menuButton.setAttribute("aria-expanded",open?"true":"false");
+});
+
+document.addEventListener("click",event=>{
+if(!menu.contains(event.target)&&!menuButton.contains(event.target)){
+closeMenu();
+}
+});
+
+menu.querySelectorAll("a").forEach(link=>{
+link.addEventListener("click",closeMenu);
+});
+
+async function loadDashboard(){
+const token=getAccessToken();
+
+if(!token){
+clearSession();
+window.location.href="login.html";
+return;
+}
+
+try{
+const response=await fetch(
+API_BASE+"/api/dashboard/staff",
+{
+headers:{
+Authorization:"Bearer "+token
+}
+}
+);
+
+const result=await response.json();
+
+if(!response.ok||!result.success){
+throw new Error(
+result.message||"Unable to load your staff dashboard."
+);
+}
+
+const user=result.user||{};
+const statistics=result.statistics||{};
+
+const firstName=String(
+user.full_name||"Staff Member"
+).trim().split(/\s+/)[0];
+
+dashboardWelcomeText.textContent=
+"Welcome back, "+firstName+
+". Manage your daily school activities from one place.";
+
+const students=Number(
+statistics.students?.total||0
+);
+
+const tasks=Number(
+statistics.tasks?.active||0
+);
+
+const unread=Number(
+statistics.notifications?.unread||0
+);
+
+studentCount.textContent=students;
+taskCount.textContent=tasks;
+notificationCount.textContent=unread;
+
+if(unread>0){
+notificationAlert.textContent=
+"🔔 You have "+unread+
+" unread notification"+
+(unread===1?"":"s")+".";
+
+notificationAlert.classList.add("show");
+
+notificationBadge.textContent=
+unread+" New";
+}else{
+notificationAlert.textContent="";
+notificationAlert.classList.remove("show");
+notificationBadge.textContent="Notifications";
+}
+
+localStorage.setItem(
+"kenbridgeUser",
+JSON.stringify(user)
+);
+
+}catch(error){
+console.error(
+"DASHBOARD LOADING ERROR:",
+error
+);
+
+studentCount.textContent="—";
+taskCount.textContent="—";
+notificationCount.textContent="—";
+
+notificationAlert.textContent=
+error.message||
+"Unable to load dashboard information.";
+
+notificationAlert.classList.add("show");
+
+dashboardWelcomeText.textContent=
+"Your dashboard information could not be loaded. Please try again.";
+
+if(
+String(error.message||"")
+.toLowerCase()
+.includes("session")||
+String(error.message||"")
+.toLowerCase()
+.includes("token")||
+String(error.message||"")
+.toLowerCase()
+.includes("authorization")
+){
+clearSession();
+setTimeout(()=>{
+window.location.href="login.html";
+},1200);
+}
+}
+}
+
+logoutButton.addEventListener("click",event=>{
+event.preventDefault();
+logout();
+});
+
+menuLogout.addEventListener("click",event=>{
+event.preventDefault();
+logout();
+});
+
+document.getElementById(
+"portalFooterYear"
+).textContent=new Date().getFullYear();
+
+loadDashboard();
+});
+</script>
+
+</body>
+  </html>
