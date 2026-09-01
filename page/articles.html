@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Articles & News | Kenbridge Christian School</title>
+<meta name="description" content="Read news, articles, announcements and stories from Kenbridge Christian School.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.article-loading,.article-empty,.article-error{grid-column:1/-1;text-align:center;padding:35px 20px;border-radius:12px;font-size:15px}
+.article-loading{background:#fff;border:1px solid #e1e8e4;color:#64736c}
+.article-empty{background:#fff;border:1px solid #e1e8e4;color:#64736c}
+.article-error{background:#fff5f5;border:1px solid #f0caca;color:#9c3030}
+.article-card{transition:transform .25s ease,box-shadow .25s ease}
+.article-card:hover{transform:translateY(-4px)}
+.article-card-link{cursor:pointer;background:none;border:0;padding:0;font:inherit;color:inherit}
+.article-modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.65)}
+.article-modal.show{display:flex}
+.article-modal-box{width:min(850px,100%);max-height:90vh;overflow-y:auto;position:relative;background:#fff;border-radius:16px;padding:35px;box-shadow:0 25px 80px rgba(0,0,0,.3)}
+.article-modal-close{position:absolute;top:14px;right:16px;width:40px;height:40px;border:0;border-radius:50%;background:#eef6f1;color:#08783f;font-size:22px;cursor:pointer}
+.article-modal-category{display:inline-block;margin-bottom:12px}
+.article-modal-title{margin:0 0 12px;color:#173a2c}
+.article-modal-date{display:block;margin-bottom:22px;color:#718079}
+.article-modal-content{color:#40564b;line-height:1.8;white-space:pre-wrap}
+@media(max-width:600px){.article-modal-box{padding:28px 20px}}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+<div class="container top-bar-inner">
+<div class="top-location">📍 Old Butabika Road, Kampala, Uganda</div>
+<div class="top-contact">
+<a href="tel:+256789825517">📞 +256 789 825 517</a>
+<span class="separator">|</span>
+<span>Mon–Fri: 8:00 AM–5:00 PM</span>
+<span class="separator">|</span>
+<span>Sat: 8:00 AM–2:00 PM</span>
+</div>
+</div>
+</div>
+
+<header class="header" id="header">
+<div class="container nav-container">
+
+<a href="../index.html" class="brand">
+<div class="logo-container">
+<img src="../images/logo.jpg" alt="Kenbridge Christian School Logo" class="school-logo">
+</div>
+<div class="brand-name">
+<strong>KENBRIDGE</strong>
+<span>CHRISTIAN SCHOOL</span>
+</div>
+</a>
+
+<nav class="desktop-nav">
+<a href="../index.html">Home</a>
+<a href="about.html">About</a>
+<a href="academics.html">Academics</a>
+<a href="admissions.html">Admissions</a>
+<a href="fees.html">Fees</a>
+<a href="articles.html" class="active">Articles</a>
+<a href="contact.html">Contact</a>
+
+<div class="more-menu">
+<button class="more-button" type="button">More <span>⌄</span></button>
+<div class="dropdown">
+<a href="boarding.html">Boarding</a>
+<a href="gallery.html">Gallery</a>
+<a href="management.html">Management</a>
+<a href="announcements.html">Announcements</a>
+<a href="projects.html">Projects</a>
+<a href="sports.html">Sports</a>
+<a href="facilities.html">Facilities</a>
+<a href="careers.html">Careers</a>
+<a href="feedback.html">Feedback</a>
+</div>
+</div>
+
+<a href="admissions.html" class="apply-button">Apply Online</a>
+</nav>
+
+<button class="mobile-menu-button" id="mobileMenuButton" aria-label="Open navigation" aria-expanded="false">
+<span></span><span></span><span></span>
+</button>
+
+</div>
+
+<nav class="mobile-nav" id="mobileNav">
+<a href="../index.html">Home</a>
+<a href="about.html">About</a>
+<a href="academics.html">Academics</a>
+<a href="admissions.html">Admissions</a>
+<a href="fees.html">Fees</a>
+<a href="boarding.html">Boarding</a>
+<a href="articles.html">Articles</a>
+<a href="gallery.html">Gallery</a>
+<a href="announcements.html">Announcements</a>
+<a href="projects.html">Projects</a>
+<a href="sports.html">Sports</a>
+<a href="facilities.html">Facilities</a>
+<a href="management.html">Management</a>
+<a href="careers.html">Careers</a>
+<a href="feedback.html">Feedback</a>
+<a href="contact.html">Contact</a>
+<a href="admissions.html" class="mobile-apply">Apply Online</a>
+</nav>
+</header>
+
+<section class="hero">
+<div class="container hero-content">
+<span class="hero-label">NEWS & ARTICLES</span>
+<h1>Stories from <span>Kenbridge.</span></h1>
+<p>Stay connected with school news, learning stories, activities, achievements and important updates.</p>
+</div>
+</section>
+
+<section class="section">
+<div class="container">
+<div class="section-heading">
+<span class="section-label">FEATURED</span>
+<h2>Latest from Kenbridge</h2>
+</div>
+<div id="featuredArticleContainer">
+<div class="article-loading">Loading the latest article...</div>
+</div>
+</div>
+</section>
+
+<section class="section why-section">
+<div class="container">
+<div class="section-heading">
+<span class="section-label">EXPLORE</span>
+<h2>Browse Our Stories</h2>
+<p>Discover different areas of school life through our news and articles.</p>
+</div>
+
+<div class="category-grid">
+<a href="#articles" class="category-card" data-category="ACADEMICS">
+<div class="category-icon">📚</div>
+<h3>Academics</h3>
+<p>Learning, achievements and academic activities.</p>
+<span>Explore →</span>
+</a>
+
+<a href="#articles" class="category-card" data-category="SCHOOL LIFE">
+<div class="category-icon">🏫</div>
+<h3>School Life</h3>
+<p>Everyday moments and experiences at Kenbridge.</p>
+<span>Explore →</span>
+</a>
+
+<a href="#articles" class="category-card" data-category="SPORTS">
+<div class="category-icon">⚽</div>
+<h3>Sports</h3>
+<p>Sports events, competitions and learner activities.</p>
+<span>Explore →</span>
+</a>
+
+<a href="#articles" class="category-card" data-category="COMMUNITY">
+<div class="category-icon">🤝</div>
+<h3>Community</h3>
+<p>Stories involving parents, learners and the wider community.</p>
+<span>Explore →</span>
+</a>
+</div>
+</div>
+</section>
+
+<section class="section" id="articles">
+<div class="container">
+<div class="section-heading">
+<span class="section-label">LATEST STORIES</span>
+<h2>News & Articles</h2>
+</div>
+
+<div class="article-grid" id="articleGrid">
+<div class="article-loading">Loading published articles...</div>
+</div>
+</div>
+</section>
+
+<section class="school-life">
+<div class="container">
+<div class="section-heading light">
+<span class="section-label">STAY CONNECTED</span>
+<h2>Never miss a school update.</h2>
+<p>Follow school announcements and important updates through the official communication channels.</p>
+</div>
+
+<div class="updates-box">
+<div>
+<div class="feature-icon">🔔</div>
+<h3>School Updates</h3>
+<p>Important announcements, events and school news are published through the official Kenbridge website.</p>
+</div>
+<a href="announcements.html" class="btn btn-primary">View Announcements</a>
+</div>
+</div>
+</section>
+
+<section class="admissions-cta">
+<div class="container cta-inner">
+<div>
+<span class="section-label">KENBRIDGE CHRISTIAN SCHOOL</span>
+<h2>Discover more about us.</h2>
+<p>Explore our academics, school life, facilities and admissions information.</p>
+</div>
+<a href="about.html" class="btn btn-primary">About Our School</a>
+</div>
+</section>
+
+<div id="site-footer"></div>
+
+<div class="article-modal" id="articleModal" aria-hidden="true">
+<div class="article-modal-box">
+<button type="button" class="article-modal-close" id="articleModalClose" aria-label="Close article">×</button>
+<span class="article-category article-modal-category" id="modalArticleCategory"></span>
+<h2 class="article-modal-title" id="modalArticleTitle"></h2>
+<small class="article-modal-date" id="modalArticleDate"></small>
+<div class="article-modal-content" id="modalArticleContent"></div>
+</div>
+</div>
+
+<script src="../js/script.js"></script>
+<script src="../js/components.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+const API_BASE="https://kenbridge-christian-school.onrender.com";
+const featuredContainer=document.getElementById("featuredArticleContainer");
+const articleGrid=document.getElementById("articleGrid");
+const articleModal=document.getElementById("articleModal");
+const modalClose=document.getElementById("articleModalClose");
+const modalCategory=document.getElementById("modalArticleCategory");
+const modalTitle=document.getElementById("modalArticleTitle");
+const modalDate=document.getElementById("modalArticleDate");
+const modalContent=document.getElementById("modalArticleContent");
+let articles=[];
+
+function escapeHTML(value){
+return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+}
+
+function formatDate(value){
+if(!value)return "Official Kenbridge Article";
+const date=new Date(value);
+if(Number.isNaN(date.getTime()))return "Official Kenbridge Article";
+return date.toLocaleDateString("en-US",{day:"numeric",month:"long",year:"numeric"});
+}
+
+function getCategory(article){
+return String(article.category||article.type||"SCHOOL LIFE").toUpperCase();
+}
+
+function getArticleContent(article){
+return article.content||article.description||article.body||"";
+}
+
+function getArticleImage(article){
+return article.image_url||article.image||"../images/school.jpg";
+}
+
+function createFeaturedArticle(article){
+const category=getCategory(article);
+const title=article.title||"Kenbridge Christian School";
+const content=getArticleContent(article);
+const image=getArticleImage(article);
+
+featuredContainer.innerHTML=`
+<article class="featured-article">
+<div class="featured-article-image">
+<img src="${escapeHTML(image)}" alt="${escapeHTML(title)}">
+</div>
+<div class="featured-article-content">
+<span class="article-category">${escapeHTML(category)}</span>
+<h2>${escapeHTML(title)}</h2>
+<p>${escapeHTML(content)}</p>
+<button type="button" class="btn btn-primary" data-read-article="${escapeHTML(article.id)}">Read More</button>
+</div>
+</article>`;
+}
+
+function createArticleCard(article){
+const category=getCategory(article);
+const title=article.title||"Kenbridge Article";
+const content=getArticleContent(article);
+const image=getArticleImage(article);
+const card=document.createElement("article");
+
+card.className="article-card";
+card.innerHTML=`
+<div class="article-image">
+<img src="${escapeHTML(image)}" alt="${escapeHTML(title)}">
+<span class="article-tag">${escapeHTML(category)}</span>
+</div>
+<div class="article-content">
+<small>${escapeHTML(formatDate(article.created_at))}</small>
+<h3>${escapeHTML(title)}</h3>
+<p>${escapeHTML(content)}</p>
+<button type="button" class="article-card-link" data-read-article="${escapeHTML(article.id)}">Read Article →</button>
+</div>`;
+
+return card;
+}
+
+function openArticle(id){
+const article=articles.find(item=>String(item.id)===String(id));
+if(!article)return;
+
+modalCategory.textContent=getCategory(article);
+modalTitle.textContent=article.title||"Kenbridge Article";
+modalDate.textContent=formatDate(article.created_at);
+modalContent.textContent=getArticleContent(article);
+
+articleModal.classList.add("show");
+articleModal.setAttribute("aria-hidden","false");
+document.body.style.overflow="hidden";
+}
+
+function closeArticle(){
+articleModal.classList.remove("show");
+articleModal.setAttribute("aria-hidden","true");
+document.body.style.overflow="";
+}
+
+function renderArticles(selectedCategory=""){
+articleGrid.innerHTML="";
+
+const filteredArticles=selectedCategory
+?articles.slice(1).filter(article=>getCategory(article)===selectedCategory)
+:articles.slice(1);
+
+if(!filteredArticles.length){
+articleGrid.innerHTML=`<div class="article-empty">No published articles are available in this category at the moment.</div>`;
+return;
+}
+
+filteredArticles.forEach(article=>{
+articleGrid.appendChild(createArticleCard(article));
+});
+}
+
+async function loadArticles(){
+try{
+const response=await fetch(API_BASE+"/api/public/articles");
+const result=await response.json();
+
+if(!response.ok||!result.success){
+throw new Error(result.message||"Unable to load articles.");
+}
+
+articles=Array.isArray(result.articles)?result.articles:[];
+
+if(!articles.length){
+featuredContainer.innerHTML=`<div class="article-empty">No published articles are available at the moment.</div>`;
+articleGrid.innerHTML=`<div class="article-empty">New stories from Kenbridge will appear here when they are published.</div>`;
+return;
+}
+
+createFeaturedArticle(articles[0]);
+renderArticles();
+
+}catch(error){
+console.error("PUBLIC ARTICLES ERROR:",error);
+
+const message=escapeHTML(error.message||"Articles could not be loaded.");
+
+featuredContainer.innerHTML=`<div class="article-error">${message}</div>`;
+articleGrid.innerHTML=`<div class="article-error">${message}</div>`;
+}
+}
+
+document.addEventListener("click",event=>{
+const button=event.target.closest("[data-read-article]");
+if(!button)return;
+openArticle(button.dataset.readArticle);
+});
+
+modalClose.addEventListener("click",closeArticle);
+
+articleModal.addEventListener("click",event=>{
+if(event.target===articleModal)closeArticle();
+});
+
+document.addEventListener("keydown",event=>{
+if(event.key==="Escape")closeArticle();
+});
+
+document.querySelectorAll(".category-card[data-category]").forEach(card=>{
+card.addEventListener("click",()=>{
+const category=card.dataset.category;
+setTimeout(()=>renderArticles(category),100);
+});
+});
+
+loadArticles();
+});
+</script>
+
+</body>
+  </html>
