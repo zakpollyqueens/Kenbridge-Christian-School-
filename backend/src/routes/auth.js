@@ -1,3 +1,8 @@
+const express=require("express");
+const supabase=require("../supabase");
+const pool=require("../db");
+
+const router=express.Router();
 router.post("/staff", async (req,res)=>{
 let createdUserId=null;
 
