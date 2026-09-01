@@ -4,6 +4,7 @@ const express=require("express");
 const cors=require("cors");
 const pool=require("./db");
 
+const dashboardRoutes=require("./routes/dashboard");
 const authRoutes=require("./routes/auth");
 const contentRoutes=require("./routes/content");
 const staffContentRoutes=require("./routes/staff-content");
