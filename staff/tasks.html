@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tasks | Kenbridge Staff Portal</title>
+<meta name="description" content="View and manage tasks assigned to Kenbridge Christian School staff.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/portal-auth.js"></script>
+
+<style>
+*{box-sizing:border-box}
+.staff-page{min-height:100vh;background:#f4f8f5}
+.staff-header{background:#08783f;color:#fff;padding:18px 0}
+.staff-header-inner{width:min(1200px,92%);margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.staff-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}
+.staff-brand img{width:52px;height:52px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}
+.staff-brand strong,.staff-brand span{display:block}
+.staff-brand strong{font-size:18px}
+.staff-brand span{margin-top:3px;font-size:12px;opacity:.85}
+.staff-logout{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border:1px solid #ffffff80;border-radius:8px;color:#fff;text-decoration:none;font-size:14px;font-weight:700}
+.staff-logout:hover{background:#ffffff1f}
+
+.staff-container{width:min(1200px,92%);margin:auto;padding:40px 0 60px}
+.staff-heading{margin-bottom:25px}
+.staff-heading small{display:block;margin-bottom:8px;color:#08783f;font-size:12px;font-weight:900;letter-spacing:1.5px}
+.staff-heading h1{margin:0 0 8px;color:#173a2c;font-size:clamp(28px,4vw,40px)}
+.staff-heading p{margin:0;color:#68776f;line-height:1.7}
+
+.task-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.task-search{flex:1;min-width:230px;padding:13px 14px;border:1px solid #d6e0da;border-radius:9px;background:#fff;font:inherit;outline:none}
+.task-search:focus{border-color:#08783f;box-shadow:0 0 0 3px #08783f1a}
+.task-filter{padding:13px 14px;border:1px solid #d6e0da;border-radius:9px;background:#fff;color:#29463a;font:inherit;outline:none}
+.task-filter:focus{border-color:#08783f}
+
+.task-message{display:none;margin-bottom:20px;padding:14px 16px;border-radius:9px;font-size:13px;line-height:1.6}
+.task-message.error{display:block;background:#fbeaea;border:1px solid #edcaca;color:#a62929}
+.task-message.success{display:block;background:#e8f5ed;border:1px solid #c9e6d3;color:#08783f}
+
+.tasks-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.task-card{padding:22px;border:1px solid #e1e8e4;border-radius:14px;background:#fff;box-shadow:0 8px 25px #0000000d}
+.task-card:hover{box-shadow:0 12px 30px #00000012}
+.task-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.task-priority,.task-status{display:inline-block;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:800}
+.task-priority{background:#eef6f1;color:#08783f}
+.task-priority.high{background:#fbeaea;color:#a62929}
+.task-priority.medium{background:#fff4df;color:#956400}
+.task-status.pending{background:#fff4df;color:#956400}
+.task-status.in-progress{background:#eaf3ff;color:#1765ad}
+.task-status.completed{background:#e8f7ed;color:#08783f}
+
+.task-card h2{margin:0 0 9px;color:#173a2c;font-size:19px}
+.task-card p{margin:0 0 16px;color:#68776f;font-size:14px;line-height:1.7;white-space:pre-line}
+.task-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:17px}
+.task-meta div{padding:10px;border-radius:8px;background:#f6f9f7}
+.task-meta small{display:block;margin-bottom:3px;color:#7b8882;font-size:10px;text-transform:uppercase;font-weight:800}
+.task-meta span{color:#315244;font-size:12px;font-weight:700}
+.task-actions{display:flex;gap:8px;flex-wrap:wrap}
+.task-button{border:1px solid #d7e0db;border-radius:7px;padding:8px 11px;background:#fff;color:#315244;font-size:12px;font-weight:700;cursor:pointer}
+.task-button:hover{border-color:#08783f;color:#08783f}
+.task-button.primary{border-color:#08783f;background:#08783f;color:#fff}
+.task-button:disabled{opacity:.55;cursor:not-allowed}
+
+.task-loading,.task-empty{grid-column:1/-1;padding:40px 20px;text-align:center;color:#718079;background:#fff;border:1px solid #e1e8e4;border-radius:14px}
+
+.task-note{margin-top:22px;padding:17px;border-radius:10px;background:#fffdf4;border:1px solid #eee4bd;color:#6d623b;font-size:13px;line-height:1.7}
+
+@media(max-width:700px){
+.staff-header-inner{align-items:flex-start}
+.staff-brand img{width:44px;height:44px}
+.staff-brand strong{font-size:15px}
+.staff-brand span{font-size:11px}
+.staff-logout{padding:8px 11px;font-size:12px}
+.staff-container{padding-top:30px}
+.task-toolbar{align-items:stretch}
+.task-search,.task-filter{width:100%;min-width:0}
+.tasks-list{grid-template-columns:1fr}
+.task-meta{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+<div class="staff-page">
+
+<header class="staff-header">
+<div class="staff-header-inner">
+<a href="staff-dashboard.html" class="staff-brand">
+<img src="../images/logo.png" alt="Kenbridge Christian School Logo">
+<div>
+<strong>Kenbridge Christian School</strong>
+<span>Staff Portal</span>
+</div>
+</a>
+<a href="login.html" class="staff-logout" id="logoutButton">Log Out</a>
+</div>
+</header>
+
+<main class="staff-container">
+
+<section class="staff-heading">
+<small>STAFF PORTAL</small>
+<h1>Tasks</h1>
+<p>View tasks assigned to you and keep track of your work.</p>
+</section>
+
+<div class="task-message" id="taskMessage"></div>
+
+<div class="task-toolbar">
+<input
+type="search"
+id="taskSearch"
+class="task-search"
+placeholder="Search your tasks..."
+aria-label="Search tasks"
+>
+
+<select id="taskFilter" class="task-filter" aria-label="Filter tasks">
+<option value="ALL">All Tasks</option>
+<option value="PENDING">Pending</option>
+<option value="IN_PROGRESS">In Progress</option>
+<option value="COMPLETED">Completed</option>
+</select>
+</div>
+
+<section class="tasks-list" id="tasksList">
+<div class="task-loading">Loading your tasks...</div>
+</section>
+
+<div class="task-note">
+<strong>Staff task system:</strong>
+Tasks displayed here are assigned to the currently authenticated staff account and are loaded from the Kenbridge backend database.
+</div>
+
+</main>
+
+<footer class="portal-footer">
+<p>© <span id="footerYear"></span> Kenbridge Christian School. All Rights Reserved.</p>
+</footer>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+
+const API_BASE="https://kenbridge-christian-school.onrender.com";
+
+const tasksList=document.getElementById("tasksList");
+const taskSearch=document.getElementById("taskSearch");
+const taskFilter=document.getElementById("taskFilter");
+const taskMessage=document.getElementById("taskMessage");
+
+let tasks=[];
+
+function getAccessToken(){
+for(const key of[
+"kenbridgeAccessToken",
+"access_token",
+"kenbridge_access_token",
+"token"
+]){
+const token=localStorage.getItem(key)||sessionStorage.getItem(key);
+if(token)return token;
+}
+return null;
+}
+
+function escapeHTML(value){
+return String(value??"")
+.replace(/[&<>"']/g,char=>({
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#039;"
+}[char]));
+}
+
+function formatDate(value){
+if(!value)return"Not set";
+
+const date=new Date(value);
+
+if(Number.isNaN(date.getTime()))return"Not set";
+
+return date.toLocaleDateString(
+undefined,
+{
+year:"numeric",
+month:"short",
+day:"numeric"
+}
+);
+}
+
+function showMessage(text,type){
+taskMessage.textContent=text;
+taskMessage.className="task-message "+type;
+}
+
+function clearMessage(){
+taskMessage.textContent="";
+taskMessage.className="task-message";
+}
+
+function statusClass(status){
+return String(status||"PENDING")
+.toLowerCase()
+.replace(/_/g,"-");
+}
+
+function renderTasks(){
+
+const searchTerm=
+taskSearch.value.trim().toLowerCase();
+
+const filter=
+taskFilter.value;
+
+const filtered=tasks.filter(task=>{
+
+const status=
+String(task.status||"PENDING")
+.toUpperCase();
+
+if(filter!=="ALL"&&status!==filter){
+return false;
+}
+
+const searchable=[
+task.title,
+task.description,
+task.priority,
+task.status,
+task.category
+]
+.join(" ")
+.toLowerCase();
+
+return searchable.includes(searchTerm);
+});
+
+tasksList.innerHTML="";
+
+if(!filtered.length){
+
+tasksList.innerHTML=`
+<div class="task-empty">
+No tasks were found.
+</div>
+`;
+
+return;
+}
+
+filtered.forEach(task=>{
+
+const status=
+String(task.status||"PENDING")
+.toUpperCase();
+
+const priority=
+String(task.priority||"NORMAL")
+.toUpperCase();
+
+const card=
+document.createElement("article");
+
+card.className="task-card";
+
+let actionButton="";
+
+if(status==="PENDING"){
+
+actionButton=`
+<button
+type="button"
+class="task-button primary"
+data-action="status"
+data-id="${escapeHTML(task.id)}"
+data-status="IN_PROGRESS"
+>
+Start Task
+</button>
+`;
+
+}else if(status==="IN_PROGRESS"){
+
+actionButton=`
+<button
+type="button"
+class="task-button primary"
+data-action="status"
+data-id="${escapeHTML(task.id)}"
+data-status="COMPLETED"
+>
+Mark Completed
+</button>
+`;
+
+}
+
+card.innerHTML=`
+
+<div class="task-top">
+
+<span class="task-priority ${
+priority==="HIGH"
+?"high"
+:priority==="MEDIUM"
+?"medium"
+:""
+}">
+${escapeHTML(priority)}
+</span>
+
+<span class="task-status ${statusClass(status)}">
+${escapeHTML(status.replace(/_/g," "))}
+</span>
+
+</div>
+
+<h2>
+${escapeHTML(task.title||"Untitled Task")}
+</h2>
+
+<p>
+${escapeHTML(task.description||"No task description provided.")}
+</p>
+
+<div class="task-meta">
+
+<div>
+<small>Category</small>
+<span>
+${escapeHTML(task.category||"General")}
+</span>
+</div>
+
+<div>
+<small>Due Date</small>
+<span>
+${formatDate(task.due_date)}
+</span>
+</div>
+
+</div>
+
+<div class="task-actions">
+
+${actionButton}
+
+</div>
+`;
+
+tasksList.appendChild(card);
+
+});
+
+}
+
+async function loadTasks(){
+
+const token=getAccessToken();
+
+if(!token){
+
+tasksList.innerHTML=`
+<div class="task-empty">
+Your staff session was not found. Please log in again.
+</div>
+`;
+
+return;
+}
+
+try{
+
+const response=
+await fetch(
+API_BASE+"/api/staff/tasks",
+{
+headers:{
+Authorization:"Bearer "+token
+}
+}
+);
+
+const result=await response.json();
+
+if(!response.ok||!result.success){
+
+throw new Error(
+result.message||
+"Unable to retrieve your tasks."
+);
+
+}
+
+tasks=
+Array.isArray(result.tasks)
+?result.tasks
+:[];
+
+renderTasks();
+
+}catch(error){
+
+console.error(
+"STAFF TASK LOAD ERROR:",
+error
+);
+
+tasksList.innerHTML=`
+<div class="task-empty">
+Unable to load your tasks.
+</div>
+`;
+
+showMessage(
+error.message||
+"Unable to load your tasks.",
+"error"
+);
+
+}
+
+}
+
+async function updateTaskStatus(
+id,
+status,
+button
+){
+
+const token=getAccessToken();
+
+if(!token){
+
+showMessage(
+"Your staff session was not found. Please log in again.",
+"error"
+);
+
+return;
+}
+
+button.disabled=true;
+
+const originalText=
+button.textContent;
+
+button.textContent=
+status==="COMPLETED"
+?"Completing..."
+:"Starting...";
+
+try{
+
+const response=
+await fetch(
+API_BASE+
+"/api/staff/tasks/"+
+encodeURIComponent(id)+
+"/status",
+{
+method:"PATCH",
+headers:{
+"Content-Type":"application/json",
+Authorization:"Bearer "+token
+},
+body:JSON.stringify({
+status
+})
+}
+);
+
+const result=
+await response.json();
+
+if(!response.ok||!result.success){
+
+throw new Error(
+result.message||
+"Unable to update task."
+);
+
+}
+
+showMessage(
+result.message||
+"Task updated successfully.",
+"success"
+);
+
+await loadTasks();
+
+}catch(error){
+
+console.error(
+"STAFF TASK UPDATE ERROR:",
+error
+);
+
+showMessage(
+error.message||
+"Unable to update task.",
+"error"
+);
+
+}finally{
+
+button.disabled=false;
+button.textContent=originalText;
+
+}
+
+}
+
+tasksList.addEventListener(
+"click",
+async event=>{
+
+const button=
+event.target.closest(
+"button[data-action]"
+);
+
+if(!button)return;
+
+const id=button.dataset.id;
+const status=button.dataset.status;
+
+if(
+button.dataset.action==="status"&&
+id&&
+status
+){
+
+await updateTaskStatus(
+id,
+status,
+button
+);
+
+}
+
+});
+
+taskSearch.addEventListener(
+"input",
+renderTasks
+);
+
+taskFilter.addEventListener(
+"change",
+renderTasks
+);
+
+function logout(){
+
+for(const key of[
+"access_token",
+"refresh_token",
+"kenbridge_access_token",
+"kenbridgeAccessToken",
+"token",
+"user",
+"kenbridge_user",
+"kenbridgeAdminLoggedIn",
+"kenbridgeStaffLoggedIn"
+]){
+
+localStorage.removeItem(key);
+sessionStorage.removeItem(key);
+
+}
+
+window.location.href="login.html";
+
+}
+
+document
+.getElementById("logoutButton")
+?.addEventListener(
+"click",
+event=>{
+event.preventDefault();
+logout();
+}
+);
+
+document.getElementById("footerYear").textContent=
+new Date().getFullYear();
+
+loadTasks();
+
+});
+</script>
+
+</body>
+  </html>
