@@ -1,0 +1,313 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Payroll | Kenbridge Staff Portal</title>
+<meta name="description" content="Staff payroll information for Kenbridge Christian School.">
+<meta name="theme-color" content="#08783f"><link rel="stylesheet" href="../css/style.css"><style>
+.staff-page{min-height:100vh;background:#f4f8f5}
+.staff-header{background:#08783f;color:#fff;padding:18px 0}
+.staff-header-inner{width:min(1150px,92%);margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.staff-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}
+.staff-brand img{width:48px;height:48px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}
+.staff-brand strong{display:block;font-size:17px}
+.staff-brand span{display:block;font-size:12px;opacity:.85;margin-top:3px}
+.staff-logout{padding:10px 15px;border:1px solid rgba(255,255,255,.5);border-radius:8px;color:#fff;text-decoration:none;font-size:13px;font-weight:700}
+.staff-logout:hover{background:rgba(255,255,255,.12)}
+.staff-container{width:min(1100px,92%);margin:auto;padding:40px 0 60px}
+
+.staff-heading{margin-bottom:25px}
+.staff-heading small{display:block;color:#08783f;font-size:12px;font-weight:800;letter-spacing:1.5px;margin-bottom:7px}
+.staff-heading h1{margin:0 0 7px;color:#173a2c;font-size:clamp(28px,4vw,40px)}
+.staff-heading p{margin:0;color:#68776f;line-height:1.6}
+
+.staff-nav{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:25px}
+.staff-nav a{padding:10px 14px;border:1px solid #dce5e0;border-radius:8px;background:#fff;color:#315244;text-decoration:none;font-size:13px;font-weight:700}
+.staff-nav a:hover,.staff-nav a.active{background:#08783f;border-color:#08783f;color:#fff}
+
+.payroll-card{background:#fff;border:1px solid #e1e8e4;border-radius:14px;padding:25px;box-shadow:0 8px 25px rgba(0,0,0,.05);margin-bottom:22px}
+.payroll-card h2{margin:0 0 7px;color:#173a2c}
+.payroll-card>p{margin:0 0 20px;color:#718079;line-height:1.6}
+
+.payroll-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px}
+.summary-box{padding:20px;border-radius:12px;background:#f8fbf9;border:1px solid #e1e8e4}
+.summary-box span{display:block;color:#718079;font-size:12px;margin-bottom:7px}
+.summary-box strong{font-size:22px;color:#08783f}
+
+.payroll-table-wrap{width:100%;overflow-x:auto}
+.payroll-table{width:100%;min-width:620px;border-collapse:collapse}
+.payroll-table th,.payroll-table td{padding:13px;text-align:left;border-bottom:1px solid #e6ece8}
+.payroll-table th{background:#eef6f1;color:#164d32;font-size:13px}
+.payroll-table td{font-size:14px;color:#52635b}
+
+.status{display:inline-block;padding:5px 9px;border-radius:20px;background:#e8f5ed;color:#08783f;font-size:12px;font-weight:700;text-transform:capitalize}
+.status.pending{background:#fff4d6;color:#8a6400}
+.status.paid{background:#e8f5ed;color:#08783f}
+.status.failed,.status.cancelled{background:#fdeaea;color:#a12b2b}
+
+.payroll-notice{padding:17px;border-radius:10px;background:#fffdf4;border:1px solid #eee4bd;color:#6d623b;font-size:13px;line-height:1.7}
+.loading-row{text-align:center;padding:25px;color:#718079}
+.error-row{text-align:center;padding:25px;color:#a12b2b}
+
+@media(max-width:700px){
+.payroll-summary{grid-template-columns:1fr}
+}
+
+@media(max-width:650px){
+.staff-header-inner{align-items:flex-start}
+.staff-brand img{width:42px;height:42px}
+.staff-brand strong{font-size:14px}
+.staff-brand span{font-size:10px}
+.staff-logout{padding:8px 11px;font-size:12px}
+.staff-container{padding-top:30px}
+.payroll-card{padding:20px 16px}
+}
+</style><script src="../js/portal-auth.js"></script></head><body><div class="staff-page"><header class="staff-header">
+<div class="staff-header-inner"><a href="staff-dashboard.html" class="staff-brand">
+<img src="../images/logo.png" alt="Kenbridge Christian School Logo">
+<div>
+<strong>Kenbridge Christian School</strong>
+<span>Staff Portal</span>
+</div>
+</a><a href="login.html" class="staff-logout" id="logoutButton">Log Out</a>
+
+</div>
+</header><main class="staff-container"><div class="staff-heading">
+<small>STAFF PORTAL</small>
+<h1>Payroll</h1>
+<p>Review your payroll information, payment history, and payslip details.</p>
+</div><nav class="staff-nav">
+<a href="staff-dashboard.html">Dashboard</a>
+<a href="students.html">Students</a>
+<a href="attendance.html">Attendance</a>
+<a href="announcements.html">Announcements</a>
+<a href="articles.html">Articles</a>
+<a href="reports.html">Reports</a>
+<a href="files.html">Files</a>
+<a href="calendar.html">Calendar</a>
+<a href="messages.html">Messages</a>
+<a href="tasks.html">Tasks</a>
+<a href="leave.html">Leave</a>
+<a href="payroll.html" class="active">Payroll</a>
+<a href="profile.html">My Profile</a>
+</nav><section class="payroll-card"><h2>Payroll Overview</h2>
+<p>Your payroll records are securely retrieved from the Kenbridge Christian School payroll system.</p><div class="payroll-summary"><div class="summary-box">
+<span>Latest Payroll Period</span>
+<strong id="currentMonth">Loading...</strong>
+</div><div class="summary-box">
+<span>Payment Status</span>
+<strong id="paymentStatus">Loading...</strong>
+</div><div class="summary-box">
+<span>Latest Net Pay</span>
+<strong id="latestPayslip">Loading...</strong>
+</div></div><div class="payroll-table-wrap"><table class="payroll-table"><thead>
+<tr>
+<th>Period</th>
+<th>Gross Amount</th>
+<th>Deductions</th>
+<th>Net Pay</th>
+<th>Status</th>
+</tr>
+</thead><tbody id="payrollBody">
+<tr>
+<td colspan="5" class="loading-row">
+Loading payroll records...
+</td>
+</tr>
+</tbody></table></div></section><section class="payroll-card"><h2>Payslip Information</h2>
+<p>Your payroll information is linked to your authenticated staff account.</p><div class="payroll-notice">
+<strong>Secure payroll access:</strong>
+Only payroll records associated with your staff account are displayed here. Salary information is retrieved securely through the Kenbridge Christian School server.
+</div></section></main></div><script>
+
+const API_BASE="https://kenbridge-christian-school.onrender.com";
+
+document.addEventListener("DOMContentLoaded",function(){
+
+const currentMonth=document.getElementById("currentMonth");
+const paymentStatus=document.getElementById("paymentStatus");
+const latestPayslip=document.getElementById("latestPayslip");
+const payrollBody=document.getElementById("payrollBody");
+const logoutButton=document.getElementById("logoutButton");
+
+function formatMoney(amount){
+
+return new Intl.NumberFormat("en-UG",{
+style:"currency",
+currency:"UGX",
+maximumFractionDigits:0
+}).format(Number(amount||0));
+
+}
+
+function formatMonth(dateValue){
+
+if(!dateValue)return "—";
+
+const date=new Date(dateValue+"T00:00:00");
+
+return date.toLocaleDateString("en-US",{
+month:"long",
+year:"numeric"
+});
+
+}
+
+function statusClass(status){
+
+return String(status||"pending")
+.toLowerCase()
+.replace(/\s+/g,"-");
+
+}
+
+function escapeHTML(value){
+
+const div=document.createElement("div");
+div.textContent=value??"";
+return div.innerHTML;
+
+}
+
+async function loadPayroll(){
+
+try{
+
+const token=sessionStorage.getItem("kenbridgeAccessToken");
+
+if(!token){
+throw new Error("Your login session was not found. Please log in again.");
+}
+
+const controller=new AbortController();
+
+const timeout=setTimeout(function(){
+controller.abort();
+},15000);
+
+let response;
+
+try{
+
+response=await fetch(
+API_BASE+"/api/payroll/my",
+{
+method:"GET",
+headers:{
+"Authorization":"Bearer "+token,
+"Content-Type":"application/json"
+},
+signal:controller.signal
+}
+);
+
+}finally{
+
+clearTimeout(timeout);
+
+}
+
+let result;
+
+try{
+
+result=await response.json();
+
+}catch(error){
+
+throw new Error("The payroll server returned an invalid response.");
+
+}
+
+if(!response.ok||!result.success){
+
+throw new Error(
+result.message||"Unable to retrieve payroll information."
+);
+
+}
+
+const payrollRecords=Array.isArray(result.payroll)
+?result.payroll
+:[];
+
+if(payrollRecords.length===0){
+
+currentMonth.textContent="No Records";
+paymentStatus.textContent="—";
+latestPayslip.textContent="—";
+
+payrollBody.innerHTML=`
+<tr>
+<td colspan="5" class="loading-row">
+No payroll records are currently available for your account.
+</td>
+</tr>
+`;
+
+return;
+
+}
+
+const latest=result.latest||payrollRecords[0];
+
+currentMonth.textContent=formatMonth(latest.pay_month);
+
+paymentStatus.textContent=
+String(latest.status||"PENDING")
+.replace(/_/g," ");
+
+latestPayslip.textContent=formatMoney(latest.net_amount);
+
+payrollBody.innerHTML=payrollRecords.map(function(record){
+
+const status=String(record.status||"PENDING");
+
+return `
+<tr>
+<td>${escapeHTML(formatMonth(record.pay_month))}</td>
+<td>${escapeHTML(formatMoney(record.gross_amount))}</td>
+<td>${escapeHTML(formatMoney(record.deductions))}</td>
+<td>${escapeHTML(formatMoney(record.net_amount))}</td>
+<td>
+<span class="status ${escapeHTML(statusClass(status))}">
+${escapeHTML(status.replace(/_/g," "))}
+</span>
+</td>
+</tr>
+`;
+
+}).join("");
+
+}catch(error){
+
+console.error("Payroll loading error:",error);
+
+currentMonth.textContent="Unavailable";
+paymentStatus.textContent="Unavailable";
+latestPayslip.textContent="Unavailable";
+
+payrollBody.innerHTML=`
+<tr>
+<td colspan="5" class="error-row">
+${escapeHTML(error.message||"Unable to load payroll information at this time.")}
+</td>
+</tr>
+`;
+
+}
+
+}
+
+logoutButton.addEventListener("click",function(){
+
+sessionStorage.removeItem("kenbridgeAccessToken");
+sessionStorage.removeItem("kenbridgeStaffLoggedIn");
+
+});
+
+loadPayroll();
+
+});
+
+</script></body>
+  </html>
