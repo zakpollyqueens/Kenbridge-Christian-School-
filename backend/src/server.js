@@ -85,7 +85,7 @@ app.use("/api/auth",authRoutes);
 app.use("/api/content",contentRoutes);
 
 app.use("/api/staff-content",staffContentRoutes);
-app.use("/api/documents",documentsRoutes);
+app.use("/api/documents",require("./routes/documents"));
 app.use("/api/tasks",tasksRoutes);
 app.use("/api/messages",messagesRoutes);
 app.use("/api/dashboard",dashboardRoutes);
