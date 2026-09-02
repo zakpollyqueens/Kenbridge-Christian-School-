@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Reports | Kenbridge Staff</title>
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f7f6;color:#243b31}
+.page{min-height:100vh}
+.head{background:#08783f;color:#fff;padding:18px 0}
+.head-in,.main{width:min(1150px,92%);margin:auto}
+.head-in{display:flex;justify-content:space-between;align-items:center;gap:15px}
+.brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}
+.brand img{width:50px;height:50px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}
+.brand strong,.brand span{display:block}
+.brand span{font-size:12px;opacity:.85;margin-top:3px}
+.logout{padding:10px 15px;border:1px solid #ffffff80;border-radius:8px;color:#fff;text-decoration:none;font-weight:bold;font-size:13px}
+.main{padding:38px 0 60px}
+.title{margin-bottom:25px}
+.title small{color:#08783f;font-weight:bold;letter-spacing:1px}
+.title h1{margin:7px 0;color:#16352a}
+.title p{margin:0;color:#68776f}
+.filters{display:grid;grid-template-columns:1fr 180px 160px;gap:12px;margin-bottom:22px}
+.filters select{width:100%;padding:13px;border:1px solid #d8e0dc;border-radius:8px;background:#fff;font:inherit}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.sum{padding:18px;background:#fff;border:1px solid #e1e8e4;border-radius:10px}
+.sum span{display:block;color:#718079;font-size:12px}
+.sum strong{display:block;font-size:24px;margin-top:6px;color:#173a2c}
+.card{background:#fff;border:1px solid #e1e8e4;border-radius:12px;box-shadow:0 8px 25px #0000000d;overflow:hidden;margin-bottom:22px}
+.card-title{padding:17px 18px;border-bottom:1px solid #e9efeb;font-weight:bold;color:#29463a}
+.message{display:none;margin:18px;padding:13px;border-radius:8px;font-size:13px}
+.message.error{display:block;background:#fbeaea;color:#a33a3a}
+.message.success{display:block;background:#e8f5ed;color:#08783f}
+.loading,.empty{padding:35px;text-align:center;color:#68776f}
+.empty{display:none}
+.table-wrap{overflow:auto}
+.table{width:100%;min-width:850px;border-collapse:collapse}
+.table th,.table td{padding:14px;border-bottom:1px solid #edf1ef;text-align:left;font-size:13px}
+.table th{background:#f0f5f2;color:#29463a}
+.name{font-weight:bold}
+.status{display:inline-block;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:bold}
+.not_started{background:#f1f3f2;color:#68776f}
+.draft{background:#fff4df;color:#9a6300}
+.submitted{background:#eaf3ff;color:#1765ad}
+.approved{background:#e8f5ed;color:#08783f}
+.btn{padding:8px 11px;border:1px solid #08783f;border-radius:7px;background:#08783f;color:#fff;font-size:12px;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-block}
+.btn:hover{opacity:.9}
+.btn.secondary{background:#fff;color:#08783f}
+.files-list{padding:0 18px 18px}
+.file-item{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:15px 0;border-bottom:1px solid #edf1ef}
+.file-item:last-child{border-bottom:0}
+.file-name{font-weight:bold;font-size:13px;color:#29463a}
+.file-meta{font-size:11px;color:#718079;margin-top:5px;line-height:1.5}
+.file-actions{display:flex;gap:7px;flex-wrap:wrap}
+.file-empty{padding:25px 0;text-align:center;color:#718079;font-size:13px}
+.report-badge{display:inline-block;margin-left:7px;padding:3px 7px;border-radius:12px;background:#e8f5ed;color:#08783f;font-size:10px;font-weight:bold}
+@media(max-width:750px){
+.filters{grid-template-columns:1fr}
+.summary{grid-template-columns:1fr 1fr}
+.head-in{align-items:flex-start}
+.file-item{align-items:flex-start;flex-direction:column}
+.file-actions{width:100%}
+}
+@media(max-width:450px){.summary{grid-template-columns:1fr}}
+</style>
+<script src="../js/portal-auth.js"></script>
+</head>
+
+<body>
+<div class="page">
+
+<header class="head">
+<div class="head-in">
+<a href="staff-dashboard.html" class="brand">
+<img src="../images/logo.png" alt="Kenbridge Logo">
+<div>
+<strong>Kenbridge Christian School</strong>
+<span>Staff Portal</span>
+</div>
+</a>
+<a href="login.html" class="logout" id="logout">Logout</a>
+</div>
+</header>
+
+<main class="main">
+
+<div class="title">
+<small>ACADEMIC REPORTS</small>
+<h1>Student Reports</h1>
+<p>Select a class, academic year and term to manage learner reports and view uploaded class report files.</p>
+</div>
+
+<div class="summary">
+<div class="sum"><span>Total Learners</span><strong id="total">0</strong></div>
+<div class="sum"><span>Not Started</span><strong id="notStarted">0</strong></div>
+<div class="sum"><span>Draft Reports</span><strong id="drafts">0</strong></div>
+<div class="sum"><span>Submitted / Approved</span><strong id="completed">0</strong></div>
+</div>
+
+<div class="filters">
+<select id="classSelect">
+<option value="">Select Class</option>
+</select>
+
+<select id="yearSelect"></select>
+
+<select id="termSelect">
+<option value="">Select Term</option>
+<option>Term 1</option>
+<option>Term 2</option>
+<option>Term 3</option>
+</select>
+</div>
+
+<section class="card">
+<div id="message" class="message"></div>
+
+<div id="loading" class="loading">
+Loading available classes...
+</div>
+
+<div class="table-wrap">
+<table class="table">
+<thead>
+<tr>
+<th>Student Name</th>
+<th>Class</th>
+<th>Academic Year</th>
+<th>Term</th>
+<th>Aggregate</th>
+<th>Grade</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="body"></tbody>
+</table>
+</div>
+
+<div id="empty" class="empty">
+Select a class to view learners.
+</div>
+</section>
+
+<section class="card">
+
+<div class="card-title">
+Uploaded Report Files
+<span class="report-badge">SCHOOL FILES</span>
+</div>
+
+<div id="filesLoading" class="loading" style="display:none">
+Loading uploaded reports...
+</div>
+
+<div id="filesList" class="files-list">
+<div class="file-empty">
+Select a class to view report files uploaded through School Files.
+</div>
+</div>
+
+</section>
+
+</main>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+
+const API="https://kenbridge-christian-school.onrender.com/api";
+const REPORTS=API+"/reports";
+const DOC_REPORTS=API+"/documents/reports";
+
+const $=id=>document.getElementById(id);
+
+const classSelect=$("classSelect");
+const yearSelect=$("yearSelect");
+const termSelect=$("termSelect");
+const body=$("body");
+const loading=$("loading");
+const empty=$("empty");
+const message=$("message");
+const filesList=$("filesList");
+const filesLoading=$("filesLoading");
+
+let students=[];
+
+function token(){
+for(const k of[
+"access_token",
+"kenbridge_access_token",
+"kenbridgeAccessToken",
+"token"
+]){
+const v=localStorage.getItem(k)||sessionStorage.getItem(k);
+if(v)return v;
+}
+return null;
+}
+
+function logout(){
+[
+"access_token",
+"refresh_token",
+"kenbridge_access_token",
+"kenbridgeAccessToken",
+"kenbridgeRefreshToken",
+"kenbridgeUser",
+"token",
+"user",
+"kenbridge_user",
+"kenbridgeStaffLoggedIn",
+"kenbridgeUserRole"
+].forEach(k=>{
+localStorage.removeItem(k);
+sessionStorage.removeItem(k);
+});
+location.href="login.html";
+}
+
+function show(text,type="error"){
+message.textContent=text;
+message.className="message "+type;
+}
+
+function hideMessage(){
+message.textContent="";
+message.className="message";
+}
+
+function status(v){
+return String(v||"NOT_STARTED").toUpperCase();
+}
+
+function statusLabel(v){
+return status(v)
+.replace(/_/g," ")
+.toLowerCase()
+.replace(/\b\w/g,c=>c.toUpperCase());
+}
+
+function statusClass(v){
+v=status(v);
+if(v==="DRAFT")return"draft";
+if(v==="SUBMITTED")return"submitted";
+if(v==="APPROVED")return"approved";
+return"not_started";
+}
+
+function escapeHtml(v){
+return String(v??"").replace(/[&<>"']/g,c=>({
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#039;"
+}[c]));
+}
+
+function setupYears(){
+const y=new Date().getFullYear();
+yearSelect.innerHTML='<option value="">Select Year</option>';
+for(let i=y+1;i>=y-5;i--){
+yearSelect.innerHTML+=
+'<option value="'+i+'">'+i+'</option>';
+}
+yearSelect.value=String(y);
+}
+
+async function loadClasses(){
+
+const t=token();
+if(!t)return logout();
+
+loading.style.display="block";
+hideMessage();
+
+try{
+
+const r=await fetch(REPORTS+"/classes",{
+headers:{Authorization:"Bearer "+t}
+});
+
+let d={};
+try{d=await r.json()}catch{}
+
+if(!r.ok||!d.success)
+throw new Error(d.message||"Unable to load report classes.");
+
+const classes=Array.isArray(d.classes)?d.classes:[];
+
+classSelect.innerHTML=
+'<option value="">Select Class</option>'+
+classes.map(c=>{
+const name=c.class_name||c;
+return'<option value="'+escapeHtml(name)+'">'+
+escapeHtml(name)+
+'</option>';
+}).join("");
+
+empty.style.display="block";
+empty.textContent="Select a class to view learners.";
+
+}catch(e){
+
+console.error("LOAD CLASSES ERROR:",e);
+show(e.message||"Unable to load available classes.");
+
+}finally{
+
+loading.style.display="none";
+
+}
+}
+
+async function loadStudents(){
+
+const cls=classSelect.value;
+const year=yearSelect.value;
+const term=termSelect.value;
+
+if(!cls){
+
+students=[];
+body.innerHTML="";
+empty.style.display="block";
+empty.textContent="Select a class to view learners.";
+updateSummary();
+loadFiles();
+return;
+
+}
+
+const t=token();
+if(!t)return logout();
+
+loading.style.display="block";
+empty.style.display="none";
+hideMessage();
+
+try{
+
+let url=
+REPORTS+"/classes/"+encodeURIComponent(cls);
+
+const q=new URLSearchParams();
+
+if(year)q.set("academic_year",year);
+if(term)q.set("term",term);
+
+if(q.toString())url+="?"+q.toString();
+
+const r=await fetch(url,{
+headers:{Authorization:"Bearer "+t}
+});
+
+let d={};
+try{d=await r.json()}catch{}
+
+if(!r.ok||!d.success)
+throw new Error(d.message||"Unable to load learners.");
+
+students=
+Array.isArray(d.students)?d.students:[];
+
+render();
+
+}catch(e){
+
+console.error("LOAD REPORTS ERROR:",e);
+students=[];
+body.innerHTML="";
+empty.style.display="block";
+empty.textContent="Unable to load learners.";
+show(e.message||"Unable to load learner reports.");
+updateSummary();
+
+}finally{
+
+loading.style.display="none";
+loadFiles();
+
+}
+}
+
+function render(){
+
+body.innerHTML="";
+
+empty.style.display=students.length?"none":"block";
+
+if(!students.length){
+
+empty.textContent="No active learners were found in this class.";
+updateSummary();
+return;
+
+}
+
+students.forEach(s=>{
+
+const st=status(s.report_status);
+const id=s.student_id;
+
+const tr=document.createElement("tr");
+
+tr.innerHTML=
+'<td class="name">'+
+escapeHtml(s.full_name||"Unknown")+
+'</td>'+
+'<td>'+
+escapeHtml(s.class_name||classSelect.value)+
+'</td>'+
+'<td>'+
+escapeHtml(s.academic_year||yearSelect.value||"—")+
+'</td>'+
+'<td>'+
+escapeHtml(s.term||termSelect.value||"—")+
+'</td>'+
+'<td>'+
+escapeHtml(s.aggregate??"—")+
+'</td>'+
+'<td>'+
+escapeHtml(s.overall_grade||"—")+
+'</td>'+
+'<td><span class="status '+statusClass(st)+'">'+
+statusLabel(st)+
+'</span></td>'+
+'<td><button class="btn" '+
+'data-student="'+escapeHtml(id)+'" '+
+'data-report="'+escapeHtml(s.report_id||"")+'">'+
+(s.report_id?"Open Report":"Create Report")+
+'</button></td>';
+
+body.appendChild(tr);
+
+});
+
+updateSummary();
+
+}
+
+function updateSummary(){
+
+const total=students.length;
+
+$("total").textContent=total;
+
+$("notStarted").textContent=
+students.filter(s=>
+status(s.report_status)==="NOT_STARTED"
+).length;
+
+$("drafts").textContent=
+students.filter(s=>
+status(s.report_status)==="DRAFT"
+).length;
+
+$("completed").textContent=
+students.filter(s=>
+["SUBMITTED","APPROVED"].includes(
+status(s.report_status)
+)
+).length;
+
+}
+
+function formatSize(bytes){
+
+const n=Number(bytes||0);
+
+if(!n)return"";
+
+if(n<1024)return n+" B";
+if(n<1024*1024)
+return(Math.round(n/102.4)/10)+" KB";
+if(n<1024*1024*1024)
+return(Math.round(n/104857.6)/10)+" MB";
+
+return(Math.round(n/107374182.4)/10)+" GB";
+
+}
+
+function formatDate(value){
+
+if(!value)return"";
+
+const d=new Date(value);
+
+if(Number.isNaN(d.getTime()))return"";
+
+return d.toLocaleDateString(undefined,{
+year:"numeric",
+month:"short",
+day:"numeric"
+});
+
+}
+
+function fileType(file){
+
+const mime=
+String(file.file_type||"").toLowerCase();
+
+if(mime.includes("pdf"))return"PDF";
+if(mime.includes("word")||mime.includes("document"))
+return"WORD";
+if(mime.includes("spreadsheet")||mime.includes("excel"))
+return"EXCEL";
+if(mime.includes("image"))return"IMAGE";
+
+const name=
+String(file.file_name||"").toLowerCase();
+
+if(name.endsWith(".pdf"))return"PDF";
+if(name.endsWith(".doc")||name.endsWith(".docx"))
+return"WORD";
+if(name.endsWith(".xls")||name.endsWith(".xlsx"))
+return"EXCEL";
+if(name.match(/\.(jpg|jpeg|png|webp)$/))
+return"IMAGE";
+
+return"FILE";
+
+}
+
+async function loadFiles(){
+
+const cls=classSelect.value;
+
+if(!cls){
+
+filesList.innerHTML=
+'<div class="file-empty">'+
+'Select a class to view report files uploaded through School Files.'+
+'</div>';
+
+return;
+
+}
+
+const t=token();
+
+if(!t)return logout();
+
+filesLoading.style.display="block";
+
+try{
+
+const url=
+DOC_REPORTS+
+"?class_name="+encodeURIComponent(cls);
+
+const r=await fetch(url,{
+headers:{Authorization:"Bearer "+t}
+});
+
+let d={};
+
+try{d=await r.json()}catch{}
+
+if(!r.ok||!d.success)
+throw new Error(
+d.message||"Unable to load uploaded reports."
+);
+
+const reports=
+Array.isArray(d.reports)?d.reports:[];
+
+if(!reports.length){
+
+filesList.innerHTML=
+'<div class="file-empty">'+
+'No uploaded report files were found for '+
+escapeHtml(cls)+
+'.'+
+'</div>';
+
+return;
+
+}
+
+filesList.innerHTML=reports.map(file=>{
+
+const title=
+file.title||
+file.file_name||
+"Class Report";
+
+const description=
+file.description||
+"";
+
+const date=
+formatDate(file.created_at);
+
+const size=
+formatSize(file.file_size);
+
+const type=
+fileType(file);
+
+const url=
+file.file_url||"";
+
+const meta=[
+escapeHtml(type),
+size?escapeHtml(size):"",
+date?escapeHtml(date):"",
+file.uploader_name?
+"Uploaded by "+escapeHtml(file.uploader_name):
+""
+].filter(Boolean).join(" • ");
+
+return'<div class="file-item">'+
+
+'<div>'+
+'<div class="file-name">'+
+escapeHtml(title)+
+'</div>'+
+
+'<div class="file-meta">'+
+(meta||"Report file")+
+'</div>'+
+
+(description?
+'<div class="file-meta">'+
+escapeHtml(description)+
+'</div>':
+"")+
+
+'</div>'+
+
+'<div class="file-actions">'+
+
+(url?
+'<a class="btn secondary" '+
+'href="'+escapeHtml(url)+'" '+
+'target="_blank" '+
+'rel="noopener noreferrer">'+
+'Open File'+
+'</a>':
+"")+
+
+(url?
+'<a class="btn" '+
+'href="'+escapeHtml(url)+'" '+
+'target="_blank" '+
+'rel="noopener noreferrer" '+
+'download>'+
+'Download'+
+'</a>':
+"")+
+
+'</div>'+
+
+'</div>';
+
+}).join("");
+
+}catch(e){
+
+console.error(
+"LOAD UPLOADED REPORT FILES ERROR:",
+e
+);
+
+filesList.innerHTML=
+'<div class="file-empty">'+
+'Uploaded report files could not be loaded at the moment.'+
+'</div>';
+
+}finally{
+
+filesLoading.style.display="none";
+
+}
+}
+
+classSelect.addEventListener(
+"change",
+loadStudents
+);
+
+yearSelect.addEventListener(
+"change",
+()=>{
+if(classSelect.value)loadStudents();
+}
+);
+
+termSelect.addEventListener(
+"change",
+()=>{
+if(classSelect.value)loadStudents();
+}
+);
+
+body.addEventListener("click",e=>{
+
+const b=e.target.closest(
+"button[data-student]"
+);
+
+if(!b)return;
+
+const q=new URLSearchParams({
+student:b.dataset.student,
+class:classSelect.value,
+year:yearSelect.value,
+term:termSelect.value,
+report:b.dataset.report
+});
+
+location.href=
+"report-details.html?"+q.toString();
+
+});
+
+$("logout").addEventListener(
+"click",
+e=>{
+e.preventDefault();
+logout();
+}
+);
+
+setupYears();
+loadClasses();
+
+});
+</script>
+
+</body>
+  </html>
