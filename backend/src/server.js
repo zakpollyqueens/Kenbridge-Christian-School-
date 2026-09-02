@@ -12,6 +12,8 @@ const tasksRoutes=require("./routes/tasks");
 const reportsRoutes=require("./routes/reports");
 const galleryRoutes=require("./routes/gallery");
 const studentsRoutes=require("./routes/students");
+const documentsRoutes=require("./routes/documents");
+const documentsRoutes=require("./routes/documents");
 const publicContentRoutes=require("./routes/public-content");
 const notificationsRoutes=require("./routes/notifications");
 const app=express();
@@ -80,7 +82,7 @@ app.use("/api/auth",authRoutes);
 app.use("/api/content",contentRoutes);
 
 app.use("/api/staff-content",staffContentRoutes);
-
+app.use("/api/documents",documentsRoutes);
 app.use("/api/tasks",tasksRoutes);
 app.use("/api/dashboard",dashboardRoutes);
 app.use("/api/notifications",notificationsRoutes);
