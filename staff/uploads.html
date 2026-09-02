@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upload Documents | Kenbridge Staff Portal</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f8f6;color:#243b31;font-family:Arial,sans-serif}.wrap{max-width:950px;margin:auto;padding:25px 16px 50px}.card{background:#fff;border:1px solid #dfe8e2;border-radius:14px;padding:24px;box-shadow:0 6px 20px #0001}.head{margin-bottom:22px}.head h1{margin:0 0 7px;color:#08783f}.head p{margin:0;color:#66756e}.form{display:grid;grid-template-columns:1fr 1fr;gap:17px}.group{display:flex;flex-direction:column}.full{grid-column:1/-1}label{font-size:13px;font-weight:bold;margin-bottom:7px}input,select,textarea{width:100%;padding:12px;border:1px solid #ccd9d1;border-radius:8px;font:inherit;background:#fff}textarea{min-height:110px;resize:vertical}.file{border:2px dashed #b8ccc0;border-radius:10px;padding:25px;text-align:center;background:#f8fbf9}.file input{border:0;padding:0}.note{display:none;margin-top:8px;padding:11px;border-radius:8px;background:#edf8f1;color:#08783f;font-size:12px;line-height:1.5}.note.show{display:block}.message{display:none;margin-bottom:18px;padding:13px;border-radius:8px;font-size:13px}.message.error{display:block;background:#fbeaea;color:#9d2f2f}.message.success{display:block;background:#e8f6ed;color:#08783f}.buttons{display:flex;gap:10px;margin-top:4px}.btn{border:0;border-radius:8px;padding:13px 20px;font-weight:bold;cursor:pointer}.upload{background:#08783f;color:#fff}.cancel{background:#eee;color:#34483e;text-decoration:none}.btn:disabled{opacity:.6}@media(max-width:650px){.form{grid-template-columns:1fr}.full{grid-column:auto}.buttons{flex-direction:column}.btn{width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="head">
+<h1>Upload Documents</h1>
+<p>Upload school files and class reports for authorised classes.</p>
+</div>
+
+<div class="card">
+<div id="message" class="message"></div>
+
+<form id="uploadForm" class="form" enctype="multipart/form-data">
+
+<div class="group full">
+<label for="file">Select File</label>
+<div class="file">
+<input id="file" type="file" required>
+<div id="fileName">Choose a PDF, Excel, Word or other authorised school file.</div>
+</div>
+</div>
+
+<div class="group">
+<label for="title">Document Title</label>
+<input id="title" type="text" placeholder="e.g. Baby Class Term 2 Report" required>
+</div>
+
+<div class="group">
+<label for="class_name">Class</label>
+<select id="class_name" required>
+<option value="">Loading classes...</option>
+</select>
+</div>
+
+<div class="group">
+<label for="document_type">File Type</label>
+<select id="document_type">
+<option value="FILE">School Document</option>
+<option value="REPORT">Class Report</option>
+</select>
+<div id="reportNote" class="note">
+This file will be saved as a <strong>REPORT</strong> and will automatically be available in the Reports section for the selected class.
+</div>
+</div>
+
+<div class="group">
+<label for="description">Description</label>
+<textarea id="description" placeholder="Enter a description"></textarea>
+</div>
+
+<div class="group full">
+<div class="buttons">
+<button id="uploadBtn" class="btn upload" type="submit">Upload Document</button>
+<a class="btn cancel" href="files.html">Cancel</a>
+</div>
+</div>
+
+</form>
+</div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+const API="https://kenbridge-christian-school.onrender.com/api/documents";
+const $=id=>document.getElementById(id);
+const form=$("uploadForm"),file=$("file"),classes=$("class_name"),type=$("document_type"),btn=$("uploadBtn"),note=$("reportNote"),msg=$("message");
+
+function token(){
+for(const k of["access_token","kenbridge_access_token","kenbridgeAccessToken","token"]){
+const v=localStorage.getItem(k)||sessionStorage.getItem(k);
+if(v)return v
+}
+return null
+}
+
+function show(text,kind){
+msg.textContent=text;
+msg.className="message "+kind
+}
+
+function updateType(){
+const report=type.value==="REPORT";
+note.classList.toggle("show",report);
+btn.textContent=report?"Upload Class Report":"Upload Document";
+}
+
+async function loadClasses(){
+const t=token();
+if(!t){
+classes.innerHTML='<option value="">Please log in again</option>';
+show("Staff session not found. Please log in again.","error");
+return
+}
+try{
+const r=await fetch(API+"/classes",{headers:{Authorization:"Bearer "+t}});
+const d=await r.json();
+if(!r.ok||!d.success)throw new Error(d.message||"Unable to load classes.");
+const list=Array.isArray(d.classes)?d.classes:[];
+classes.innerHTML='<option value="">Select class</option>';
+list.forEach(c=>{
+const o=document.createElement("option");
+o.value=c;
+o.textContent=c;
+classes.appendChild(o)
+});
+if(!list.length)show("No authorised classes were found for your account.","error");
+}catch(e){
+classes.innerHTML='<option value="">Unable to load classes</option>';
+show(e.message,"error")
+}
+}
+
+file.addEventListener("change",()=>{
+const f=file.files&&file.files[0];
+$("fileName").textContent=f?f.name:"Choose a PDF, Excel, Word or other authorised school file."
+});
+
+type.addEventListener("change",updateType);
+
+form.addEventListener("submit",async e=>{
+e.preventDefault();
+msg.className="message";
+const t=token(),f=file.files&&file.files[0],title=$("title").value.trim(),className=classes.value,documentType=type.value;
+
+if(!t)return show("Staff session not found. Please log in again.","error");
+if(!f)return show("Please select a file.","error");
+if(!title)return show("Please enter a document title.","error");
+if(!className)return show("Please select a class.","error");
+
+const data=new FormData();
+data.append("file",f);
+data.append("title",title);
+data.append("description",$("description").value.trim());
+data.append("class_name",className);
+
+/* THIS IS THE IMPORTANT CONNECTION */
+data.append("document_type",documentType);
+data.append("document_scope",documentType==="REPORT"?"CLASS":"CLASS");
+
+btn.disabled=true;
+btn.textContent="Uploading...";
+
+try{
+const r=await fetch(API+"/upload",{
+method:"POST",
+headers:{Authorization:"Bearer "+t},
+body:data
+});
+let d={};
+try{d=await r.json()}catch{}
+if(!r.ok||!d.success)throw new Error(d.message||"Upload failed.");
+
+show(
+documentType==="REPORT"
+?"Report uploaded successfully. Opening Reports..."
+:"Document uploaded successfully.",
+"success"
+);
+
+form.reset();
+updateType();
+
+setTimeout(()=>{
+if(documentType==="REPORT"){
+location.href="reports.html?class="+encodeURIComponent(className)
+}else{
+location.href="files.html"
+}
+},1200);
+
+}catch(e){
+console.error(e);
+show(e.message||"Unable to upload file.","error");
+btn.disabled=false;
+updateType()
+}
+});
+
+updateType();
+loadClasses();
+});
+</script>
+</body>
+  </html>
