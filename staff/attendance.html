@@ -1,0 +1,837 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Attendance | Kenbridge Staff Portal</title>
+<meta name="description" content="Student attendance management for Kenbridge Christian School staff.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/portal-auth.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f8f5;color:#243b31}
+.staff-page{min-height:100vh}
+.staff-header{background:#08783f;color:#fff}
+.staff-header-inner,.staff-container{width:min(1100px,92%);margin:auto}
+.staff-header-inner{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.staff-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}
+.staff-brand img{width:48px;height:48px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}
+.staff-brand strong{display:block;font-size:17px}
+.staff-brand span{display:block;font-size:12px;opacity:.85;margin-top:3px}
+.staff-logout{padding:10px 15px;border:1px solid rgba(255,255,255,.5);border-radius:8px;color:#fff;text-decoration:none;font-size:13px;font-weight:700}
+.staff-logout:hover{background:rgba(255,255,255,.12)}
+.staff-container{padding:40px 0 60px}
+.staff-heading{margin-bottom:25px}
+.staff-heading small{display:block;color:#08783f;font-size:12px;font-weight:800;letter-spacing:1.5px;margin-bottom:7px}
+.staff-heading h1{margin:0 0 7px;color:#173a2c;font-size:clamp(28px,4vw,40px)}
+.staff-heading p{margin:0;color:#68776f;line-height:1.6}
+.staff-nav{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:25px}
+.staff-nav a{padding:10px 14px;border:1px solid #dce5e0;border-radius:8px;background:#fff;color:#315244;text-decoration:none;font-size:13px;font-weight:700}
+.staff-nav a:hover,.staff-nav a.active{background:#08783f;border-color:#08783f;color:#fff}
+.attendance-card{background:#fff;border:1px solid #e1e8e4;border-radius:14px;padding:25px;box-shadow:0 8px 25px rgba(0,0,0,.05);margin-bottom:22px}
+.attendance-card h2{margin:0 0 7px;color:#173a2c}
+.attendance-card>p{margin:0 0 20px;color:#718079;line-height:1.6}
+.attendance-controls{display:grid;grid-template-columns:1fr 1fr;gap:17px;margin-bottom:20px}
+.control-group{display:flex;flex-direction:column}
+.control-group label{font-weight:700;color:#29463a;margin-bottom:7px}
+.control-group input,.control-group select{width:100%;padding:12px 13px;border:1px solid #d6e0da;border-radius:8px;font:inherit;outline:none;background:#fff}
+.control-group input:focus,.control-group select:focus{border-color:#08783f;box-shadow:0 0 0 3px rgba(8,120,63,.1)}
+.attendance-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.summary-box{padding:16px;border-radius:10px;background:#f8fbf9;border:1px solid #e1e8e4;text-align:center}
+.summary-box strong{display:block;font-size:24px;color:#08783f}
+.summary-box span{font-size:12px;color:#718079}
+.attendance-table-wrap{width:100%;overflow-x:auto}
+.attendance-table{width:100%;min-width:650px;border-collapse:collapse}
+.attendance-table th,.attendance-table td{padding:13px;text-align:left;border-bottom:1px solid #e6ece8}
+.attendance-table th{background:#eef6f1;color:#164d32;font-size:13px}
+.attendance-table td{font-size:14px;color:#52635b}
+.student-name{font-weight:700;color:#173a2c}
+.attendance-status{display:flex;gap:6px;flex-wrap:wrap}
+.status-button{border:1px solid #d5dfd9;border-radius:7px;background:#fff;padding:7px 9px;color:#52635b;font-size:12px;font-weight:700;cursor:pointer}
+.status-button:hover{border-color:#08783f;color:#08783f}
+.status-button.selected.present{background:#e8f5ed;border-color:#08783f;color:#08783f}
+.status-button.selected.absent{background:#fbeaea;border-color:#b42318;color:#b42318}
+.status-button.selected.late{background:#fff1d9;border-color:#b87800;color:#9a6200}
+.save-attendance{margin-top:20px;border:0;border-radius:8px;padding:12px 18px;background:#08783f;color:#fff;font-weight:800;cursor:pointer}
+.save-attendance:hover{filter:brightness(.95)}
+.save-attendance:disabled{opacity:.65;cursor:not-allowed}
+.attendance-message{min-height:20px;margin:12px 0 0;font-size:13px;font-weight:700}
+.attendance-message.success{color:#08783f}
+.attendance-message.error{color:#b42318}
+.attendance-message.info{color:#52635b}
+.loading-row,.empty-row{text-align:center;padding:25px;color:#68776f}
+.history-item{padding:16px;border:1px solid #e1e8e4;border-radius:10px;background:#f9fcfa;margin-bottom:10px}
+.history-item strong{display:block;color:#173a2c;margin-bottom:5px}
+.history-meta{font-size:12px;color:#08783f;font-weight:700}
+.security-note{padding:17px;border-radius:10px;background:#fffdf4;border:1px solid #eee4bd;color:#6d623b;font-size:13px;line-height:1.7}
+@media(max-width:700px){
+.attendance-controls{grid-template-columns:1fr}
+.attendance-summary{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+.staff-header-inner{align-items:flex-start;padding:12px 0}
+.staff-brand img{width:42px;height:42px}
+.staff-brand strong{font-size:14px}
+.staff-brand span{font-size:10px}
+.staff-logout{padding:8px 11px;font-size:12px}
+.staff-container{padding-top:30px}
+.attendance-card{padding:20px 16px}
+}
+</style>
+</head>
+<body><div class="staff-page"><header class="staff-header">
+<div class="staff-header-inner"><a href="staff-dashboard.html" class="staff-brand">
+<img src="../images/logo.png" alt="Kenbridge Christian School Logo">
+<div>
+<strong>Kenbridge Christian School</strong>
+<span>Staff Portal</span>
+</div>
+</a><a href="login.html" class="staff-logout" id="logoutButton">Log Out</a>
+
+</div>
+</header><main class="staff-container"><div class="staff-heading">
+<small>STAFF PORTAL</small>
+<h1>Attendance</h1>
+<p>Record and review daily student attendance.</p>
+</div><nav class="staff-nav">
+<a href="staff-dashboard.html">Dashboard</a>
+<a href="students.html">Students</a>
+<a href="attendance.html" class="active">Attendance</a>
+<a href="announcements.html">Announcements</a>
+<a href="articles.html">Articles</a>
+<a href="reports.html">Reports</a>
+<a href="files.html">Files</a>
+<a href="calendar.html">Calendar</a>
+<a href="messages.html">Messages</a>
+<a href="tasks.html">Tasks</a>
+<a href="profile.html">My Profile</a>
+</nav><section class="attendance-card"><h2>Daily Attendance</h2>
+<p>Select a class and date to load learners, then mark each learner as Present, Absent or Late.</p><div class="attendance-controls"><div class="control-group">
+<label for="attendanceDate">Attendance Date</label>
+<input type="date" id="attendanceDate">
+</div><div class="control-group">
+<label for="attendanceClass">Class</label>
+<select id="attendanceClass">
+<option value="">Select Class</option>
+<option value="BABY">Baby Class</option>
+<option value="MIDDLE">Middle Class</option>
+<option value="TOP">Top Class</option>
+<option value="P1">Primary One</option>
+<option value="P2">Primary Two</option>
+<option value="P3">Primary Three</option>
+<option value="P4">Primary Four</option>
+<option value="P5">Primary Five</option>
+<option value="P6">Primary Six</option>
+<option value="P7">Primary Seven</option>
+</select>
+</div></div><div class="attendance-summary"><div class="summary-box">
+<strong id="presentCount">0</strong>
+<span>Present</span>
+</div><div class="summary-box">
+<strong id="absentCount">0</strong>
+<span>Absent</span>
+</div><div class="summary-box">
+<strong id="lateCount">0</strong>
+<span>Late</span>
+</div></div><div class="attendance-table-wrap"><table class="attendance-table"><thead>
+<tr>
+<th>Student</th>
+<th>Admission No.</th>
+<th>Stream</th>
+<th>Attendance Status</th>
+</tr>
+</thead><tbody id="attendanceBody">
+<tr>
+<td colspan="4" class="empty-row">Select a class to load students.</td>
+</tr>
+</tbody></table></div><button type="button" class="save-attendance" id="saveAttendance">
+Save Attendance
+</button><p id="attendanceMessage" class="attendance-message"></p></section><section class="attendance-card"><h2>Attendance History</h2>
+<p>Recently recorded attendance from the school database.</p><div id="attendanceHistory">
+<div class="history-item">
+<span class="history-meta">Loading attendance history...</span>
+</div>
+</div></section><div class="security-note">
+<strong>Secure school records:</strong>
+Attendance is stored in the Kenbridge school database and linked to the authenticated staff member who records it.
+</div></main></div><script>
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+const API="https://kenbridge-christian-school.onrender.com/api/attendance";
+
+const q=id=>document.getElementById(id);
+
+const dateInput=q("attendanceDate");
+const classInput=q("attendanceClass");
+const body=q("attendanceBody");
+const message=q("attendanceMessage");
+const history=q("attendanceHistory");
+const saveButton=q("saveAttendance");
+
+let students=[];
+
+
+const token=()=>[
+"kenbridgeAccessToken",
+"access_token",
+"kenbridge_access_token",
+"token"
+].map(k=>localStorage.getItem(k)||sessionStorage.getItem(k)).find(Boolean);
+
+
+function esc(value){
+
+return String(value??"").replace(/[&<>"']/g,c=>({
+
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#039;"
+
+}[c]));
+
+}
+
+
+function showMessage(text,type="info"){
+
+message.textContent=text;
+message.className="attendance-message "+type;
+
+}
+
+
+function updateSummary(){
+
+let present=0;
+let absent=0;
+let late=0;
+
+document.querySelectorAll(".status-button.selected").forEach(button=>{
+
+const status=button.dataset.status;
+
+if(status==="PRESENT")present++;
+if(status==="ABSENT")absent++;
+if(status==="LATE")late++;
+
+});
+
+q("presentCount").textContent=present;
+q("absentCount").textContent=absent;
+q("lateCount").textContent=late;
+
+}
+
+
+function renderStudents(){
+
+body.innerHTML="";
+
+if(!students.length){
+
+body.innerHTML=`
+<tr>
+<td colspan="4" class="empty-row">
+No active students were found for this class.
+</td>
+</tr>`;
+
+updateSummary();
+
+return;
+
+}
+
+
+students.forEach(student=>{
+
+const name=
+student.full_name||
+`${student.first_name||""} ${student.last_name||""}`.trim()||
+"Unnamed Student";
+
+const status=String(
+student.attendance_status||""
+).toUpperCase();
+
+const row=document.createElement("tr");
+
+row.dataset.studentId=student.id;
+
+row.innerHTML=`
+
+<td class="student-name">
+${esc(name)}
+</td>
+
+<td>
+${esc(student.admission_number||"—")}
+</td>
+
+<td>
+${esc(student.stream||"—")}
+</td>
+
+<td>
+
+<div class="attendance-status">
+
+<button
+type="button"
+class="status-button ${status==="PRESENT"?"selected present":""}"
+data-status="PRESENT">
+Present
+</button>
+
+<button
+type="button"
+class="status-button ${status==="ABSENT"?"selected absent":""}"
+data-status="ABSENT">
+Absent
+</button>
+
+<button
+type="button"
+class="status-button ${status==="LATE"?"selected late":""}"
+data-status="LATE">
+Late
+</button>
+
+</div>
+
+</td>`;
+
+body.appendChild(row);
+
+});
+
+updateSummary();
+
+}
+
+
+async function loadStudents(){
+
+const className=classInput.value;
+const date=dateInput.value;
+
+students=[];
+
+body.innerHTML=`
+<tr>
+<td colspan="4" class="loading-row">
+Loading students...
+</td>
+</tr>`;
+
+updateSummary();
+
+
+if(!className){
+
+body.innerHTML=`
+<tr>
+<td colspan="4" class="empty-row">
+Please select a class.
+</td>
+</tr>`;
+
+return;
+
+}
+
+
+if(!date){
+
+showMessage("Please select an attendance date.","error");
+
+return;
+
+}
+
+
+const t=token();
+
+if(!t){
+
+showMessage(
+"Your session was not found. Please log in again.",
+"error"
+);
+
+return;
+
+}
+
+
+try{
+
+showMessage("Loading students...","info");
+
+const url=
+API+
+"?class="+encodeURIComponent(className)+
+"&date="+encodeURIComponent(date);
+
+const response=await fetch(url,{
+
+headers:{
+Authorization:"Bearer "+t
+}
+
+});
+
+
+const data=await response.json();
+
+
+if(!response.ok||!data.success){
+
+throw new Error(
+data.message||"Unable to load students."
+);
+
+}
+
+
+students=Array.isArray(data.students)?
+data.students:
+[];
+
+
+renderStudents();
+
+
+showMessage(
+students.length?
+"Students loaded successfully.":
+"No active students were found for this class.",
+"success"
+);
+
+
+}catch(error){
+
+students=[];
+
+body.innerHTML=`
+<tr>
+<td colspan="4" class="empty-row">
+Unable to load students.
+</td>
+</tr>`;
+
+showMessage(
+error.message||"Unable to load students.",
+"error"
+);
+
+}
+
+}
+
+
+body.addEventListener("click",event=>{
+
+const button=
+event.target.closest(".status-button");
+
+if(!button)return;
+
+const buttons=
+button.parentElement.querySelectorAll(
+".status-button"
+);
+
+
+buttons.forEach(item=>{
+
+item.classList.remove(
+"selected",
+"present",
+"absent",
+"late"
+);
+
+});
+
+
+button.classList.add(
+"selected",
+button.dataset.status.toLowerCase()
+);
+
+
+updateSummary();
+
+});
+
+
+async function saveAttendance(){
+
+const className=classInput.value;
+const date=dateInput.value;
+
+
+if(!className){
+
+showMessage(
+"Please select a class.",
+"error"
+);
+
+return;
+
+}
+
+
+if(!date){
+
+showMessage(
+"Please select an attendance date.",
+"error"
+);
+
+return;
+
+}
+
+
+if(!students.length){
+
+showMessage(
+"There are no students to save attendance for.",
+"error"
+);
+
+return;
+
+}
+
+
+const attendance=[];
+
+
+const rows=
+document.querySelectorAll(
+"#attendanceBody tr[data-student-id]"
+);
+
+
+for(const row of rows){
+
+const selected=
+row.querySelector(
+".status-button.selected"
+);
+
+
+if(!selected){
+
+showMessage(
+"Please mark attendance for every student before saving.",
+"error"
+);
+
+return;
+
+}
+
+
+attendance.push({
+
+student_id:
+row.dataset.studentId,
+
+status:
+selected.dataset.status
+
+});
+
+}
+
+
+const t=token();
+
+
+if(!t){
+
+showMessage(
+"Your session was not found. Please log in again.",
+"error"
+);
+
+return;
+
+}
+
+
+saveButton.disabled=true;
+
+saveButton.textContent=
+"Saving Attendance...";
+
+
+try{
+
+const response=await fetch(API,{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json",
+
+Authorization:"Bearer "+t
+
+},
+
+body:JSON.stringify({
+
+class_name:className,
+
+attendance_date:date,
+
+attendance
+
+})
+
+});
+
+
+const data=
+await response.json();
+
+
+if(!response.ok||!data.success){
+
+throw new Error(
+data.message||
+"Unable to save attendance."
+);
+
+}
+
+
+showMessage(
+data.message||
+"Attendance saved successfully.",
+"success"
+);
+
+
+loadHistory();
+
+
+}catch(error){
+
+showMessage(
+error.message||
+"Unable to save attendance.",
+"error"
+);
+
+}finally{
+
+saveButton.disabled=false;
+
+saveButton.textContent=
+"Save Attendance";
+
+}
+
+}
+
+
+async function loadHistory(){
+
+const t=token();
+
+
+if(!t){
+
+history.innerHTML=`
+<div class="history-item">
+<span class="history-meta">
+Please log in to view attendance history.
+</span>
+</div>`;
+
+return;
+
+}
+
+
+try{
+
+const response=await fetch(
+API+"/history",
+{
+
+headers:{
+
+Authorization:"Bearer "+t
+
+}
+
+}
+
+);
+
+
+const data=
+await response.json();
+
+
+if(!response.ok||!data.success){
+
+throw new Error(
+data.message||
+"Unable to load attendance history."
+);
+
+}
+
+
+const records=
+Array.isArray(data.history)?
+data.history:
+[];
+
+
+history.innerHTML="";
+
+
+if(!records.length){
+
+history.innerHTML=`
+<div class="history-item">
+<span class="history-meta">
+No attendance records have been saved yet.
+</span>
+</div>`;
+
+return;
+
+}
+
+
+records.forEach(record=>{
+
+const item=
+document.createElement("div");
+
+
+item.className=
+"history-item";
+
+
+item.innerHTML=`
+
+<strong>
+${esc(record.class_name)}
+</strong>
+
+<div class="history-meta">
+
+${esc(record.attendance_date)}
+&nbsp;•&nbsp;
+Present: ${esc(record.present_count)}
+&nbsp;•&nbsp;
+Absent: ${esc(record.absent_count)}
+&nbsp;•&nbsp;
+Late: ${esc(record.late_count)}
+
+</div>`;
+
+
+history.appendChild(item);
+
+});
+
+
+}catch(error){
+
+history.innerHTML=`
+<div class="history-item">
+<span class="history-meta">
+Unable to load attendance history.
+</span>
+</div>`;
+
+}
+
+}
+
+
+classInput.addEventListener(
+"change",
+loadStudents
+);
+
+
+dateInput.addEventListener(
+"change",
+()=>{
+
+if(classInput.value){
+
+loadStudents();
+
+}
+
+}
+);
+
+
+saveButton.addEventListener(
+"click",
+saveAttendance
+);
+
+
+q("logoutButton").addEventListener(
+"click",
+event=>{
+
+event.preventDefault();
+
+
+[
+"kenbridgeAccessToken",
+"kenbridgeRefreshToken",
+"kenbridgeUser",
+"access_token",
+"refresh_token",
+"kenbridge_access_token",
+"token"
+].forEach(key=>{
+
+localStorage.removeItem(key);
+
+sessionStorage.removeItem(key);
+
+});
+
+
+location.href="login.html";
+
+}
+);
+
+
+dateInput.value=
+new Date()
+.toISOString()
+.split("T")[0];
+
+
+loadHistory();
+
+});
+
+</script></body>
+  </html>
