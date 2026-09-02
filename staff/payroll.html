@@ -274,36 +274,201 @@ ${escapeHTML(status.replace(/_/g," "))}
 </span>
 </td>
 </tr>
-`;
+<script>
+const API_BASE = "https://kenbridge-christian-school.onrender.com";
 
-}).join("");
+document.addEventListener("DOMContentLoaded", function () {
 
-}catch(error){
+  const currentMonth = document.getElementById("currentMonth");
+  const paymentStatus = document.getElementById("paymentStatus");
+  const latestPayslip = document.getElementById("latestPayslip");
+  const payrollBody = document.getElementById("payrollBody");
+  const logoutButton = document.getElementById("logoutButton");
 
-console.error("Payroll loading error:",error);
+  function formatMoney(amount) {
+    return new Intl.NumberFormat("en-UG", {
+      style: "currency",
+      currency: "UGX",
+      maximumFractionDigits: 0
+    }).format(Number(amount || 0));
+  }
 
-currentMonth.textContent="Unavailable";
-paymentStatus.textContent="Unavailable";
-latestPayslip.textContent="Unavailable";
+  function formatMonth(dateValue) {
+    if (!dateValue) return "—";
 
-payrollBody.innerHTML=`
-<tr>
-<td colspan="5" class="error-row">
-${escapeHTML(error.message||"Unable to load payroll information at this time.")}
-</td>
-</tr>
-  logoutButton.addEventListener("click", function () {
-    localStorage.removeItem("kenbridgeAccessToken");
-    localStorage.removeItem("kenbridgeRefreshToken");
-    localStorage.removeItem("kenbridgeUser");
+    const date = new Date(dateValue + "T00:00:00");
 
-    sessionStorage.removeItem("kenbridgeStaffLoggedIn");
-    sessionStorage.removeItem("kenbridgeUserRole");
+    return date.toLocaleDateString("en-US", {
+      month: "long",
+      year: "numeric"
+    });
+  }
+
+  function statusClass(status) {
+    return String(status || "pending")
+      .toLowerCase()
+      .replace(/\s+/g, "-");
+  }
+
+  function escapeHTML(value) {
+    const div = document.createElement("div");
+    div.textContent = value ?? "";
+    return div.innerHTML;
+  }
+
+  async function loadPayroll() {
+
+    try {
+
+      const token = localStorage.getItem("kenbridgeAccessToken");
+
+      if (!token) {
+        throw new Error("Your login session was not found. Please log in again.");
+      }
+
+      const controller = new AbortController();
+
+      const timeout = setTimeout(function () {
+        controller.abort();
+      }, 15000);
+
+      let response;
+
+      try {
+
+        response = await fetch(
+          API_BASE + "/api/payroll/my",
+          {
+            method: "GET",
+            headers: {
+              "Authorization": "Bearer " + token,
+              "Content-Type": "application/json"
+            },
+            signal: controller.signal
+          }
+        );
+
+      } finally {
+
+        clearTimeout(timeout);
+
+      }
+
+      let result;
+
+      try {
+
+        result = await response.json();
+
+      } catch (error) {
+
+        throw new Error("The payroll server returned an invalid response.");
+
+      }
+
+      if (!response.ok || !result.success) {
+
+        throw new Error(
+          result.message || "Unable to retrieve payroll information."
+        );
+
+      }
+
+      const payrollRecords = Array.isArray(result.payroll)
+        ? result.payroll
+        : [];
+
+      if (payrollRecords.length === 0) {
+
+        currentMonth.textContent = "No Records";
+        paymentStatus.textContent = "—";
+        latestPayslip.textContent = "—";
+
+        payrollBody.innerHTML = `
+          <tr>
+            <td colspan="5" class="loading-row">
+              No payroll records are currently available for your account.
+            </td>
+          </tr>
+        `;
+
+        return;
+
+      }
+
+      const latest = result.latest || payrollRecords[0];
+
+      currentMonth.textContent = formatMonth(latest.pay_month);
+
+      paymentStatus.textContent =
+        String(latest.status || "PENDING")
+          .replace(/_/g, " ");
+
+      latestPayslip.textContent =
+        formatMoney(latest.net_amount);
+
+      payrollBody.innerHTML = payrollRecords.map(function (record) {
+
+        const status = String(record.status || "PENDING");
+
+        return `
+          <tr>
+            <td>${escapeHTML(formatMonth(record.pay_month))}</td>
+            <td>${escapeHTML(formatMoney(record.gross_amount))}</td>
+            <td>${escapeHTML(formatMoney(record.deductions))}</td>
+            <td>${escapeHTML(formatMoney(record.net_amount))}</td>
+            <td>
+              <span class="status ${escapeHTML(statusClass(status))}">
+                ${escapeHTML(status.replace(/_/g, " "))}
+              </span>
+            </td>
+          </tr>
+        `;
+
+      }).join("");
+
+    } catch (error) {
+
+      console.error("Payroll loading error:", error);
+
+      currentMonth.textContent = "Unavailable";
+      paymentStatus.textContent = "Unavailable";
+      latestPayslip.textContent = "Unavailable";
+
+      payrollBody.innerHTML = `
+        <tr>
+          <td colspan="5" class="error-row">
+            ${escapeHTML(
+              error.message ||
+              "Unable to load payroll information at this time."
+            )}
+          </td>
+        </tr>
+      `;
+
+    }
+
+  }
+
+  if (logoutButton) {
+
+    logoutButton.addEventListener("click", function () {
+
+      localStorage.removeItem("kenbridgeAccessToken");
+      localStorage.removeItem("kenbridgeRefreshToken");
+      localStorage.removeItem("kenbridgeUser");
+
+      sessionStorage.removeItem("kenbridgeStaffLoggedIn");
+      sessionStorage.removeItem("kenbridgeUserRole");
+
+    });
+
+  }
+
+  loadPayroll();
+
 });
+</script>
 
-loadPayroll();
-
-});
-
-</script></body>
+}).</body>
   </html>
