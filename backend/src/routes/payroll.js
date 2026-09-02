@@ -169,8 +169,7 @@ res.status(500).json({ success: false, message: "Unable to create payroll." });
 }
 });
 
-router.put("/", async (req, res) => {
-if (!await getAdministrator(req, res)) return;
+router.put("/:id", async (req, res) => {
 
 try {
 const { pay_month, gross_amount, deductions = 0, status = "PENDING" } = req.body || {};
@@ -205,7 +204,7 @@ res.status(500).json({ success: false, message: "Unable to update payroll." });
 }
 });
 
-router.delete("/", async (req, res) => {
+router.delete("/:id", async (req, res) => {
 if (!await getAdministrator(req, res)) return;
 
 try {
