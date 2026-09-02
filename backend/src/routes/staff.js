@@ -67,7 +67,62 @@ async function authenticateStaff(req, res) {
     return user;
 }
 
+/* ============================================================
+   GET ACTIVE STAFF FOR ADMIN TASK ASSIGNMENT
+   GET /api/staff/admin/list
+   ADMIN ONLY
+============================================================ */
 
+router.get("/admin/list", async (req, res) => {
+    try {
+        const user = await authenticateStaff(req, res);
+
+        if (!user) {
+            return;
+        }
+
+        const role = String(user.role || "").toUpperCase();
+
+        if (role !== "ADMIN") {
+            return res.status(403).json({
+                success: false,
+                message: "Only administrators can view the staff assignment list."
+            });
+        }
+
+        const { rows } = await pool.query(
+            `SELECT
+                id,
+                full_name,
+                username,
+                email,
+                role,
+                position,
+                department,
+                phone,
+                is_active
+             FROM users
+             WHERE is_active = TRUE
+               AND UPPER(COALESCE(role, '')) IN ('STAFF', 'ADMIN')
+             ORDER BY
+                full_name ASC NULLS LAST,
+                username ASC`
+        );
+
+        return res.status(200).json({
+            success: true,
+            staff: rows
+        });
+
+    } catch (error) {
+        console.error("GET ADMIN STAFF LIST ERROR:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Unable to retrieve the staff list."
+        });
+    }
+});
 /* ============================================================
    GET STAFF PROFILE
    GET /api/staff/profile
