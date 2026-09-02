@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calendar | Kenbridge Staff Portal</title>
+<meta name="description" content="School calendar and events for Kenbridge Christian School staff.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/portal-auth.js"></script>
+<style>
+.staff-page{min-height:100vh;background:#f4f8f5}.staff-header{background:#08783f;color:#fff;padding:18px 0}.staff-header-inner,.staff-container{width:min(1050px,92%);margin:auto}.staff-header-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}.staff-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}.staff-brand img{width:48px;height:48px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}.staff-brand strong,.staff-brand span{display:block}.staff-brand strong{font-size:17px}.staff-brand span{font-size:12px;opacity:.85;margin-top:3px}.staff-logout{padding:10px 15px;border:1px solid #ffffff80;border-radius:8px;color:#fff;text-decoration:none;font-size:13px;font-weight:700}.staff-container{padding:40px 0 60px}.staff-heading{margin-bottom:25px}.staff-heading small{display:block;color:#08783f;font-size:12px;font-weight:800;letter-spacing:1.5px;margin-bottom:7px}.staff-heading h1{margin:0 0 7px;color:#173a2c;font-size:clamp(28px,4vw,40px)}.staff-heading p,.calendar-card>p{margin:0;color:#68776f;line-height:1.6}.staff-nav{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:25px}.staff-nav a{padding:10px 14px;border:1px solid #dce5e0;border-radius:8px;background:#fff;color:#315244;text-decoration:none;font-size:13px;font-weight:700}.staff-nav a:hover,.staff-nav a.active{background:#08783f;border-color:#08783f;color:#fff}.calendar-card{background:#fff;border:1px solid #e1e8e4;border-radius:14px;padding:25px;box-shadow:0 8px 25px #0000000d;margin-bottom:22px}.calendar-card h2{margin:0 0 7px;color:#173a2c}.calendar-card>p{margin-bottom:20px}.event-form{display:grid;grid-template-columns:1fr 1fr;gap:17px}.form-group{display:flex;flex-direction:column}.form-group.full,.event-button,.event-message{grid-column:1/-1}.form-group label{font-weight:700;color:#29463a;margin-bottom:7px}.form-group input,.form-group select,.form-group textarea{width:100%;box-sizing:border-box;padding:12px 13px;border:1px solid #d6e0da;border-radius:8px;font:inherit;outline:none;background:#fff}.form-group textarea{min-height:120px;resize:vertical}.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:#08783f;box-shadow:0 0 0 3px #08783f1a}.event-button{width:max-content;border:0;border-radius:8px;padding:12px 18px;background:#08783f;color:#fff;font-weight:800;cursor:pointer}.event-button:disabled{opacity:.6;cursor:not-allowed}.event-message{min-height:20px;margin:0;font-size:13px;font-weight:700}.success{color:#08783f}.error{color:#b42318}.event-list{display:grid;gap:12px}.event-item{padding:17px;border:1px solid #e1e8e4;border-radius:10px;background:#f9fcfa}.event-item strong{display:block;color:#173a2c;font-size:16px;margin-bottom:6px}.event-meta{font-size:12px;color:#08783f;font-weight:700}.event-description{margin:8px 0 0;color:#68776f;line-height:1.5;font-size:13px}.event-actions{display:flex;gap:8px;margin-top:12px}.event-actions button{border:0;border-radius:6px;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer}.edit-btn{background:#e7f3ed;color:#08783f}.delete-btn{background:#fde8e8;color:#b42318}.empty,.loading{padding:20px;text-align:center;color:#718079;border:1px dashed #d6e0da;border-radius:9px}.security-note{padding:17px;border-radius:10px;background:#fffdf4;border:1px solid #eee4bd;color:#6d623b;font-size:13px;line-height:1.7}@media(max-width:650px){.staff-header-inner{align-items:flex-start}.staff-brand img{width:42px;height:42px}.staff-brand strong{font-size:14px}.staff-brand span{font-size:10px}.staff-logout{padding:8px 11px;font-size:12px}.staff-container{padding-top:30px}.calendar-card{padding:20px 16px}.event-form{grid-template-columns:1fr}.form-group.full,.event-button,.event-message{grid-column:auto}}
+</style>
+</head>
+<body>
+<div class="staff-page">
+<header class="staff-header"><div class="staff-header-inner">
+<a href="staff-dashboard.html" class="staff-brand"><img src="../images/logo.png" alt="Kenbridge Christian School Logo"><div><strong>Kenbridge Christian School</strong><span>Staff Portal</span></div></a>
+<a href="login.html" class="staff-logout" id="logoutButton">Log Out</a>
+</div></header>
+<main class="staff-container">
+<div class="staff-heading"><small>STAFF PORTAL</small><h1>School Calendar</h1><p>Record upcoming school activities, meetings and important events.</p></div>
+<nav class="staff-nav"><a href="staff-dashboard.html">Dashboard</a><a href="students.html">Students</a><a href="announcements.html">Announcements</a><a href="articles.html">Articles</a><a href="reports.html">Reports</a><a href="files.html">Files</a><a href="calendar.html" class="active">Calendar</a><a href="profile.html">My Profile</a></nav>
+<section class="calendar-card">
+<h2>Add School Event</h2><p>Create an event and save it directly to the Kenbridge backend.</p>
+<form id="eventForm" class="event-form">
+<div class="form-group"><label for="eventTitle">Event Title</label><input type="text" id="eventTitle" required placeholder="e.g. Sports Day"></div>
+<div class="form-group"><label for="eventType">Event Type</label><select id="eventType" required><option value="">Select Event Type</option><option>Academic</option><option>Sports</option><option>Christian / Chapel</option><option>Meeting</option><option>School Event</option><option>Examination</option><option>Holiday</option><option>Other</option></select></div>
+<div class="form-group"><label for="eventDate">Date</label><input type="date" id="eventDate" required></div>
+<div class="form-group"><label for="eventTime">Time</label><input type="time" id="eventTime"></div>
+<div class="form-group"><label for="eventLocation">Location</label><input type="text" id="eventLocation" placeholder="e.g. School Main Hall"></div>
+<div class="form-group"><label for="eventAudience">Audience</label><select id="eventAudience"><option>All School</option><option>Students</option><option>Staff</option><option>Parents</option><option>Teachers</option></select></div>
+<div class="form-group full"><label for="eventDescription">Description</label><textarea id="eventDescription" placeholder="Enter details about this event..."></textarea></div>
+<button type="submit" class="event-button" id="submitButton">Save Event</button>
+<p id="eventMessage" class="event-message"></p>
+</form>
+</section>
+<section class="calendar-card"><h2>Calendar Events</h2><p>Events currently saved in the Kenbridge backend.</p><div id="eventList" class="event-list"><div class="loading">Loading calendar events...</div></div></section>
+<div class="security-note"><strong>Backend connected:</strong> Calendar events are stored in the school database and protected by staff authentication.</div>
+</main>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+const API_BASE="https://kenbridge-christian-school.onrender.com/api",form=document.getElementById("eventForm"),list=document.getElementById("eventList"),message=document.getElementById("eventMessage"),button=document.getElementById("submitButton"),logoutButton=document.getElementById("logoutButton");let editingId=null;
+const getToken=()=>["kenbridgeAccessToken","access_token","accessToken","kenbridge_access_token","token"].map(k=>localStorage.getItem(k)).find(Boolean)||"";
+const headers=()=>({"Content-Type":"application/json","Authorization":"Bearer "+getToken()});
+const escapeHTML=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+const showMessage=(text,type="success")=>{message.textContent=text;message.className="event-message "+type};
+const formatDate=v=>{if(!v)return"";const d=new Date(v);return Number.isNaN(d.getTime())?v:d.toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"})};
+const formatTime=v=>{if(!v)return"";const d=new Date(v);return Number.isNaN(d.getTime())?"":d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})};
+const resetForm=()=>{form.reset();editingId=null;button.textContent="Save Event"};
+const getDescriptionParts=text=>{text=String(text||"");const type=text.match(/^Event Type:\s*(.*?)\n/i),audience=text.match(/^Audience:\s*(.*?)\n/i);return{type:type?.[1]||"",audience:audience?.[1]||"",description:text.replace(/^Event Type:.*?\n/i,"").replace(/^Audience:.*?\n/i,"").trim()}};
+function renderEvents(events){if(!events?.length){list.innerHTML='<div class="empty">No calendar events have been created yet.</div>';return}list.innerHTML=events.map(e=>{const p=getDescriptionParts(e.description),time=e.all_day?"All day":formatTime(e.start_at);return`<div class="event-item"><strong>${escapeHTML(e.title)}</strong><div class="event-meta">${escapeHTML(formatDate(e.start_at))}${time?" • "+escapeHTML(time):""}${e.location?" • "+escapeHTML(e.location):""}</div>${p.type?`<div class="event-meta">${escapeHTML(p.type)}${p.audience?" • "+escapeHTML(p.audience):""}</div>`:""}<div class="event-description">${escapeHTML(p.description||"No description provided.")}</div><div class="event-actions"><button class="edit-btn" data-edit="${escapeHTML(e.id)}">Edit</button><button class="delete-btn" data-delete="${escapeHTML(e.id)}">Delete</button></div></div>`}).join("")}
+async function loadEvents(){list.innerHTML='<div class="loading">Loading calendar events...</div>';try{const token=getToken();if(!token)throw Error("Your staff session has expired. Please log in again.");const res=await fetch(API_BASE+"/calendar",{headers:{"Authorization":"Bearer "+token}}),data=await res.json();if(!res.ok)throw Error(data.message||"Unable to load calendar events.");renderEvents(data.events||[])}catch(e){list.innerHTML='<div class="empty">'+escapeHTML(e.message)+'</div>'}}
+const makeDateTime=(date,time)=>date?(time?`${date}T${time}:00`:`${date}T00:00:00`):null;
+async function startEditing(e){const p=getDescriptionParts(e.description),d=new Date(e.start_at);if(Number.isNaN(d.getTime()))return showMessage("This event has an invalid date.","error");eventTitle.value=e.title||"";eventType.value=p.type||"";eventDate.value=d.toISOString().slice(0,10);eventTime.value=e.all_day?"":d.toTimeString().slice(0,5);eventLocation.value=e.location||"";eventAudience.value=p.audience||"All School";eventDescription.value=p.description||"";editingId=e.id;button.textContent="Update Event";window.scrollTo({top:form.getBoundingClientRect().top+scrollY-30,behavior:"smooth"})}
+async function saveEvent(){const title=eventTitle.value.trim(),type=eventType.value,date=eventDate.value,time=eventTime.value,location=eventLocation.value.trim(),audience=eventAudience.value,description=eventDescription.value.trim();if(!title||!date)return showMessage("Please enter the event title and date.","error");if(!getToken())return showMessage("Your staff session has expired. Please log in again.","error");button.disabled=true;showMessage(editingId?"Updating event...":"Saving event...");try{const res=await fetch(editingId?API_BASE+"/calendar/"+encodeURIComponent(editingId):API_BASE+"/calendar",{method:editingId?"PUT":"POST",headers:headers(),body:JSON.stringify({title,description:`Event Type: ${type}\nAudience: ${audience}\n${description}`.trim(),start_at:makeDateTime(date,time),end_at:null,location,all_day:!time})}),data=await res.json();if(!res.ok)throw Error(data.message||"Unable to save event.");showMessage(editingId?"Event updated successfully.":"Event saved successfully.");resetForm();loadEvents()}catch(e){showMessage(e.message||"Unable to save event.","error")}finally{button.disabled=false}}
+async function deleteEvent(id){if(!confirm("Delete this calendar event?"))return;try{const res=await fetch(API_BASE+"/calendar/"+encodeURIComponent(id),{method:"DELETE",headers:{"Authorization":"Bearer "+getToken()}}),data=await res.json();if(!res.ok)throw Error(data.message||"Unable to delete event.");showMessage("Event deleted successfully.");loadEvents()}catch(e){showMessage(e.message||"Unable to delete event.","error")}}
+form.addEventListener("submit",e=>{e.preventDefault();saveEvent()});
+list.addEventListener("click",async e=>{const edit=e.target.closest("[data-edit]"),del=e.target.closest("[data-delete]");if(edit){const res=await fetch(API_BASE+"/calendar",{headers:{"Authorization":"Bearer "+getToken()}}),data=await res.json();const event=(data.events||[]).find(x=>x.id===edit.dataset.edit);if(event)startEditing(event)}if(del)deleteEvent(del.dataset.delete)});
+logoutButton.addEventListener("click",()=>{["kenbridgeAccessToken","kenbridgeUser","kenbridgeUserRole","access_token","accessToken","kenbridge_access_token","token","kenbridgeStaffLoggedIn"].forEach(k=>localStorage.removeItem(k));sessionStorage.removeItem("kenbridgeStaffLoggedIn")});
+loadEvents();
+});
+</script>
+</body>
+                                     </html>
