@@ -77,7 +77,32 @@ th,td{padding:13px;text-align:left;border-bottom:1px solid #e6ece8}th{background
 const API_BASE=""https://kenbridge-christian-school.onrender.com" (https://kenbridge-christian-school.onrender.com)";
 let payrollRecords=[],editingId=null;
 const staffSelect=document.getElementById("staff_id"),payMonthInput=document.getElementById("pay_month"),grossInput=document.getElementById("gross_amount"),deductionsInput=document.getElementById("deductions"),statusInput=document.getElementById("status"),netPreview=document.getElementById("netPreview"),payrollBody=document.getElementById("payrollBody"),payrollForm=document.getElementById("payrollForm"),notice=document.getElementById("notice"),formTitle=document.getElementById("formTitle"),saveButton=document.getElementById("saveButton"),cancelButton=document.getElementById("cancelButton");
-function authHeaders(){return{"Authorization":"Bearer "+localStorage.getItem("kenbridgeAccessToken"),"Content-Type":"application/json"}}
+function getAccessToken(){
+    return (
+        localStorage.getItem("kenbridgeAccessToken") ||
+        localStorage.getItem("access_token") ||
+        localStorage.getItem("kenbridge_access_token") ||
+        localStorage.getItem("token") ||
+        sessionStorage.getItem("kenbridgeAccessToken") ||
+        sessionStorage.getItem("access_token") ||
+        sessionStorage.getItem("kenbridge_access_token") ||
+        sessionStorage.getItem("token") ||
+        null
+    );
+}
+
+function authHeaders(){
+    const token=getAccessToken();
+
+    if(!token){
+        throw new Error("Your login session was not found. Please log in again.");
+    }
+
+    return{
+        "Authorization":"Bearer "+token,
+        "Content-Type":"application/json"
+    };
+  }
 function formatMoney(v){return new Intl.NumberFormat("en-UG",{style:"currency",currency:"UGX",maximumFractionDigits:0}).format(Number(v||0))}
 function formatMonth(v){return v?new Date(v+"T00:00:00").toLocaleDateString("en-US",{month:"long",year:"numeric"}):"—"}
 function showNotice(m,t){notice.textContent=m;notice.className="notice "+t;setTimeout(()=>{notice.className="notice";notice.textContent=""},5000)}
