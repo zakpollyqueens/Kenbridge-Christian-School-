@@ -446,7 +446,170 @@ router.patch("/:id", async (req, res) => {
         });
     }
 });
+/* =========================================================
+   EDIT TASK
+   PATCH /api/tasks/:id
+   ADMIN ONLY
+========================================================= */
 
+router.patch("/:id", async (req, res) => {
+    try {
+        const user = await authenticateUser(req);
+
+        if (!isAdmin(user)) {
+            return res.status(403).json({
+                success: false,
+                message: "Only administrators can edit tasks."
+            });
+        }
+
+        const {
+            title,
+            description,
+            assigned_to,
+            priority,
+            status,
+            due_date
+        } = req.body || {};
+
+        if (!title?.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "Task title is required."
+            });
+        }
+
+        if (String(title).trim().length > 200) {
+            return res.status(400).json({
+                success: false,
+                message: "Task title cannot exceed 200 characters."
+            });
+        }
+
+        const allowedPriorities = [
+            "LOW",
+            "NORMAL",
+            "HIGH",
+            "URGENT"
+        ];
+
+        const allowedStatuses = [
+            "PENDING",
+            "IN_PROGRESS",
+            "COMPLETED",
+            "CANCELLED"
+        ];
+
+        const cleanPriority =
+            String(priority || "NORMAL").toUpperCase();
+
+        const cleanStatus =
+            String(status || "PENDING").toUpperCase();
+
+        if (!allowedPriorities.includes(cleanPriority)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid task priority."
+            });
+        }
+
+        if (!allowedStatuses.includes(cleanStatus)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid task status."
+            });
+        }
+
+        const { rows: taskRows } = await pool.query(
+            `SELECT id
+             FROM staff_tasks
+             WHERE id = $1
+             LIMIT 1`,
+            [req.params.id]
+        );
+
+        if (!taskRows.length) {
+            return res.status(404).json({
+                success: false,
+                message: "Task was not found."
+            });
+        }
+
+        if (!assigned_to) {
+            return res.status(400).json({
+                success: false,
+                message: "A staff member must be assigned."
+            });
+        }
+
+        const { rows: staffRows } = await pool.query(
+            `SELECT id, is_active
+             FROM users
+             WHERE id = $1
+             LIMIT 1`,
+            [assigned_to]
+        );
+
+        const assignedStaff = staffRows[0];
+
+        if (!assignedStaff) {
+            return res.status(404).json({
+                success: false,
+                message: "Assigned staff member was not found."
+            });
+        }
+
+        if (!assignedStaff.is_active) {
+            return res.status(400).json({
+                success: false,
+                message: "Tasks cannot be assigned to an inactive account."
+            });
+        }
+
+        const { rows } = await pool.query(
+            `UPDATE staff_tasks
+             SET
+                title = $1,
+                description = $2,
+                assigned_to = $3,
+                priority = $4,
+                status = $5,
+                due_date = $6,
+                completed_at =
+                    CASE
+                        WHEN $5 = 'COMPLETED'
+                            THEN COALESCE(completed_at, NOW())
+                        ELSE NULL
+                    END,
+                updated_at = NOW()
+             WHERE id = $7
+             RETURNING *`,
+            [
+                String(title).trim(),
+                description?.trim() || null,
+                assigned_to,
+                cleanPriority,
+                cleanStatus,
+                due_date || null,
+                req.params.id
+            ]
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "Task updated successfully.",
+            task: rows[0]
+        });
+
+    } catch (error) {
+        console.error("EDIT TASK ERROR:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: error.message || "Unable to edit task."
+        });
+    }
+});
 /* =========================================================
    UPDATE TASK STATUS
    PATCH /api/tasks/:id/status
