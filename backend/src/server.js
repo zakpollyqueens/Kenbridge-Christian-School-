@@ -17,6 +17,7 @@ const studentsRoutes=require("./routes/students");
 const documentsRoutes=require("./routes/documents");
 const calendarRoutes=require("./routes/calendar");
 const attendanceRoutes=require("./routes/attendance");
+const staffRoutes=require("./routes/staff");
 const publicContentRoutes=require("./routes/public-content");
 const notificationsRoutes=require("./routes/notifications");
 const app=express();
@@ -95,6 +96,7 @@ app.use("/api/calendar",calendarRoutes);
 app.use("/api/public",publicContentRoutes);
 app.use("/api/leave",leaveRoutes);
 app.use("/api/reports",reportsRoutes);
+app.use("/api/staff",staffRoutes);
 app.use("/api/students",studentsRoutes);
 app.use("/api/gallery",galleryRoutes);
 app.use((req,res)=>{
