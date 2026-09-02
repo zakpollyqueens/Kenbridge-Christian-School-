@@ -8,7 +8,56 @@
 <meta name="theme-color" content="#08783f">
 <link rel="stylesheet" href="../../css/style.css">
 <style>
-.admin-page{min-height:100vh;background:#f5f7f6}.admin-header{background:#08783f;color:#fff;padding:18px 0}.admin-header-inner,.admin-container{width:min(900px,92%);margin:auto}.admin-header-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}.admin-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}.admin-brand img{width:52px;height:52px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}.admin-brand-text strong,.admin-brand-text span{display:block}.admin-brand-text strong{font-size:18px}.admin-brand-text span{margin-top:3px;font-size:12px;opacity:.85}.admin-logout,.submit-button,.cancel-button{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-weight:700}.admin-logout{padding:10px 16px;border:1px solid #ffffff80;border-radius:8px;color:#fff;font-size:14px}.admin-logout:hover{background:#ffffff1f}.admin-container{padding:40px 0 60px}.admin-heading{margin-bottom:28px}.admin-heading small{display:block;margin-bottom:8px;color:#08783f;font-size:12px;font-weight:800;letter-spacing:1.5px}.admin-heading h1{margin:0 0 8px;color:#16352a;font-size:clamp(28px,4vw,40px)}.admin-heading p{margin:0;color:#64736c;line-height:1.7}.staff-form-card{padding:28px;border:1px solid #e1e8e4;border-radius:12px;background:#fff;box-shadow:0 8px 25px #0000000d}.staff-form{display:grid;grid-template-columns:1fr 1fr;gap:20px}.form-group{display:flex;flex-direction:column}.form-group.full,.form-actions,.form-message{grid-column:1/-1}.form-group label{margin-bottom:7px;color:#29463a;font-size:13px;font-weight:700}.form-group input,.form-group select,.form-group textarea{width:100%;box-sizing:border-box;padding:13px 14px;border:1px solid #d8e0dc;border-radius:8px;background:#fff;color:#243b31;font:inherit}.form-group textarea{min-height:110px;resize:vertical}.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#08783f;box-shadow:0 0 0 3px #08783f1a}.form-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:5px}.submit-button,.cancel-button{padding:13px 20px;border-radius:8px;font-size:14px;cursor:pointer}.submit-button{border:0;background:#08783f;color:#fff}.submit-button:hover{opacity:.92}.submit-button:disabled{opacity:.65;cursor:not-allowed}.cancel-button{border:1px solid #d7e0db;background:#fff;color:#315244}.cancel-button:hover{border-color:#08783f;color:#08783f}.form-message{display:none;padding:14px 16px;border-radius:8px;font-size:13px;line-height:1.5}.form-message.success{display:block;background:#e8f5ed;color:#08783f;border:1px solid #c9e6d3}.form-message.error{display:block;background:#fbeaea;color:#a33a3a;border:1px solid #edcaca}.page-loading{text-align:center;padding:40px;color:#64736c}.required{color:#b62c2c}@media(max-width:700px){.admin-header-inner{align-items:flex-start}.admin-brand img{width:44px;height:44px}.admin-brand-text strong{font-size:15px}.admin-container{padding-top:30px}.staff-form{grid-template-columns:1fr}.form-group.full,.form-actions,.form-message{grid-column:auto}.staff-form-card{padding:20px}}
+.admin-page{min-height:100vh;background:#f5f7f6}.admin-header{background:#08783f;color:#fff;padding:18px 0}.admin-header-inner,.admin-container{width:min(900px,92%);margin:auto}.admin-header-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}.admin-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}.admin-brand img{width:52px;height:52px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}.admin-brand-text strong,.admin-brand-text span{display:block}.admin-brand-text strong{font-size:18px}.admin-brand-text span{margin-top:3px;font-size:12px;opacity:.85}.admin-logout,.submit-button,.cancel-button{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-weight:700}.admin-logout{padding:10px 16px;border:1px solid #ffffff80;border-radius:8px;color:#fff;font-size:14px}.admin-logout:hover{background:#ffffff1f}.admin-container{padding:40px 0 60px}.admin-heading{margin-bottom:28px}.admin-heading small{display:block;margin-bottom:8px;color:#08783f;font-size:12px;font-weight:800;letter-spacing:1.5px}.admin-heading h1{margin:0 0 8px;color:#16352a;font-size:clamp(28px,4vw,40px)}.admin-heading p{margin:0;color:#64736c;line-height:1.7}.staff-form-card{padding:28px;border:1px solid #e1e8e4;border-radius:12px;background:#fff;box-shadow:0 8px 25px #0000000d}.staff-form{display:grid;grid-template-columns:1fr 1fr;gap:20px}.form-group{display:flex;flex-direction:column}.form-group.full,.form-actions,.form-message{grid-column:1/-1}.form-group label{margin-bottom:7px;color:#29463a;font-size:13px;font-weight:700}.form-group input,.form-group select,.form-group textarea{width:100%;box-sizing:border-box;padding:13px 14px;border:1px solid #d8e0dc;border-radius:8px;background:#fff;color:#243b31;font:inherit}.form-group textarea{min-height:110px;resize:vertical}.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#08783f;box-shadow:0 0 0 3px #08783f1a}.form-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:5px}.submit-button,.cancel-button{padding:13px 20px;border-radius:8px;font-size:14px;cursor:pointer}.submit-button{border:0;background:#08783f;color:#fff}.submit-button:hover{opacity:.92}.submit-button:disabled{opacity:.65;cursor:not-allowed}.cancel-button{border:1px solid #d7e0db;background:#fff;color:#315244}.cancel-button:hover{border-color:#08783f;color:#08783f}.form-message{display:none;padding:14px 16px;border-radius:8px;font-size:13px;line-height:1.5}.form-message.success{display:block;background:#e8f5ed;color:#08783f;border:1px solid #c9e6d3}.form-message.error{display:block;background:#fbeaea;color:#a33a3a;border:1px solid #edcaca}.page-loading{text-align:center;padding:40px;color:#64736c}.required{color:#b62c2c}@media(max-width:700px){.admin-header-inner{align-items:flex-start}.admin-brand img{width:44px;height:44px}.admin-brand-text strong{font-size:15px}.admin-container{padding-top:30px}.staff-form{grid-template-columns:1fr}.form-group.full,.form-actions,.form-message{grid-column:auto}.staff-form-card{padding:20px
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     }}
+  .class-permissions{
+grid-column:1/-1;
+padding:18px;
+border:1px solid #dce5e0;
+border-radius:10px;
+background:#f8fbf9
+}
+.class-permissions h3{
+margin:0 0 6px;
+color:#173a2c;
+font-size:16px
+}
+.class-permissions p{
+margin:0 0 15px;
+font-size:13px;
+color:#68776f;
+line-height:1.5
+}
+.class-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px
+}
+.class-option{
+display:flex;
+align-items:center;
+gap:8px;
+padding:10px 12px;
+border:1px solid #dce5e0;
+border-radius:8px;
+background:#fff;
+cursor:pointer;
+font-size:13px;
+font-weight:700;
+color:#315244
+}
+.class-option:hover{
+border-color:#08783f
+}
+.class-option input{
+width:17px;
+height:17px;
+accent-color:#08783f
+}
+@media(max-width:700px){
+.class-permissions{grid-column:auto}
+.class-grid{grid-template-columns:1fr 1fr}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
 </style>
 <script src="../../js/portal-auth.js"></script>
 </head>
@@ -121,6 +170,68 @@
 </main>
 
 </div>
+  <div class="class-permissions">
+<h3>Assigned Classes</h3>
+
+<p>
+Select the classes this staff member is authorised to manage.
+Administrators automatically have access to all classes.
+</p>
+
+<div class="class-grid">
+
+<label class="class-option">
+<input type="checkbox" name="assignedClasses" value="BABY">
+Baby Class
+</label>
+
+<label class="class-option">
+<input type="checkbox" name="assignedClasses" value="MIDDLE">
+Middle Class
+</label>
+
+<label class="class-option">
+<input type="checkbox" name="assignedClasses" value="TOP">
+Top Class
+</label>
+
+<label class="class-option">
+<input type="checkbox" name="assignedClasses" value="P1">
+Primary One
+</label>
+
+<label class="class-option">
+<input type="checkbox" name="assignedClasses" value="P2">
+Primary Two
+</label>
+
+<label class="class-option">
+<input type="checkbox" name="assignedClasses" value="P3">
+Primary Three
+</label>
+
+<label class="class-option">
+<input type="checkbox" name="assignedClasses" value="P4">
+Primary Four
+</label>
+
+<label class="class-option">
+<input type="checkbox" name="assignedClasses" value="P5">
+Primary Five
+</label>
+
+<label class="class-option">
+<input type="checkbox" name="assignedClasses" value="P6">
+Primary Six
+</label>
+
+<label class="class-option">
+<input type="checkbox" name="assignedClasses" value="P7">
+Primary Seven
+</label>
+
+</div>
+  </div>
 
 <script>
 document.addEventListener("DOMContentLoaded",()=>{
