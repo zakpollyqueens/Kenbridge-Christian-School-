@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Task Management | Kenbridge Christian School</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#172033}
+.header{background:#123c69;color:#fff;padding:18px 24px;display:flex;justify-content:space-between;align-items:center}
+.header h1{font-size:22px}.header small{opacity:.85}
+.container{max-width:1400px;margin:auto;padding:24px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}
+.topbar h2{font-size:26px;margin-bottom:5px}.topbar p{color:#667085}
+.btn{border:0;border-radius:8px;padding:11px 16px;cursor:pointer;font-weight:700}
+.btn-primary{background:#123c69;color:#fff}.btn-secondary{background:#e8edf4;color:#172033}.btn-danger{background:#c62828;color:#fff}.btn-success{background:#2e7d32;color:#fff}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:22px}
+.stat{background:#fff;border-radius:12px;padding:20px;box-shadow:0 3px 12px rgba(0,0,0,.07)}
+.stat strong{display:block;font-size:30px;margin-bottom:5px}.stat span{color:#697586}
+.controls{background:#fff;border-radius:12px;padding:18px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:12px;margin-bottom:20px;box-shadow:0 3px 12px rgba(0,0,0,.07)}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid #ccd4df;border-radius:7px;font:inherit}
+textarea{resize:vertical;min-height:110px}
+.tasks{display:grid;gap:14px}
+.task{background:#fff;border-radius:12px;padding:20px;box-shadow:0 3px 12px rgba(0,0,0,.07)}
+.task-head{display:flex;justify-content:space-between;gap:15px}
+.task-title{font-size:19px;font-weight:700;margin-bottom:8px}
+.task-description{color:#667085;line-height:1.5;margin-bottom:14px}
+.badges{display:flex;flex-wrap:wrap;gap:7px}
+.badge{padding:5px 9px;border-radius:20px;background:#edf2f7;font-size:12px;font-weight:700}
+.priority-URGENT{background:#fde8e8;color:#b42318}.priority-HIGH{background:#fff1df;color:#a15c00}.priority-NORMAL{background:#eaf2ff;color:#175cd3}.priority-LOW{background:#e9f7ef;color:#217a45}
+.status-PENDING{background:#fff4cc;color:#8a6500}.status-IN_PROGRESS{background:#e5f0ff;color:#175cd3}.status-COMPLETED{background:#e6f7ed;color:#217a45}.status-CANCELLED{background:#f1f1f1;color:#666}
+.task-info{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0;font-size:13px;color:#667085}
+.task-actions{display:flex;flex-wrap:wrap;gap:8px}
+.empty,.loading{background:#fff;padding:45px;text-align:center;border-radius:12px;color:#667085}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);align-items:center;justify-content:center;padding:20px;z-index:1000}
+.modal.show{display:flex}.modal-box{background:#fff;width:min(620px,100%);max-height:90vh;overflow:auto;border-radius:14px;padding:24px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.close{border:0;background:transparent;font-size:26px;cursor:pointer}
+.form-group{margin-bottom:15px}.form-group label{display:block;font-weight:700;margin-bottom:6px}
+.form-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+.message{display:none;padding:12px;border-radius:8px;margin-bottom:15px}.message.show{display:block}.message.error{background:#fde8e8;color:#b42318}.message.success{background:#e6f7ed;color:#217a45}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.controls{grid-template-columns:1fr 1fr}.task-info{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.container{padding:15px}.header{padding:15px}.topbar{flex-direction:column;align-items:flex-start}.stats{grid-template-columns:1fr 1fr}.controls{grid-template-columns:1fr}.task-head{flex-direction:column}.task-info{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="header"><div><h1>Kenbridge Christian School</h1><small>Administration • Task Management</small></div></header>
+<main class="container">
+<div class="topbar"><div><h2>Task Management</h2><p>Create, assign and monitor staff tasks.</p></div><button class="btn btn-primary" onclick="openCreateModal()">+ Add Task</button></div>
+<div id="message" class="message"></div>
+<section class="stats">
+<div class="stat"><strong id="totalCount">0</strong><span>Total Tasks</span></div>
+<div class="stat"><strong id="pendingCount">0</strong><span>Pending</span></div>
+<div class="stat"><strong id="progressCount">0</strong><span>In Progress</span></div>
+<div class="stat"><strong id="completedCount">0</strong><span>Completed</span></div>
+</section>
+<section class="controls">
+<input id="searchInput" type="search" placeholder="Search tasks..." oninput="renderTasks()">
+<select id="statusFilter" onchange="renderTasks()"><option value="">All Statuses</option><option value="PENDING">Pending</option><option value="IN_PROGRESS">In Progress</option><option value="COMPLETED">Completed</option><option value="CANCELLED">Cancelled</option></select>
+<select id="priorityFilter" onchange="renderTasks()"><option value="">All Priorities</option><option value="URGENT">Urgent</option><option value="HIGH">High</option><option value="NORMAL">Normal</option><option value="LOW">Low</option></select>
+<select id="staffFilter" onchange="renderTasks()"><option value="">All Staff</option></select>
+</section>
+<section id="tasksContainer" class="tasks"><div class="loading">Loading tasks...</div></section>
+</main>
+
+<div id="taskModal" class="modal">
+<div class="modal-box">
+<div class="modal-head"><h3 id="modalTitle">Add Task</h3><button class="close" onclick="closeModal()">&times;</button></div>
+<form id="taskForm">
+<input type="hidden" id="taskId">
+<div class="form-group"><label>Task Title</label><input id="title" maxlength="200" required placeholder="Enter task title"></div>
+<div class="form-group"><label>Description</label><textarea id="description" placeholder="Describe the task..."></textarea></div>
+<div class="form-group"><label>Assign To</label><select id="assignedTo" required><option value="">Loading staff...</option></select></div>
+<div class="form-group"><label>Priority</label><select id="priority"><option value="NORMAL">Normal</option><option value="LOW">Low</option><option value="HIGH">High</option><option value="URGENT">Urgent</option></select></div>
+<div class="form-group"><label>Status</label><select id="status"><option value="PENDING">Pending</option><option value="IN_PROGRESS">In Progress</option><option value="COMPLETED">Completed</option><option value="CANCELLED">Cancelled</option></select></div>
+<div class="form-group"><label>Due Date</label><input id="dueDate" type="date"></div>
+<div class="form-actions"><button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary"><span id="saveButton">Create Task</span></button></div>
+</form>
+</div>
+</div>
+
+<script>
+const API_BASE="https://kenbridge-christian-school.onrender.com";
+let tasks=[],staff=[],editingTaskId=null;
+
+function getToken(){return localStorage.getItem("kenbridgeAccessToken")||localStorage.getItem("access_token")||localStorage.getItem("kenbridge_access_token")||localStorage.getItem("token")||sessionStorage.getItem("kenbridgeAccessToken")||sessionStorage.getItem("access_token")||sessionStorage.getItem("kenbridge_access_token")||sessionStorage.getItem("token")}
+function authHeaders(){return{"Content-Type":"application/json","Authorization":"Bearer "+getToken()}}
+function showMessage(text,type){const box=document.getElementById("message");box.textContent=text;box.className="message show "+type;setTimeout(()=>box.className="message",4000)}
+
+async function loadStaff(){
+try{
+const response=await fetch(API_BASE+"/api/staff/admin/list",{headers:authHeaders()});
+const data=await response.json();
+if(!response.ok)throw new Error(data.message||"Unable to load staff.");
+staff=Array.isArray(data.staff)?data.staff:[];
+populateStaff();
+}catch(error){
+console.error("STAFF LOAD ERROR:",error);
+document.getElementById("assignedTo").innerHTML='<option value="">Unable to load staff</option>';
+}
+}
+
+function populateStaff(){
+const select=document.getElementById("assignedTo");
+select.innerHTML='<option value="">Select staff member</option>';
+staff.forEach(person=>{
+const option=document.createElement("option");
+option.value=person.id;
+option.textContent=person.full_name||person.username||person.email||"Staff member";
+select.appendChild(option);
+});
+const filter=document.getElementById("staffFilter");
+const current=filter.value;
+filter.innerHTML='<option value="">All Staff</option>';
+staff.forEach(person=>{
+const option=document.createElement("option");
+option.value=person.id;
+option.textContent=person.full_name||person.username||person.email||"Staff member";
+filter.appendChild(option);
+});
+filter.value=current;
+}
+
+async function loadTasks(){
+const token=getToken();
+if(!token){
+document.getElementById("tasksContainer").innerHTML='<div class="empty">Authentication required. Please log in again.</div>';
+return;
+}
+try{
+const response=await fetch(API_BASE+"/api/tasks/all",{headers:authHeaders()});
+const data=await response.json();
+if(!response.ok)throw new Error(data.message||"Unable to load tasks.");
+tasks=Array.isArray(data.tasks)?data.tasks:[];
+updateStats();renderTasks();
+}catch(error){
+console.error("TASK LOAD ERROR:",error);
+document.getElementById("tasksContainer").innerHTML='<div class="empty">'+escapeHtml(error.message)+'</div>';
+}
+}
+
+function updateStats(){
+document.getElementById("totalCount").textContent=tasks.length;
+document.getElementById("pendingCount").textContent=tasks.filter(t=>t.status==="PENDING").length;
+document.getElementById("progressCount").textContent=tasks.filter(t=>t.status==="IN_PROGRESS").length;
+document.getElementById("completedCount").textContent=tasks.filter(t=>t.status==="COMPLETED").length;
+}
+
+function renderTasks(){
+const container=document.getElementById("tasksContainer");
+const search=document.getElementById("searchInput").value.toLowerCase().trim();
+const status=document.getElementById("statusFilter").value;
+const priority=document.getElementById("priorityFilter").value;
+const staffId=document.getElementById("staffFilter").value;
+const filtered=tasks.filter(task=>{
+const searchable=[task.title,task.description,task.assigned_to_name,task.assigned_to_username,task.created_by_name].filter(Boolean).join(" ").toLowerCase();
+return(!search||searchable.includes(search))&&(!status||task.status===status)&&(!priority||task.priority===priority)&&(!staffId||task.assigned_to===staffId);
+});
+if(!filtered.length){container.innerHTML='<div class="empty">No tasks match your filters.</div>';return}
+container.innerHTML=filtered.map(taskCard).join("");
+}
+
+function taskCard(task){
+const due=task.due_date?new Date(task.due_date).toLocaleDateString():"No due date";
+const status=task.status||"PENDING";
+const priority=task.priority||"NORMAL";
+return`<article class="task"><div class="task-head"><div><div class="task-title">${escapeHtml(task.title)}</div><div class="task-description">${escapeHtml(task.description||"No description provided.")}</div></div><div class="badges"><span class="badge priority-${priority}">${formatText(priority)}</span><span class="badge status-${status}">${formatText(status)}</span></div></div><div class="task-info"><div><strong>Assigned:</strong><br>${escapeHtml(task.assigned_to_name||task.assigned_to_username||"Unassigned")}</div><div><strong>Due:</strong><br>${escapeHtml(due)}</div><div><strong>Created by:</strong><br>${escapeHtml(task.created_by_name||"Administrator")}</div></div><div class="task-actions"><button class="btn btn-secondary" onclick="viewTask('${task.id}')">View</button><button class="btn btn-primary" onclick="editTask('${task.id}')">Edit</button>${status!=="COMPLETED"?`<button class="btn btn-success" onclick="completeTask('${task.id}')">Mark Completed</button>`:""}<button class="btn btn-danger" onclick="deleteTask('${task.id}')">Delete</button></div></article>`;
+}
+
+function openCreateModal(){
+editingTaskId=null;
+document.getElementById("modalTitle").textContent="Add Task";
+document.getElementById("saveButton").textContent="Create Task";
+document.getElementById("taskForm").reset();
+document.getElementById("priority").value="NORMAL";
+document.getElementById("status").value="PENDING";
+document.getElementById("taskModal").classList.add("show");
+}
+
+function closeModal(){document.getElementById("taskModal").classList.remove("show");editingTaskId=null}
+
+function editTask(id){
+const task=tasks.find(t=>String(t.id)===String(id));
+if(!task)return;
+editingTaskId=task.id;
+document.getElementById("modalTitle").textContent="Edit Task";
+document.getElementById("saveButton").textContent="Save Changes";
+document.getElementById("title").value=task.title||"";
+document.getElementById("description").value=task.description||"";
+document.getElementById("assignedTo").value=task.assigned_to||"";
+document.getElementById("priority").value=task.priority||"NORMAL";
+document.getElementById("status").value=task.status||"PENDING";
+document.getElementById("dueDate").value=task.due_date?String(task.due_date).substring(0,10):"";
+document.getElementById("taskModal").classList.add("show");
+}
+
+function viewTask(id){
+const task=tasks.find(t=>String(t.id)===String(id));
+if(!task)return;
+const due=task.due_date?new Date(task.due_date).toLocaleDateString():"No due date";
+alert("TASK DETAILS\n\nTitle: "+(task.title||"")+"\n\nDescription: "+(task.description||"None")+"\n\nAssigned to: "+(task.assigned_to_name||"Unassigned")+"\n\nPriority: "+formatText(task.priority)+"\n\nStatus: "+formatText(task.status)+"\n\nDue date: "+due);
+}
+
+async function saveTask(){
+const title=document.getElementById("title").value.trim();
+const description=document.getElementById("description").value.trim();
+const assigned_to=document.getElementById("assignedTo").value;
+const priority=document.getElementById("priority").value;
+const status=document.getElementById("status").value;
+const due_date=document.getElementById("dueDate").value;
+if(!title){showMessage("Task title is required.","error");return}
+if(!assigned_to){showMessage("Please select a staff member.","error");return}
+const payload={title,description,assigned_to,priority,status,due_date:due_date||null};
+try{
+const url=editingTaskId?API_BASE+"/api/tasks/"+encodeURIComponent(editingTaskId):API_BASE+"/api/tasks";
+const response=await fetch(url,{method:editingTaskId?"PATCH":"POST",headers:authHeaders(),body:JSON.stringify(payload)});
+const data=await response.json();
+if(!response.ok)throw new Error(data.message||"Unable to save task.");
+closeModal();
+showMessage(data.message||"Task saved successfully.","success");
+await loadTasks();
+}catch(error){showMessage(error.message,"error")}
+}
+
+document.getElementById("taskForm").addEventListener("submit",e=>{e.preventDefault();saveTask()});
+
+async function completeTask(id){
+if(!confirm("Mark this task as completed?"))return;
+try{
+const response=await fetch(API_BASE+"/api/tasks/"+encodeURIComponent(id)+"/status",{method:"PATCH",headers:authHeaders(),body:JSON.stringify({status:"COMPLETED"})});
+const data=await response.json();
+if(!response.ok)throw new Error(data.message||"Unable to update task.");
+showMessage("Task marked as completed.","success");
+await loadTasks();
+}catch(error){showMessage(error.message,"error")}
+}
+
+async function deleteTask(id){
+if(!confirm("Delete this task? This action cannot be undone."))return;
+try{
+const response=await fetch(API_BASE+"/api/tasks/"+encodeURIComponent(id),{method:"DELETE",headers:authHeaders()});
+const data=await response.json();
+if(!response.ok)throw new Error(data.message||"Unable to delete task.");
+showMessage("Task deleted successfully.","success");
+await loadTasks();
+}catch(error){showMessage(error.message,"error")}
+}
+
+function formatText(value){return String(value||"").toLowerCase().replace(/_/g," ").replace(/\b\w/g,char=>char.toUpperCase())}
+function escapeHtml(value){return String(value??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+
+async function initialize(){await loadStaff();await loadTasks()}
+initialize();
+</script>
+</body>
+                                                     </html>
