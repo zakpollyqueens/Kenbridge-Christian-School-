@@ -172,7 +172,7 @@ async function loadPayroll(){
 
 try{
 
-const token=sessionStorage.getItem("kenbridgeAccessToken");
+const token = localStorage.getItem("kenbridgeAccessToken");
 
 if(!token){
 throw new Error("Your login session was not found. Please log in again.");
