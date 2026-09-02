@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Articles | Kenbridge Staff Portal</title>
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/portal-auth.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f7f6;color:#243b31}.page{min-height:100vh}.top{background:#08783f;color:#fff;padding:18px 0}.top-in,.wrap{width:min(1200px,92%);margin:auto}.top-in{display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}.brand img{width:52px;height:52px;object-fit:contain;padding:5px;border-radius:50%;background:#fff}.brand strong,.brand span{display:block}.brand strong{font-size:18px}.brand span{margin-top:3px;font-size:12px;opacity:.85}.logout{padding:10px 16px;border:1px solid #ffffff80;border-radius:8px;color:#fff;text-decoration:none;font-size:14px;font-weight:700}.wrap{padding:40px 0 60px}.heading{margin-bottom:28px}.heading small{display:block;margin-bottom:8px;color:#08783f;font-size:12px;font-weight:800;letter-spacing:1.5px}.heading h1{margin:0 0 8px;color:#16352a;font-size:clamp(28px,4vw,40px)}.heading p{margin:0;color:#64736c;line-height:1.7}.tools{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;margin-bottom:25px}.search{flex:1;min-width:240px;padding:13px 15px;border:1px solid #d8e0dc;border-radius:8px;background:#fff;font-size:14px}.search:focus,.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:#08783f;box-shadow:0 0 0 3px #08783f1a}.add{border:0;padding:13px 18px;border-radius:8px;background:#08783f;color:#fff;font-size:14px;font-weight:800;cursor:pointer}.message{display:none;margin-bottom:20px;padding:14px 16px;border-radius:9px;font-size:13px;line-height:1.6}.message.success{display:block;background:#e8f5ed;color:#08783f;border:1px solid #c9e6d3}.message.error{display:block;background:#fbeaea;color:#a62929;border:1px solid #edcaca}.list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.card{padding:24px;border:1px solid #e1e8e4;border-radius:12px;background:#fff;box-shadow:0 8px 25px #0000000d}.card-top{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:14px}.tag,.status{display:inline-block;padding:5px 10px;border-radius:20px;font-size:11px;font-weight:800;letter-spacing:.4px}.tag{background:#e8f5ed;color:#08783f}.status{background:#fff4df;color:#8a6200}.status.published{background:#e8f5ed;color:#08783f}.card h2{margin:0 0 10px;color:#173a2c;font-size:21px}.excerpt{margin:0 0 18px;color:#64736c;line-height:1.7;font-size:14px;white-space:pre-line}.meta{margin-bottom:18px;color:#7a8781;font-size:12px}.actions{display:flex;gap:8px;flex-wrap:wrap}.action{padding:8px 11px;border:1px solid #d7e0db;border-radius:6px;background:#fff;color:#315244;cursor:pointer;font-size:12px;font-weight:700}.action.delete{border-color:#e7bcbc;color:#a62929}.loading,.empty{grid-column:1/-1;padding:40px 20px;border:1px solid #e1e8e4;border-radius:12px;background:#fff;color:#718079;text-align:center}.note{margin-top:25px;padding:20px;border:1px solid #eee4bd;border-radius:10px;background:#fffdf4;color:#6d623b;font-size:13px;line-height:1.7}.modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;background:#041910a6}.modal.show{display:flex}.modal-card{width:min(800px,100%);max-height:90vh;overflow-y:auto;padding:26px;border-radius:14px;background:#fff;box-shadow:0 25px 70px #0000004d}.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:22px}.modal-head h2{margin:0 0 6px;color:#173a2c}.modal-head p{margin:0;color:#718079;font-size:13px;line-height:1.6}.close{width:38px;height:38px;border:1px solid #d7e0db;border-radius:8px;background:#fff;color:#315244;font-size:22px;cursor:pointer}.form{display:grid;grid-template-columns:1fr 1fr;gap:18px}.field{display:flex;flex-direction:column}.field.full,.form-actions{grid-column:1/-1}.field label{margin-bottom:7px;color:#29463a;font-size:13px;font-weight:800}.field input,.field select,.field textarea{width:100%;padding:13px 14px;border:1px solid #d8e0dc;border-radius:8px;background:#fff;color:#243b31;font:inherit}.field textarea{min-height:240px;resize:vertical}.form-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:4px}.cancel,.submit{padding:12px 18px;border-radius:8px;font-size:14px;font-weight:800;cursor:pointer}.cancel{border:1px solid #d7e0db;background:#fff;color:#315244}.submit{border:0;background:#08783f;color:#fff}.submit:disabled{opacity:.65;cursor:not-allowed}@media(max-width:700px){.top-in{align-items:flex-start}.brand img{width:44px;height:44px}.brand strong{font-size:15px}.brand span{font-size:11px}.logout{padding:8px 11px;font-size:12px}.wrap{padding-top:30px}.tools{align-items:stretch}.search,.add{width:100%}.list{grid-template-columns:1fr}.form{grid-template-columns:1fr}.field.full,.form-actions{grid-column:auto}.modal-card{padding:20px}}
+</style>
+</head>
+<body>
+<div class="page">
+<header class="top"><div class="top-in">
+<a href="staff-dashboard.html" class="brand"><img src="../images/logo.png" alt="Kenbridge Christian School"><div><strong>Kenbridge Christian School</strong><span>Staff Portal</span></div></a>
+<a href="login.html" class="logout" id="logoutButton">Logout</a>
+</div></header>
+
+<main class="wrap">
+<div class="heading"><small>STAFF PORTAL</small><h1>Articles</h1><p>Create school articles and submit them for administrator review and publication.</p></div>
+
+<div class="tools">
+<input type="search" id="articleSearch" class="search" placeholder="Search articles..." aria-label="Search articles">
+<button type="button" class="add" id="addArticleButton">+ New Article</button>
+</div>
+
+<div id="articleMessage" class="message" role="alert"></div>
+<section class="list" id="articlesList"><div class="loading">Loading articles...</div></section>
+
+<div class="note"><strong>Staff article workflow:</strong> Articles created by staff remain pending until an administrator approves them for publication. You can edit or delete your own pending articles.</div>
+</main>
+</div>
+
+<div class="modal" id="articleModal" aria-hidden="true">
+<div class="modal-card" role="dialog" aria-modal="true">
+<div class="modal-head">
+<div><h2 id="articleModalTitle">Create Article</h2><p id="articleModalText">Submit a school article for administrator approval.</p></div>
+<button type="button" class="close" id="closeArticleModal">×</button>
+</div>
+
+<form id="articleForm" class="form">
+<div class="field full"><label for="articleTitle">Article Title</label><input type="text" id="articleTitle" required maxlength="250" placeholder="Enter article title"></div>
+
+<div class="field"><label for="articleCategory">Category</label>
+<select id="articleCategory" required>
+<option value="School News">School News</option>
+<option value="Academics">Academics</option>
+<option value="Sports">Sports</option>
+<option value="Events">Events</option>
+<option value="Achievements">Achievements</option>
+<option value="Community">Community</option>
+<option value="General">General</option>
+</select></div>
+
+<div class="field"><label>Publication Status</label><input type="text" id="articleStatusText" value="Pending Administrator Approval" disabled></div>
+
+<div class="field full"><label for="articleContent">Article Content</label><textarea id="articleContent" required placeholder="Write the full article here..."></textarea></div>
+
+<div class="form-actions">
+<button type="button" class="cancel" id="cancelArticleButton">Cancel</button>
+<button type="submit" class="submit" id="submitArticleButton">Submit for Approval</button>
+</div>
+</form>
+</div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+const API="https://kenbridge-christian-school.onrender.com/api/content/articles",$=id=>document.getElementById(id),list=$("articlesList"),search=$("articleSearch"),msg=$("articleMessage"),add=$("addArticleButton"),modal=$("articleModal"),close=$("closeArticleModal"),cancel=$("cancelArticleButton"),form=$("articleForm"),title=$("articleTitle"),category=$("articleCategory"),content=$("articleContent"),modalTitle=$("articleModalTitle"),modalText=$("articleModalText"),statusText=$("articleStatusText"),submit=$("submitArticleButton"),logoutButton=$("logoutButton");
+let articles=[],editingId=null;
+
+function token(){for(const k of["kenbridgeAccessToken","access_token","kenbridge_access_token","token"]){const v=localStorage.getItem(k)||sessionStorage.getItem(k);if(v)return v}return null}
+function message(t,type="error"){msg.textContent=t;msg.className="message "+type}
+function clear(){msg.textContent="";msg.className="message"}
+function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function date(v){if(!v)return"Recently created";const d=new Date(v);return Number.isNaN(d.getTime())?"Recently created":d.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"})}
+function excerpt(v){v=String(v||"");return v.length>240?v.slice(0,240)+"…":v}
+
+function resetFields(){title.disabled=false;category.disabled=false;content.disabled=false;submit.style.display="inline-block"}
+
+function openModal(a=null,view=false){
+clear();editingId=a?.id||null;form.reset();resetFields();
+if(a){
+modalTitle.textContent=view?"View Article":"Edit Article";
+modalText.textContent=view?(a.is_published?"This article has been published.":"This article is pending administrator approval."):"Update your pending article before administrator approval.";
+title.value=a.title||"";category.value=a.category||"General";content.value=a.content||a.body||"";statusText.value=a.is_published?"Published":"Pending Administrator Approval";submit.textContent="Save Changes";
+if(view){title.disabled=true;category.disabled=true;content.disabled=true;submit.style.display="none"}
+}else{
+modalTitle.textContent="Create Article";modalText.textContent="Submit a school article for administrator approval.";statusText.value="Pending Administrator Approval";submit.textContent="Submit for Approval"
+}
+modal.classList.add("show");modal.setAttribute("aria-hidden","false");if(!view)setTimeout(()=>title.focus(),100)
+}
+
+function closeModal(){modal.classList.remove("show");modal.setAttribute("aria-hidden","true");editingId=null;resetFields()}
+
+add.addEventListener("click",()=>openModal());
+close.addEventListener("click",closeModal);
+cancel.addEventListener("click",closeModal);
+modal.addEventListener("click",e=>{if(e.target===modal)closeModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&modal.classList.contains("show"))closeModal()});
+
+function render(q=""){
+list.innerHTML="";
+const t=q.trim().toLowerCase(),items=articles.filter(a=>[a.title,a.content,a.body,a.category,a.author_name].some(v=>String(v||"").toLowerCase().includes(t)));
+if(!items.length){list.innerHTML='<div class="empty">No articles were found.</div>';return}
+items.forEach(a=>{
+const published=a.is_published===true,card=document.createElement("article");card.className="card";
+card.innerHTML=`<div class="card-top"><span class="tag">${esc(a.category||"General")}</span><span class="status ${published?"published":""}">${published?"PUBLISHED":"PENDING"}</span></div><h2>${esc(a.title)}</h2><p class="excerpt">${esc(excerpt(a.content||a.body))}</p><div class="meta">Created ${date(a.created_at)}${a.author_name?" by "+esc(a.author_name):""}</div><div class="actions"><button class="action" data-action="view" data-id="${esc(a.id)}">View</button>${!published?`<button class="action" data-action="edit" data-id="${esc(a.id)}">Edit</button><button class="action delete" data-action="delete" data-id="${esc(a.id)}">Delete</button>`:""}</div>`;
+list.appendChild(card)
+})
+}
+
+async function load(){
+list.innerHTML='<div class="loading">Loading articles...</div>';
+const t=token();if(!t){list.innerHTML='<div class="empty">Your staff session was not found. Please log in again.</div>';return}
+try{
+const r=await fetch(API,{headers:{Authorization:"Bearer "+t}});let data={};try{data=await r.json()}catch{}
+if(!r.ok||!data.success)throw new Error(data.message||"Unable to retrieve articles.");
+articles=Array.isArray(data.articles)?data.articles:[];
+render(search.value)
+}catch(e){console.error("LOAD ARTICLES ERROR:",e);articles=[];list.innerHTML=`<div class="empty">${esc(e.message||"Unable to load articles.")}</div>`}
+}
+
+search.addEventListener("input",function(){render(this.value)});
+
+form.addEventListener("submit",async e=>{
+e.preventDefault();clear();
+const t=title.value.trim(),c=content.value.trim(),cat=category.value;
+if(!t||!c){message("Please enter the article title and content.");return}
+const access=token();if(!access){message("Your staff session was not found. Please log in again.");return}
+const editing=Boolean(editingId);submit.disabled=true;submit.textContent=editing?"Saving...":"Submitting...";
+try{
+const r=await fetch(editing?API+"/"+encodeURIComponent(editingId):API,{method:editing?"PUT":"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+access},body:JSON.stringify({title:t,content:c,body:c,category:cat})});
+let data={};try{data=await r.json()}catch{}
+if(!r.ok||!data.success)throw new Error(data.message||(editing?"Article could not be updated.":"Article could not be submitted."));
+closeModal();message(data.message||(editing?"Article updated successfully.":"Article submitted successfully and is awaiting administrator approval."),"success");await load()
+}catch(e){console.error("ARTICLE SAVE ERROR:",e);message(e.message||"Unable to save the article.")}
+finally{submit.disabled=false;submit.textContent=editingId?"Save Changes":"Submit for Approval"}
+});
+
+list.addEventListener("click",async e=>{
+const b=e.target.closest("button[data-action]");if(!b)return;
+const id=b.dataset.id,action=b.dataset.action,a=articles.find(x=>String(x.id)===String(id));if(!a)return;
+if(action==="view"){openModal(a,true);return}
+if(action==="edit"){openModal(a,false);return}
+if(action==="delete"){
+if(!confirm("Are you sure you want to delete this pending article?"))return;
+const access=token();if(!access){message("Your staff session was not found. Please log in again.");return}
+b.disabled=true;b.textContent="Deleting...";
+try{
+const r=await fetch(API+"/"+encodeURIComponent(id),{method:"DELETE",headers:{Authorization:"Bearer "+access}});let data={};try{data=await r.json()}catch{}
+if(!r.ok||!data.success)throw new Error(data.message||"Unable to delete article.");
+message(data.message||"Article deleted successfully.","success");await load()
+}catch(e){console.error("DELETE ARTICLE ERROR:",e);message(e.message||"Unable to delete article.");b.disabled=false;b.textContent="Delete"}
+}
+});
+
+function logout(){["kenbridgeAccessToken","kenbridgeRefreshToken","kenbridgeUser","access_token","refresh_token","kenbridge_access_token","token","user","kenbridge_user"].forEach(k=>{localStorage.removeItem(k);sessionStorage.removeItem(k)});location.href="login.html"}
+logoutButton.addEventListener("click",e=>{e.preventDefault();logout()});
+load();
+});
+</script>
+</body>
+  </html>
