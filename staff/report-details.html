@@ -1,0 +1,98 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Report Details | Kenbridge Christian School</title><meta name="theme-color" content="#08783f"><link rel="stylesheet" href="../css/style.css"><style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f7f6;color:#1d3429}.page{min-height:100vh}.header{background:#08783f;color:#fff;padding:17px 0}.head-in,.container{width:min(1100px,92%);margin:auto}.head-in{display:flex;justify-content:space-between;align-items:center;gap:16px}.brand{display:flex;align-items:center;gap:11px;color:#fff;text-decoration:none}.brand img{width:48px;height:48px;object-fit:contain;background:#fff;border-radius:50%;padding:4px}.brand strong,.brand span{display:block}.brand span{font-size:12px;opacity:.85;margin-top:3px}.logout,.back,.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:8px;padding:10px 15px;font-weight:700;font-size:13px;cursor:pointer}.logout{color:#fff;border:1px solid #ffffff80}.container{padding:34px 0 60px}.top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:25px}.eyebrow{font-size:12px;font-weight:800;color:#08783f;letter-spacing:1.4px}.top h1{margin:7px 0;font-size:clamp(28px,5vw,40px)}.top p{margin:0;color:#66776e;line-height:1.6}.back{background:#fff;border:1px solid #d7e2dc;color:#315244;white-space:nowrap}.filters{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}.filters select{padding:11px 13px;border:1px solid #d7e2dc;border-radius:8px;background:#fff;font:inherit;color:#29463a}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}.stat,.card{background:#fff;border:1px solid #e0e8e3;border-radius:12px;box-shadow:0 5px 18px #00000008}.stat{padding:18px}.stat b{display:block;font-size:25px;color:#08783f;margin-bottom:5px}.stat span{font-size:12px;color:#687970}.card{padding:22px;margin-bottom:22px}.card h2{margin:0 0 6px;font-size:20px}.muted{margin:0;color:#6c7a73;font-size:13px;line-height:1.6}.message{padding:15px;border-radius:8px;margin-bottom:20px;display:none}.message.error{display:block;background:#fbeaea;color:#9b3333;border:1px solid #eccccc}.message.success{display:block;background:#e8f5ed;color:#08783f;border:1px solid #cbe6d4}.loading,.empty{text-align:center;padding:30px;color:#6c7a73}.files{display:grid;gap:11px;margin-top:16px}.file{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:15px;border:1px solid #e2e9e5;border-radius:9px;background:#fbfdfc}.file strong{display:block;margin-bottom:5px}.file small{color:#718078}.btn{background:#08783f;color:#fff;border:0}.btn:hover{opacity:.9}.table-wrap{overflow:auto;margin-top:16px}.table{width:100%;border-collapse:collapse;min-width:680px}.table th,.table td{text-align:left;padding:13px;border-bottom:1px solid #e5ebe7;font-size:13px}.table th{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:#617169;background:#fafcfb}.status{display:inline-block;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:800}.NOT_STARTED{background:#f1f3f2;color:#68766f}.DRAFT{background:#fff4d8;color:#8a6415}.SUBMITTED{background:#e6f0ff;color:#2862a5}.APPROVED{background:#e6f6eb;color:#16713a}.RETURNED{background:#fbeaea;color:#a23a3a}.student-link{color:#08783f;font-weight:700;text-decoration:none}.student-link:hover{text-decoration:underline}@media(max-width:750px){.head-in,.top{align-items:flex-start}.stats{grid-template-columns:repeat(2,1fr)}.top{flex-direction:column}.file{align-items:flex-start;flex-direction:column}}@media(max-width:450px){.stats{grid-template-columns:1fr}.brand img{width:42px;height:42px}.brand strong{font-size:14px}}
+</style><script src="../js/portal-auth.js"></script></head><body><div class="page">
+
+<header class="header"><div class="head-in">
+<a href="staff-dashboard.html" class="brand"><img src="../images/logo.png" alt="Kenbridge Christian School Logo"><div><strong>Kenbridge Christian School</strong><span>Staff Portal</span></div></a>
+<a href="login.html" id="logoutButton" class="logout">Logout</a>
+</div></header>
+
+<main class="container">
+<div class="top"><div><div class="eyebrow">CLASS REPORTS</div><h1 id="title">Report Details</h1><p id="subtitle">Loading class information...</p>
+<div class="filters"><select id="yearSelect"><option value="">All Academic Years</option></select><select id="termSelect"><option value="">All Terms</option><option>Term 1</option><option>Term 2</option><option>Term 3</option></select></div></div>
+<a href="reports.html" class="back">← Back to Reports</a></div>
+
+<div id="message" class="message"></div>
+
+<section class="stats">
+<div class="stat"><b id="totalStudents">0</b><span>Total Learners</span></div>
+<div class="stat"><b id="totalReports">0</b><span>Reports Created</span></div>
+<div class="stat"><b id="approvedReports">0</b><span>Approved Reports</span></div>
+<div class="stat"><b id="uploadedFiles">0</b><span>Uploaded Files</span></div>
+</section>
+
+<section class="card"><h2>Uploaded Class Reports</h2><p class="muted">Reports uploaded through School Files for this class appear here automatically.</p><div id="filesList" class="files"><div class="loading">Loading uploaded reports...</div></div></section>
+
+<section class="card"><h2>Learner Reports</h2><p class="muted">Select a learner to view the report information available for the selected academic year and term.</p><div class="table-wrap"><table class="table"><thead><tr><th>Learner</th><th>Report</th><th>Aggregate</th><th>Grade</th><th>Status</th><th>Action</th></tr></thead><tbody id="studentsBody"><tr><td colspan="6" class="loading">Loading learners...</td></tr></tbody></table></div></section>
+</main></div>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+const API="https://kenbridge-christian-school.onrender.com";
+const params=new URLSearchParams(location.search);
+const className=String(params.get("class")||params.get("class_name")||"").trim().toUpperCase();
+const title=document.getElementById("title"),subtitle=document.getElementById("subtitle"),message=document.getElementById("message"),yearSelect=document.getElementById("yearSelect"),termSelect=document.getElementById("termSelect"),filesList=document.getElementById("filesList"),studentsBody=document.getElementById("studentsBody");
+
+function token(){for(const k of["access_token","kenbridge_access_token","kenbridgeAccessToken","token"]){const v=localStorage.getItem(k)||sessionStorage.getItem(k);if(v)return v}return null}
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function msg(text,type="error"){message.textContent=text;message.className="message "+type}
+function clear(){message.textContent="";message.className="message"}
+function auth(){const t=token();if(!t){msg("Your staff session was not found. Please log in again.");return null}return {Authorization:"Bearer "+t}}
+function query(){const p=new URLSearchParams();if(yearSelect.value)p.set("academic_year",yearSelect.value);if(termSelect.value)p.set("term",termSelect.value);return p.toString()}
+
+if(!className){title.textContent="No Class Selected";subtitle.textContent="Return to the Reports page and select a class.";filesList.innerHTML='<div class="empty">No class was selected.</div>';studentsBody.innerHTML='<tr><td colspan="6" class="empty">No class was selected.</td></tr>';return}
+
+title.textContent=className+" Report Details";
+subtitle.textContent="Uploaded class reports and learner report progress.";
+
+const years=[];for(let y=new Date().getFullYear()+1;y>=2008;y--)years.push(y+"/"+(y+1));
+yearSelect.innerHTML+=[...new Set(years)].map(y=>'<option value="'+y+'">'+y+'</option>').join("");
+yearSelect.value=params.get("academic_year")||"";
+termSelect.value=params.get("term")||"";
+
+async function request(url){
+const h=auth();if(!h)throw new Error("Your staff session was not found.");
+const r=await fetch(API+url,{headers:h});let d={};try{d=await r.json()}catch{}
+if(!r.ok||!d.success)throw new Error(d.message||"Unable to load data.");
+return d
+}
+
+async function loadFiles(){
+try{
+filesList.innerHTML='<div class="loading">Loading uploaded reports...</div>';
+const d=await request("/api/documents/reports?class_name="+encodeURIComponent(className));
+const files=Array.isArray(d.documents)?d.documents:Array.isArray(d.reports)?d.reports:[];
+document.getElementById("uploadedFiles").textContent=files.length;
+if(!files.length){filesList.innerHTML='<div class="empty">No report files have been uploaded for '+esc(className)+' yet.</div>';return}
+filesList.innerHTML=files.map(f=>{
+const name=f.title||f.file_name||"Report File",desc=f.description||"No description provided.",date=f.created_at?new Date(f.created_at).toLocaleDateString():"";
+const url=f.file_url||"#";
+return '<div class="file"><div><strong>'+esc(name)+'</strong><small>'+esc(desc)+(date?" · "+esc(date):"")+(f.uploader_name?" · Uploaded by "+esc(f.uploader_name):"")+'</small></div><a class="btn" href="'+esc(url)+'" target="_blank" rel="noopener">View File</a></div>'
+}).join("")
+}catch(e){console.error("LOAD REPORT FILES:",e);filesList.innerHTML='<div class="empty">'+esc(e.message)+'</div>';msg(e.message)}
+}
+
+async function loadStudents(){
+try{
+studentsBody.innerHTML='<tr><td colspan="6" class="loading">Loading learners...</td></tr>';
+const q=query(),d=await request("/api/reports/classes/"+encodeURIComponent(className)+(q?"?"+q:""));
+const students=Array.isArray(d.students)?d.students:[];
+document.getElementById("totalStudents").textContent=students.length;
+document.getElementById("totalReports").textContent=students.filter(s=>s.report_id).length;
+document.getElementById("approvedReports").textContent=students.filter(s=>String(s.report_status).toUpperCase()==="APPROVED").length;
+if(!students.length){studentsBody.innerHTML='<tr><td colspan="6" class="empty">No active learners were found in this class.</td></tr>';return}
+studentsBody.innerHTML=students.map(s=>{
+const status=String(s.report_status||"NOT_STARTED").toUpperCase(),href="student-report.html?student_id="+encodeURIComponent(s.student_id)+(yearSelect.value?"&academic_year="+encodeURIComponent(yearSelect.value):"")+(termSelect.value?"&term="+encodeURIComponent(termSelect.value):"");
+return '<tr><td><strong>'+esc(s.full_name)+'</strong></td><td>'+esc(s.report_id?"Created":"Not Started")+'</td><td>'+esc(s.aggregate??"—")+'</td><td>'+esc(s.overall_grade||"—")+'</td><td><span class="status '+esc(status)+'">'+esc(status.replace("_"," "))+'</span></td><td><a class="student-link" href="'+href+'">View Report →</a></td></tr>'
+}).join("")
+}catch(e){console.error("LOAD CLASS REPORTS:",e);studentsBody.innerHTML='<tr><td colspan="6" class="empty">'+esc(e.message)+'</td></tr>';msg(e.message)}
+}
+
+async function loadAll(){clear();await Promise.all([loadFiles(),loadStudents()])}
+yearSelect.addEventListener("change",loadStudents);termSelect.addEventListener("change",loadStudents);
+
+document.getElementById("logoutButton").addEventListener("click",e=>{e.preventDefault();["access_token","refresh_token","kenbridge_access_token","kenbridgeAccessToken","kenbridgeRefreshToken","kenbridgeUser","token","user","kenbridge_user","kenbridgeAdminLoggedIn","kenbridgeStaffLoggedIn","kenbridgeUserRole"].forEach(k=>{localStorage.removeItem(k);sessionStorage.removeItem(k)});location.href="login.html"});
+
+loadAll();
+});
+</script></body></html>
