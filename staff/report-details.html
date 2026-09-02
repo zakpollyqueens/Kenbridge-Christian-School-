@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Student Report Card | Kenbridge Christian School</title>
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/portal-auth.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6f4;color:#24372d;font-family:Arial,sans-serif}.page{min-height:100vh}.topbar{background:#08783f;color:#fff;padding:15px 0}.topbar-in,.wrap{width:min(1100px,94%);margin:auto}.topbar-in{display:flex;align-items:center;justify-content:space-between;gap:15px}.brand{display:flex;align-items:center;gap:10px}.brand img{width:45px;height:45px;object-fit:contain;background:#fff;border-radius:50%;padding:4px}.brand strong,.brand span{display:block}.brand span{font-size:12px;opacity:.85;margin-top:2px}.back{color:#fff;text-decoration:none;border:1px solid #ffffff80;padding:9px 13px;border-radius:7px;font-weight:700;font-size:13px}.wrap{padding:30px 0 60px}.loading,.error{padding:25px;text-align:center;background:#fff;border-radius:10px;border:1px solid #e1e8e4}.error{color:#a33a3a}.actions{display:flex;justify-content:flex-end;gap:10px;margin-bottom:18px}.btn{border:0;border-radius:7px;padding:11px 16px;font-weight:700;cursor:pointer;font-size:13px}.print{background:#08783f;color:#fff}.print:hover{opacity:.9}.card{background:#fff;border:1px solid #dce5df;box-shadow:0 8px 30px #00000012;padding:35px;max-width:1000px;margin:auto}.report-head{position:relative;display:grid;grid-template-columns:130px 1fr 130px;align-items:center;gap:15px;padding-bottom:20px;border-bottom:3px solid #08783f}.student-photo,.school-logo{width:105px;height:105px;object-fit:cover;border:1px solid #d7e1db;background:#f7faf8}.student-photo{border-radius:8px}.school-logo{border-radius:50%;padding:6px;object-fit:contain}.student-side{text-align:left}.logo-side{text-align:right}.school{text-align:center}.school h1{margin:0;color:#08783f;font-size:clamp(21px,3vw,32px)}.school h2{margin:7px 0 0;font-size:16px;color:#29463a}.school p{margin:6px 0 0;color:#64736c;font-size:13px}.student-info{margin:24px 0;border:1px solid #dce5df;border-radius:8px;overflow:hidden}.info-grid{display:grid;grid-template-columns:repeat(2,1fr)}.info{padding:13px 16px;border-bottom:1px solid #e4ebe6}.info:nth-last-child(-n+2){border-bottom:0}.info b{color:#08783f;font-size:12px;display:block;margin-bottom:4px}.section-title{margin:25px 0 10px;padding:10px 14px;background:#08783f;color:#fff;font-size:14px;font-weight:800;border-radius:6px}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:600px}th,td{border:1px solid #dce5df;padding:11px;text-align:left;font-size:13px}th{background:#f0f6f2;color:#08783f}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:15px}.summary div{border:1px solid #dce5df;border-radius:7px;padding:13px}.summary b{display:block;color:#08783f;font-size:11px;margin-bottom:5px}.comments{display:grid;gap:15px}.comment-box{border:1px solid #dce5df;border-radius:7px;padding:15px;min-height:75px}.comment-box b{display:block;color:#08783f;font-size:12px;margin-bottom:8px}.footer{margin-top:28px;padding-top:15px;border-top:1px solid #dce5df;display:flex;justify-content:space-between;color:#718079;font-size:11px}.status{display:inline-block;padding:5px 9px;border-radius:20px;background:#e8f5ed;color:#08783f;font-size:11px;font-weight:800}.empty-photo{display:flex;align-items:center;justify-content:center;color:#718079;font-size:11px;text-align:center}@media(max-width:700px){.topbar-in{align-items:flex-start}.card{padding:20px}.report-head{grid-template-columns:80px 1fr 80px}.student-photo,.school-logo{width:70px;height:70px}.school h1{font-size:19px}.school h2{font-size:13px}.info-grid{grid-template-columns:1fr}.info:nth-last-child(2){border-bottom:1px solid #e4ebe6}.summary{grid-template-columns:1fr}.footer{display:block}.footer span{display:block;margin:5px 0}}@media print{body{background:#fff}.topbar,.actions{display:none!important}.wrap{width:100%;padding:0}.card{border:0;box-shadow:none;max-width:none;padding:12mm}.page{min-height:0}@page{size:A4 portrait;margin:10mm}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="topbar">
+<div class="topbar-in">
+<div class="brand">
+<img src="../images/logo.png" alt="Kenbridge Christian School">
+<div><strong>Kenbridge Christian School</strong><span>Student Report Card</span></div>
+</div>
+<a class="back" href="reports.html">← Back to Reports</a>
+</div>
+</header>
+
+<main class="wrap">
+<div class="actions">
+<button class="btn print" id="printButton">Print Report</button>
+</div>
+
+<div id="loading" class="loading">Loading student report...</div>
+<div id="error" class="error" style="display:none"></div>
+
+<section id="reportCard" class="card" style="display:none">
+
+<div class="report-head">
+<div class="student-side">
+<img id="studentPhoto" class="student-photo" src="" alt="Student Photo">
+</div>
+
+<div class="school">
+<h1>KENBRIDGE CHRISTIAN SCHOOL</h1>
+<h2>STUDENT ACADEMIC REPORT CARD</h2>
+<p id="reportPeriod">Academic Report</p>
+</div>
+
+<div class="logo-side">
+<img class="school-logo" src="../images/logo.png" alt="School Logo">
+</div>
+</div>
+
+<div class="student-info">
+<div class="info-grid">
+<div class="info"><b>STUDENT NAME</b><span id="studentName">—</span></div>
+<div class="info"><b>CLASS</b><span id="studentClass">—</span></div>
+<div class="info"><b>ACADEMIC YEAR</b><span id="academicYear">—</span></div>
+<div class="info"><b>TERM</b><span id="term">—</span></div>
+</div>
+</div>
+
+<div class="section-title">ACADEMIC PERFORMANCE</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Subject</th>
+<th>Marks</th>
+<th>Grade</th>
+</tr>
+</thead>
+<tbody id="subjectsBody"></tbody>
+</table>
+</div>
+
+<div class="summary">
+<div><b>AGGREGATE</b><span id="aggregate">—</span></div>
+<div><b>OVERALL GRADE</b><span id="overallGrade">—</span></div>
+<div><b>ATTENDANCE</b><span id="attendance">—</span></div>
+</div>
+
+<div class="section-title">COMMENTS</div>
+
+<div class="comments">
+<div class="comment-box"><b>CLASS TEACHER'S COMMENT</b><span id="teacherComment">—</span></div>
+<div class="comment-box"><b>HEAD TEACHER'S COMMENT</b><span id="headComment">—</span></div>
+</div>
+
+<div class="section-title">REPORT STATUS</div>
+<div><span class="status" id="reportStatus">—</span></div>
+
+<div class="footer">
+<span>Kenbridge Christian School</span>
+<span>Generated: <span id="generatedDate"></span></span>
+</div>
+
+</section>
+</main>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+
+const API_BASE="https://kenbridge-christian-school.onrender.com";
+const params=new URLSearchParams(location.search);
+const studentId=params.get("student")||params.get("studentId")||params.get("id");
+const loading=document.getElementById("loading");
+const errorBox=document.getElementById("error");
+const card=document.getElementById("reportCard");
+
+function token(){
+for(const key of["access_token","kenbridge_access_token","kenbridgeAccessToken","token"]){
+const value=localStorage.getItem(key)||sessionStorage.getItem(key);
+if(value)return value;
+}
+return null;
+}
+
+function value(...items){
+for(const item of items){
+if(item!==undefined&&item!==null&&String(item).trim()!=="")return item;
+}
+return "—";
+}
+
+function showError(text){
+loading.style.display="none";
+errorBox.textContent=text;
+errorBox.style.display="block";
+}
+
+async function loadReport(){
+
+if(!studentId){
+showError("No student was selected. Please return to Reports and select a student.");
+return;
+}
+
+const accessToken=token();
+
+if(!accessToken){
+showError("Your staff session was not found. Please log in again.");
+return;
+}
+
+try{
+
+const response=await fetch(
+API_BASE+"/api/reports/student/"+encodeURIComponent(studentId),
+{
+headers:{Authorization:"Bearer "+accessToken}
+}
+);
+
+let result={};
+
+try{result=await response.json()}catch{}
+
+if(!response.ok||!result.success){
+throw new Error(result.message||"Unable to load the student report.");
+}
+
+const data=result.report||result.data||result;
+const student=data.student||data;
+
+document.getElementById("studentName").textContent=value(student.full_name,student.name,data.student_name);
+document.getElementById("studentClass").textContent=value(data.class_name,student.class_name,params.get("class"));
+document.getElementById("academicYear").textContent=value(data.academic_year,params.get("year"));
+document.getElementById("term").textContent=value(data.term,params.get("term"));
+
+document.getElementById("reportPeriod").textContent=
+"Academic Year "+value(data.academic_year,params.get("year"))+
+" • "+value(data.term,params.get("term"));
+
+document.getElementById("aggregate").textContent=value(data.aggregate);
+document.getElementById("overallGrade").textContent=value(data.overall_grade,data.grade);
+document.getElementById("attendance").textContent=value(data.attendance);
+
+document.getElementById("teacherComment").textContent=value(
+data.teacher_comment,
+data.class_teacher_comment
+);
+
+document.getElementById("headComment").textContent=value(
+data.head_teacher_comment,
+data.head_comment
+);
+
+document.getElementById("reportStatus").textContent=value(data.status);
+
+const photo=document.getElementById("studentPhoto");
+const photoUrl=value(student.photo_url,data.photo_url,"");
+
+if(photoUrl!=="—"&&photoUrl){
+photo.src=photoUrl;
+photo.onerror=()=>{photo.src="../images/default-student.png";};
+}else{
+photo.src="../images/default-student.png";
+}
+
+const subjects=
+data.subjects||
+data.results||
+data.marks||
+[];
+
+const tbody=document.getElementById("subjectsBody");
+
+if(Array.isArray(subjects)&&subjects.length){
+
+tbody.innerHTML=subjects.map(item=>`
+<tr>
+<td>${value(item.subject_name,item.subject,item.name)}</td>
+<td>${value(item.marks,item.mark,item.score)}</td>
+<td>${value(item.grade)}</td>
+</tr>
+`).join("");
+
+}else{
+
+tbody.innerHTML='<tr><td colspan="3">No subject results have been entered for this report.</td></tr>';
+
+}
+
+document.getElementById("generatedDate").textContent=
+new Date().toLocaleDateString();
+
+loading.style.display="none";
+card.style.display="block";
+
+}catch(error){
+
+console.error("REPORT LOAD ERROR:",error);
+showError(error.message||"Unable to load the student report.");
+
+}
+
+}
+
+document.getElementById("printButton").addEventListener("click",()=>window.print());
+
+loadReport();
+
+});
+</script>
+</body>
+  </html>
