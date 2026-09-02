@@ -1,0 +1,155 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Payroll Management | Kenbridge Christian School</title><meta name="theme-color" content="#08783f"><link rel="stylesheet" href="../css/style.css"><style>body{margin:0;background:#f4f8f5;font-family:Arial,sans-serif;color:#173a2c}.admin-header{background:#08783f;color:#fff;padding:18px 0}.admin-header-inner,.container{width:min(1180px,92%);margin:auto}.admin-header-inner{display:flex;justify-content:space-between;align-items:center}.brand{color:#fff;text-decoration:none;font-weight:800;font-size:18px}.brand span{display:block;font-size:11px;opacity:.85;margin-top:4px}.container{padding:35px 0 60px}.heading{margin-bottom:25px}.heading h1{margin:0 0 8px}.heading p{margin:0;color:#68776f}.card{background:#fff;border:1px solid #e1e8e4;border-radius:14px;padding:24px;margin-bottom:22px;box-shadow:0 8px 25px #0000000a}.card h2{margin-top:0}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.field{display:flex;flex-direction:column;gap:7px}.field label{font-size:13px;font-weight:700}.field input,.field select{padding:12px;border:1px solid #d7e1dc;border-radius:8px;font-size:14px}.net-preview{padding:12px;background:#eef7f1;border-radius:8px;font-weight:800;color:#08783f}.actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}button{border:0;border-radius:8px;padding:12px 17px;font-weight:700;cursor:pointer}.primary{background:#08783f;color:#fff}.secondary{background:#e8efeb;color:#315244}.danger{background:#fdeaea;color:#a12b2b}.notice{display:none;margin-bottom:16px;padding:12px;border-radius:8px;font-size:14px}.notice.success{display:block;background:#e8f5ed;color:#08783f}.notice.error{display:block;background:#fdeaea;color:#a12b2b}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:13px;text-align:left;border-bottom:1px solid #e6ece8}th{background:#eef6f1;font-size:13px}.status{font-size:12px;font-weight:800}.status.paid{color:#08783f}.status.pending{color:#9a7000}.small-btn{padding:8px 10px;font-size:12px}@media(max-width:700px){.form-grid{grid-template-columns:1fr}.container{width:94%}}
+</style></head><body><div class="admin-page"><header class="admin-header"><div class="admin-header-inner"><a class="brand" href="admin-dashboard.html">Kenbridge Christian School<span>Administration Portal</span></a><a href="../login.html" id="logoutButton" style="color:#fff;text-decoration:none">Log Out</a></div></header><main class="container"><div class="heading"><h1>Payroll Management</h1><p>Create and manage staff payroll records.</p></div><div id="notice" class="notice"></div><section class="card"><h2 id="formTitle">Add Payroll Record</h2><form id="payrollForm"><div class="form-grid"><div class="field"><label for="staff_id">Staff Member</label><select id="staff_id" required disabled><option value="">Loading staff members...</option></select></div><div class="field"><label for="pay_month">Payroll Month</label><input type="month" id="pay_month" required></div><div class="field"><label for="gross_amount">Gross Amount (UGX)</label><input type="number" id="gross_amount" min="0" step="1" required></div><div class="field"><label for="deductions">Deductions (UGX)</label><input type="number" id="deductions" min="0" step="1" value="0"></div><div class="field"><label>Net Pay</label><div id="netPreview" class="net-preview">UGX 0</div></div><div class="field"><label for="status">Payment Status</label><select id="status"><option value="PENDING">Pending</option><option value="PAID">Paid</option></select></div></div><div class="actions"><button type="submit" class="primary" id="saveButton">Save Payroll Record</button><button type="button" class="secondary" id="cancelButton" style="display:none">Cancel Edit</button></div></form></section><section class="card"><h2>Payroll Records</h2><div class="table-wrap"><table><thead><tr><th>Staff Member</th><th>Period</th><th>Gross</th><th>Deductions</th><th>Net Pay</th><th>Status</th><th>Actions</th></tr></thead><tbody id="payrollBody"><tr><td colspan="7">Loading payroll records...</td></tr></tbody></table></div></section></main></div><script>
+const API_BASE="https://kenbridge-christian-school.onrender.com";
+let payrollRecords=[],editingId=null;
+const staffSelect=document.getElementById("staff_id"),payMonthInput=document.getElementById("pay_month"),grossInput=document.getElementById("gross_amount"),deductionsInput=document.getElementById("deductions"),statusInput=document.getElementById("status"),netPreview=document.getElementById("netPreview"),payrollBody=document.getElementById("payrollBody"),payrollForm=document.getElementById("payrollForm"),notice=document.getElementById("notice"),formTitle=document.getElementById("formTitle"),saveButton=document.getElementById("saveButton"),cancelButton=document.getElementById("cancelButton"),logoutButton=document.getElementById("logoutButton");
+
+function getAccessToken(){return localStorage.getItem("kenbridgeAccessToken")||localStorage.getItem("access_token")||localStorage.getItem("kenbridge_access_token")||localStorage.getItem("token")||sessionStorage.getItem("kenbridgeAccessToken")||sessionStorage.getItem("access_token")||sessionStorage.getItem("kenbridge_access_token")||sessionStorage.getItem("token")||null}
+
+function clearSession(){["kenbridgeAccessToken","kenbridgeRefreshToken","kenbridgeUser","access_token","refresh_token","kenbridge_access_token","token","user","kenbridge_user"].forEach(k=>localStorage.removeItem(k));["kenbridgeStaffLoggedIn","kenbridgeUserRole","kenbridgeAdminLoggedIn"].forEach(k=>sessionStorage.removeItem(k))}
+
+function authHeaders(){const token=getAccessToken();if(!token)throw new Error("Your login session was not found. Please log in again.");return{"Authorization":"Bearer "+token,"Content-Type":"application/json"}}
+
+function formatMoney(v){return new Intl.NumberFormat("en-UG",{style:"currency",currency:"UGX",maximumFractionDigits:0}).format(Number(v||0))}
+
+function formatMonth(v){return v?new Date(String(v).slice(0,10)+"T00:00:00").toLocaleDateString("en-US",{month:"long",year:"numeric"}):"—"}
+
+function escapeHTML(value){const div=document.createElement("div");div.textContent=value??"";return div.innerHTML}
+
+function showNotice(m,t){notice.textContent=m;notice.className="notice "+t;setTimeout(()=>{notice.className="notice";notice.textContent=""},5000)}
+
+function updateNetPreview(){netPreview.textContent=formatMoney(Math.max(0,Number(grossInput.value||0)-Number(deductionsInput.value||0)))}
+
+async function request(url,options={}){let response;try{response=await fetch(API_BASE+url,{...options,headers:{...authHeaders(),...(options.headers||{})}})}catch(error){throw new Error("Unable to connect to the Kenbridge server. Please try again.")}let data;try{data=await response.json()}catch(error){throw new Error("The server returned an invalid response.")}if(!response.ok||!data.success){if(response.status===401){clearSession()}throw new Error(data.message||"Request failed.")}return data}
+
+async function verifyAdmin(){const result=await request("/api/auth/me");const user=result.user;if(!user||String(user.role||"").toUpperCase()!=="ADMIN"){throw new Error("Only administrators can manage payroll records.")}return user}
+
+function getStaffName(staff){if(staff.full_name)return staff.full_name;if(staff.first_name||staff.last_name)return[String(staff.first_name||""),String(staff.last_name||"")].join(" ").trim();if(staff.username)return staff.username;if(staff.email)return staff.email;return"Unnamed Staff"}
+
+async function loadStaff(){
+staffSelect.disabled=true;
+staffSelect.innerHTML='<option value="">Loading staff members...</option>';
+try{
+const r=await request("/api/auth/staff");
+const staff=Array.isArray(r.staff)?r.staff:[];
+staffSelect.innerHTML='<option value="">Select staff member</option>';
+const availableStaff=staff.filter(s=>String(s.role||"").toUpperCase()!=="ADMIN"&&s.is_active!==false);
+if(!availableStaff.length){
+staffSelect.innerHTML='<option value="">No active staff members found</option>';
+showNotice("No active staff members were found in the staff accounts.","error");
+return;
+}
+availableStaff.forEach(s=>{
+const option=document.createElement("option");
+option.value=s.id;
+const name=getStaffName(s);
+const details=[s.position||s.job_title,s.department].filter(Boolean).join(" • ");
+option.textContent=details?name+" — "+details:name;
+staffSelect.appendChild(option);
+});
+staffSelect.disabled=false;
+}catch(e){
+console.error("LOAD STAFF ERROR:",e);
+staffSelect.innerHTML='<option value="">Unable to load staff members</option>';
+showNotice(e.message||"Unable to load staff members.","error");
+}
+}
+
+async function loadPayroll(){
+try{
+const r=await request("/api/payroll");
+payrollRecords=Array.isArray(r.payroll)?r.payroll:[];
+payrollBody.innerHTML=payrollRecords.length?payrollRecords.map(r=>{
+const staffName=r.full_name||[r.first_name||"",r.last_name||""].join(" ").trim()||r.staff_name||"Unknown Staff";
+return'<tr><td>'+escapeHTML(staffName)+'</td><td>'+escapeHTML(formatMonth(r.pay_month))+'</td><td>'+escapeHTML(formatMoney(r.gross_amount))+'</td><td>'+escapeHTML(formatMoney(r.deductions))+'</td><td>'+escapeHTML(formatMoney(r.net_amount))+'</td><td><span class="status '+escapeHTML(String(r.status||"PENDING").toLowerCase())+'">'+escapeHTML(String(r.status||"PENDING"))+'</span></td><td><button class="secondary small-btn" onclick="editPayroll(\''+escapeHTML(r.id)+'\')">Edit</button> <button class="danger small-btn" onclick="deletePayroll(\''+escapeHTML(r.id)+'\')">Delete</button></td></tr>';
+}).join(""):'<tr><td colspan="7">No payroll records have been created yet.</td></tr>';
+}catch(e){
+console.error("LOAD PAYROLL ERROR:",e);
+payrollBody.innerHTML='<tr><td colspan="7">'+escapeHTML(e.message||"Unable to load payroll records.")+'</td></tr>';
+}
+}
+
+payrollForm.addEventListener("submit",async e=>{
+e.preventDefault();
+try{
+const gross=Number(grossInput.value||0),deductions=Number(deductionsInput.value||0);
+if(!staffSelect.value&&!editingId)throw new Error("Please select a staff member.");
+if(!payMonthInput.value)throw new Error("Please select a payroll month.");
+if(gross<0||deductions<0)throw new Error("Payroll amounts cannot be negative.");
+if(deductions>gross)throw new Error("Deductions cannot exceed gross amount.");
+const payload={staff_id:staffSelect.value,pay_month:payMonthInput.value+"-01",gross_amount:gross,deductions:deductions,status:statusInput.value};
+const url="/api/payroll"+(editingId?"/"+editingId:"");
+const body=editingId?{pay_month:payload.pay_month,gross_amount:gross,deductions:deductions,status:statusInput.value}:payload;
+await request(url,{method:editingId?"PUT":"POST",body:JSON.stringify(body)});
+showNotice("Payroll record "+(editingId?"updated":"created")+" successfully.","success");
+resetForm();
+await loadPayroll();
+}catch(e){console.error("SAVE PAYROLL ERROR:",e);showNotice(e.message||"Unable to save payroll record.","error")}
+});
+
+window.editPayroll=function(id){
+const r=payrollRecords.find(x=>String(x.id)===String(id));
+if(!r)return;
+editingId=id;
+staffSelect.value=r.staff_id||"";
+staffSelect.disabled=true;
+payMonthInput.value=String(r.pay_month||"").slice(0,7);
+grossInput.value=r.gross_amount||0;
+deductionsInput.value=r.deductions||0;
+statusInput.value=r.status||"PENDING";
+updateNetPreview();
+formTitle.textContent="Edit Payroll Record";
+saveButton.textContent="Update Payroll Record";
+cancelButton.style.display="inline-block";
+window.scrollTo({top:0,behavior:"smooth"});
+};
+
+window.deletePayroll=async function(id){
+if(!confirm("Delete this payroll record?"))return;
+try{
+await request("/api/payroll/"+id,{method:"DELETE"});
+showNotice("Payroll record deleted successfully.","success");
+await loadPayroll();
+}catch(e){console.error("DELETE PAYROLL ERROR:",e);showNotice(e.message||"Unable to delete payroll record.","error")}
+};
+
+function resetForm(){
+editingId=null;
+payrollForm.reset();
+staffSelect.disabled=staffSelect.options.length<=1;
+deductionsInput.value=0;
+updateNetPreview();
+formTitle.textContent="Add Payroll Record";
+saveButton.textContent="Save Payroll Record";
+cancelButton.style.display="none";
+}
+
+cancelButton.addEventListener("click",resetForm);
+grossInput.addEventListener("input",updateNetPreview);
+deductionsInput.addEventListener("input",updateNetPreview);
+
+if(logoutButton){
+logoutButton.addEventListener("click",function(){
+clearSession();
+});
+}
+
+async function initializePayrollPage(){
+try{
+await verifyAdmin();
+const now=new Date();
+payMonthInput.value=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0");
+updateNetPreview();
+await Promise.all([loadStaff(),loadPayroll()]);
+}catch(e){
+console.error("PAYROLL PAGE INITIALIZATION ERROR:",e);
+staffSelect.disabled=true;
+staffSelect.innerHTML='<option value="">Unable to start payroll management</option>';
+payrollBody.innerHTML='<tr><td colspan="7">'+escapeHTML(e.message||"Unable to load payroll management.")+'</td></tr>';
+showNotice(e.message||"Unable to initialize payroll management.","error");
+if(/session|token|authorization|expired|invalid/i.test(String(e.message||""))){setTimeout(()=>{window.location.href="../login.html"},1500)}
+}
+}
+
+initializePayrollPage();
+</script></body></html>
