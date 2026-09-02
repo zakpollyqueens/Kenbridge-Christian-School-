@@ -14,7 +14,6 @@ const galleryRoutes=require("./routes/gallery");
 const studentsRoutes=require("./routes/students");
 const documentsRoutes=require("./routes/documents");
 const attendanceRoutes=require("./routes/attendance");
-const documentsRoutes=require("./routes/documents");
 const publicContentRoutes=require("./routes/public-content");
 const notificationsRoutes=require("./routes/notifications");
 const app=express();
