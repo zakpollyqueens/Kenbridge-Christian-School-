@@ -292,17 +292,13 @@ payrollBody.innerHTML=`
 ${escapeHTML(error.message||"Unable to load payroll information at this time.")}
 </td>
 </tr>
-`;
+  logoutButton.addEventListener("click", function () {
+    localStorage.removeItem("kenbridgeAccessToken");
+    localStorage.removeItem("kenbridgeRefreshToken");
+    localStorage.removeItem("kenbridgeUser");
 
-}
-
-}
-
-logoutButton.addEventListener("click",function(){
-
-sessionStorage.removeItem("kenbridgeAccessToken");
-sessionStorage.removeItem("kenbridgeStaffLoggedIn");
-
+    sessionStorage.removeItem("kenbridgeStaffLoggedIn");
+    sessionStorage.removeItem("kenbridgeUserRole");
 });
 
 loadPayroll();
