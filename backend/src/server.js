@@ -91,7 +91,7 @@ app.use("/api/staff-content",staffContentRoutes);
 app.use("/api/documents",require("./routes/documents"));
 app.use("/api/tasks",tasksRoutes);
 app.use("/api/payroll",payrollRoutes);
-app.use("/api/notifications", adminNotificationsRoutes);
+app.use("/api/admin/notifications",adminNotificationsRoutes);
 app.use("/api/messages",messagesRoutes);
 app.use("/api/dashboard",dashboardRoutes);
 app.use("/api/attendance",attendanceRoutes); 
