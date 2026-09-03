@@ -4,6 +4,8 @@ const pool = require('../db');
 const supabase = require('../supabase');
 const { v4: uuidv4 } = require('uuid');
 const pdfUtil = require('../utils/pdf');
+const storage = require('../utils/storage-s3');
+const emailUtil = require('../utils/email');
 
 async function getUserFromToken(req, res) {
   try {
@@ -109,7 +111,7 @@ router.get('/', async (req, res) => {
     }
 
     // Staff/secretariat/finance/admin
-    const { rows } = await pool.query('SELECT t.*, s.title, s.class_name, s.period_type, s.status FROM report_tasks t JOIN report_submissions s ON s.id = t.submission_id WHERE t.assigned_to = $1 OR $2 = ANY(ARRAY[\'ADMIN\', t.role_needed]) ORDER BY t.created_at DESC', [user.id, String(user.role).toUpperCase()]);
+    const { rows } = await pool.query('SELECT t.*, s.title, s.class_name, s.period_type, s.status, t.submission_id FROM report_tasks t JOIN report_submissions s ON s.id = t.submission_id WHERE t.assigned_to = $1 OR $2 = ANY(ARRAY[\'ADMIN\', t.role_needed]) ORDER BY t.created_at DESC', [user.id, String(user.role).toUpperCase()]);
     res.json({ success: true, tasks: rows });
   } catch (err) {
     console.error('LIST SUBMISSIONS ERROR:', err);
@@ -175,20 +177,75 @@ router.post('/:id/approve', async (req, res) => {
 
     // Generate PDF and store link (async)
     try {
-      const { rows } = await pool.query('SELECT html_content, json_content FROM report_submissions WHERE id = $1 LIMIT 1', [req.params.id]);
+      const { rows } = await pool.query('SELECT html_content, json_content, title FROM report_submissions WHERE id = $1 LIMIT 1', [req.params.id]);
       const submission = rows[0];
       // If html_content is null, render a simple template from json_content using reports route builder
       let html = submission.html_content;
       if (!html && submission.json_content) {
         // build a basic HTML view
-        html = `<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/css/style.css"></head><body><div class="container"><h1>Report</h1><pre>${JSON.stringify(submission.json_content, null, 2)}</pre></div></body></html>`;
+        html = `<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/css/style.css"></head><body><div class="container"><h1>${submission.title||'Report'}</h1><pre>${JSON.stringify(submission.json_content, null, 2)}</pre></div></body></html>`;
       }
       const pdfBuffer = await pdfUtil.renderPdfFromHtml(html);
-      // For now we will not upload; we'll store a data URL path in pdf_url (or null)
-      // In production, upload to S3 and store URL. Here we will store as base64 placeholder (not ideal for large files).
-      const base64 = pdfBuffer.toString('base64');
-      const pdfDataUrl = `data:application/pdf;base64,${base64}`;
-      await pool.query('UPDATE report_submissions SET pdf_url = $1, status = $2 WHERE id = $3', [pdfDataUrl, 'published', req.params.id]);
+
+      let finalUrl = null;
+      if (storage.isConfigured()) {
+        const key = `reports/${req.params.id}.pdf`;
+        await storage.uploadBufferToS3(pdfBuffer, key, 'application/pdf');
+        if (storage.PUBLIC) {
+          finalUrl = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.S3_REGION}.amazonaws.com/${encodeURIComponent(key)}`;
+        } else {
+          // generate signed url for 7 days (default)
+          const expires = Number(process.env.SIGNED_URL_EXPIRE_SECONDS) || 7*24*3600;
+          finalUrl = await storage.generateSignedUrl(key, expires);
+        }
+        await pool.query('UPDATE report_submissions SET pdf_url = $1, status = $2 WHERE id = $3', [finalUrl, 'published', req.params.id]);
+      } else {
+        // fallback: store base64 (not ideal)
+        const base64 = pdfBuffer.toString('base64');
+        const pdfDataUrl = `data:application/pdf;base64,${base64}`;
+        finalUrl = pdfDataUrl;
+        await pool.query('UPDATE report_submissions SET pdf_url = $1, status = $2 WHERE id = $3', [pdfDataUrl, 'published', req.params.id]);
+      }
+
+      // Send notification emails to parents if emails exist
+      try {
+        // gather parent emails from students table where student_name matches (best-effort)
+        const { rows: rowItems } = await pool.query('SELECT * FROM report_submission_rows WHERE submission_id = $1', [req.params.id]);
+        const emails = new Set();
+        for (const r of rowItems) {
+          if (r.student_id) {
+            const { rows: srows } = await pool.query('SELECT parent_email FROM students WHERE id = $1 LIMIT 1', [r.student_id]);
+            if (srows.length && srows[0].parent_email) emails.add(srows[0].parent_email);
+          }
+          if (r.student_name) {
+            const { rows: srows } = await pool.query('SELECT parent_email FROM students WHERE full_name = $1 LIMIT 1', [r.student_name]);
+            if (srows.length && srows[0].parent_email) emails.add(srows[0].parent_email);
+          }
+        }
+
+        // also include submitter and assigned staff
+        const { rows: subinfo } = await pool.query('SELECT submitted_by, assigned_to, class_name, title FROM report_submissions WHERE id = $1 LIMIT 1', [req.params.id]);
+        const sub = subinfo[0];
+        if (sub.submitted_by) {
+          const { rows: u } = await pool.query('SELECT email FROM users WHERE id = $1 LIMIT 1', [sub.submitted_by]);
+          if (u.length && u[0].email) emails.add(u[0].email);
+        }
+        if (sub.assigned_to) {
+          const { rows: u2 } = await pool.query('SELECT email FROM users WHERE id = $1 LIMIT 1', [sub.assigned_to]);
+          if (u2.length && u2[0].email) emails.add(u2[0].email);
+        }
+
+        if (emails.size) {
+          const recipients = Array.from(emails);
+          const subject = `Published report: ${sub.title || 'Class Report'}`;
+          const text = `A report for ${sub.class_name || ''} has been published. View or download: ${finalUrl}`;
+          const html = `<p>A report for <strong>${sub.class_name || ''}</strong> has been published.</p><p><a href="${finalUrl}">Download the report</a></p>`;
+          await emailUtil.sendMail(recipients, subject, text, html);
+        }
+      } catch (emailErr) {
+        console.error('EMAIL SEND ERROR:', emailErr);
+      }
+
     } catch (pdfErr) {
       console.error('PDF GENERATION FAILED:', pdfErr);
     }
@@ -230,9 +287,24 @@ router.get('/:id/export/pdf', async (req, res) => {
     const user = await getUserFromToken(req, res);
     if (!user) return;
 
-    const { rows } = await pool.query('SELECT html_content, json_content, title FROM report_submissions WHERE id = $1 LIMIT 1', [req.params.id]);
+    const { rows } = await pool.query('SELECT html_content, json_content, title, pdf_url FROM report_submissions WHERE id = $1 LIMIT 1', [req.params.id]);
     if (!rows.length) return res.status(404).json({ success: false, message: 'Not found' });
     const submission = rows[0];
+
+    if (submission.pdf_url && submission.pdf_url.startsWith('data:')) {
+      // send data URL
+      const base64 = submission.pdf_url.split(',')[1];
+      const buffer = Buffer.from(base64, 'base64');
+      res.set('Content-Type','application/pdf');
+      res.set('Content-Disposition', `attachment; filename="${(submission.title||'report').replace(/[^a-z0-9\-_\.]/gi,'_')}.pdf"`);
+      res.send(buffer);
+      return;
+    }
+
+    // If pdf_url is an S3 link (public or signed), redirect
+    if (submission.pdf_url) {
+      return res.redirect(submission.pdf_url);
+    }
 
     let html = submission.html_content;
     if (!html && submission.json_content) {
@@ -241,12 +313,36 @@ router.get('/:id/export/pdf', async (req, res) => {
 
     const pdfBuffer = await pdfUtil.renderPdfFromHtml(html);
     res.set('Content-Type','application/pdf');
-    res.set('Content-Disposition', `attachment; filename="${(submission.title||'report').replace(/[^a-z0-9\-_\.]/gi,'_')}.pdf"
-`);
+    res.set('Content-Disposition', `attachment; filename="${(submission.title||'report').replace(/[^a-z0-9\-_\.]/gi,'_')}.pdf"`);
     res.send(pdfBuffer);
   } catch (err) {
     console.error('EXPORT PDF ERROR:', err);
     res.status(500).json({ success: false, message: 'Unable to export PDF.' });
+  }
+});
+
+// Generate signed URL for a submission's PDF (if S3 private)
+router.get('/:id/signed-url', async (req, res) => {
+  try {
+    const user = await getUserFromToken(req, res);
+    if (!user) return;
+    if (!storage.isConfigured()) return res.status(400).json({ success: false, message: 'Storage not configured.' });
+
+    const expires = Number(req.query.expires) || Number(process.env.SIGNED_URL_EXPIRE_SECONDS) || 7*24*3600;
+    const { rows } = await pool.query('SELECT pdf_url FROM report_submissions WHERE id = $1 LIMIT 1', [req.params.id]);
+    if (!rows.length || !rows[0].pdf_url) return res.status(404).json({ success: false, message: 'PDF not found.' });
+    const pdfUrl = rows[0].pdf_url;
+
+    // if pdfUrl is s3 public link, return it
+    if (pdfUrl.startsWith('http')) return res.json({ success: true, url: pdfUrl });
+
+    // If stored key (we stored key earlier when uploading), we need the key. We stored key as reports/<id>.pdf
+    const key = `reports/${req.params.id}.pdf`;
+    const signed = await storage.generateSignedUrl(key, expires);
+    res.json({ success: true, url: signed });
+  } catch (err) {
+    console.error('SIGNED URL ERROR:', err);
+    res.status(500).json({ success: false, message: 'Unable to generate signed URL.' });
   }
 });
 
