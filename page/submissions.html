@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Reports & Submissions | Kenbridge Christian School</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="section-heading">
+      <span class="section-label">REPORTS</span>
+      <h2>Teacher Submissions & Secretariat Tasks</h2>
+      <p>Teachers can create class reports (weekly, monthly, termly). Secretariat/Finance staff receive tasks to approve, print and publish reports.</p>
+    </div>
+
+    <!-- Teacher submission form -->
+    <section style="margin-bottom:20px;padding:18px;border:1px solid #e6f0ea;border-radius:10px;background:#fff">
+      <h3>Teacher: Create / Submit a Class Report</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+        <label style="display:flex;flex-direction:column;gap:6px">
+          Class Name
+          <input type="text" id="t_class" placeholder="e.g. Grade 3A">
+        </label>
+        <label style="display:flex;flex-direction:column;gap:6px">
+          Period Type
+          <select id="t_period">
+            <option value="WEEK">Weekly</option>
+            <option value="MONTH">Monthly</option>
+            <option value="TERM">Termly</option>
+          </select>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:6px">
+          Start Date
+          <input type="date" id="t_start">
+        </label>
+        <label style="display:flex;flex-direction:column;gap:6px">
+          End Date
+          <input type="date" id="t_end">
+        </label>
+        <label style="display:flex;flex-direction:column;gap:6px;width:100%">
+          Title (optional)
+          <input type="text" id="t_title" placeholder="Term 1 - Class Report">
+        </label>
+
+        <label style="display:flex;flex-direction:column;gap:6px;width:100%">
+          CSV (first row headers: student_name, mark1, mark2, ...)
+          <textarea id="t_csv" rows="6" placeholder="Paste CSV content here (or leave empty and the teacher will add rows)"></textarea>
+        </label>
+
+        <div style="display:flex;gap:8px;align-items:center">
+          <button id="t_submit" class="btn btn-primary">Submit Report</button>
+        </div>
+      </div>
+      <small style="display:block;margin-top:8px;color:#6b7280">After submission the report will be sent to the Secretariat/Finance in charge for printing/publishing.</small>
+    </section>
+
+    <!-- Secretariat tasks -->
+    <section style="margin-bottom:20px">
+      <h3>Tasks (Secretariat / Finance)</h3>
+      <div id="tasksList">Loading tasks...</div>
+    </section>
+
+    <!-- Submissions list for current user -->
+    <section>
+      <h3>Your Submissions</h3>
+      <div id="mySubs">Loading...</div>
+    </section>
+
+  </div>
+
+<script>
+  async function fetchTasks(){
+    try{
+      const r = await fetch('/api/submissions', { headers: { 'Authorization': 'Bearer ' + (localStorage.getItem('kenbridge_admin_token')||'') } });
+      const data = await r.json();
+      if(!data.success){ document.getElementById('tasksList').innerText='Unable to load tasks'; return }
+      // If tasks present
+      if(data.tasks && data.tasks.length){
+        document.getElementById('tasksList').innerHTML = data.tasks.map(t=>`<div style="padding:12px;border:1px solid #eef6f0;border-radius:8px;margin-bottom:10px;background:#fff"><strong>${t.title||'Submission'}</strong><div style="color:#6b7280">Class: ${t.class_name||'-'} | Period: ${t.period_type} | Status: ${t.status}</div><div style="margin-top:8px"><button class='btn btn-primary' onclick="viewSubmission('${t.submission_id}')">View</button> <button class='btn btn-outline' onclick="assign('${t.submission_id}')">Assign</button> <button class='btn btn-primary' onclick="approve('${t.submission_id}')">Approve & Publish</button></div></div>`).join('');
+      } else if(data.submissions){
+        document.getElementById('tasksList').innerHTML = '<div class="article-empty">No tasks found.</div>';
+      } else {
+        document.getElementById('tasksList').innerText='No tasks found.';
+      }
+    } catch(err){ console.error(err); document.getElementById('tasksList').innerText='Failed to load tasks'; }
+  }
+
+  async function fetchMySubs(){
+    try{
+      const r = await fetch('/api/submissions', { headers: { 'Authorization': 'Bearer ' + (localStorage.getItem('kenbridge_admin_token')||'') } });
+      const data = await r.json();
+      if(!data.success){ document.getElementById('mySubs').innerText='Unable to load'; return }
+      if(data.submissions){
+        document.getElementById('mySubs').innerHTML = data.submissions.map(s=>`<div style="padding:12px;border:1px solid #eef6f0;border-radius:8px;margin-bottom:10px;background:#fff"><strong>${s.title||'Report'}</strong><div style="color:#6b7280">Class: ${s.class_name||'-'} | ${s.period_type} | Status: ${s.status}</div><div style="margin-top:8px"><a class="btn btn-primary" href="/api/submissions/${s.id}" target="_blank">View</a></div></div>`).join('');
+      } else document.getElementById('mySubs').innerText='No submissions yet.';
+    } catch(err){ console.error(err); document.getElementById('mySubs').innerText='Failed to load'; }
+  }
+
+  async function submitReport(){
+    const class_name = document.getElementById('t_class').value.trim();
+    const period_type = document.getElementById('t_period').value;
+    const start = document.getElementById('t_start').value;
+    const end = document.getElementById('t_end').value;
+    const title = document.getElementById('t_title').value.trim();
+    const csv = document.getElementById('t_csv').value.trim();
+    const token = localStorage.getItem('kenbridge_admin_token') || '';
+    if(!start || !end){ alert('Start and end dates required'); return }
+    try{
+      const resp = await fetch('/api/submissions', {
+        method:'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ title, class_name, period_type, period_start: start, period_end: end, csv })
+      });
+      const data = await resp.json();
+      if(!resp.ok) throw new Error(data?.message || 'Failed');
+      alert('Submitted successfully. Task created.');
+      fetchTasks(); fetchMySubs();
+    } catch(err){ console.error(err); alert('Error: ' + (err?.message || err)); }
+  }
+
+  function viewSubmission(id){
+    window.open('/api/submissions/' + id, '_blank');
+  }
+
+  async function assign(submissionId){
+    const assigned = prompt('Enter user id to assign to (staff id):');
+    if(!assigned) return;
+    try{
+      const token = localStorage.getItem('kenbridge_admin_token')||'';
+      const resp = await fetch('/api/submissions/' + submissionId + '/assign', { method:'POST', headers:{ 'Content-Type':'application/json','Authorization':'Bearer ' + token }, body: JSON.stringify({ assigned_to: assigned }) });
+      const data = await resp.json();
+      if(!resp.ok) throw new Error(data?.message||'Failed');
+      alert('Assigned.');
+      fetchTasks();
+    } catch(err){ console.error(err); alert('Error: ' + (err?.message||err)); }
+  }
+
+  async function approve(submissionId){
+    if(!confirm('Approve and publish this submission?')) return;
+    try{
+      const token = localStorage.getItem('kenbridge_admin_token')||'';
+      const resp = await fetch('/api/submissions/' + submissionId + '/approve', { method:'POST', headers:{ 'Authorization':'Bearer ' + token } });
+      const data = await resp.json();
+      if(!resp.ok) throw new Error(data?.message||'Failed');
+      alert('Approved and published.');
+      fetchTasks(); fetchMySubs();
+    } catch(err){ console.error(err); alert('Error: ' + (err?.message||err)); }
+  }
+
+  document.getElementById('t_submit').addEventListener('click', submitReport);
+
+  document.addEventListener('DOMContentLoaded', ()=>{ fetchTasks(); fetchMySubs(); });
+</script>
+</body>
+</html>
