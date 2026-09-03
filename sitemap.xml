@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://your-site-domain.example/</loc>
+  </url>
+  <url>
+    <loc>https://your-site-domain.example/privacy.html</loc>
+  </url>
+  <url>
+    <loc>https://your-site-domain.example/terms.html</loc>
+  </url>
+  <url>
+    <loc>https://your-site-domain.example/index.html</loc>
+  </url>
+  <url>
+    <loc>https://your-site-domain.example/page/about.html</loc>
+  </url>
+  <url>
+    <loc>https://your-site-domain.example/page/contact.html</loc>
+  </url>
+  <url>
+    <loc>https://your-site-domain.example/page/articles.html</loc>
+  </url>
+  <url>
+    <loc>https://your-site-domain.example/page/announcements.html</loc>
+  </url>
+  <url>
+    <loc>https://your-site-domain.example/page/admissions.html</loc>
+  </url>
+  <url>
+    <loc>https://your-site-domain.example/page/academics.html</loc>
+  </url>
+</urlset>
