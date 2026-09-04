@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Board Resolutions | Kenbridge Christian School</title>
+<title>Resolutions | Kenbridge Christian School</title>
 <link rel="stylesheet" href="../css/style.css">
 <style>
-:root{--p:#123c63;--s:#1f6f8b;--bg:#f4f7fb;--card:#fff;--text:#17212b;--muted:#64748b;--border:#e2e8f0;--danger:#b42318;--success:#067647;--warn:#b54708}
+:root{--p:#123c63;--s:#1f6f8b;--bg:#f4f7fb;--card:#fff;--text:#17212b;--muted:#64748b;--border:#e2e8f0;--danger:#b42318;--success:#087443}
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
 .sidebar{position:fixed;top:0;left:0;bottom:0;width:260px;background:var(--p);color:#fff;display:flex;flex-direction:column;z-index:1000}
@@ -28,7 +28,7 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 .urole{font-size:12px;color:var(--muted)}
 .menu{display:none;border:0;background:var(--p);color:#fff;border-radius:7px;padding:9px 11px}
 .content{padding:28px}
-.heading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}
+.heading{margin-bottom:22px}
 .heading h2{margin:0;color:var(--p);font-size:24px}
 .heading p{margin:7px 0 0;color:var(--muted);font-size:14px}
 .card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:18px}
@@ -38,8 +38,6 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 .primary{background:var(--p);color:#fff}
 .secondary{background:#eef5f8;color:var(--s)}
 .danger{background:#fef3f2;color:var(--danger)}
-.success{background:#ecfdf3;color:var(--success)}
-.warn{background:#fff7ed;color:var(--warn)}
 .notice{display:none;padding:12px 14px;border-radius:8px;margin-bottom:16px;font-size:13px;line-height:1.5}
 .notice.show{display:block}
 .notice.error{background:#fef3f2;color:var(--danger)}
@@ -49,31 +47,31 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 .stat strong{display:block;color:var(--p);font-size:22px}
 .stat span{font-size:12px;color:var(--muted)}
 .resolutions{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-.resolution{border:1px solid var(--border);border-radius:11px;padding:18px;background:#fff}
-.res-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.number{font-weight:bold;color:var(--p);font-size:15px}
-.badge{padding:5px 9px;border-radius:20px;font-size:10px;font-weight:bold;white-space:nowrap}
-.badge.open{background:#eff8ff;color:#175cd3}
-.badge.progress{background:#fff7ed;color:#b54708}
-.badge.completed{background:#ecfdf3;color:#067647}
-.badge.cancelled{background:#fef3f2;color:#b42318}
-.title{font-size:17px;font-weight:bold;color:var(--p);margin-top:14px}
-.desc{font-size:13px;color:var(--muted);line-height:1.6;margin-top:8px}
-.decision{margin-top:14px;padding:13px;border-left:3px solid var(--s);background:#f8fafc;font-size:13px;line-height:1.6}
-.meta{font-size:12px;color:var(--muted);line-height:1.8;margin-top:13px}
+.resolution{background:#fff;border:1px solid var(--border);border-radius:11px;padding:18px}
+.rtop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.rnum{font-size:11px;color:var(--s);font-weight:bold}
+.rtitle{font-size:17px;font-weight:bold;color:var(--p);margin-top:6px;line-height:1.35}
+.badge{font-size:10px;font-weight:bold;border-radius:20px;padding:5px 9px;white-space:nowrap}
+.open{background:#eef5f8;color:var(--s)}
+.progressing{background:#fff4e5;color:#a15c00}
+.completed{background:#ecfdf3;color:var(--success)}
+.cancelled{background:#fef3f2;color:var(--danger)}
+.desc{font-size:13px;color:var(--muted);line-height:1.6;margin-top:11px}
+.decision{margin-top:13px;padding:12px;border-radius:8px;background:#f8fafc;border-left:3px solid var(--s);font-size:13px;line-height:1.6}
+.meta{font-size:12px;color:var(--muted);margin-top:13px;line-height:1.8}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
 .empty,.loading{text-align:center;padding:40px;color:var(--muted);grid-column:1/-1}
-.modal-wrap{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:2000}
-.modal-wrap.show{display:flex}
-.modal{background:#fff;border-radius:12px;width:min(650px,100%);max-height:90vh;overflow:auto;padding:22px}
-.modal h3{margin:0;color:var(--p)}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
-.field{display:flex;flex-direction:column;gap:6px}
-.field.full{grid-column:1/-1}
-.field label{font-size:12px;font-weight:bold;color:var(--p)}
-.field input,.field select,.field textarea{width:100%;padding:10px 11px;border:1px solid var(--border);border-radius:8px;font:inherit;outline:none}
-.field textarea{min-height:100px;resize:vertical}
-.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:20px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2000;align-items:center;justify-content:center;padding:20px}
+.modal.show{display:flex}
+.modal-box{width:min(650px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:13px;padding:22px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-head h3{margin:0;color:var(--p);font-size:20px}
+.close{border:0;background:#eef2f6;border-radius:50%;width:34px;height:34px;font-size:20px;cursor:pointer}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;font-weight:bold;color:#475569;margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:8px;outline:none;background:#fff}
+.form-group textarea{min-height:90px;resize:vertical}
+.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
 @media(max-width:1000px){.resolutions{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:900px){
 .sidebar{transform:translateX(-100%);transition:.25s}
@@ -85,8 +83,6 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 }
 @media(max-width:600px){
 .stats{grid-template-columns:1fr}
-.form-grid{grid-template-columns:1fr}
-.field.full{grid-column:auto}
 .user>div:not(.avatar){display:none}
 }
 </style>
@@ -135,16 +131,22 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 <header class="top">
 
 <div style="display:flex;align-items:center;gap:14px">
+
 <button id="menu" class="menu">☰</button>
-<h1>Board Resolutions</h1>
+
+<h1>Resolutions</h1>
+
 </div>
 
 <div class="user">
+
 <div id="avatar" class="avatar">B</div>
+
 <div>
 <div id="uname" class="uname">Loading...</div>
 <div id="urole" class="urole">Board Member</div>
 </div>
+
 </div>
 
 </header>
@@ -153,12 +155,11 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 
 <div class="heading">
 
-<div>
 <h2>Board Resolutions</h2>
-<p>Record, monitor and review decisions adopted by the Board of Governors.</p>
-</div>
 
-<button id="addBtn" class="btn primary">＋ New Resolution</button>
+<p>
+Record and track decisions, actions and resolutions approved by the Board of Governors.
+</p>
 
 </div>
 
@@ -177,7 +178,7 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 </div>
 
 <div class="stat">
-<strong id="progress">0</strong>
+<strong id="progressing">0</strong>
 <span>In Progress</span>
 </div>
 
@@ -192,17 +193,29 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 
 <div class="filters">
 
-<input id="search" type="search" placeholder="Search resolutions...">
+<input
+id="search"
+type="search"
+placeholder="Search resolutions..."
+>
 
-<select id="statusFilter">
+<select id="status">
+
 <option value="">All Statuses</option>
 <option value="open">Open</option>
 <option value="in_progress">In Progress</option>
 <option value="completed">Completed</option>
 <option value="cancelled">Cancelled</option>
+
 </select>
 
-<button id="refresh" class="btn secondary">↻ Refresh</button>
+<button id="refresh" class="btn secondary">
+↻ Refresh
+</button>
+
+<button id="addBtn" class="btn primary" style="display:none">
+＋ New Resolution
+</button>
 
 </div>
 
@@ -211,14 +224,23 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 <div class="card">
 
 <div style="margin-bottom:18px">
-<h3 style="margin:0;color:var(--p);font-size:18px">Resolution Register</h3>
+
+<h3 style="margin:0;color:var(--p);font-size:18px">
+Resolution Register
+</h3>
+
 <p style="margin:6px 0 0;color:var(--muted);font-size:13px">
-Official Board decisions and their implementation status.
+Official Board decisions and follow-up actions.
 </p>
+
 </div>
 
-<div id="resolutions" class="resolutions">
-<div class="loading">Loading resolutions...</div>
+<div id="list" class="resolutions">
+
+<div class="loading">
+Loading resolutions...
+</div>
+
 </div>
 
 </div>
@@ -227,68 +249,165 @@ Official Board decisions and their implementation status.
 
 </main>
 
-<div id="modalWrap" class="modal-wrap">
+<div id="modal" class="modal">
 
-<div class="modal">
+<div class="modal-box">
 
-<h3>New Board Resolution</h3>
+<div class="modal-head">
+
+<h3 id="modalTitle">New Resolution</h3>
+
+<button id="closeModal" class="close">×</button>
+
+</div>
+
+<div id="formNotice" class="notice"></div>
 
 <form id="form">
 
-<div class="form-grid">
+<div class="form-group">
 
-<div class="field">
-<label for="meeting">Meeting</label>
-<select id="meeting" required>
-<option value="">Select meeting</option>
+<label for="meetingInput">
+Meeting
+</label>
+
+<select id="meetingInput">
+
+<option value="">
+No meeting selected
+</option>
+
 </select>
+
 </div>
 
-<div class="field">
-<label for="number">Resolution Number</label>
-<input id="number" type="text" placeholder="e.g. BOG-001-2026" required>
+<div class="form-group">
+
+<label for="numberInput">
+Resolution Number
+</label>
+
+<input
+id="numberInput"
+required
+placeholder="e.g. BOG-2026-001"
+>
+
 </div>
 
-<div class="field full">
-<label for="title">Title</label>
-<input id="title" type="text" placeholder="Resolution title" required>
+<div class="form-group">
+
+<label for="titleInput">
+Title
+</label>
+
+<input
+id="titleInput"
+required
+placeholder="Resolution title"
+>
+
 </div>
 
-<div class="field full">
-<label for="description">Description</label>
-<textarea id="description" placeholder="Background or description"></textarea>
+<div class="form-group">
+
+<label for="descriptionInput">
+Description
+</label>
+
+<textarea
+id="descriptionInput"
+placeholder="Background or description of the resolution"
+></textarea>
+
 </div>
 
-<div class="field full">
-<label for="decision">Decision</label>
-<textarea id="decision" placeholder="Record the decision adopted by the Board" required></textarea>
+<div class="form-group">
+
+<label for="decisionInput">
+Decision
+</label>
+
+<textarea
+id="decisionInput"
+required
+placeholder="Record the decision approved by the Board"
+></textarea>
+
 </div>
 
-<div class="field">
-<label for="responsible">Responsible Person</label>
-<input id="responsible" type="text" placeholder="Person responsible for action">
+<div class="form-group">
+
+<label for="actionInput">
+Action Required
+</label>
+
+<textarea
+id="actionInput"
+placeholder="Action or follow-up required"
+></textarea>
+
 </div>
 
-<div class="field">
-<label for="dueDate">Due Date</label>
-<input id="dueDate" type="date">
+<div class="form-group">
+
+<label for="responsibleInput">
+Responsible Person
+</label>
+
+<input
+id="responsibleInput"
+placeholder="Person responsible for implementation"
+>
+
 </div>
 
-<div class="field">
-<label for="status">Status</label>
-<select id="status">
+<div class="form-group">
+
+<label for="dueInput">
+Due Date
+</label>
+
+<input
+id="dueInput"
+type="date"
+>
+
+</div>
+
+<div class="form-group">
+
+<label for="statusInput">
+Status
+</label>
+
+<select id="statusInput">
+
 <option value="open">Open</option>
 <option value="in_progress">In Progress</option>
 <option value="completed">Completed</option>
 <option value="cancelled">Cancelled</option>
+
 </select>
-</div>
 
 </div>
 
 <div class="modal-actions">
-<button type="button" id="cancelBtn" class="btn secondary">Cancel</button>
-<button type="submit" id="saveBtn" class="btn primary">Save Resolution</button>
+
+<button
+type="button"
+id="cancelModal"
+class="btn secondary">
+Cancel
+</button>
+
+<button
+type="submit"
+id="saveBtn"
+class="btn primary">
+Save Resolution
+</button>
+
 </div>
 
 </form>
@@ -306,128 +425,189 @@ Official Board decisions and their implementation status.
 
 let resolutions=[];
 let meetings=[];
+let currentUser=null;
+let editingId=null;
 
 const $=id=>document.getElementById(id);
 
 function esc(v){
+
 return String(v??"")
 .replace(/&/g,"&amp;")
 .replace(/</g,"&lt;")
 .replace(/>/g,"&gt;")
 .replace(/"/g,"&quot;")
 .replace(/'/g,"&#039;");
+
 }
 
-function notice(text,type="error"){
-$("notice").textContent=text;
-$("notice").className=`notice show ${type}`;
+function showNotice(text,error=false,target="notice"){
+
+const n=$(target);
+
+n.textContent=text;
+
+n.className=
+"notice show "+
+(error?"error":"success");
+
+if(target==="notice"){
+
+setTimeout(
+()=>n.className="notice",
+5000
+);
+
 }
 
-function dateText(v){
-if(!v)return"";
-const d=new Date(v);
-if(Number.isNaN(d.getTime()))return String(v);
+}
+
+function hideNotice(target="formNotice"){
+
+$(target).className="notice";
+
+}
+
+function isAdmin(){
+
+return String(
+currentUser?.role||""
+).toUpperCase()==="ADMIN";
+
+}
+
+function dateText(value){
+
+if(!value)return"";
+
+const d=new Date(value);
+
+if(Number.isNaN(d.getTime()))
+return String(value);
+
 return d.toLocaleDateString(undefined,{
 year:"numeric",
 month:"short",
 day:"numeric"
 });
+
 }
 
 function statusName(status){
+
 const names={
 open:"Open",
 in_progress:"In Progress",
 completed:"Completed",
 cancelled:"Cancelled"
 };
-return names[String(status||"").toLowerCase()]||"Unknown";
+
+return names[
+String(status||"").toLowerCase()
+]||"Open";
+
 }
 
 function statusClass(status){
-const s=String(status||"").toLowerCase();
-if(s==="in_progress")return"progress";
+
+const s=
+String(status||"open").toLowerCase();
+
+if(s==="in_progress")return"progressing";
+
 if(s==="completed")return"completed";
+
 if(s==="cancelled")return"cancelled";
+
 return"open";
+
 }
 
-function meetingName(id){
-const m=meetings.find(x=>String(x.id)===String(id));
-return m?.title||"Board Meeting";
-}
+function renderStats(){
 
-function updateStats(){
-
-$("total").textContent=resolutions.length;
+$("total").textContent=
+resolutions.length;
 
 $("open").textContent=
-resolutions.filter(x=>
-String(x.status||"").toLowerCase()==="open"
+resolutions.filter(
+x=>String(x.status||"").toLowerCase()==="open"
 ).length;
 
-$("progress").textContent=
-resolutions.filter(x=>
-String(x.status||"").toLowerCase()==="in_progress"
+$("progressing").textContent=
+resolutions.filter(
+x=>String(x.status||"").toLowerCase()==="in_progress"
 ).length;
 
 $("completed").textContent=
-resolutions.filter(x=>
-String(x.status||"").toLowerCase()==="completed"
+resolutions.filter(
+x=>String(x.status||"").toLowerCase()==="completed"
 ).length;
 
 }
 
 function render(){
 
-const q=$("search").value.trim().toLowerCase();
-const status=$("statusFilter").value;
+const q=
+$("search").value.trim().toLowerCase();
 
-const list=resolutions.filter(item=>{
+const status=
+$("status").value;
+
+const list=resolutions.filter(r=>{
 
 const haystack=[
-item.resolution_number,
-item.title,
-item.description,
-item.decision,
-item.action_required,
-item.responsible_person,
-item.status
+r.resolution_number,
+r.title,
+r.description,
+r.decision,
+r.action_required,
+r.responsible_person,
+r.meeting_title,
+r.status
 ].join(" ").toLowerCase();
 
 return(
 (!q||haystack.includes(q))&&
-(!status||String(item.status||"").toLowerCase()===status)
+(!status||
+String(r.status||"").toLowerCase()===status)
 );
 
 });
 
-const box=$("resolutions");
+const box=$("list");
 
 if(!list.length){
 
 box.innerHTML=
 `<div class="empty">
-No resolutions found.
+No resolutions match your search.
 </div>`;
 
 return;
 
 }
 
-box.innerHTML=list.map(item=>{
+box.innerHTML=list.map(r=>{
 
-const status=String(
-item.status||"open"
-).toLowerCase();
+const status=
+String(r.status||"open").toLowerCase();
 
-return `
+return`
+
 <article class="resolution">
 
-<div class="res-top">
+<div class="rtop">
 
-<div class="number">
-${esc(item.resolution_number||"Resolution")}
+<div>
+
+<div class="rnum">
+${esc(r.resolution_number||"No Number")}
+</div>
+
+<div class="rtitle">
+${esc(r.title||"Untitled Resolution")}
+</div>
+
 </div>
 
 <span class="badge ${statusClass(status)}">
@@ -436,72 +616,99 @@ ${esc(statusName(status))}
 
 </div>
 
-<div class="title">
-${esc(item.title||"Untitled Resolution")}
-</div>
+${r.description?
+`<div class="desc">
+${esc(r.description)}
+</div>`:""}
 
-${item.description?
-`<div class="desc">${esc(item.description)}</div>`:""}
-
-${item.decision?
+${r.decision?
 `<div class="decision">
 <strong>Decision:</strong><br>
-${esc(item.decision)}
+${esc(r.decision)}
 </div>`:""}
 
 <div class="meta">
 
-${item.meeting_id?
-`<div><strong>Meeting:</strong> ${esc(meetingName(item.meeting_id))}</div>`:""}
+${r.meeting_title?
+`<div>
+<strong>Meeting:</strong>
+${esc(r.meeting_title)}
+${r.meeting_date?
+" — "+esc(dateText(r.meeting_date)):
+""}
+</div>`:""}
 
-${item.responsible_person?
-`<div><strong>Responsible:</strong> ${esc(item.responsible_person)}</div>`:""}
+${r.action_required?
+`<div>
+<strong>Action:</strong>
+${esc(r.action_required)}
+</div>`:""}
 
-${item.due_date?
-`<div><strong>Due Date:</strong> ${esc(dateText(item.due_date))}</div>`:""}
+${r.responsible_person?
+`<div>
+<strong>Responsible:</strong>
+${esc(r.responsible_person)}
+</div>`:""}
 
-${item.action_required?
-`<div><strong>Action:</strong> ${esc(item.action_required)}</div>`:""}
+${r.due_date?
+`<div>
+<strong>Due:</strong>
+${esc(dateText(r.due_date))}
+</div>`:""}
 
-${item.created_at?
-`<div><strong>Created:</strong> ${esc(dateText(item.created_at))}</div>`:""}
+${r.created_at?
+`<div>
+<strong>Created:</strong>
+${esc(dateText(r.created_at))}
+</div>`:""}
 
 </div>
 
 <div class="actions">
 
-${item.meeting_id?
-`<a class="btn secondary"
-href="meeting-details.html?id=${encodeURIComponent(item.meeting_id)}">
+${r.meeting_id?
+`<a
+class="btn secondary"
+href="meeting-details.html?id=${encodeURIComponent(r.meeting_id)}">
 View Meeting
 </a>`:""}
+
+${isAdmin()?
+`<button
+class="btn secondary edit"
+data-id="${esc(r.id)}">
+Edit
+</button>
+
+<button
+class="btn danger delete"
+data-id="${esc(r.id)}">
+Delete
+</button>`:""}
 
 </div>
 
 </article>
+
 `;
 
 }).join("");
 
-}
+document.querySelectorAll(".edit").forEach(btn=>{
 
-function populateMeetings(){
+btn.addEventListener(
+"click",
+()=>openEdit(btn.dataset.id)
+);
 
-const select=$("meeting");
+});
 
-select.innerHTML=
-`<option value="">Select meeting</option>`;
+document.querySelectorAll(".delete").forEach(btn=>{
 
-meetings.forEach(m=>{
-
-const option=document.createElement("option");
-
-option.value=m.id;
-
-option.textContent=
-`${m.title||"Meeting"}${m.meeting_date?" — "+dateText(m.meeting_date):""}`;
-
-select.appendChild(option);
+btn.addEventListener(
+"click",
+()=>deleteResolution(btn.dataset.id)
+);
 
 });
 
@@ -517,25 +724,43 @@ await KenbridgeBoardAuth.request(
 );
 
 meetings=
-Array.isArray(data?.meetings)
-?data.meetings
-:Array.isArray(data)
-?data
-:[];
+Array.isArray(data?.meetings)?
+data.meetings:
+Array.isArray(data)?
+data:
+Array.isArray(data?.data)?
+data.data:
+[];
 
-populateMeetings();
+const select=$("meetingInput");
+
+select.innerHTML=
+`<option value="">
+No meeting selected
+</option>`+
+meetings.map(m=>
+`<option value="${esc(m.id)}">
+${esc(m.title||"Untitled Meeting")}
+${m.meeting_date?
+" — "+esc(dateText(m.meeting_date)):
+""}
+</option>`
+).join("");
 
 }catch(error){
 
-console.error(error);
+console.error(
+"Meeting load error:",
+error
+);
 
 }
 
 }
 
-async function loadResolutions(){
+async function load(){
 
-$("resolutions").innerHTML=
+$("list").innerHTML=
 `<div class="loading">
 Loading resolutions...
 </div>`;
@@ -548,43 +773,121 @@ await KenbridgeBoardAuth.request(
 );
 
 resolutions=
-Array.isArray(data?.resolutions)
-?data.resolutions
-:Array.isArray(data)
-?data
-:[];
+Array.isArray(data?.resolutions)?
+data.resolutions:
+Array.isArray(data)?
+data:
+Array.isArray(data?.data)?
+data.data:
+[];
 
-updateStats();
+renderStats();
 render();
 
 }catch(error){
 
 console.error(error);
 
-$("resolutions").innerHTML=
+$("list").innerHTML=
 `<div class="empty">
 Unable to load resolutions.
 </div>`;
 
-notice(
+showNotice(
 error.message||
-"Unable to load Board resolutions."
+"Unable to load Board resolutions.",
+true
 );
 
 }
 
 }
 
-function openModal(){
+function resetForm(){
+
+editingId=null;
+
+$("modalTitle").textContent=
+"New Resolution";
 
 $("form").reset();
-$("modalWrap").classList.add("show");
+
+$("statusInput").value=
+"open";
+
+$("meetingInput").value="";
+
+$("saveBtn").textContent=
+"Save Resolution";
+
+hideNotice();
+
+}
+
+function openAdd(){
+
+resetForm();
+
+$("modal").classList.add("show");
+
+}
+
+function openEdit(id){
+
+const r=resolutions.find(
+x=>String(x.id)===String(id)
+);
+
+if(!r)return;
+
+editingId=r.id;
+
+$("modalTitle").textContent=
+"Edit Resolution";
+
+$("meetingInput").value=
+r.meeting_id||"";
+
+$("numberInput").value=
+r.resolution_number||"";
+
+$("titleInput").value=
+r.title||"";
+
+$("descriptionInput").value=
+r.description||"";
+
+$("decisionInput").value=
+r.decision||"";
+
+$("actionInput").value=
+r.action_required||"";
+
+$("responsibleInput").value=
+r.responsible_person||"";
+
+$("dueInput").value=
+r.due_date?
+String(r.due_date).slice(0,10):
+"";
+
+$("statusInput").value=
+r.status||"open";
+
+$("saveBtn").textContent=
+"Update Resolution";
+
+hideNotice();
+
+$("modal").classList.add("show");
 
 }
 
 function closeModal(){
 
-$("modalWrap").classList.remove("show");
+$("modal").classList.remove("show");
+
+resetForm();
 
 }
 
@@ -592,24 +895,89 @@ async function saveResolution(event){
 
 event.preventDefault();
 
-const button=$("saveBtn");
+if(!isAdmin()){
 
-button.disabled=true;
-button.textContent="Saving...";
+showNotice(
+"Only administrators can manage Board resolutions.",
+true,
+"formNotice"
+);
+
+return;
+
+}
+
+const number=
+$("numberInput").value.trim();
+
+const title=
+$("titleInput").value.trim();
+
+const decision=
+$("decisionInput").value.trim();
+
+if(!number||!title||!decision){
+
+showNotice(
+"Resolution number, title and decision are required.",
+true,
+"formNotice"
+);
+
+return;
+
+}
 
 const payload={
-meeting_id:$("meeting").value||null,
-resolution_number:$("number").value.trim(),
-title:$("title").value.trim(),
-description:$("description").value.trim()||null,
-decision:$("decision").value.trim(),
-action_required:$("responsible").value.trim()||null,
-responsible_person:$("responsible").value.trim()||null,
-due_date:$("dueDate").value||null,
-status:$("status").value
+
+meeting_id:
+$("meetingInput").value||null,
+
+resolution_number:number,
+
+title:title,
+
+description:
+$("descriptionInput").value.trim()||null,
+
+decision:decision,
+
+action_required:
+$("actionInput").value.trim()||null,
+
+responsible_person:
+$("responsibleInput").value.trim()||null,
+
+due_date:
+$("dueInput").value||null,
+
+status:
+$("statusInput").value
+
 };
 
+const btn=$("saveBtn");
+
+btn.disabled=true;
+
+btn.textContent=
+editingId?
+"Updating...":
+"Saving...";
+
 try{
+
+if(editingId){
+
+await KenbridgeBoardAuth.request(
+`/api/board/resolutions/${encodeURIComponent(editingId)}`,
+{
+method:"PUT",
+body:JSON.stringify(payload)
+}
+);
+
+}else{
 
 await KenbridgeBoardAuth.request(
 "/api/board/resolutions",
@@ -619,28 +987,84 @@ body:JSON.stringify(payload)
 }
 );
 
+}
+
 closeModal();
 
-await loadResolutions();
-
-notice(
-"Resolution saved successfully.",
-"success"
+showNotice(
+editingId?
+"Resolution updated successfully.":
+"Resolution created successfully."
 );
+
+await load();
 
 }catch(error){
 
 console.error(error);
 
-notice(
+showNotice(
 error.message||
-"Unable to save the resolution."
+"Unable to save resolution.",
+true,
+"formNotice"
 );
 
 }finally{
 
-button.disabled=false;
-button.textContent="Save Resolution";
+btn.disabled=false;
+
+if(document.querySelector(".modal.show")){
+
+btn.textContent=
+editingId?
+"Update Resolution":
+"Save Resolution";
+
+}
+
+}
+
+}
+
+async function deleteResolution(id){
+
+if(!isAdmin())return;
+
+const r=resolutions.find(
+x=>String(x.id)===String(id)
+);
+
+if(!r)return;
+
+if(!confirm(
+`Delete resolution "${r.resolution_number||r.title||"this resolution"}"?`
+))return;
+
+try{
+
+await KenbridgeBoardAuth.request(
+`/api/board/resolutions/${encodeURIComponent(id)}`,
+{
+method:"DELETE"
+}
+);
+
+showNotice(
+"Resolution deleted successfully."
+);
+
+await load();
+
+}catch(error){
+
+console.error(error);
+
+showNotice(
+error.message||
+"Unable to delete resolution.",
+true
+);
 
 }
 
@@ -648,45 +1072,48 @@ button.textContent="Save Resolution";
 
 async function init(){
 
-const user=
+currentUser=
 await KenbridgeBoardAuth.requireBoard({
 redirect:true,
 loginPath:"login.html"
 });
 
-if(!user)return;
+if(!currentUser)return;
 
 const role=
-String(user.role||"").toUpperCase();
+String(currentUser.role||"").toUpperCase();
 
 const name=
-user.full_name||
-user.email||
+currentUser.full_name||
+currentUser.email||
 "Board Member";
 
 $("uname").textContent=name;
 
 $("urole").textContent=
-role==="ADMIN"
-?"Administrator"
-:"Board Member";
+role==="ADMIN"?
+"Administrator":
+"Board Member";
 
 $("avatar").textContent=
 name.split(/\s+/)
 .filter(Boolean)
 .slice(0,2)
-.map(x=>x[0].toUpperCase())
+.map(
+x=>x[0].toUpperCase()
+)
 .join("")||"B";
 
-if(role!=="ADMIN"){
+if(isAdmin()){
 
-$("addBtn").style.display="none";
+$("addBtn").style.display=
+"inline-block";
 
 }
 
 await Promise.all([
 loadMeetings(),
-loadResolutions()
+load()
 ]);
 
 }
@@ -696,34 +1123,12 @@ $("menu").addEventListener(
 ()=>$("sidebar").classList.toggle("open")
 );
 
-$("addBtn").addEventListener(
-"click",
-openModal
-);
-
-$("cancelBtn").addEventListener(
-"click",
-closeModal
-);
-
-$("modalWrap").addEventListener(
-"click",
-e=>{
-if(e.target===$("modalWrap"))closeModal();
-}
-);
-
-$("form").addEventListener(
-"submit",
-saveResolution
-);
-
 $("refresh").addEventListener(
 "click",
 async()=>{
 await Promise.all([
 loadMeetings(),
-loadResolutions()
+load()
 ]);
 }
 );
@@ -733,9 +1138,37 @@ $("search").addEventListener(
 render
 );
 
-$("statusFilter").addEventListener(
+$("status").addEventListener(
 "change",
 render
+);
+
+$("addBtn").addEventListener(
+"click",
+openAdd
+);
+
+$("closeModal").addEventListener(
+"click",
+closeModal
+);
+
+$("cancelModal").addEventListener(
+"click",
+closeModal
+);
+
+$("modal").addEventListener(
+"click",
+e=>{
+if(e.target===$("modal"))
+closeModal();
+}
+);
+
+$("form").addEventListener(
+"submit",
+saveResolution
 );
 
 $("logout").addEventListener(
@@ -754,11 +1187,15 @@ loginPath:"login.html"
 );
 
 init().catch(error=>{
+
 console.error(error);
-notice(
+
+showNotice(
 error.message||
-"Unable to initialize Board Resolutions."
+"Unable to initialize Resolutions.",
+true
 );
+
 });
 
 })();
