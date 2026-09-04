@@ -1,437 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Announcements | Kenbridge Christian School</title>
-
-<meta
-    name="description"
-    content="Latest announcements, notices and important updates from Kenbridge Christian School."
->
-
+<meta name="description" content="Latest announcements, notices and important updates from Kenbridge Christian School.">
 <meta name="theme-color" content="#08783f">
-
-<link
-    rel="stylesheet"
-    href="../css/style.css"
->
+<link rel="stylesheet" href="../css/style.css">
 
 <style>
-
 .announcement-loading,
 .announcement-empty,
 .announcement-error{
     grid-column:1/-1;
     text-align:center;
-    padding:35px 20px;
-    border-radius:12px;
+    padding:40px 24px;
+    border-radius:14px;
     font-size:15px;
 }
-
-.announcement-loading{
-    background:#ffffff;
-    border:1px solid #e1e8e4;
-    color:#64736c;
-}
-
+.announcement-loading,
 .announcement-empty{
-    background:#ffffff;
+    background:#fff;
     border:1px solid #e1e8e4;
     color:#64736c;
 }
-
 .announcement-error{
     background:#fff5f5;
     border:1px solid #f0caca;
     color:#9c3030;
 }
-
 .announcement-card{
     transition:transform .25s ease,box-shadow .25s ease;
 }
-
 .announcement-card:hover{
-    transform:translateY(-3px);
+    transform:translateY(-4px);
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
 }
-
+.announcement-content p{
+    white-space:pre-line;
+}
+.announcement-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:12px;
+}
+.announcement-meta small{
+    color:#68756f;
+}
+.updates-intro{
+    max-width:760px;
+    margin:0 auto 30px;
+    text-align:center;
+}
+.quick-note{
+    margin-top:22px;
+    text-align:center;
+    color:#66736d;
+    font-size:14px;
+}
+@media(max-width:700px){
+    .announcement-loading,
+    .announcement-empty,
+    .announcement-error{
+        padding:30px 16px;
+    }
+}
 </style>
-
 </head>
 
 <body>
 
-<!-- =========================================
-     TOP BAR
-========================================= -->
-
+<!-- TOP BAR -->
 <div class="top-bar">
-
 <div class="container top-bar-inner">
-
     <div class="top-location">
         📍 Old Butabika Road, Kampala, Uganda
     </div>
-
     <div class="top-contact">
-
-        <a href="tel:+256789825517">
-            📞 +256 789 825 517
-        </a>
-
+        <a href="tel:+256789825517">📞 +256 789 825 517</a>
         <span class="separator">|</span>
-
-        <span>
-            Mon–Fri: 8:00 AM–5:00 PM
-        </span>
-
+        <span>Mon–Fri: 8:00 AM–5:00 PM</span>
         <span class="separator">|</span>
-
-        <span>
-            Sat: 8:00 AM–2:00 PM
-        </span>
-
+        <span>Sat: 8:00 AM–2:00 PM</span>
     </div>
-
+</div>
 </div>
 
-</div>
-
-
-<!-- =========================================
-     HEADER
-========================================= -->
-
+<!-- HEADER -->
 <header class="header" id="header">
-
 <div class="container nav-container">
 
-    <a
-        href="../index.html"
-        class="brand"
-    >
-
+    <a href="../index.html" class="brand">
         <div class="logo-container">
-
-            <img
-                src="../images/logo.jpg"
-                alt="Kenbridge Christian School Logo"
-                class="school-logo"
-            >
-
+            <img src="../images/logo.jpg"
+                 alt="Kenbridge Christian School Logo"
+                 class="school-logo">
         </div>
-
         <div class="brand-name">
-
-            <strong>
-                KENBRIDGE
-            </strong>
-
-            <span>
-                CHRISTIAN SCHOOL
-            </span>
-
+            <strong>KENBRIDGE</strong>
+            <span>CHRISTIAN SCHOOL</span>
         </div>
-
     </a>
-
 
     <nav class="desktop-nav">
 
-        <a href="../index.html">
-            Home
-        </a>
-
-        <a href="about.html">
-            About
-        </a>
-
-        <a href="academics.html">
-            Academics
-        </a>
-
-        <a href="admissions.html">
-            Admissions
-        </a>
-
-        <a href="fees.html">
-            Fees
-        </a>
-
-        <a href="articles.html">
-            Articles
-        </a>
-
-        <a href="contact.html">
-            Contact
-        </a>
-
+        <a href="../index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="academics.html">Academics</a>
+        <a href="admissions.html">Admissions</a>
+        <a href="fees.html">Fees</a>
+        <a href="articles.html">Articles</a>
+        <a href="contact.html">Contact</a>
 
         <div class="more-menu">
-
-            <button
-                class="more-button"
-                type="button"
-            >
+            <button class="more-button" type="button">
                 More <span>⌄</span>
             </button>
 
             <div class="dropdown">
-
-                <a href="boarding.html">
-                    Boarding
-                </a>
-
-                <a href="gallery.html">
-                    Gallery
-                </a>
-
-                <a href="management.html">
-                    Management
-                </a>
-
-                <a
-                    href="announcements.html"
-                    class="active"
-                >
-                    Announcements
-                </a>
-
-                <a href="projects.html">
-                    Projects
-                </a>
-
-                <a href="sports.html">
-                    Sports
-                </a>
-
-                <a href="facilities.html">
-                    Facilities
-                </a>
-
-                <a href="careers.html">
-                    Careers
-                </a>
-
-                <a href="feedback.html">
-                    Feedback
-                </a>
-
+                <a href="boarding.html">Boarding</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="management.html">Management</a>
+                <a href="announcements.html" class="active">Announcements</a>
+                <a href="projects.html">Projects</a>
+                <a href="reports.html">Reports</a>
+                <a href="sports.html">Sports</a>
+                <a href="facilities.html">Facilities</a>
+                <a href="careers.html">Careers</a>
+                <a href="feedback.html">Feedback</a>
             </div>
-
         </div>
 
-
-        <a
-            href="admissions.html"
-            class="apply-button"
-        >
+        <a href="submissions.html" class="apply-button">
             Apply Online
         </a>
 
     </nav>
 
-
-    <button
-        class="mobile-menu-button"
-        id="mobileMenuButton"
-        aria-label="Open navigation"
-        aria-expanded="false"
-    >
-
+    <button class="mobile-menu-button"
+            id="mobileMenuButton"
+            aria-label="Open navigation"
+            aria-expanded="false">
         <span></span>
         <span></span>
         <span></span>
-
     </button>
 
 </div>
 
+<nav class="mobile-nav" id="mobileNav">
 
-<nav
-    class="mobile-nav"
-    id="mobileNav"
->
+    <a href="../index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="academics.html">Academics</a>
+    <a href="admissions.html">Admissions</a>
+    <a href="fees.html">Fees</a>
+    <a href="boarding.html">Boarding</a>
+    <a href="articles.html">Articles</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="announcements.html" class="active">Announcements</a>
+    <a href="projects.html">Projects</a>
+    <a href="reports.html">Reports</a>
+    <a href="sports.html">Sports</a>
+    <a href="facilities.html">Facilities</a>
+    <a href="management.html">Management</a>
+    <a href="careers.html">Careers</a>
+    <a href="feedback.html">Feedback</a>
+    <a href="contact.html">Contact</a>
 
-    <a href="../index.html">
-        Home
-    </a>
-
-    <a href="about.html">
-        About
-    </a>
-
-    <a href="academics.html">
-        Academics
-    </a>
-
-    <a href="admissions.html">
-        Admissions
-    </a>
-
-    <a href="fees.html">
-        Fees
-    </a>
-
-    <a href="boarding.html">
-        Boarding
-    </a>
-
-    <a href="articles.html">
-        Articles
-    </a>
-
-    <a href="gallery.html">
-        Gallery
-    </a>
-
-    <a href="announcements.html">
-        Announcements
-    </a>
-
-    <a href="projects.html">
-        Projects
-    </a>
-
-    <a href="sports.html">
-        Sports
-    </a>
-
-    <a href="facilities.html">
-        Facilities
-    </a>
-
-    <a href="management.html">
-        Management
-    </a>
-
-    <a href="careers.html">
-        Careers
-    </a>
-
-    <a href="feedback.html">
-        Feedback
-    </a>
-
-    <a href="contact.html">
-        Contact
-    </a>
-
-    <a
-        href="admissions.html"
-        class="mobile-apply"
-    >
+    <a href="submissions.html" class="mobile-apply">
         Apply Online
     </a>
 
 </nav>
-
 </header>
 
-
-<!-- =========================================
-     PAGE HERO
-========================================= -->
-
+<!-- HERO -->
 <section class="hero">
-
 <div class="container hero-content">
 
-    <span class="hero-label">
-        SCHOOL UPDATES
-    </span>
+    <span class="hero-label">SCHOOL UPDATES</span>
 
     <h1>
         Important news &
-        <span>
-            announcements.
-        </span>
+        <span>announcements.</span>
     </h1>
 
     <p>
         Stay informed about school activities,
         events, notices, term information and
-        important updates.
+        important updates from Kenbridge Christian School.
     </p>
 
 </div>
-
 </section>
 
-
-<!-- =========================================
-     IMPORTANT NOTICE
-========================================= -->
-
+<!-- OFFICIAL NOTICE -->
 <section class="section">
-
 <div class="container">
 
     <div class="notice-box">
 
-        <div class="notice-icon">
-            🔔
-        </div>
+        <div class="notice-icon">🔔</div>
 
         <div>
-
-            <h3>
-                Stay Updated
-            </h3>
-
+            <h3>Stay Updated</h3>
             <p>
                 Official announcements from Kenbridge
-                Christian School are published here
-                when approved by the school.
+                Christian School are published here when
+                approved by the school.
             </p>
-
         </div>
 
     </div>
 
 </div>
-
 </section>
 
-
-<!-- =========================================
-     LATEST ANNOUNCEMENTS
-========================================= -->
-
+<!-- LATEST ANNOUNCEMENTS -->
 <section class="section why-section">
-
 <div class="container">
 
     <div class="section-heading">
+        <span class="section-label">LATEST UPDATES</span>
 
-        <span class="section-label">
-            LATEST UPDATES
-        </span>
-
-        <h2>
-            School Announcements
-        </h2>
+        <h2>School Announcements</h2>
 
         <p>
-            Important information for learners,
-            parents, guardians and the wider
-            school community.
+            Important information for learners, parents,
+            guardians and the wider school community.
         </p>
-
     </div>
 
-
-    <div
-        class="announcement-list"
-        id="announcementsList"
-    >
+    <div class="announcement-list" id="announcementsList">
 
         <div class="announcement-loading">
             Loading official announcements...
@@ -439,201 +241,121 @@
 
     </div>
 
-</div>
+    <p class="quick-note">
+        Announcements displayed here are retrieved from
+        the school's official announcement system.
+    </p>
 
+</div>
 </section>
 
-
-<!-- =========================================
-     TERM INFORMATION
-========================================= -->
-
+<!-- TERM INFORMATION -->
 <section class="section">
-
 <div class="container">
 
     <div class="section-heading">
+        <span class="section-label">SCHOOL CALENDAR</span>
 
-        <span class="section-label">
-            SCHOOL CALENDAR
-        </span>
-
-        <h2>
-            Term Information
-        </h2>
+        <h2>Term Information</h2>
 
         <p>
-            Official term dates and calendar
-            information will be displayed here.
+            Official term dates and calendar information
+            will be displayed here when supplied and approved
+            by the school.
         </p>
-
     </div>
-
 
     <div class="feature-grid">
 
         <article class="feature-card">
+            <div class="feature-icon">📅</div>
 
-            <div class="feature-icon">
-                📅
-            </div>
-
-            <h3>
-                Term One
-            </h3>
+            <h3>Term One</h3>
 
             <p>
-                Official opening, closing and
-                holiday dates will be added once
-                supplied by the school.
+                Official opening, closing and holiday dates
+                will be added once supplied by the school.
             </p>
-
         </article>
 
-
         <article class="feature-card">
+            <div class="feature-icon">📅</div>
 
-            <div class="feature-icon">
-                📅
-            </div>
-
-            <h3>
-                Term Two
-            </h3>
+            <h3>Term Two</h3>
 
             <p>
-                Official opening, closing and
-                holiday dates will be added once
-                supplied by the school.
+                Official opening, closing and holiday dates
+                will be added once supplied by the school.
             </p>
-
         </article>
 
-
         <article class="feature-card">
+            <div class="feature-icon">📅</div>
 
-            <div class="feature-icon">
-                📅
-            </div>
-
-            <h3>
-                Term Three
-            </h3>
+            <h3>Term Three</h3>
 
             <p>
-                Official opening, closing and
-                holiday dates will be added once
-                supplied by the school.
+                Official opening, closing and holiday dates
+                will be added once supplied by the school.
             </p>
-
         </article>
 
     </div>
 
 </div>
-
 </section>
 
-
-<!-- =========================================
-     QUICK LINKS
-========================================= -->
-
+<!-- QUICK ACCESS -->
 <section class="school-life">
-
 <div class="container">
 
     <div class="section-heading light">
 
-        <span class="section-label">
-            QUICK ACCESS
-        </span>
+        <span class="section-label">QUICK ACCESS</span>
 
-        <h2>
-            Find what you need.
-        </h2>
+        <h2>Find what you need.</h2>
 
         <p>
-            Access other important sections of
-            the Kenbridge Christian School website.
+            Access other important sections of the
+            Kenbridge Christian School website.
         </p>
 
     </div>
 
-
     <div class="life-grid">
 
+        <a href="admissions.html" class="life-card">
 
-        <a
-            href="admissions.html"
-            class="life-card"
-        >
-
-            <img
-                src="../images/school.jpg"
-                alt="Admissions"
-            >
+            <img src="../images/school.jpg"
+                 alt="Kenbridge Christian School Admissions">
 
             <div>
-
-                <h3>
-                    Admissions
-                </h3>
-
-                <span>
-                    Learn More →
-                </span>
-
+                <h3>Admissions</h3>
+                <span>Learn More →</span>
             </div>
 
         </a>
 
+        <a href="fees.html" class="life-card">
 
-        <a
-            href="fees.html"
-            class="life-card"
-        >
-
-            <img
-                src="../images/school.jpg"
-                alt="School fees"
-            >
+            <img src="../images/school.jpg"
+                 alt="Kenbridge Christian School Fees">
 
             <div>
-
-                <h3>
-                    School Fees
-                </h3>
-
-                <span>
-                    View Information →
-                </span>
-
+                <h3>School Fees</h3>
+                <span>View Information →</span>
             </div>
 
         </a>
 
+        <a href="contact.html" class="life-card">
 
-        <a
-            href="contact.html"
-            class="life-card"
-        >
-
-            <img
-                src="../images/school.jpg"
-                alt="Contact Kenbridge Christian School"
-            >
+            <img src="../images/school.jpg"
+                 alt="Contact Kenbridge Christian School">
 
             <div>
-
-                <h3>
-                    Contact School
-                </h3>
-
-                <span>
-                    Get In Touch →
-                </span>
-
+                <h3>Contact School</h3>
+                <span>Get In Touch →</span>
             </div>
 
         </a>
@@ -641,16 +363,10 @@
     </div>
 
 </div>
-
 </section>
 
-
-<!-- =========================================
-     CTA
-========================================= -->
-
+<!-- CTA -->
 <section class="admissions-cta">
-
 <div class="container cta-inner">
 
     <div>
@@ -659,131 +375,91 @@
             KENBRIDGE CHRISTIAN SCHOOL
         </span>
 
-        <h2>
-            Need clarification?
-        </h2>
+        <h2>Need clarification?</h2>
 
         <p>
-            Contact the school directly for the
-            latest official announcements and
-            information.
+            Contact the school directly for the latest
+            official announcements and information.
         </p>
 
     </div>
 
-
-    <a
-        href="contact.html"
-        class="btn btn-primary"
-    >
+    <a href="contact.html" class="btn btn-primary">
         Contact Us
     </a>
 
 </div>
-
 </section>
 
-
-<!-- =========================================
-     FOOTER
-========================================= -->
-
+<!-- FOOTER -->
 <footer class="footer">
 
 <div class="container footer-grid">
 
-
     <div class="footer-about">
 
-        <img
-            src="../images/logo.png"
-            alt="Kenbridge Christian School Logo"
-            class="footer-logo"
-        >
+        <img src="../images/logo.png"
+             alt="Kenbridge Christian School Logo"
+             class="footer-logo">
 
-        <h3>
-            Kenbridge Christian School
-        </h3>
+        <h3>Kenbridge Christian School</h3>
 
         <p>
-            Head and Not Tails.
+            Head and Not Tails.<br>
             Deuteronomy 28:13
         </p>
 
     </div>
 
-
     <div class="footer-column">
 
-        <h4>
-            Explore
-        </h4>
+        <h4>Explore</h4>
 
-        <a href="about.html">
-            About
-        </a>
-
-        <a href="academics.html">
-            Academics
-        </a>
-
-        <a href="admissions.html">
-            Admissions
-        </a>
-
-        <a href="fees.html">
-            Fees
-        </a>
-
-        <a href="gallery.html">
-            Gallery
-        </a>
+        <a href="about.html">About</a>
+        <a href="academics.html">Academics</a>
+        <a href="admissions.html">Admissions</a>
+        <a href="fees.html">Fees</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="announcements.html">Announcements</a>
 
     </div>
 
-
     <div class="footer-column">
 
-        <h4>
-            School Life
-        </h4>
+        <h4>School Life</h4>
 
-        <a href="sports.html">
-            Sports
-        </a>
-
-        <a href="projects.html">
-            Projects
-        </a>
-
-        <a href="facilities.html">
-            Facilities
-        </a>
-
-        <a href="boarding.html">
-            Boarding
-        </a>
-
-        <a href="articles.html">
-            Articles
-        </a>
+        <a href="sports.html">Sports</a>
+        <a href="projects.html">Projects</a>
+        <a href="reports.html">Reports</a>
+        <a href="facilities.html">Facilities</a>
+        <a href="boarding.html">Boarding</a>
+        <a href="articles.html">Articles</a>
 
     </div>
 
+    <div class="footer-column">
+
+        <h4>School & Support</h4>
+
+        <a href="management.html">Management</a>
+        <a href="careers.html">Careers</a>
+        <a href="feedback.html">Feedback</a>
+        <a href="contact.html">Contact</a>
+        <a href="submissions.html">Online Submission</a>
+
+    </div>
 
     <div class="footer-column">
 
-        <h4>
-            Contact
-        </h4>
+        <h4>Contact</h4>
 
         <p>
-            Old Butabika Road,
+            Old Butabika Road,<br>
             Kampala, Uganda
         </p>
 
         <p>
-            P.O. Box 520093,
+            P.O. Box 520093,<br>
             Luzira
         </p>
 
@@ -794,7 +470,6 @@
     </div>
 
 </div>
-
 
 <div class="footer-bottom">
 
@@ -814,446 +489,226 @@
 
 </div>
 
-<a href="privacy.html">
-    Privacy Policy
-</a>
+<div class="footer-legal">
 
-<a href="terms.html">
-    Terms & Conditions
-</a>
+    <a href="privacy.html">Privacy Policy</a>
+
+    <a href="terms.html">Terms & Conditions</a>
+
+</div>
 
 </footer>
 
-
-<!-- =========================================
-     JAVASCRIPT
-========================================= -->
-
+<!-- JAVASCRIPT -->
 <script src="../js/script.js"></script>
 
 <script>
+document.addEventListener("DOMContentLoaded",async function(){
 
-document.addEventListener(
-    "DOMContentLoaded",
-    async function(){
+    const API_BASE="https://kenbridge-christian-school.onrender.com";
+    const list=document.getElementById("announcementsList");
 
-        const API_BASE =
-            "https://kenbridge-christian-school.onrender.com";
-
-        const list =
-            document.getElementById(
-                "announcementsList"
-            );
-
-
-        function escapeHTML(value){
-
-            return String(value ?? "")
-                .replace(
-                    /[&<>"']/g,
-                    function(character){
-
-                        const characters = {
-                            "&":"&amp;",
-                            "<":"&lt;",
-                            ">":"&gt;",
-                            '"':"&quot;",
-                            "'":"&#039;"
-                        };
-
-                        return characters[character];
-
-                    }
-                );
-
-        }
-
-
-        function formatDate(dateValue){
-
-            if(!dateValue){
-                return {
-                    day:"—",
-                    month:"DATE"
-                };
-            }
-
-
-            const date =
-                new Date(dateValue);
-
-
-            if(
-                Number.isNaN(
-                    date.getTime()
-                )
-            ){
-                return {
-                    day:"—",
-                    month:"DATE"
-                };
-            }
-
-
-            return {
-                day:
-                    String(
-                        date.getDate()
-                    ).padStart(
-                        2,
-                        "0"
-                    ),
-
-                month:
-                    date.toLocaleString(
-                        "en-US",
-                        {
-                            month:"short"
-                        }
-                    ).toUpperCase()
+    function escapeHTML(value){
+        return String(value??"").replace(/[&<>"']/g,function(character){
+            const characters={
+                "&":"&amp;",
+                "<":"&lt;",
+                ">":"&gt;",
+                '"':"&quot;",
+                "'":"&#039;"
             };
+            return characters[character];
+        });
+    }
 
+    function formatDate(dateValue){
+
+        if(!dateValue){
+            return{
+                day:"—",
+                month:"DATE"
+            };
         }
 
+        const date=new Date(dateValue);
 
-        function createAnnouncementCard(
-            announcement
-        ){
+        if(Number.isNaN(date.getTime())){
+            return{
+                day:"—",
+                month:"DATE"
+            };
+        }
 
-            const date =
-                formatDate(
-                    announcement.created_at
-                );
+        return{
+            day:String(date.getDate()).padStart(2,"0"),
+            month:date.toLocaleString("en-US",{
+                month:"short"
+            }).toUpperCase()
+        };
+    }
 
+    function createAnnouncementCard(announcement){
 
-            const category =
-                announcement.category ||
-                "SCHOOL NOTICE";
+        const date=formatDate(
+            announcement.created_at||
+            announcement.date||
+            announcement.published_at
+        );
 
+        const category=
+            announcement.category||
+            "SCHOOL NOTICE";
 
-            const title =
-                announcement.title ||
-                "School Announcement";
+        const title=
+            announcement.title||
+            "School Announcement";
 
+        const content=
+            announcement.content||
+            announcement.description||
+            announcement.message||
+            "";
 
-            const content =
-                announcement.content ||
-                announcement.description ||
-                "";
+        const article=document.createElement("article");
 
+        article.className="announcement-card";
 
-            const article =
-                document.createElement(
-                    "article"
-                );
+        article.innerHTML=`
 
+            <div class="announcement-date">
+                <strong>${escapeHTML(date.day)}</strong>
+                <span>${escapeHTML(date.month)}</span>
+            </div>
 
-            article.className =
-                "announcement-card";
+            <div class="announcement-content">
 
+                <span class="article-category">
+                    ${escapeHTML(category)}
+                </span>
 
-            article.innerHTML = `
+                <h3>
+                    ${escapeHTML(title)}
+                </h3>
 
-                <div class="announcement-date">
+                <p>
+                    ${escapeHTML(content)}
+                </p>
 
-                    <strong>
-                        ${escapeHTML(
-                            date.day
-                        )}
-                    </strong>
-
-                    <span>
-                        ${escapeHTML(
-                            date.month
-                        )}
-                    </span>
-
-                </div>
-
-
-                <div class="announcement-content">
-
-                    <span class="article-category">
-                        ${escapeHTML(
-                            category
-                        )}
-                    </span>
-
-                    <h3>
-                        ${escapeHTML(
-                            title
-                        )}
-                    </h3>
-
-                    <p>
-                        ${escapeHTML(
-                            content
-                        )}
-                    </p>
-
+                <div class="announcement-meta">
                     <small>
                         Official Kenbridge Christian School announcement
                     </small>
-
                 </div>
 
-            `;
+            </div>
 
+        `;
 
-            return article;
+        return article;
+    }
 
-        }
+    async function loadAnnouncements(){
 
+        try{
 
-        async function loadAnnouncements(){
+            const response=await fetch(
+                API_BASE+"/api/public/announcements"
+            );
+
+            let result={};
 
             try{
-
-                const response =
-                    await fetch(
-                        API_BASE +
-                        "/api/public/announcements"
-                    );
-
-
-                const result =
-                    await response.json();
-
-
-                if(
-                    !response.ok ||
-                    !result.success
-                ){
-
-                    throw new Error(
-                        result.message ||
-                        "Unable to load announcements."
-                    );
-
-                }
-
-
-                const announcements =
-                    Array.isArray(
-                        result.announcements
-                    )
-                    ? result.announcements
-                    : [];
-
-
-                list.innerHTML = "";
-
-
-                if(
-                    announcements.length === 0
-                ){
-
-                    list.innerHTML = `
-
-                        <div class="announcement-empty">
-
-                            No official announcements
-                            are available at the moment.
-                            Please check again later.
-
-                        </div>
-
-                    `;
-
-                    return;
-
-                }
-
-
-                announcements.forEach(
-                    function(
-                        announcement
-                    ){
-
-                        list.appendChild(
-                            createAnnouncementCard(
-                                announcement
-                            )
-                        );
-
-                    }
+                result=await response.json();
+            }catch(parseError){
+                throw new Error(
+                    "The announcements service returned an invalid response."
                 );
-
-
-            }catch(error){
-
-                console.error(
-                    "PUBLIC ANNOUNCEMENTS ERROR:",
-                    error
-                );
-
-
-                list.innerHTML = `
-
-                    <div class="announcement-error">
-
-                        ${escapeHTML(
-                            error.message ||
-                            "Announcements could not be loaded."
-                        )}
-
-                    </div>
-
-                `;
-
             }
 
+            if(!response.ok||!result.success){
+
+                throw new Error(
+                    result.message||
+                    "Unable to load announcements."
+                );
+            }
+
+            const announcements=
+                Array.isArray(result.announcements)
+                ?result.announcements
+                :Array.isArray(result.data)
+                ?result.data
+                :[];
+
+            list.innerHTML="";
+
+            if(!announcements.length){
+
+                list.innerHTML=`
+                    <div class="announcement-empty">
+                        <strong>No official announcements are available at the moment.</strong>
+                        <br><br>
+                        Please check again later for new school updates.
+                    </div>
+                `;
+
+                return;
+            }
+
+            announcements
+                .sort(function(a,b){
+
+                    const dateA=new Date(
+                        a.created_at||
+                        a.date||
+                        a.published_at||
+                        0
+                    ).getTime();
+
+                    const dateB=new Date(
+                        b.created_at||
+                        b.date||
+                        b.published_at||
+                        0
+                    ).getTime();
+
+                    return dateB-dateA;
+
+                })
+                .forEach(function(announcement){
+
+                    list.appendChild(
+                        createAnnouncementCard(announcement)
+                    );
+
+                });
+
+        }catch(error){
+
+            console.error(
+                "PUBLIC ANNOUNCEMENTS ERROR:",
+                error
+            );
+
+            list.innerHTML=`
+                <div class="announcement-error">
+                    <strong>
+                        Announcements could not be loaded.
+                    </strong>
+                    <br><br>
+                    ${escapeHTML(
+                        error.message||
+                        "Please try again later."
+                    )}
+                </div>
+            `;
         }
-
-
-        loadAnnouncements();
-
     }
-);
 
- <!-- =========================================
-     FOOTER
-========================================= --><footer class="footer"><div class="container footer-grid">
+    loadAnnouncements();
 
-
-    <div class="footer-about">
-
-        <img
-            src="../images/logo.png"
-            alt="Kenbridge Christian School Logo"
-            class="footer-logo"
-        >
-
-        <h3>
-            Kenbridge Christian School
-        </h3>
-
-        <p>
-            Head and Not Tails.
-            Deuteronomy 28:13
-        </p>
-
-    </div>
-
-
-
-    <div class="footer-column">
-
-        <h4>
-            Explore
-        </h4>
-
-        <a href="about.html">
-            About
-        </a>
-
-        <a href="academics.html">
-            Academics
-        </a>
-
-        <a href="admissions.html">
-            Admissions
-        </a>
-
-        <a href="fees.html">
-            Fees
-        </a>
-
-        <a href="gallery.html">
-            Gallery
-        </a>
-
-    </div>
-
-
-
-    <div class="footer-column">
-
-        <h4>
-            School Life
-        </h4>
-
-        <a href="sports.html">
-            Sports
-        </a>
-
-        <a href="projects.html">
-            Projects
-        </a>
-
-        <a href="facilities.html">
-            Facilities
-        </a>
-
-        <a href="boarding.html">
-            Boarding
-        </a>
-
-        <a href="articles.html">
-            Articles
-        </a>
-
-    </div>
-
-
-
-    <div class="footer-column">
-
-        <h4>
-            Contact
-        </h4>
-
-        <p>
-            Old Butabika Road,
-            Kampala, Uganda
-        </p>
-
-        <p>
-            P.O. Box 520093,
-            Luzira
-        </p>
-
-        <a href="tel:+256789825517">
-            +256 789 825 517
-        </a>
-
-    </div>
-
-</div>
-
-
-
-<div class="footer-bottom">
-
-    <div class="container">
-
-        <span>
-            © 2026 Kenbridge Christian School.
-            All Rights Reserved.
-             Made with ❤️ by Zakmolanitech Solutions 
-        </span>
-
-        <span>
-        Our Motto; Heads and Not Tails
-        </span>
-
-    </div>
-
-</div>
-
-<a href="privacy.html">
-    Privacy Policy
-</a>
-
-<a href="terms.html">
-    Terms & Conditions
-</a>
-
-<div id="site-footer"></div>
-
-<script src="../js/script.js"></script>
-<script src="../js/components.js"></script>
+});
+</script>
 
 </body>
-
-  </html>
+</html>
