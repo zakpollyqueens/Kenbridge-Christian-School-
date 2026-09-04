@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Board Announcements | Kenbridge Christian School</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+:root{--p:#123c63;--s:#1f6f8b;--bg:#f4f7fb;--card:#fff;--text:#17212b;--muted:#64748b;--border:#e2e8f0;--danger:#b42318;--success:#067647;--warn:#b54708}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:260px;background:var(--p);color:#fff;display:flex;flex-direction:column;z-index:1000}
+.brand{padding:25px 22px;border-bottom:1px solid rgba(255,255,255,.12)}
+.brand small{display:block;opacity:.7;margin-bottom:6px;font-size:11px;letter-spacing:1px}
+.brand h2{margin:0;font-size:19px}
+.nav{flex:1;overflow:auto;padding:16px 10px}
+.label{margin:14px 12px 7px;font-size:10px;letter-spacing:1px;opacity:.55;font-weight:bold}
+.nav a{display:flex;gap:10px;padding:12px;color:#fff;text-decoration:none;border-radius:8px;font-size:14px;margin:3px 0}
+.nav a:hover,.nav a.active{background:rgba(255,255,255,.14)}
+.side-bottom{padding:14px;border-top:1px solid rgba(255,255,255,.12)}
+.logout{width:100%;padding:11px;border:1px solid rgba(255,255,255,.3);border-radius:8px;background:transparent;color:#fff;font-weight:bold;cursor:pointer}
+.main{margin-left:260px;min-height:100vh}
+.top{height:74px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.top h1{margin:0;color:var(--p);font-size:22px}
+.user{display:flex;align-items:center;gap:10px}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--s);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold}
+.uname{font-weight:bold;font-size:14px}
+.urole{font-size:12px;color:var(--muted)}
+.menu{display:none;border:0;background:var(--p);color:#fff;border-radius:7px;padding:9px 11px}
+.content{padding:28px}
+.heading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}
+.heading h2{margin:0;color:var(--p);font-size:24px}
+.heading p{margin:7px 0 0;color:var(--muted);font-size:14px}
+.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:18px}
+.filters{display:flex;gap:10px;flex-wrap:wrap}
+.filters input,.filters select{padding:10px 12px;border:1px solid var(--border);border-radius:8px;outline:none;background:#fff}
+.btn{border:0;border-radius:8px;padding:10px 14px;font-weight:bold;cursor:pointer;font-size:13px;text-decoration:none;display:inline-block}
+.primary{background:var(--p);color:#fff}
+.secondary{background:#eef5f8;color:var(--s)}
+.danger{background:#fef3f2;color:var(--danger)}
+.success{background:#ecfdf3;color:var(--success)}
+.warn{background:#fff7ed;color:var(--warn)}
+.notice{display:none;padding:12px 14px;border-radius:8px;margin-bottom:16px;font-size:13px;line-height:1.5}
+.notice.show{display:block}
+.notice.error{background:#fef3f2;color:var(--danger)}
+.notice.success{background:#ecfdf3;color:var(--success)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.stat{background:#fff;border:1px solid var(--border);border-radius:11px;padding:17px}
+.stat strong{display:block;color:var(--p);font-size:22px}
+.stat span{font-size:12px;color:var(--muted)}
+.announcements{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.announcement{border:1px solid var(--border);border-radius:11px;padding:19px;background:#fff;border-left:4px solid var(--s)}
+.announcement.important{border-left-color:var(--warn)}
+.announcement.urgent{border-left-color:var(--danger)}
+.a-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.priority{padding:5px 9px;border-radius:20px;font-size:10px;font-weight:bold}
+.priority.normal{background:#eef5f8;color:var(--s)}
+.priority.important{background:#fff7ed;color:var(--warn)}
+.priority.urgent{background:#fef3f2;color:var(--danger)}
+.title{font-size:17px;font-weight:bold;color:var(--p);margin-top:14px}
+.message{font-size:13px;color:var(--muted);line-height:1.7;margin-top:9px;white-space:pre-wrap}
+.meta{font-size:12px;color:var(--muted);line-height:1.8;margin-top:14px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.empty,.loading{text-align:center;padding:40px;color:var(--muted);grid-column:1/-1}
+.modal-wrap{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:2000}
+.modal-wrap.show{display:flex}
+.modal{background:#fff;border-radius:12px;width:min(620px,100%);max-height:90vh;overflow:auto;padding:22px}
+.modal h3{margin:0;color:var(--p)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.full{grid-column:1/-1}
+.field label{font-size:12px;font-weight:bold;color:var(--p)}
+.field input,.field select,.field textarea{width:100%;padding:10px 11px;border:1px solid var(--border);border-radius:8px;font:inherit;outline:none}
+.field textarea{min-height:150px;resize:vertical}
+.check{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text)}
+.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:20px}
+@media(max-width:1000px){.announcements{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){
+.sidebar{transform:translateX(-100%);transition:.25s}
+.sidebar.open{transform:translateX(0)}
+.main{margin-left:0}
+.menu{display:block}
+.top{padding:0 16px}
+.content{padding:18px}
+}
+@media(max-width:600px){
+.stats{grid-template-columns:1fr}
+.form-grid{grid-template-columns:1fr}
+.field.full{grid-column:auto}
+.user>div:not(.avatar){display:none}
+.heading{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+
+<body>
+
+<aside id="sidebar" class="sidebar">
+
+<div class="brand">
+<small>KENBRIDGE CHRISTIAN SCHOOL</small>
+<h2>Board of Governors</h2>
+</div>
+
+<nav class="nav">
+
+<a href="board-dashboard.html">🏠 Dashboard</a>
+
+<div class="label">GOVERNANCE</div>
+
+<a href="members.html">👥 Board Members</a>
+<a href="meetings.html">📅 Meetings</a>
+<a href="agendas.html">📋 Agendas</a>
+<a href="minutes.html">📝 Minutes</a>
+
+<div class="label">SCHOOL PLANNING</div>
+
+<a href="planning.html">🎯 School Planning</a>
+<a href="documents.html">📁 Board Documents</a>
+<a href="resolutions.html">⚖️ Resolutions</a>
+
+<div class="label">COMMUNICATION</div>
+
+<a href="announcements.html" class="active">📢 Announcements</a>
+
+</nav>
+
+<div class="side-bottom">
+<button id="logout" class="logout">Sign Out</button>
+</div>
+
+</aside>
+
+<main class="main">
+
+<header class="top">
+
+<div style="display:flex;align-items:center;gap:14px">
+<button id="menu" class="menu">☰</button>
+<h1>Announcements</h1>
+</div>
+
+<div class="user">
+<div id="avatar" class="avatar">B</div>
+<div>
+<div id="uname" class="uname">Loading...</div>
+<div id="urole" class="urole">Board Member</div>
+</div>
+</div>
+
+</header>
+
+<section class="content">
+
+<div class="heading">
+
+<div>
+<h2>Board Announcements</h2>
+<p>Important notices and official communications for the Board of Governors.</p>
+</div>
+
+<button id="addBtn" class="btn primary">＋ New Announcement</button>
+
+</div>
+
+<div id="notice" class="notice"></div>
+
+<div class="stats">
+
+<div class="stat">
+<strong id="total">0</strong>
+<span>Total Announcements</span>
+</div>
+
+<div class="stat">
+<strong id="published">0</strong>
+<span>Published</span>
+</div>
+
+<div class="stat">
+<strong id="important">0</strong>
+<span>Important</span>
+</div>
+
+<div class="stat">
+<strong id="urgent">0</strong>
+<span>Urgent</span>
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="filters">
+
+<input id="search" type="search" placeholder="Search announcements...">
+
+<select id="priorityFilter">
+<option value="">All Priorities</option>
+<option value="normal">Normal</option>
+<option value="important">Important</option>
+<option value="urgent">Urgent</option>
+</select>
+
+<select id="publishedFilter">
+<option value="">All Status</option>
+<option value="published">Published</option>
+<option value="draft">Draft</option>
+</select>
+
+<button id="refresh" class="btn secondary">↻ Refresh</button>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div style="margin-bottom:18px">
+<h3 style="margin:0;color:var(--p);font-size:18px">Communication Register</h3>
+<p style="margin:6px 0 0;color:var(--muted);font-size:13px">
+Official notices issued through the Board portal.
+</p>
+</div>
+
+<div id="announcements" class="announcements">
+<div class="loading">Loading announcements...</div>
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+<div id="modalWrap" class="modal-wrap">
+
+<div class="modal">
+
+<h3>Create Board Announcement</h3>
+
+<form id="form">
+
+<div class="form-grid">
+
+<div class="field full">
+<label for="title">Title</label>
+<input id="title" type="text" placeholder="Announcement title" required>
+</div>
+
+<div class="field">
+<label for="priority">Priority</label>
+<select id="priority">
+<option value="normal">Normal</option>
+<option value="important">Important</option>
+<option value="urgent">Urgent</option>
+</select>
+</div>
+
+<div class="field">
+<label for="published">Publication</label>
+<select id="published">
+<option value="true">Publish Now</option>
+<option value="false">Save as Draft</option>
+</select>
+</div>
+
+<div class="field full">
+<label for="message">Message</label>
+<textarea id="message" placeholder="Write the official announcement..." required></textarea>
+</div>
+
+</div>
+
+<div class="modal-actions">
+<button type="button" id="cancelBtn" class="btn secondary">Cancel</button>
+<button type="submit" id="saveBtn" class="btn primary">Save Announcement</button>
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+<script src="../js/board-auth.js"></script>
+
+<script>
+(function(){
+
+"use strict";
+
+let announcements=[];
+
+const $=id=>document.getElementById(id);
+
+function esc(v){
+return String(v??"")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+}
+
+function notice(text,type="error"){
+$("notice").textContent=text;
+$("notice").className=`notice show ${type}`;
+}
+
+function dateText(v){
+if(!v)return"";
+const d=new Date(v);
+if(Number.isNaN(d.getTime()))return String(v);
+return d.toLocaleDateString(undefined,{
+year:"numeric",
+month:"short",
+day:"numeric"
+});
+}
+
+function priorityName(value){
+const names={
+normal:"Normal",
+important:"Important",
+urgent:"Urgent"
+};
+return names[String(value||"").toLowerCase()]||"Normal";
+}
+
+function updateStats(){
+
+$("total").textContent=announcements.length;
+
+$("published").textContent=
+announcements.filter(x=>x.published===true).length;
+
+$("important").textContent=
+announcements.filter(x=>
+String(x.priority||"").toLowerCase()==="important"
+).length;
+
+$("urgent").textContent=
+announcements.filter(x=>
+String(x.priority||"").toLowerCase()==="urgent"
+).length;
+
+}
+
+function render(){
+
+const q=$("search").value.trim().toLowerCase();
+const priority=$("priorityFilter").value;
+const pub=$("publishedFilter").value;
+
+const list=announcements.filter(item=>{
+
+const p=String(item.priority||"normal").toLowerCase();
+const published=item.published===true;
+
+const haystack=[
+item.title,
+item.message,
+item.priority
+].join(" ").toLowerCase();
+
+return(
+(!q||haystack.includes(q))&&
+(!priority||p===priority)&&
+(!pub||
+(pub==="published"&&published)||
+(pub==="draft"&&!published))
+);
+
+});
+
+const box=$("announcements");
+
+if(!list.length){
+
+box.innerHTML=
+`<div class="empty">
+No announcements found.
+</div>`;
+
+return;
+
+}
+
+box.innerHTML=list.map(item=>{
+
+const priority=
+String(item.priority||"normal").toLowerCase();
+
+const published=item.published===true;
+
+return `
+<article class="announcement ${esc(priority)}">
+
+<div class="a-top">
+
+<strong style="font-size:12px;color:var(--muted)">
+${published?"PUBLISHED":"DRAFT"}
+</strong>
+
+<span class="priority ${esc(priority)}">
+${esc(priorityName(priority))}
+</span>
+
+</div>
+
+<div class="title">
+${esc(item.title||"Untitled Announcement")}
+</div>
+
+<div class="message">
+${esc(item.message||"")}
+</div>
+
+<div class="meta">
+
+${item.created_at?
+`<div><strong>Created:</strong> ${esc(dateText(item.created_at))}</div>`:""}
+
+${item.updated_at?
+`<div><strong>Updated:</strong> ${esc(dateText(item.updated_at))}</div>`:""}
+
+</div>
+
+</article>
+`;
+
+}).join("");
+
+}
+
+async function load(){
+
+$("announcements").innerHTML=
+`<div class="loading">
+Loading announcements...
+</div>`;
+
+try{
+
+const data=
+await KenbridgeBoardAuth.request(
+"/api/board/announcements"
+);
+
+announcements=
+Array.isArray(data?.announcements)
+?data.announcements
+:Array.isArray(data)
+?data
+:[];
+
+updateStats();
+render();
+
+}catch(error){
+
+console.error(error);
+
+$("announcements").innerHTML=
+`<div class="empty">
+Unable to load announcements.
+</div>`;
+
+notice(
+error.message||
+"Unable to load Board announcements."
+);
+
+}
+
+}
+
+function openModal(){
+
+$("form").reset();
+$("priority").value="normal";
+$("published").value="true";
+$("modalWrap").classList.add("show");
+
+}
+
+function closeModal(){
+
+$("modalWrap").classList.remove("show");
+
+}
+
+async function saveAnnouncement(event){
+
+event.preventDefault();
+
+const button=$("saveBtn");
+
+button.disabled=true;
+button.textContent="Saving...";
+
+const payload={
+title:$("title").value.trim(),
+message:$("message").value.trim(),
+priority:$("priority").value,
+published:$("published").value==="true"
+};
+
+try{
+
+await KenbridgeBoardAuth.request(
+"/api/board/announcements",
+{
+method:"POST",
+body:JSON.stringify(payload)
+}
+);
+
+closeModal();
+
+await load();
+
+notice(
+"Announcement saved successfully.",
+"success"
+);
+
+}catch(error){
+
+console.error(error);
+
+notice(
+error.message||
+"Unable to save announcement."
+);
+
+}finally{
+
+button.disabled=false;
+button.textContent="Save Announcement";
+
+}
+
+}
+
+async function init(){
+
+const user=
+await KenbridgeBoardAuth.requireBoard({
+redirect:true,
+loginPath:"login.html"
+});
+
+if(!user)return;
+
+const role=
+String(user.role||"").toUpperCase();
+
+const name=
+user.full_name||
+user.email||
+"Board Member";
+
+$("uname").textContent=name;
+
+$("urole").textContent=
+role==="ADMIN"
+?"Administrator"
+:"Board Member";
+
+$("avatar").textContent=
+name.split(/\s+/)
+.filter(Boolean)
+.slice(0,2)
+.map(x=>x[0].toUpperCase())
+.join("")||"B";
+
+if(role!=="ADMIN"){
+$("addBtn").style.display="none";
+}
+
+await load();
+
+}
+
+$("menu").addEventListener(
+"click",
+()=>$("sidebar").classList.toggle("open")
+);
+
+$("addBtn").addEventListener(
+"click",
+openModal
+);
+
+$("cancelBtn").addEventListener(
+"click",
+closeModal
+);
+
+$("modalWrap").addEventListener(
+"click",
+e=>{
+if(e.target===$("modalWrap"))closeModal();
+}
+);
+
+$("form").addEventListener(
+"submit",
+saveAnnouncement
+);
+
+$("refresh").addEventListener(
+"click",
+load
+);
+
+$("search").addEventListener(
+"input",
+render
+);
+
+$("priorityFilter").addEventListener(
+"change",
+render
+);
+
+$("publishedFilter").addEventListener(
+"change",
+render
+);
+
+$("logout").addEventListener(
+"click",
+async function(){
+
+this.disabled=true;
+this.textContent="Signing Out...";
+
+await KenbridgeBoardAuth.logout({
+redirect:true,
+loginPath:"login.html"
+});
+
+}
+);
+
+init().catch(error=>{
+console.error(error);
+notice(
+error.message||
+"Unable to initialize Board Announcements."
+);
+});
+
+})();
+</script>
+
+</body>
+</html>
