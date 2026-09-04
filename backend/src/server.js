@@ -26,7 +26,6 @@ const calendarRoutes = require("./routes/calendar");
 const attendanceRoutes = require("./routes/attendance");
 const staffRoutes = require("./routes/staff");
 const boardUploadRoutes=require("./routes/board-upload");
-const boardUploadRoutes=require("./routes/board-upload");
 const publicContentRoutes = require("./routes/public-content");
 
 // New submissions workflow
