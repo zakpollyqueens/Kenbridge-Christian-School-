@@ -51,6 +51,7 @@
 }
 </style>
   <script src="../js/portal-auth.js"></script>
+  <script src="../js/portal-api.js"></script>
 </head>
 <body>
 <div class="staff-page">
@@ -154,28 +155,47 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded",function(){
-const search=document.getElementById("resourceSearch");
-const items=document.querySelectorAll(".resource-item");
+async function loadResources(){
+  const grid=document.getElementById('resourceGrid');
+  const search=document.getElementById('resourceSearch');
+  grid.innerHTML='<div class="loading">Loading resources...</div>';
+  try{
+    const data=await KENBRIDGE_API.request('/api/documents');
+    const docs = Array.isArray(data.documents)?data.documents:(Array.isArray(data.reports)?data.reports:[]);
+    if(!docs.length){
+      grid.innerHTML='<div class="empty">No resources found.</div>';
+    } else {
+      grid.innerHTML=docs.map(d=>{
+        const title=d.title||d.file_name||d.name||'Document';
+        const url=d.file_url||d.url||d.path||'#';
+        const desc=d.description||d.excerpt||'';
+        return `<article class="resource-item"><div class="resource-icon">📄</div><h3>${escapeHTML(title)}</h3><p>${escapeHTML(desc)}</p><a href="${escapeHTML(url)}" target="_blank" rel="noopener" class="resource-link">Open</a></article>`;
+      }).join('');
+    }
+  }catch(err){
+    console.error('RESOURCE LOAD ERROR:',err);
+    grid.innerHTML='<div class="error">Unable to load resources.</div>';
+  }
 
-search.addEventListener("input",function(){
-const term=search.value.toLowerCase().trim();
-items.forEach(item=>{
-item.style.display=item.dataset.search.includes(term)?"":"none";
-});
-});
+  search.addEventListener('input',()=>{
+    const term=search.value.toLowerCase().trim();
+    document.querySelectorAll('.resource-item').forEach(item=>{
+      item.style.display=item.textContent.toLowerCase().includes(term)?'':'none';
+    });
+  });
 
-document.querySelectorAll(".resource-demo").forEach(link=>{
-link.addEventListener("click",function(event){
-event.preventDefault();
-alert("This resource will be connected to the school's resource library when the backend is available.");
-});
-});
+  document.querySelectorAll('.resource-demo').forEach(link=>{
+    link.addEventListener('click',function(event){event.preventDefault();alert('This resource will be connected to the school\'s resource library when the backend is available.');});
+  });
 
-document.getElementById("logoutButton").addEventListener("click",function(){
-sessionStorage.removeItem("kenbridgeStaffLoggedIn");
-});
-});
+  document.getElementById('logoutButton').addEventListener('click',function(){
+    sessionStorage.removeItem('kenbridgeStaffLoggedIn');
+  });
+}
+
+function escapeHTML(v){return String(v||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'":"&#039;'}[c]));}
+
+document.addEventListener('DOMContentLoaded',loadResources);
 </script>
 </body>
   </html>
