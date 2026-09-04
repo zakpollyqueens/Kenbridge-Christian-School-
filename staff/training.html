@@ -3,650 +3,228 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Training & Development | Kenbridge Christian School</title>
+<title>Training & Development | Kenbridge Staff Portal</title>
+<meta name="description" content="Kenbridge Christian School Staff Training and Professional Development Center">
 <link rel="stylesheet" href="../css/style.css">
+<script src="../js/portal-auth.js"></script>
+<script src="../js/portal-api.js"></script>
 <style>
-:root{--tr-primary:#174ea6;--tr-secondary:#0b8043;--tr-warning:#f9ab00;--tr-danger:#d93025;--tr-bg:#f5f7fb;--tr-card:#fff;--tr-text:#172033;--tr-muted:#6b7280;--tr-border:#e5e7eb}
-body{background:var(--tr-bg)}
-.training-wrap{max-width:1400px;margin:auto;padding:24px}
-.training-hero{background:linear-gradient(135deg,#174ea6,#12366f);color:#fff;border-radius:18px;padding:28px;margin-bottom:22px;display:flex;justify-content:space-between;gap:20px;align-items:center}
-.training-hero h1{margin:0 0 8px;font-size:30px}.training-hero p{margin:0;opacity:.9}
-.training-actions{display:flex;gap:10px;flex-wrap:wrap}
-.tr-btn{border:0;border-radius:9px;padding:11px 16px;cursor:pointer;font-weight:700}
-.tr-btn-primary{background:#fff;color:#174ea6}.tr-btn-dark{background:#174ea6;color:#fff}.tr-btn-green{background:#0b8043;color:#fff}.tr-btn-danger{background:#d93025;color:#fff}.tr-btn-light{background:#eef3fb;color:#174ea6}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:22px}
-.stat{background:var(--tr-card);border:1px solid var(--tr-border);border-radius:14px;padding:19px;display:flex;align-items:center;gap:15px}
-.stat-icon{width:48px;height:48px;border-radius:12px;background:#eaf1ff;display:grid;place-items:center;font-size:23px}
-.stat strong{font-size:25px;display:block}.stat span{color:var(--tr-muted);font-size:13px}
-.grid{display:grid;grid-template-columns:2fr 1fr;gap:20px}
-.card{background:var(--tr-card);border:1px solid var(--tr-border);border-radius:15px;padding:20px;margin-bottom:20px}
-.card h2{font-size:19px;margin:0 0 15px;color:var(--tr-text)}
-.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}
-.section-head h2{margin:0}.muted{color:var(--tr-muted)}
-.session{border:1px solid var(--tr-border);border-radius:12px;padding:15px;margin-bottom:12px}
-.session:last-child{margin-bottom:0}.session-top{display:flex;justify-content:space-between;gap:12px}
-.session h3{margin:0 0 6px;font-size:16px}.session p{margin:4px 0;color:var(--tr-muted);font-size:13px}
-.badge{display:inline-block;padding:4px 8px;border-radius:20px;font-size:11px;font-weight:700;background:#eef2f7;color:#46505f}
-.badge-green{background:#e7f6ed;color:#08783e}.badge-blue{background:#e8f0ff;color:#174ea6}.badge-yellow{background:#fff5d9;color:#8a6500}.badge-red{background:#fde9e7;color:#b3261e}
-.session-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
-.upcoming-empty{text-align:center;padding:30px;color:var(--tr-muted)}
-.program-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.program{border:1px solid var(--tr-border);border-radius:12px;padding:15px}
-.program h3{font-size:15px;margin:0 0 7px}.program p{font-size:13px;color:var(--tr-muted);margin:0 0 10px}
-.progress{height:8px;background:#edf0f4;border-radius:20px;overflow:hidden}.progress i{display:block;height:100%;background:#174ea6}
-.training-list{display:flex;flex-direction:column;gap:9px}.training-row{border:1px solid var(--tr-border);border-radius:10px;padding:12px}
-.training-row strong{display:block;font-size:14px}.training-row small{color:var(--tr-muted)}
-.notice{padding:12px;border-radius:10px;background:#eef5ff;margin-bottom:9px;font-size:13px}
-.notice.unread{border-left:4px solid #174ea6}
-.material{display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px solid var(--tr-border);padding:12px 0}
-.material:last-child{border-bottom:0}.material-info strong{display:block}.material-info small{color:var(--tr-muted)}
-.cert{border:1px solid var(--tr-border);border-radius:12px;padding:14px;margin-bottom:10px}
-.cert strong{display:block}.cert small{color:var(--tr-muted)}
-.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
-.cal-day{background:#f8fafc;border:1px solid #edf0f4;min-height:65px;padding:6px;border-radius:7px;font-size:11px}
-.cal-day b{display:block;font-size:12px}.cal-event{background:#e8f0ff;color:#174ea6;padding:3px;border-radius:4px;margin-top:4px}
-.topic-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.topic{border:1px solid var(--tr-border);border-radius:10px;padding:12px}.topic b{display:block}.topic small{color:var(--tr-muted)}
-.search-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}
-.search-row input,.search-row select,.modal input,.modal select,.modal textarea{border:1px solid #d8dde6;border-radius:8px;padding:10px;background:#fff}
-.search-row input{flex:1;min-width:180px}
-.tabs{display:flex;gap:6px;overflow:auto;margin-bottom:15px}.tab{padding:9px 13px;border:1px solid var(--tr-border);background:#fff;border-radius:8px;cursor:pointer;white-space:nowrap}.tab.active{background:#174ea6;color:#fff}
-.hidden{display:none!important}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:9999}.modal.show{display:flex}
-.modal-box{background:#fff;border-radius:15px;width:min(650px,100%);max-height:90vh;overflow:auto;padding:22px}.modal-head{display:flex;justify-content:space-between;align-items:center}.modal-head h2{margin:0}.close{border:0;background:#eee;border-radius:50%;width:34px;height:34px;cursor:pointer}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:13px;font-weight:700}.modal textarea{min-height:100px;resize:vertical}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
-.loading{text-align:center;padding:25px;color:var(--tr-muted)}
-@media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}
-@media(max-width:650px){.training-wrap{padding:12px}.training-hero{padding:20px;display:block}.training-actions{margin-top:15px}.stats{grid-template-columns:1fr 1fr}.program-grid,.topic-grid,.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.calendar{grid-template-columns:repeat(7,minmax(35px,1fr));overflow:auto}.session-top{display:block}}
+:root{--g:#08783f;--gd:#075b31;--bg:#f4f8f5;--card:#fff;--line:#dfe8e3;--text:#173a2c;--muted:#68776f;--blue:#315da8}
+*{box-sizing:border-box}.training-page{min-height:100vh;background:var(--bg)}
+.staff-header{background:var(--g);color:#fff;padding:16px 0}.staff-header-inner{width:min(1180px,94%);margin:auto;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.staff-brand{display:flex;align-items:center;gap:11px;color:#fff;text-decoration:none}.staff-brand img{width:45px;height:45px;object-fit:contain;background:#fff;border-radius:50%;padding:4px}.staff-brand strong{display:block;font-size:16px}.staff-brand span{font-size:11px;opacity:.85}.logout{border:1px solid #ffffff80;border-radius:8px;padding:9px 13px;color:#fff;text-decoration:none;font-size:12px;font-weight:700}
+.container{width:min(1180px,94%);margin:auto;padding:28px 0 60px}.heading{margin-bottom:20px}.heading small{color:var(--g);font-weight:800;letter-spacing:1.5px;font-size:11px}.heading h1{margin:5px 0;color:var(--text);font-size:clamp(27px,4vw,40px)}.heading p{margin:0;color:var(--muted);line-height:1.6}
+.nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px}.nav a{background:#fff;border:1px solid var(--line);color:#315244;padding:9px 12px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:700}.nav a:hover{background:var(--g);color:#fff}
+.hero{background:linear-gradient(135deg,#08783f,#0c9a55);color:#fff;border-radius:16px;padding:25px;margin-bottom:18px;box-shadow:0 10px 30px #08783f20}.hero h2{margin:0 0 7px}.hero p{margin:0;opacity:.9;line-height:1.6}.hero-actions{margin-top:18px;display:flex;gap:9px;flex-wrap:wrap}
+.btn{border:0;border-radius:8px;padding:10px 14px;font-weight:800;font-size:12px;cursor:pointer}.btn-green{background:var(--g);color:#fff}.btn-white{background:#fff;color:var(--g)}.btn-dark{background:#173a2c;color:#fff}.btn-danger{background:#b72d2d;color:#fff}.btn-blue{background:#315da8;color:#fff}.btn:disabled{opacity:.5;cursor:not-allowed}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:17px}.stat b{font-size:25px;color:var(--g);display:block}.stat span{font-size:11px;color:var(--muted);font-weight:700}
+.tabs{display:flex;gap:7px;overflow:auto;padding-bottom:8px;margin-bottom:15px}.tab{white-space:nowrap;border:1px solid var(--line);background:#fff;color:#315244;border-radius:8px;padding:10px 13px;font-size:12px;font-weight:800;cursor:pointer}.tab.active{background:var(--g);border-color:var(--g);color:#fff}
+.panel{display:none}.panel.active{display:block}.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 6px 22px #00000008}.card h2{margin:0 0 6px;color:var(--text);font-size:19px}.card>p{margin:0 0 16px;color:var(--muted);font-size:13px;line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.item{border:1px solid var(--line);border-radius:11px;padding:16px;background:#fbfdfb}.item h3{margin:0 0 6px;color:var(--text);font-size:15px}.item p{margin:0;color:var(--muted);font-size:12px;line-height:1.55}.meta{margin-top:10px;color:var(--g);font-size:11px;font-weight:800}.actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.badge{display:inline-block;padding:4px 8px;border-radius:20px;font-size:10px;font-weight:800;background:#e9f4ed;color:var(--g);margin:2px}.badge.orange{background:#fff1d9;color:#956400}.badge.blue{background:#eaf1ff;color:var(--blue)}.badge.red{background:#fdeaea;color:#a52626}
+.progress{height:8px;background:#e8eee9;border-radius:20px;overflow:hidden;margin-top:10px}.progress i{display:block;height:100%;background:var(--g);width:0}
+.empty{padding:25px;text-align:center;color:var(--muted);font-size:13px;border:1px dashed #ccd9d1;border-radius:10px}
+.searchbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}.searchbar input,.searchbar select{flex:1;min-width:160px}
+input,select,textarea{width:100%;padding:10px 11px;border:1px solid #ccd9d1;border-radius:8px;background:#fff;font:inherit;font-size:13px;color:#30483d}textarea{min-height:90px;resize:vertical}label{display:block;font-size:11px;font-weight:800;color:#486257;margin-bottom:5px}.field{margin-bottom:11px}
+table{width:100%;border-collapse:collapse;min-width:650px}th,td{padding:11px;border-bottom:1px solid #e6ece8;text-align:left;font-size:12px}th{background:#eef6f1;color:#164d32}.table-wrap{overflow:auto}
+.notice{padding:13px;border-radius:9px;background:#fffdf4;border:1px solid #eee4bd;color:#6d623b;font-size:12px;line-height:1.6}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:99;align-items:center;justify-content:center;padding:15px}.modal.show{display:flex}.modal-box{background:#fff;border-radius:14px;width:min(650px,100%);max-height:92vh;overflow:auto;padding:21px}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.modal-head h2{margin:0;color:var(--text);font-size:19px}.close{border:0;background:#eee;border-radius:50%;width:30px;height:30px;cursor:pointer}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}.file-note{font-size:10px;color:var(--muted);margin-top:4px}
+.toast{position:fixed;right:18px;bottom:18px;background:#173a2c;color:#fff;padding:12px 16px;border-radius:9px;display:none;z-index:200;font-size:12px;box-shadow:0 8px 25px #0003}.toast.show{display:block}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);border:1px solid var(--line);border-radius:10px;overflow:hidden}.dayname,.day{padding:9px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);min-height:70px;font-size:11px}.dayname{background:#eef6f1;font-weight:800;color:#315244;min-height:auto}.day strong{display:block;color:var(--text)}.event{margin-top:5px;background:#e8f5ed;color:var(--g);padding:3px;border-radius:4px;font-size:9px;font-weight:800}
+@media(max-width:850px){.stats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.grid,.grid2,.form-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.full{grid-column:auto}.container{padding-top:22px}.hero{padding:20px}.staff-brand strong{font-size:13px}.staff-brand span{font-size:9px}}
 </style>
 </head>
-
 <body>
+<div class="training-page">
+<header class="staff-header"><div class="staff-header-inner">
+<a class="staff-brand" href="staff-dashboard.html"><img src="../images/logo.png" alt="Kenbridge Christian School"><div><strong>Kenbridge Christian School</strong><span>Staff Portal • Training & Development</span></div></a>
+<a class="logout" href="login.html" id="logout">Log Out</a>
+</div></header>
 
-<header>
-<div class="container">
-<h1>Kenbridge Christian School Staff Portal</h1>
-<nav>
-<a href="staff-dashboard.html">Dashboard</a>
-<a href="students.html">Students</a>
-<a href="attendance.html">Attendance</a>
-<a href="announcements.html">Announcements</a>
-<a href="articles.html">Articles</a>
-<a href="reports.html">Reports</a>
-<a href="files.html">Files</a>
-<a href="calendar.html">Calendar</a>
-<a href="messages.html">Messages</a>
-<a href="tasks.html">Tasks</a>
-<a href="leave.html">Leave</a>
-<a href="payroll.html">Payroll</a>
-<a href="training.html" class="active">Training</a>
-<a href="notifications.html">Notifications</a>
-<a href="profile.html">My Profile</a>
+<main class="container">
+<div class="heading"><small>STAFF PROFESSIONAL DEVELOPMENT</small><h1>Training & Development Center</h1><p>Grow professionally, attend workshops, join live sessions, access training packages and track your development.</p></div>
+
+<nav class="nav">
+<a href="staff-dashboard.html">Dashboard</a><a href="students.html">Students</a><a href="attendance.html">Attendance</a><a href="announcements.html">Announcements</a><a href="articles.html">Articles</a><a href="reports.html">Reports</a><a href="files.html">Files</a><a href="calendar.html">Calendar</a><a href="messages.html">Messages</a><a href="tasks.html">Tasks</a><a href="leave.html">Leave</a><a href="payroll.html">Payroll</a><a href="training.html">Training</a><a href="profile.html">My Profile</a>
 </nav>
-</div>
-</header>
 
-<main class="training-wrap">
-
-<section class="training-hero">
-<div>
-<h1>Training & Development</h1>
-<p>Your professional development centre for workshops, live sessions, training packages, groups and certificates.</p>
-</div>
-<div class="training-actions">
-<button class="tr-btn tr-btn-primary" onclick="loadEverything()">↻ Refresh</button>
-<button id="adminBtn" class="tr-btn tr-btn-green hidden" onclick="openAdmin()">⚙ Training Administration</button>
-</div>
+<section class="hero">
+<h2>Build stronger teaching and professional practice</h2>
+<p>Access teacher development, classroom practice, learner support, safeguarding, Christian education, digital skills, workshops, meetings and certificates from one place.</p>
+<div class="hero-actions"><button class="btn btn-white" onclick="loadAll()">↻ Refresh Training</button><button class="btn btn-white" id="adminBtn" onclick="openAdmin()">⚙ Training Administration</button></div>
 </section>
 
 <section class="stats">
-<div class="stat"><div class="stat-icon">📚</div><div><strong id="statPrograms">0</strong><span>Active Programs</span></div></div>
-<div class="stat"><div class="stat-icon">🎓</div><div><strong id="statMine">0</strong><span>My Active Training</span></div></div>
-<div class="stat"><div class="stat-icon">🏆</div><div><strong id="statCertificates">0</strong><span>Certificates</span></div></div>
-<div class="stat"><div class="stat-icon">🔔</div><div><strong id="statNotifications">0</strong><span>Unread Alerts</span></div></div>
+<div class="stat"><b id="statPrograms">0</b><span>ACTIVE PROGRAMS</span></div>
+<div class="stat"><b id="statMine">0</b><span>MY ACTIVE TRAINING</span></div>
+<div class="stat"><b id="statCerts">0</b><span>CERTIFICATES</span></div>
+<div class="stat"><b id="statAlerts">0</b><span>UNREAD ALERTS</span></div>
 </section>
 
 <div class="tabs">
-<button class="tab active" data-tab="overview">Overview</button>
-<button class="tab" data-tab="programs">Training Programs</button>
-<button class="tab" data-tab="sessions">Live Sessions</button>
-<button class="tab" data-tab="groups">Workshops & Groups</button>
-<button class="tab" data-tab="materials">Training Packages</button>
-<button class="tab" data-tab="mine">My Training</button>
-<button class="tab" data-tab="certificates">Certificates</button>
-<button class="tab" data-tab="calendar">Calendar</button>
-<button class="tab" data-tab="notifications">Notifications</button>
+<button class="tab active" data-tab="overview">Overview</button><button class="tab" data-tab="programs">Programs</button><button class="tab" data-tab="sessions">Live Sessions</button><button class="tab" data-tab="groups">Workshops & Groups</button><button class="tab" data-tab="materials">Training Packages</button><button class="tab" data-tab="mine">My Training</button><button class="tab" data-tab="certificates">Certificates</button><button class="tab" data-tab="calendar">Calendar</button><button class="tab" data-tab="notifications">Notifications</button>
 </div>
 
-<section id="tab-overview" class="tab-panel">
-<div class="grid">
-<div>
-<div class="card">
-<div class="section-head"><h2>📅 Upcoming Training Sessions</h2><button class="tr-btn tr-btn-light" onclick="switchTab('sessions')">View All</button></div>
-<div id="upcomingSessions"><div class="loading">Loading sessions...</div></div>
+<section id="overview" class="panel active">
+<div class="grid2">
+<div class="card"><h2>Upcoming Training</h2><p>Your next training activities.</p><div id="overviewSessions"></div></div>
+<div class="card"><h2>Professional Development Focus</h2><p>Core areas that help teachers support learners effectively.</p><div class="grid2">
+<div class="item"><h3>📚 Teaching Practice</h3><p>Lesson preparation, teaching methods, learner engagement and classroom management.</p></div>
+<div class="item"><h3>🛡️ Learner Welfare</h3><p>Safeguarding, responsible conduct and creating safe learning environments.</p></div>
+<div class="item"><h3>💬 Communication</h3><p>Professional communication with learners, colleagues and parents.</p></div>
+<div class="item"><h3>✝️ Christian Formation</h3><p>Character, values and faith-based educational practice.</p></div>
+</div></div>
 </div>
-
-<div class="card">
-<div class="section-head"><h2>🎓 Professional Development</h2></div>
-<div class="topic-grid">
-<div class="topic"><b>👨‍🏫 Classroom Management</b><small>Build effective, respectful and productive learning environments.</small></div>
-<div class="topic"><b>📖 Lesson Planning</b><small>Improve preparation, teaching strategies and lesson delivery.</small></div>
-<div class="topic"><b>🛡️ Child Protection</b><small>Understand safeguarding, student welfare and professional responsibility.</small></div>
-<div class="topic"><b>✝️ Christian Education</b><small>Strengthen Christian values and character formation in teaching.</small></div>
-<div class="topic"><b>💻 Digital Teaching</b><small>Use technology and digital resources effectively in learning.</small></div>
-<div class="topic"><b>📝 Assessment</b><small>Improve assessment, feedback, learner support and progress tracking.</small></div>
-</div>
-</div>
-</div>
-
-<div>
-<div class="card">
-<div class="section-head"><h2>🔔 Training Alerts</h2><button class="tr-btn tr-btn-light" onclick="switchTab('notifications')">All</button></div>
-<div id="overviewNotifications"><div class="loading">Loading...</div></div>
-</div>
-
-<div class="card">
-<div class="section-head"><h2>🏆 My Certificates</h2></div>
-<div id="overviewCertificates"><div class="loading">Loading...</div></div>
-</div>
-</div>
-</div>
+<div class="card"><h2>Training Alerts</h2><p>Important information from the Training Center.</p><div id="overviewAlerts"></div></div>
 </section>
 
-<section id="tab-programs" class="tab-panel hidden">
-<div class="card">
-<div class="section-head"><h2>Training Programs</h2><button id="addProgramBtn" class="tr-btn tr-btn-dark hidden" onclick="openProgramModal()">+ Create Training</button></div>
-<div class="search-row">
-<input id="programSearch" placeholder="Search training programs..." oninput="loadPrograms()">
-<select id="programCategory" onchange="loadPrograms()"><option value="">All Categories</option><option>Classroom Management</option><option>Child Protection</option><option>Christian Education</option><option>Digital Skills</option><option>Assessment</option><option>Leadership</option><option>Professional Development</option><option>Other</option></select>
-</div>
-<div id="programList" class="program-grid"><div class="loading">Loading...</div></div>
-</div>
+<section id="programs" class="panel">
+<div class="card"><h2>Training Programs</h2><p>Browse available professional development opportunities.</p>
+<div class="searchbar"><input id="programSearch" placeholder="Search training..."><select id="programCategory"><option value="">All categories</option><option>Professional Development</option><option>Teaching Practice</option><option>Safeguarding</option><option>Digital Skills</option><option>Christian Education</option><option>Leadership</option><option>Assessment</option></select><button class="btn btn-green" onclick="loadPrograms()">Search</button></div>
+<div id="programList" class="grid"></div></div>
 </section>
 
-<section id="tab-sessions" class="tab-panel hidden">
-<div class="card">
-<div class="section-head"><h2>🎥 Live Training & Meetings</h2><button id="addSessionBtn" class="tr-btn tr-btn-dark hidden" onclick="openSessionModal()">+ Schedule Session</button></div>
-<p class="muted">Join scheduled Zoom, Google Meet, online, physical or hybrid staff-development sessions.</p>
-<div id="sessionList"><div class="loading">Loading...</div></div>
-</div>
+<section id="sessions" class="panel">
+<div class="card"><h2>Live Sessions & Meetings</h2><p>Join scheduled Zoom, Google Meet, online, physical and hybrid training sessions.</p><div id="sessionList" class="grid"></div></div>
 </section>
 
-<section id="tab-groups" class="tab-panel hidden">
-<div class="card">
-<div class="section-head"><h2>👥 Workshops & Training Groups</h2></div>
-<div id="groupList"><div class="loading">Select a training program to view its groups.</div></div>
-</div>
+<section id="groups" class="panel">
+<div class="card"><h2>Workshops & Training Groups</h2><p>View workshop groups and assigned facilitators.</p><div id="groupList" class="grid"></div></div>
 </section>
 
-<section id="tab-materials" class="tab-panel hidden">
-<div class="card">
-<div class="section-head"><h2>📚 Training Packages & Materials</h2><button id="addMaterialBtn" class="tr-btn tr-btn-dark hidden" onclick="openMaterialModal()">+ Add Material</button></div>
-<div class="search-row"><input id="materialSearch" placeholder="Search training packages..." oninput="loadMaterials()"></div>
-<div id="materialList"><div class="loading">Loading...</div></div>
-</div>
+<section id="materials" class="panel">
+<div class="card"><h2>Training Packages & Resources</h2><p>Study manuals, presentations, guides, videos, documents and other professional-development resources.</p>
+<div class="searchbar"><input id="materialSearch" placeholder="Search training packages..."><button class="btn btn-green" onclick="loadMaterials()">Search</button></div><div id="materialList" class="grid"></div></div>
 </section>
 
-<section id="tab-mine" class="tab-panel hidden">
-<div class="card">
-<div class="section-head"><h2>📈 My Training</h2></div>
-<div id="myTraining"><div class="loading">Loading...</div></div>
-</div>
+<section id="mine" class="panel">
+<div class="card"><h2>My Training</h2><p>Track your enrollment, progress, scores and completion.</p><div id="mineList"></div></div>
 </section>
 
-<section id="tab-certificates" class="tab-panel hidden">
-<div class="card">
-<div class="section-head"><h2>🏆 My Certificates</h2></div>
-<div id="certificateList"><div class="loading">Loading...</div></div>
-</div>
+<section id="certificates" class="panel">
+<div class="card"><h2>My Certificates</h2><p>Certificates issued for completed professional development.</p><div id="certificateList" class="grid"></div></div>
 </section>
 
-<section id="tab-calendar" class="tab-panel hidden">
-<div class="card">
-<div class="section-head"><h2>🗓️ Training Calendar</h2></div>
-<div id="calendar" class="calendar"></div>
-</div>
+<section id="calendar" class="panel">
+<div class="card"><h2>Training Calendar</h2><p id="calendarTitle"></p><div id="calendarBox"></div></div>
 </section>
 
-<section id="tab-notifications" class="tab-panel hidden">
-<div class="card">
-<div class="section-head"><h2>🔔 Training Notifications</h2><button class="tr-btn tr-btn-light" onclick="readAllNotifications()">Mark All Read</button></div>
-<div id="notificationList"><div class="loading">Loading...</div></div>
-</div>
+<section id="notifications" class="panel">
+<div class="card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><h2>Training Notifications</h2><p>Upcoming workshops, meetings, assignments, materials and certificates.</p></div><button class="btn btn-green" onclick="markAll()">Mark All Read</button></div><div id="notificationList"></div></div>
 </section>
-
 </main>
+</div>
 
-<!-- PROGRAM MODAL -->
-<div id="programModal" class="modal">
-<div class="modal-box">
-<div class="modal-head"><h2>Create Training Program</h2><button class="close" onclick="closeModal('programModal')">×</button></div>
-<form id="programForm">
-<div class="form-grid">
-<div class="field full"><label>Training Title *</label><input name="title" required></div>
-<div class="field"><label>Category</label><select name="category"><option>Classroom Management</option><option>Child Protection</option><option>Christian Education</option><option>Digital Skills</option><option>Assessment</option><option>Leadership</option><option>Professional Development</option><option>Other</option></select></div>
-<div class="field"><label>Trainer</label><input name="trainer_name"></div>
-<div class="field"><label>Start Date</label><input name="start_date" type="datetime-local"></div>
-<div class="field"><label>End Date</label><input name="end_date" type="datetime-local"></div>
-<div class="field"><label>Organization</label><input name="trainer_organization"></div>
-<div class="field"><label>Duration (minutes)</label><input name="duration_minutes" type="number" min="1"></div>
-<div class="field"><label>Required Training</label><select name="required"><option value="false">No</option><option value="true">Yes</option></select></div>
+<div class="modal" id="adminModal"><div class="modal-box"><div class="modal-head"><h2>Training Administration</h2><button class="close" onclick="closeModal('adminModal')">×</button></div>
+<div class="grid2">
+<button class="btn btn-green" onclick="openModal('programModal')">＋ Training Program</button>
+<button class="btn btn-blue" onclick="openModal('sessionModal')">＋ Live Session</button>
+<button class="btn btn-dark" onclick="openModal('materialModal')">＋ Training Package</button>
+<button class="btn btn-green" onclick="openModal('groupModal')">＋ Workshop Group</button>
+<button class="btn btn-blue" onclick="openModal('assignModal')">＋ Assign Staff</button>
+<button class="btn btn-dark" onclick="openModal('certificateModal')">＋ Issue Certificate</button>
+<button class="btn btn-green" onclick="openModal('notifyModal')">＋ Send Notification</button>
+</div>
+</div></div>
+
+<div class="modal" id="programModal"><div class="modal-box"><div class="modal-head"><h2>Create Training Program</h2><button class="close" onclick="closeModal('programModal')">×</button></div>
+<form id="programForm"><div class="form-grid">
+<div class="field full"><label>Title</label><input name="title" required></div>
+<div class="field"><label>Category</label><select name="category"><option>Professional Development</option><option>Teaching Practice</option><option>Safeguarding</option><option>Digital Skills</option><option>Christian Education</option><option>Leadership</option><option>Assessment</option></select></div>
+<div class="field"><label>Status</label><select name="status"><option>UPCOMING</option><option>DRAFT</option><option>ONGOING</option></select></div>
+<div class="field"><label>Trainer</label><input name="trainer_name"></div><div class="field"><label>Organisation</label><input name="trainer_organization"></div>
+<div class="field"><label>Start Date</label><input type="datetime-local" name="start_date"></div><div class="field"><label>End Date</label><input type="datetime-local" name="end_date"></div>
+<div class="field"><label>Duration (minutes)</label><input type="number" name="duration_minutes"></div><div class="field"><label>Required Training</label><select name="required"><option value="false">No</option><option value="true">Yes</option></select></div>
 <div class="field full"><label>Description</label><textarea name="description"></textarea></div>
-</div>
-<div class="modal-actions"><button type="button" class="tr-btn tr-btn-light" onclick="closeModal('programModal')">Cancel</button><button class="tr-btn tr-btn-dark">Create</button></div>
-</form>
-</div>
-</div>
+</div><button class="btn btn-green" type="submit">Create Program</button></form>
+</div></div>
 
-<!-- SESSION MODAL -->
-<div id="sessionModal" class="modal">
-<div class="modal-box">
-<div class="modal-head"><h2>Schedule Training Session</h2><button class="close" onclick="closeModal('sessionModal')">×</button></div>
-<form id="sessionForm">
-<div class="form-grid">
-<div class="field full"><label>Training Program *</label><select name="program_id" id="sessionProgram" required></select></div>
-<div class="field full"><label>Session Title *</label><input name="title" required></div>
-<div class="field"><label>Date & Time *</label><input name="session_date" type="datetime-local" required></div>
-<div class="field"><label>End Time</label><input name="end_date" type="datetime-local"></div>
+<div class="modal" id="sessionModal"><div class="modal-box"><div class="modal-head"><h2>Schedule Training Session</h2><button class="close" onclick="closeModal('sessionModal')">×</button></div>
+<form id="sessionForm"><div class="form-grid">
+<div class="field full"><label>Session Title</label><input name="title" required></div><div class="field"><label>Program ID</label><input name="program_id"></div>
 <div class="field"><label>Meeting Type</label><select name="meeting_type"><option>ZOOM</option><option>GOOGLE_MEET</option><option>ONLINE</option><option>PHYSICAL</option><option>HYBRID</option></select></div>
-<div class="field"><label>Location</label><input name="location" placeholder="Venue / room"></div>
-<div class="field full"><label>Meeting URL</label><input name="meeting_url" placeholder="Zoom or meeting link"></div>
-<div class="field"><label>Meeting ID</label><input name="meeting_id"></div>
-<div class="field"><label>Meeting Password</label><input name="meeting_password"></div>
-<div class="field"><label>Trainer</label><input name="trainer_name"></div>
+<div class="field"><label>Date & Time</label><input type="datetime-local" name="session_date" required></div><div class="field"><label>End Date & Time</label><input type="datetime-local" name="end_date"></div>
+<div class="field"><label>Meeting URL</label><input name="meeting_url" placeholder="https://..."></div><div class="field"><label>Meeting ID</label><input name="meeting_id"></div>
+<div class="field"><label>Meeting Password</label><input name="meeting_password"></div><div class="field"><label>Location</label><input name="location"></div>
+<div class="field"><label>Trainer</label><input name="trainer_name"></div><div class="field"><label>Status</label><select name="status"><option>SCHEDULED</option><option>LIVE</option></select></div>
 <div class="field full"><label>Description</label><textarea name="description"></textarea></div>
-</div>
-<div class="modal-actions"><button type="button" class="tr-btn tr-btn-light" onclick="closeModal('sessionModal')">Cancel</button><button class="tr-btn tr-btn-dark">Schedule</button></div>
-</form>
-</div>
-</div>
+</div><button class="btn btn-blue" type="submit">Schedule Session</button></form>
+</div></div>
 
-<!-- MATERIAL MODAL -->
-<div id="materialModal" class="modal">
-<div class="modal-box">
-<div class="modal-head"><h2>Add Training Material</h2><button class="close" onclick="closeModal('materialModal')">×</button></div>
-<form id="materialForm">
-<div class="form-grid">
-<div class="field full"><label>Title *</label><input name="title" required></div>
-<div class="field"><label>Program</label><select name="program_id" id="materialProgram"></select></div>
-<div class="field"><label>Material Type</label><select name="material_type"><option>DOCUMENT</option><option>PRESENTATION</option><option>VIDEO</option><option>GUIDE</option><option>MANUAL</option><option>LINK</option><option>OTHER</option></select></div>
-<div class="field full"><label>External Link</label><input name="external_url" placeholder="Optional resource or video URL"></div>
+<div class="modal" id="materialModal"><div class="modal-box"><div class="modal-head"><h2>Upload Training Package</h2><button class="close" onclick="closeModal('materialModal')">×</button></div>
+<form id="materialForm" enctype="multipart/form-data"><div class="form-grid">
+<div class="field full"><label>Title</label><input name="title" required></div><div class="field"><label>Program ID</label><input name="program_id"></div><div class="field"><label>Session ID</label><input name="session_id"></div>
+<div class="field"><label>Type</label><select name="material_type"><option>DOCUMENT</option><option>PRESENTATION</option><option>VIDEO</option><option>AUDIO</option><option>GUIDE</option><option>MANUAL</option><option>OTHER</option></select></div>
+<div class="field"><label>File</label><input type="file" name="file" required><div class="file-note">Maximum 25 MB.</div></div>
 <div class="field full"><label>Description</label><textarea name="description"></textarea></div>
-</div>
-<div class="modal-actions"><button type="button" class="tr-btn tr-btn-light" onclick="closeModal('materialModal')">Cancel</button><button class="tr-btn tr-btn-dark">Add Material</button></div>
-</form>
-</div>
-</div>
+</div><button class="btn btn-dark" type="submit">Upload Package</button></form>
+</div></div>
 
-<script src="../js/portal-auth.js"></script>
-<script src="../js/portal-api.js"></script>
+<div class="modal" id="groupModal"><div class="modal-box"><div class="modal-head"><h2>Create Workshop Group</h2><button class="close" onclick="closeModal('groupModal')">×</button></div>
+<form id="groupForm"><div class="field"><label>Program ID</label><input name="program_id" required></div><div class="field"><label>Group Name</label><input name="name" required></div><div class="field"><label>Facilitator</label><input name="facilitator_name"></div><div class="field"><label>Description</label><textarea name="description"></textarea></div><button class="btn btn-green" type="submit">Create Group</button></form>
+</div></div>
+
+<div class="modal" id="assignModal"><div class="modal-box"><div class="modal-head"><h2>Assign Staff to Training</h2><button class="close" onclick="closeModal('assignModal')">×</button></div>
+<form id="assignForm"><div class="field"><label>Program ID</label><input name="program_id" required></div><div class="field"><label>Staff ID</label><select name="staff_id" id="staffSelect" required><option value="">Loading staff...</option></select></div><div class="field"><label>Group ID (optional)</label><input name="group_id"></div><div class="field"><label>Status</label><select name="status"><option>ENROLLED</option><option>IN_PROGRESS</option><option>COMPLETED</option></select></div><button class="btn btn-blue" type="submit">Assign Staff</button></form>
+</div></div>
+
+<div class="modal" id="certificateModal"><div class="modal-box"><div class="modal-head"><h2>Issue Training Certificate</h2><button class="close" onclick="closeModal('certificateModal')">×</button></div>
+<form id="certificateForm" enctype="multipart/form-data"><div class="form-grid">
+<div class="field"><label>Program ID</label><input name="program_id" required></div><div class="field"><label>Staff ID</label><select name="staff_id" id="certificateStaff" required><option value="">Loading staff...</option></select></div>
+<div class="field full"><label>Certificate Title</label><input name="title" required></div><div class="field"><label>Issue Date</label><input type="date" name="issued_date"></div><div class="field"><label>Expiry Date</label><input type="date" name="expiry_date"></div>
+<div class="field"><label>Issuer</label><input name="issuer" value="Kenbridge Christian School"></div><div class="field"><label>Certificate Number (optional)</label><input name="certificate_number"></div>
+<div class="field full"><label>Certificate File (optional)</label><input type="file" name="file" accept=".pdf,.png,.jpg,.jpeg"></div>
+</div><button class="btn btn-dark" type="submit">Issue Certificate</button></form>
+</div></div>
+
+<div class="modal" id="notifyModal"><div class="modal-box"><div class="modal-head"><h2>Send Training Notification</h2><button class="close" onclick="closeModal('notifyModal')">×</button></div>
+<form id="notifyForm"><div class="field"><label>Staff ID (leave blank to notify all staff)</label><select name="staff_id" id="notifyStaff"><option value="">All Active Staff</option></select></div><div class="field"><label>Notification Type</label><select name="notification_type"><option>GENERAL</option><option>UPCOMING</option><option>REMINDER</option><option>ZOOM</option><option>WORKSHOP</option><option>REQUIRED</option><option>MATERIAL</option></select></div><div class="field"><label>Title</label><input name="title" required></div><div class="field"><label>Message</label><textarea name="message" required></textarea></div><div class="field"><label>Program ID (optional)</label><input name="program_id"></div><div class="field"><label>Session ID (optional)</label><input name="session_id"></div><button class="btn btn-green" type="submit">Send Notification</button></form>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
 <script>
-"use strict";
-
-const BASE=(window.API&&API.API_BASE)||"https://kenbridge-christian-school.onrender.com";
-const APIROOT=BASE+"/api/training";
-
-let isAdmin=false;
-let programs=[];
-let sessions=[];
-let materials=[];
-let certificates=[];
-let notifications=[];
-
-function token(){
- return (window.API&&typeof API.getToken==="function")
-  ? API.getToken()
-  : localStorage.getItem("kenbridgeAccessToken")||
-    localStorage.getItem("access_token")||
-    localStorage.getItem("kenbridge_access_token")||
-    sessionStorage.getItem("kenbridgeAccessToken")||"";
-}
-
-async function api(path,options={}){
- const headers=options.headers||{};
- headers.Authorization="Bearer "+token();
- if(options.body&&typeof options.body==="object"){
-  headers["Content-Type"]="application/json";
-  options.body=JSON.stringify(options.body);
- }
- const r=await fetch(APIROOT+path,{...options,headers});
- let data={};
- try{data=await r.json()}catch(e){}
- if(!r.ok)throw new Error(data.message||"Request failed.");
- return data;
-}
-
-function esc(v){
- return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-}
-
-function fmt(v){
- if(!v)return "Not specified";
- const d=new Date(v);
- return isNaN(d)?"Not specified":d.toLocaleString([],{
-  weekday:"short",year:"numeric",month:"short",day:"numeric",
-  hour:"numeric",minute:"2-digit"
- });
-}
-
-function closeModal(id){document.getElementById(id).classList.remove("show")}
+const API="https://kenbridge-christian-school.onrender.com/api/training";
+const token=()=>localStorage.getItem("kenbridgeAccessToken")||localStorage.getItem("access_token")||localStorage.getItem("kenbridge_access_token")||sessionStorage.getItem("kenbridgeAccessToken")||"";
+const headers=()=>({Authorization:"Bearer "+token()});
+async function api(path,opt={}){let o={...opt,headers:{...(opt.headers||{}),...headers()}};if(o.body&&!(o.body instanceof FormData)){o.headers["Content-Type"]="application/json";o.body=JSON.stringify(o.body)}let r=await fetch(API+path,o);let d={};try{d=await r.json()}catch(e){}if(!r.ok)throw Error(d.error||"Request failed");return d}
+const esc=x=>String(x??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const fmt=x=>x?new Date(x).toLocaleString([],{dateStyle:"medium",timeStyle:"short"}):"—";
+const toast=x=>{let t=document.getElementById("toast");t.textContent=x;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2800)};
 function openModal(id){document.getElementById(id).classList.add("show")}
-
-function switchTab(name){
- document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.tab===name));
- document.querySelectorAll(".tab-panel").forEach(x=>x.classList.add("hidden"));
- document.getElementById("tab-"+name).classList.remove("hidden");
- if(name==="programs")loadPrograms();
- if(name==="sessions")loadSessions();
- if(name==="groups")loadGroups();
- if(name==="materials")loadMaterials();
- if(name==="mine")loadMine();
- if(name==="certificates")loadCertificates();
- if(name==="calendar")buildCalendar();
- if(name==="notifications")loadNotifications();
-}
-
-document.querySelectorAll(".tab").forEach(x=>x.onclick=()=>switchTab(x.dataset.tab));
-
-async function loadDashboard(){
- try{
-  const d=await api("/dashboard");
-  const s=d.statistics||{};
-  document.getElementById("statPrograms").textContent=s.activePrograms||0;
-  document.getElementById("statMine").textContent=s.myActiveTraining||0;
-  document.getElementById("statCertificates").textContent=s.certificates||0;
-  document.getElementById("statNotifications").textContent=s.unreadNotifications||0;
-  renderSessions(d.upcoming||[],"upcomingSessions");
- }catch(e){
-  document.getElementById("upcomingSessions").innerHTML='<div class="upcoming-empty">'+esc(e.message)+'</div>';
- }
-}
-
-async function loadPrograms(){
- try{
-  const q=new URLSearchParams();
-  const s=document.getElementById("programSearch")?.value.trim();
-  const c=document.getElementById("programCategory")?.value;
-  if(s)q.set("search",s);
-  if(c)q.set("category",c);
-  const d=await api("/programs?"+q.toString());
-  programs=d.programs||[];
-  document.getElementById("programList").innerHTML=programs.length?programs.map(p=>`
-   <div class="program">
-    <span class="badge ${p.status==="ONGOING"?"badge-green":p.status==="UPCOMING"?"badge-blue":"badge"}">${esc(p.status)}</span>
-    ${p.required?'<span class="badge badge-yellow">REQUIRED</span>':''}
-    <h3>${esc(p.title)}</h3>
-    <p>${esc(p.description||"No description provided.")}</p>
-    <small class="muted">👨‍🏫 ${esc(p.trainer_name||"Trainer TBA")}</small><br>
-    <small class="muted">📅 ${fmt(p.start_date)}</small>
-    <div class="session-actions">
-     <button class="tr-btn tr-btn-light" onclick="viewProgram('${p.id}')">View Details</button>
-     ${p.status!=="COMPLETED"&&p.status!=="CANCELLED"?`<button class="tr-btn tr-btn-green" onclick="enroll('${p.id}')">Enroll</button>`:""}
-    </div>
-   </div>`).join(""):'<div class="loading">No training programs found.</div>';
- }catch(e){document.getElementById("programList").innerHTML='<div class="loading">'+esc(e.message)+'</div>'}
-}
-
-async function viewProgram(id){
- try{
-  const d=await api("/programs/"+id);
-  const p=d.program;
-  alert(
-   p.title+"\n\n"+
-   (p.description||"No description.")+
-   "\n\nTrainer: "+(p.trainer_name||"TBA")+
-   "\nStart: "+fmt(p.start_date)+
-   "\nSessions: "+(d.sessions||[]).length+
-   "\nGroups: "+(d.groups||[]).length+
-   "\nMaterials: "+(d.materials||[]).length
-  );
- }catch(e){alert(e.message)}
-}
-
-async function enroll(id){
- if(!confirm("Enroll in this training program?"))return;
- try{await api("/enroll",{method:"POST",body:{program_id:id}});alert("You have been enrolled successfully.");loadEverything()}
- catch(e){alert(e.message)}
-}
-
-function renderSessions(list,target){
- const el=document.getElementById(target);
- if(!list.length){el.innerHTML='<div class="upcoming-empty">No training sessions scheduled.</div>';return}
- el.innerHTML=list.map(s=>{
-  const online=["ZOOM","GOOGLE_MEET","ONLINE"].includes(String(s.meeting_type).toUpperCase());
-  return `<div class="session">
-   <div class="session-top">
-    <div><span class="badge ${s.status==="LIVE"?"badge-green":online?"badge-blue":"badge"}">${esc(s.status)}</span>
-    <span class="badge">${esc(s.meeting_type)}</span>
-    <h3>${esc(s.title)}</h3>
-    <p>📚 ${esc(s.program_title||"Training")}</p>
-    <p>📅 ${fmt(s.session_date)}</p>
-    <p>👨‍🏫 ${esc(s.trainer_name||"Trainer TBA")}</p>
-    ${s.location?`<p>📍 ${esc(s.location)}</p>`:""}
-    ${s.meeting_id?`<p>🆔 Meeting ID: ${esc(s.meeting_id)}</p>`:""}
-    </div>
-   </div>
-   ${s.description?`<p>${esc(s.description)}</p>`:""}
-   <div class="session-actions">
-    ${s.meeting_url?`<button class="tr-btn tr-btn-green" onclick="joinMeeting('${esc(s.meeting_url)}')">🎥 Join Meeting</button>`:""}
-    ${s.materials_url?`<button class="tr-btn tr-btn-light" onclick="openLink('${esc(s.materials_url)}')">📚 Materials</button>`:""}
-    ${s.recording_url?`<button class="tr-btn tr-btn-light" onclick="openLink('${esc(s.recording_url)}')">▶ Recording</button>`:""}
-    <button class="tr-btn tr-btn-light" onclick="markAttendance('${s.id}')">✓ Attendance</button>
-   </div>
-  </div>`
- }).join("");
-}
-
-async function loadSessions(){
- try{
-  const d=await api("/sessions");
-  sessions=d.sessions||[];
-  renderSessions(sessions,"sessionList");
- }catch(e){document.getElementById("sessionList").innerHTML='<div class="loading">'+esc(e.message)+'</div>'}
-}
-
-function joinMeeting(url){
- if(!url)return;
- window.open(url,"_blank","noopener,noreferrer");
-}
-
-function openLink(url){window.open(url,"_blank","noopener,noreferrer")}
-
-async function markAttendance(id){
- try{
-  await api("/attendance",{method:"POST",body:{session_id:id,status:"PRESENT",joined_at:new Date().toISOString()}});
-  alert("Attendance recorded.");
- }catch(e){alert(e.message)}
-}
-
-async function loadMine(){
- try{
-  const d=await api("/my-training");
-  const list=d.training||[];
-  document.getElementById("myTraining").innerHTML=list.length?list.map(x=>`
-   <div class="training-row">
-    <strong>${esc(x.title)}</strong>
-    <small>${esc(x.category||"Training")} • ${esc(x.status)}</small>
-    <div style="margin:9px 0" class="progress"><i style="width:${Number(x.progress||0)}%"></i></div>
-    <small>${Number(x.progress||0)}% complete${x.group_name?" • Group: "+esc(x.group_name):""}</small>
-   </div>`).join(""):'<div class="loading">You have no training assignments yet.</div>';
- }catch(e){document.getElementById("myTraining").innerHTML='<div class="loading">'+esc(e.message)+'</div>'}
-}
-
-async function loadGroups(){
- if(!programs.length)await loadPrograms();
- if(!programs.length){document.getElementById("groupList").innerHTML='<div class="loading">No training programs available.</div>';return}
- let html="";
- for(const p of programs){
-  try{
-   const d=await api("/groups/"+p.id);
-   const groups=d.groups||[];
-   if(groups.length)html+=`<div class="card" style="margin-bottom:12px"><h2>${esc(p.title)}</h2>`+
-    groups.map(g=>`<div class="training-row"><strong>👥 ${esc(g.name)}</strong><small>${esc(g.facilitator_name||"Facilitator TBA")} • ${g.member_count||0} members</small></div>`).join("")+
-    `</div>`;
-  }catch(e){}
- }
- document.getElementById("groupList").innerHTML=html||'<div class="loading">No workshop groups have been assigned yet.</div>';
-}
-
-async function loadMaterials(){
- try{
-  const q=new URLSearchParams();
-  const s=document.getElementById("materialSearch")?.value.trim();
-  if(s)q.set("search",s);
-  const d=await api("/materials?"+q.toString());
-  materials=d.materials||[];
-  document.getElementById("materialList").innerHTML=materials.length?materials.map(m=>`
-   <div class="material">
-    <div class="material-info">
-     <strong>📚 ${esc(m.title)}</strong>
-     <small>${esc(m.program_title||"General Training")} • ${esc(m.material_type||"DOCUMENT")}</small>
-     ${m.description?`<br><small>${esc(m.description)}</small>`:""}
-    </div>
-    <div>
-     ${m.external_url?`<button class="tr-btn tr-btn-light" onclick="openLink('${esc(m.external_url)}')">Open</button>`:""}
-     ${m.file_path?`<button class="tr-btn tr-btn-light" onclick="openLink('${esc(m.file_path)}')">View</button>`:""}
-    </div>
-   </div>`).join(""):'<div class="loading">No training materials available.</div>';
- }catch(e){document.getElementById("materialList").innerHTML='<div class="loading">'+esc(e.message)+'</div>'}
-}
-
-async function loadCertificates(){
- try{
-  const d=await api("/certificates");
-  certificates=d.certificates||[];
-  const html=certificates.length?certificates.map(c=>`
-   <div class="cert">
-    <strong>🏆 ${esc(c.title)}</strong>
-    <small>${esc(c.program_title||"Training")} • Issued ${fmt(c.issued_date)}</small><br>
-    <small>Certificate: ${esc(c.certificate_number)}</small>
-    ${c.certificate_url?`<br><button class="tr-btn tr-btn-light" style="margin-top:8px" onclick="openLink('${esc(c.certificate_url)}')">View Certificate</button>`:""}
-   </div>`).join(""):'<div class="loading">No certificates have been issued yet.</div>';
-  document.getElementById("certificateList").innerHTML=html;
-  document.getElementById("overviewCertificates").innerHTML=certificates.slice(0,3).map(c=>`<div class="training-row"><strong>🏆 ${esc(c.title)}</strong><small>${fmt(c.issued_date)}</small></div>`).join("")||'<div class="muted">No certificates yet.</div>';
- }catch(e){
-  document.getElementById("certificateList").innerHTML='<div class="loading">'+esc(e.message)+'</div>';
-  document.getElementById("overviewCertificates").innerHTML='<div class="muted">Unable to load certificates.</div>';
- }
-}
-
-async function loadNotifications(){
- try{
-  const d=await api("/notifications");
-  notifications=d.notifications||[];
-  document.getElementById("notificationList").innerHTML=notifications.length?notifications.map(n=>`
-   <div class="notice ${n.is_read?"":"unread"}">
-    <strong>${esc(n.title)}</strong>
-    <div>${esc(n.message)}</div>
-    <small class="muted">${fmt(n.created_at)}</small>
-    ${!n.is_read?`<br><button class="tr-btn tr-btn-light" style="margin-top:7px" onclick="readNotification('${n.id}')">Mark Read</button>`:""}
-   </div>`).join(""):'<div class="loading">No training notifications.</div>';
-  document.getElementById("overviewNotifications").innerHTML=notifications.slice(0,4).map(n=>`<div class="notice ${n.is_read?"":"unread"}"><strong>${esc(n.title)}</strong><br><small>${esc(n.message)}</small></div>`).join("")||'<div class="muted">No alerts.</div>';
- }catch(e){document.getElementById("notificationList").innerHTML='<div class="loading">'+esc(e.message)+'</div>'}
-}
-
-async function readNotification(id){
- try{await api("/notifications/"+id+"/read",{method:"PATCH"});loadNotifications();loadDashboard()}
- catch(e){alert(e.message)}
-}
-
-async function readAllNotifications(){
- try{await api("/notifications/read-all",{method:"PATCH"});loadNotifications();loadDashboard()}
- catch(e){alert(e.message)}
-}
-
-function buildCalendar(){
- const el=document.getElementById("calendar");
- const now=new Date(),year=now.getFullYear(),month=now.getMonth();
- const first=new Date(year,month,1).getDay(),days=new Date(year,month+1,0).getDate();
- const names=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
- let html=names.map(x=>`<div class="cal-day"><b>${x}</b></div>`).join("");
- for(let i=0;i<first;i++)html+='<div class="cal-day"></div>';
- for(let day=1;day<=days;day++){
-  const events=sessions.filter(s=>{
-   const d=new Date(s.session_date);
-   return d.getFullYear()===year&&d.getMonth()===month&&d.getDate()===day;
-  });
-  html+=`<div class="cal-day"><b>${day}</b>${events.map(e=>`<div class="cal-event">${esc(e.title)}</div>`).join("")}</div>`;
- }
- el.innerHTML=html;
-}
-
-async function openProgramModal(){openModal("programModal")}
-
-async function openSessionModal(){
- if(!programs.length)await loadPrograms();
- document.getElementById("sessionProgram").innerHTML=programs.map(p=>`<option value="${p.id}">${esc(p.title)}</option>`).join("");
- openModal("sessionModal");
-}
-
-async function openMaterialModal(){
- if(!programs.length)await loadPrograms();
- document.getElementById("materialProgram").innerHTML='<option value="">General</option>'+programs.map(p=>`<option value="${p.id}">${esc(p.title)}</option>`).join("");
- openModal("materialModal");
-}
-
-async function openAdmin(){
- switchTab("programs");
-}
-
-document.getElementById("programForm").onsubmit=async e=>{
- e.preventDefault();
- const f=new FormData(e.target),b=Object.fromEntries(f.entries());
- b.required=b.required==="true";
- try{
-  await api("/programs",{method:"POST",body:b});
-  closeModal("programModal");e.target.reset();await loadPrograms();await loadDashboard();alert("Training program created.");
- }catch(x){alert(x.message)}
-};
-
-document.getElementById("sessionForm").onsubmit=async e=>{
- e.preventDefault();
- const f=new FormData(e.target),b=Object.fromEntries(f.entries());
- try{
-  await api("/sessions",{method:"POST",body:b});
-  closeModal("sessionModal");e.target.reset();await loadSessions();await loadDashboard();alert("Training session scheduled.");
- }catch(x){alert(x.message)}
-};
-
-document.getElementById("materialForm").onsubmit=async e=>{
- e.preventDefault();
- const f=new FormData(e.target),b=Object.fromEntries(f.entries());
- if(!b.program_id)delete b.program_id;
- try{
-  await api("/materials",{method:"POST",body:b});
-  closeModal("materialModal");e.target.reset();loadMaterials();alert("Training material added.");
- }catch(x){alert(x.message)}
-};
-
-async function detectAdmin(){
- try{
-  const u=JSON.parse(localStorage.getItem("kenbridgeUser")||"{}");
-  const role=String(u.role||localStorage.getItem("kenbridgeUserRole")||"").toUpperCase();
-  isAdmin=role==="ADMIN";
- }catch(e){}
- if(isAdmin){
-  document.getElementById("adminBtn").classList.remove("hidden");
-  ["addProgramBtn","addSessionBtn","addMaterialBtn"].forEach(id=>document.getElementById(id).classList.remove("hidden"));
- }
-}
-
-async function loadEverything(){
- await detectAdmin();
- await Promise.all([
-  loadDashboard(),
-  loadPrograms(),
-  loadSessions(),
-  loadMine(),
-  loadCertificates(),
-  loadNotifications(),
-  loadMaterials()
- ]);
- buildCalendar();
-}
-
-window.addEventListener("load",loadEverything);
+function closeModal(id){document.getElementById(id).classList.remove("show")}
+function isAdmin(){let u=JSON.parse(localStorage.getItem("kenbridgeUser")||"{}");return String(u.role||localStorage.getItem("kenbridgeUserRole")||"").toUpperCase()==="ADMIN"}
+function tabInit(){document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.getElementById(b.dataset.tab).classList.add("active")})}
+async function loadDashboard(){try{let d=await api("/dashboard");document.getElementById("statPrograms").textContent=d.activePrograms||0;document.getElementById("statMine").textContent=d.myActiveTraining||0;document.getElementById("statCerts").textContent=d.certificates||0;document.getElementById("statAlerts").textContent=d.unreadNotifications||0}catch(e){toast(e.message)}}
+async function loadPrograms(){try{let q=new URLSearchParams();let s=document.getElementById("programSearch").value,c=document.getElementById("programCategory").value;if(s)q.set("search",s);if(c)q.set("category",c);let a=await api("/programs?"+q);document.getElementById("programList").innerHTML=a.length?a.map(p=>`<div class="item"><span class="badge ${p.status==="COMPLETED"?"":"orange"}">${esc(p.status)}</span>${p.required?'<span class="badge red">REQUIRED</span>':''}<h3>${esc(p.title)}</h3><p>${esc(p.description||"Professional development program.")}</p><div class="meta">${esc(p.category||"Professional Development")} • ${fmt(p.start_date)}</div><div class="actions"><button class="btn btn-green" onclick="enroll('${p.id}')">Enroll</button><button class="btn btn-dark" onclick="programDetails('${p.id}')">View Details</button></div></div>`).join(""):"<div class='empty'>No training programs found.</div>"}catch(e){toast(e.message)}}
+async function enroll(id){try{await api("/enroll",{method:"POST",body:{program_id:id}});toast("Training enrollment saved");loadAll()}catch(e){toast(e.message)}}
+async function programDetails(id){try{let p=await api("/programs/"+id);alert(`${p.title}\n\n${p.description||"No description"}\n\nSessions: ${p.sessions?.length||0}\nGroups: ${p.groups?.length||0}\nMaterials: ${p.materials?.length||0}`)}catch(e){toast(e.message)}}
+async function loadSessions(){try{let a=await api("/sessions/upcoming");document.getElementById("sessionList").innerHTML=a.length?a.map(s=>`<div class="item"><span class="badge blue">${esc(s.meeting_type)}</span><h3>${esc(s.title)}</h3><p>${esc(s.description||s.program_title||"Training session")}</p><div class="meta">${fmt(s.session_date)}${s.trainer_name?" • "+esc(s.trainer_name):""}</div><div class="actions">${s.meeting_url?`<a class="btn btn-blue" target="_blank" rel="noopener" href="${esc(s.meeting_url)}">Join Meeting</a>`:""}<button class="btn btn-green" onclick="attendance('${s.id}')">Mark Attendance</button>${s.recording_url?`<a class="btn btn-dark" target="_blank" rel="noopener" href="${esc(s.recording_url)}">Recording</a>`:""}</div></div>`).join(""):"<div class='empty'>No upcoming sessions.</div>"}catch(e){toast(e.message)}}
+async function attendance(id){try{await api("/attendance",{method:"POST",body:{session_id:id,status:"PRESENT",joined_at:new Date().toISOString()}});toast("Attendance recorded")}catch(e){toast(e.message)}}
+async function loadGroups(){try{let ps=await api("/programs");let out=[];for(let p of ps.slice(0,30)){let g=await api("/groups/"+p.id);g.forEach(x=>out.push({...x,program_title:p.title}))}document.getElementById("groupList").innerHTML=out.length?out.map(g=>`<div class="item"><span class="badge blue">WORKSHOP</span><h3>${esc(g.name)}</h3><p>${esc(g.description||"Training workshop group")}</p><div class="meta">${esc(g.program_title)}${g.facilitator_name?" • Facilitator: "+esc(g.facilitator_name):""}</div></div>`).join(""):"<div class='empty'>No workshop groups have been created yet.</div>"}catch(e){toast(e.message)}}
+async function loadMaterials(){try{let q=document.getElementById("materialSearch").value;let a=await api("/materials"+(q?"?search="+encodeURIComponent(q):""));document.getElementById("materialList").innerHTML=a.length?a.map(m=>`<div class="item"><span class="badge">${esc(m.material_type||"RESOURCE")}</span><h3>${esc(m.title)}</h3><p>${esc(m.description||"Training resource")}</p><div class="meta">${esc(m.file_name||"Online resource")} • ${m.file_size?Math.round(m.file_size/1024)+" KB":""}</div><div class="actions">${m.signed_url?`<a class="btn btn-dark" target="_blank" rel="noopener" href="${esc(m.signed_url)}">Open Package</a>`:m.external_url?`<a class="btn btn-dark" target="_blank" rel="noopener" href="${esc(m.external_url)}">Open Resource</a>`:"<span class='badge orange'>No file</span>"}</div></div>`).join(""):"<div class='empty'>No training packages found.</div>"}catch(e){toast(e.message)}}
+async function loadMine(){try{let a=await api("/my-training");document.getElementById("mineList").innerHTML=a.length?`<div class="grid">${a.map(x=>`<div class="item"><span class="badge ${x.status==="COMPLETED"?"":"blue"}">${esc(x.status)}</span><h3>${esc(x.title)}</h3><p>${esc(x.category||"Professional Development")}</p><div class="meta">Progress: ${x.progress||0}%${x.score!=null?" • Score: "+x.score:""}</div><div class="progress"><i style="width:${Math.max(0,Math.min(100,x.progress||0))}%"></i></div></div>`).join("")}</div>`:"<div class='empty'>You have not enrolled in any training yet.</div>"}catch(e){toast(e.message)}}
+async function loadCertificates(){try{let a=await api("/certificates");document.getElementById("certificateList").innerHTML=a.length?a.map(c=>`<div class="item"><span class="badge">ACTIVE</span><h3>${esc(c.title)}</h3><p>${esc(c.program_title||"Training Certificate")}</p><div class="meta">Certificate: ${esc(c.certificate_number)} • Issued ${fmt(c.issued_date)}</div><div class="actions">${c.signed_url?`<a class="btn btn-dark" target="_blank" rel="noopener" href="${esc(c.signed_url)}">View Certificate</a>`:""}<button class="btn btn-green" onclick="verify('${esc(c.verification_code)}')">Verify</button></div></div>`).join(""):"<div class='empty'>No certificates have been issued to you yet.</div>"}catch(e){toast(e.message)}}
+async function verify(code){try{let d=await api("/certificates/verify/"+encodeURIComponent(code));alert(d.valid?"Certificate verified successfully.":"Certificate is not currently valid.")}catch(e){toast(e.message)}}
+async function loadNotifications(){try{let a=await api("/notifications");let u=a.filter(x=>!x.is_read).length;document.getElementById("statAlerts").textContent=u;let html=a.length?a.map(n=>`<div class="item" style="margin-bottom:8px"><span class="badge ${n.is_read?"":"orange"}">${n.is_read?"READ":"NEW"}</span><span class="badge">${esc(n.notification_type)}</span><h3>${esc(n.title)}</h3><p>${esc(n.message)}</p><div class="meta">${fmt(n.created_at)}</div>${!n.is_read?`<div class="actions"><button class="btn btn-green" onclick="markRead('${n.id}')">Mark Read</button></div>`:""}</div>`).join(""):"<div class='empty'>No training notifications.</div>";document.getElementById("notificationList").innerHTML=html;document.getElementById("overviewAlerts").innerHTML=a.slice(0,4).map(n=>`<div class="notice" style="margin-bottom:7px"><b>${esc(n.title)}</b><br>${esc(n.message)}</div>`).join("")||"<div class='empty'>No current training alerts.</div>"}catch(e){toast(e.message)}}
+async function markRead(id){try{await api("/notifications/"+id+"/read",{method:"PATCH"});loadNotifications()}catch(e){toast(e.message)}}
+async function markAll(){try{await api("/notifications/read-all",{method:"PATCH"});loadNotifications();toast("Notifications marked as read")}catch(e){toast(e.message)}}
+async function loadCalendar(){try{let a=await api("/sessions");let d=new Date(),y=d.getFullYear(),m=d.getMonth(),days=new Date(y,m+1,0).getDate(),first=new Date(y,m,1).getDay();document.getElementById("calendarTitle").textContent=d.toLocaleString([],{month:"long",year:"numeric"});let h="<div class='calendar'>"+["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(x=>`<div class="dayname">${x}</div>`).join("");for(let i=0;i<first;i++)h+="<div class='day'></div>";for(let n=1;n<=days;n++){let ev=a.filter(s=>{let z=new Date(s.session_date);return z.getFullYear()==y&&z.getMonth()==m&&z.getDate()==n});h+=`<div class="day"><strong>${n}</strong>${ev.map(s=>`<div class="event">${esc(s.title)}</div>`).join("")}</div>`}document.getElementById("calendarBox").innerHTML=h+"</div>"}catch(e){toast(e.message)}}
+async function loadStaff(){if(!isAdmin())return;try{let a=await api("/admin/staff");["staffSelect","certificateStaff","notifyStaff"].forEach(id=>{let s=document.getElementById(id);if(!s)return;let first=id==="notifyStaff"?'<option value="">All Active Staff</option>':"<option value=''>Select Staff</option>";s.innerHTML=first+a.map(x=>`<option value="${x.id}">${esc(x.first_name+" "+x.last_name)}${x.staff_number?" • "+esc(x.staff_number):""}</option>`).join("")})}catch(e){toast(e.message)}}
+async function loadAll(){await Promise.all([loadDashboard(),loadPrograms(),loadSessions(),loadGroups(),loadMaterials(),loadMine(),loadCertificates(),loadNotifications(),loadCalendar(),loadStaff()]);document.getElementById("overviewSessions").innerHTML=document.getElementById("sessionList").innerHTML}
+function formObj(form){let o={};new FormData(form).forEach((v,k)=>{o[k]=v});if(o.required!==undefined)o.required=o.required==="true";return o}
+document.getElementById("programForm").onsubmit=async e=>{e.preventDefault();try{await api("/programs",{method:"POST",body:formObj(e.target)});toast("Training program created");closeModal("programModal");e.target.reset();loadAll()}catch(x){toast(x.message)}};
+document.getElementById("sessionForm").onsubmit=async e=>{e.preventDefault();try{await api("/sessions",{method:"POST",body:formObj(e.target)});toast("Training session scheduled");closeModal("sessionModal");e.target.reset();loadAll()}catch(x){toast(x.message)}};
+document.getElementById("materialForm").onsubmit=async e=>{e.preventDefault();try{await api("/materials/upload",{method:"POST",body:new FormData(e.target)});toast("Training package uploaded");closeModal("materialModal");e.target.reset();loadAll()}catch(x){toast(x.message)}};
+document.getElementById("groupForm").onsubmit=async e=>{e.preventDefault();try{await api("/groups",{method:"POST",body:formObj(e.target)});toast("Workshop group created");closeModal("groupModal");e.target.reset();loadAll()}catch(x){toast(x.message)}};
+document.getElementById("assignForm").onsubmit=async e=>{e.preventDefault();try{await api("/enrollments",{method:"POST",body:formObj(e.target)});toast("Staff member assigned");closeModal("assignModal");e.target.reset();loadAll()}catch(x){toast(x.message)}};
+document.getElementById("certificateForm").onsubmit=async e=>{e.preventDefault();try{await api("/certificates",{method:"POST",body:new FormData(e.target)});toast("Certificate issued");closeModal("certificateModal");e.target.reset();loadAll()}catch(x){toast(x.message)}};
+document.getElementById("notifyForm").onsubmit=async e=>{e.preventDefault();try{let o=formObj(e.target);if(!o.staff_id)delete o.staff_id;await api("/notifications",{method:"POST",body:o});toast("Notification sent");closeModal("notifyModal");e.target.reset();loadAll()}catch(x){toast(x.message)}};
+function openAdmin(){if(isAdmin())openModal("adminModal");else toast("Administrator access required")}
+document.getElementById("logout").onclick=()=>{sessionStorage.removeItem("kenbridgeStaffLoggedIn");localStorage.removeItem("kenbridgeStaffLoggedIn")};
+document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("show")}));
+document.addEventListener("DOMContentLoaded",()=>{tabInit();if(!isAdmin())document.getElementById("adminBtn").style.display="none";loadAll()});
 </script>
-
 </body>
 </html>
