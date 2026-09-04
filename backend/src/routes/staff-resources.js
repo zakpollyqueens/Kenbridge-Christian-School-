@@ -1,3 +1,4 @@
+```js
 const express=require("express");
 const multer=require("multer");
 const crypto=require("crypto");
@@ -12,506 +13,343 @@ const upload=multer({
   limits:{fileSize:25*1024*1024}
 });
 
-async function getAuthUser(req){
-  const authorization=req.headers.authorization;
+async function auth(req){
+  const h=req.headers.authorization;
+  if(!h?.startsWith("Bearer "))
+    throw Object.assign(new Error("Authentication required."),{status:401});
 
-  if(!authorization?.startsWith("Bearer ")){
-    const e=new Error("Authorization token is required.");
-    e.status=401;
-    throw e;
-  }
-
-  const token=authorization.replace("Bearer ","");
-  const {data,error}=await supabase.auth.getUser(token);
-
-  if(error||!data?.user){
-    const e=new Error("Invalid or expired session.");
-    e.status=401;
-    throw e;
-  }
+  const {data,error}=await supabase.auth.getUser(h.slice(7));
+  if(error||!data?.user)
+    throw Object.assign(new Error("Invalid or expired session."),{status:401});
 
   const {rows}=await pool.query(
-    `SELECT id,full_name,email,role,is_active
-     FROM users WHERE id=$1 LIMIT 1`,
+    `SELECT id,full_name,email,role,is_active FROM users WHERE id=$1 LIMIT 1`,
     [data.user.id]
   );
 
   const user=rows[0];
-
-  if(!user){
-    const e=new Error("Your user profile was not found.");
-    e.status=403;
-    throw e;
-  }
-
-  if(!user.is_active){
-    const e=new Error("Your account is inactive.");
-    e.status=403;
-    throw e;
-  }
+  if(!user)
+    throw Object.assign(new Error("User profile not found."),{status:403});
+  if(user.is_active===false)
+    throw Object.assign(new Error("Your account is inactive."),{status:403});
 
   return user;
 }
 
-async function getStaff(user){
+async function staff(user){
   const {rows}=await pool.query(
-    `SELECT id,user_id,staff_number,first_name,last_name,
-            department,job_title,employment_status
-     FROM staff
-     WHERE user_id=$1
-     LIMIT 1`,
+    `SELECT id,user_id,staff_number,first_name,last_name,department,job_title,employment_status
+     FROM staff WHERE user_id=$1 LIMIT 1`,
     [user.id]
   );
 
-  if(!rows.length){
-    const e=new Error("Your staff profile could not be found.");
-    e.status=403;
-    throw e;
-  }
+  if(!rows[0])
+    throw Object.assign(new Error("Staff profile not found."),{status:403});
 
   return rows[0];
 }
 
-function isAdmin(user){
-  return String(user.role||"").toUpperCase()==="ADMIN";
-}
+const admin=u=>String(u.role||"").toUpperCase()==="ADMIN";
+const text=v=>String(v??"").trim();
 
-function clean(value){
-  return String(value||"").trim();
-}
-
-function cleanFileName(name){
-  return String(name||"file")
-    .replace(/[^\w.\-]+/g,"_")
-    .replace(/_+/g,"_");
-}
-
-function cleanCategory(value){
+function category(v){
   const allowed=[
-    "EXAMS",
-    "TESTS",
-    "LESSON PLANS",
-    "NOTES",
-    "ASSIGNMENTS",
-    "SCHEMES OF WORK",
-    "PAST PAPERS",
-    "CHRISTIAN EDUCATION",
-    "TEACHING AIDS",
-    "POLICIES",
-    "FORMS",
-    "OTHER"
+    "EXAMS","TESTS","LESSON PLANS","NOTES","ASSIGNMENTS",
+    "SCHEMES OF WORK","PAST PAPERS","CHRISTIAN EDUCATION",
+    "TEACHING AIDS","POLICIES","FORMS","OTHER"
   ];
-
-  const valueUpper=clean(value).toUpperCase();
-  return allowed.includes(valueUpper)?valueUpper:"OTHER";
+  const x=text(v).toUpperCase();
+  return allowed.includes(x)?x:"OTHER";
 }
 
-/* GET RESOURCES */
+function safe(v){
+  return String(v||"").replace(/[^\w.\-]+/g,"_").replace(/_+/g,"_");
+}
+
+async function signed(path){
+  if(!path)return null;
+  const {data,error}=await supabase.storage
+    .from(BUCKET)
+    .createSignedUrl(path,3600);
+  return error?null:data?.signedUrl||null;
+}
+
+/* LIST */
 router.get("/",async(req,res)=>{
   try{
-    const user=await getAuthUser(req);
-    const staff=await getStaff(user);
-
-    const search=clean(req.query.search);
-    const category=clean(req.query.category).toUpperCase();
-    const subject=clean(req.query.subject);
-    const classLevel=clean(req.query.class_level).toUpperCase();
-    const academicYear=clean(req.query.academic_year);
-    const term=clean(req.query.term).toUpperCase();
+    const user=await auth(req);
+    const st=await staff(user);
 
     const values=[];
-    const conditions=[];
+    const where=[];
 
-    if(!isAdmin(user)){
-      values.push(staff.id);
-      conditions.push(`r.uploaded_by=$${values.length}`);
+    if(!admin(user)){
+      values.push(st.id);
+      where.push(`r.uploaded_by=$${values.length}`);
     }
 
-    if(search){
-      values.push(`%${search}%`);
-      const n=values.length;
-      conditions.push(
-        `(LOWER(COALESCE(r.title,'')) LIKE LOWER($${n})
-          OR LOWER(COALESCE(r.description,'')) LIKE LOWER($${n})
-          OR LOWER(COALESCE(r.file_name,'')) LIKE LOWER($${n})
-          OR LOWER(COALESCE(r.subject,'')) LIKE LOWER($${n}))`
-      );
-    }
+    const filters=[
+      ["search",v=>{
+        values.push(`%${text(v)}%`);
+        const n=values.length;
+        where.push(`(
+          LOWER(COALESCE(r.title,'')) LIKE LOWER($${n}) OR
+          LOWER(COALESCE(r.description,'')) LIKE LOWER($${n}) OR
+          LOWER(COALESCE(r.file_name,'')) LIKE LOWER($${n}) OR
+          LOWER(COALESCE(r.subject,'')) LIKE LOWER($${n})
+        )`);
+      }],
+      ["category",v=>{
+        values.push(text(v).toUpperCase());
+        where.push(`UPPER(COALESCE(r.category,''))=$${values.length}`);
+      }],
+      ["subject",v=>{
+        values.push(text(v));
+        where.push(`LOWER(COALESCE(r.subject,''))=LOWER($${values.length})`);
+      }],
+      ["class_level",v=>{
+        values.push(text(v).toUpperCase());
+        where.push(`UPPER(COALESCE(r.class_level,''))=$${values.length}`);
+      }],
+      ["academic_year",v=>{
+        values.push(text(v));
+        where.push(`COALESCE(r.academic_year,'')=$${values.length}`);
+      }],
+      ["term",v=>{
+        values.push(text(v).toUpperCase());
+        where.push(`UPPER(COALESCE(r.term,''))=$${values.length}`);
+      }]
+    ];
 
-    if(category){
-      values.push(category);
-      conditions.push(`UPPER(COALESCE(r.category,''))=$${values.length}`);
-    }
+    filters.forEach(([key,fn])=>{
+      if(text(req.query[key]))fn(req.query[key]);
+    });
 
-    if(subject){
-      values.push(subject);
-      conditions.push(`LOWER(COALESCE(r.subject,''))=LOWER($${values.length})`);
-    }
-
-    if(classLevel){
-      values.push(classLevel);
-      conditions.push(`UPPER(COALESCE(r.class_level,''))=$${values.length}`);
-    }
-
-    if(academicYear){
-      values.push(academicYear);
-      conditions.push(`COALESCE(r.academic_year,'')=$${values.length}`);
-    }
-
-    if(term){
-      values.push(term);
-      conditions.push(`UPPER(COALESCE(r.term,''))=$${values.length}`);
-    }
-
-    const where=conditions.length
-      ?`WHERE ${conditions.join(" AND ")}`
-      :"";
+    const sqlWhere=where.length?`WHERE ${where.join(" AND ")}`:"";
 
     const {rows}=await pool.query(
       `SELECT
-        r.id,
-        r.title,
-        r.description,
-        r.category,
-        r.subject,
-        r.class_level,
-        r.academic_year,
-        r.term,
-        r.file_name,
-        r.file_path,
-        r.file_type,
-        r.file_size,
-        r.uploaded_by,
-        r.created_at,
-        r.updated_at,
+        r.id,r.title,r.description,r.category,r.subject,r.class_level,
+        r.academic_year,r.term,r.file_name,r.file_path,r.file_type,
+        r.file_size,r.uploaded_by,r.created_at,r.updated_at,
         COALESCE(
-          NULLIF(TRIM(CONCAT_WS(' ',
-            s.first_name,
-            s.last_name
-          )),''),
-          u.full_name,
-          'Staff'
+          NULLIF(TRIM(CONCAT_WS(' ',s.first_name,s.last_name)),''),
+          u.full_name,'Staff'
         ) AS uploader_name
        FROM staff_resources r
        LEFT JOIN staff s ON s.id=r.uploaded_by
        LEFT JOIN users u ON u.id=s.user_id
-       ${where}
+       ${sqlWhere}
        ORDER BY r.created_at DESC`,
       values
     );
 
-    const resources=await Promise.all(
-      rows.map(async resource=>{
-        let file_url=null;
+    const resources=await Promise.all(rows.map(async r=>({
+      ...r,
+      file_url:await signed(r.file_path),
+      can_delete:admin(user)||String(r.uploaded_by)===String(st.id)
+    })));
 
-        try{
-          const {data,error}=await supabase
-            .storage
-            .from(BUCKET)
-            .createSignedUrl(resource.file_path,3600);
-
-          if(!error)file_url=data?.signedUrl||null;
-        }catch(e){
-          console.error("SIGNED URL ERROR:",e.message);
-        }
-
-        return {
-          ...resource,
-          file_url,
-          can_delete:
-            isAdmin(user)||
-            String(resource.uploaded_by)===String(staff.id)
-        };
-      })
-    );
-
-    return res.status(200).json({
-      success:true,
-      resources,
-      count:resources.length
-    });
-
-  }catch(error){
-    console.error("GET STAFF RESOURCES ERROR:",error.message);
-
-    return res.status(error.status||500).json({
+    res.json({success:true,count:resources.length,resources});
+  }catch(e){
+    console.error("RESOURCES LIST:",e);
+    res.status(e.status||500).json({
       success:false,
-      message:error.message||"Unable to retrieve staff resources."
+      message:e.message||"Unable to load resources."
     });
   }
 });
 
-/* GET ONE RESOURCE */
+/* ONE */
 router.get("/:id",async(req,res)=>{
   try{
-    const user=await getAuthUser(req);
-    const staff=await getStaff(user);
+    const user=await auth(req);
+    const st=await staff(user);
 
     const {rows}=await pool.query(
       `SELECT
         r.*,
         COALESCE(
-          NULLIF(TRIM(CONCAT_WS(' ',
-            s.first_name,
-            s.last_name
-          )),''),
-          u.full_name,
-          'Staff'
+          NULLIF(TRIM(CONCAT_WS(' ',s.first_name,s.last_name)),''),
+          u.full_name,'Staff'
         ) AS uploader_name
        FROM staff_resources r
        LEFT JOIN staff s ON s.id=r.uploaded_by
        LEFT JOIN users u ON u.id=s.user_id
-       WHERE r.id=$1
-       LIMIT 1`,
+       WHERE r.id=$1 LIMIT 1`,
       [req.params.id]
     );
 
-    const resource=rows[0];
+    const r=rows[0];
 
-    if(!resource){
+    if(!r)
       return res.status(404).json({
-        success:false,
-        message:"Resource was not found."
+        success:false,message:"Resource not found."
       });
-    }
 
-    if(
-      !isAdmin(user)&&
-      String(resource.uploaded_by)!==String(staff.id)
-    ){
+    if(!admin(user)&&String(r.uploaded_by)!==String(st.id))
       return res.status(403).json({
-        success:false,
-        message:"You do not have permission to access this resource."
+        success:false,message:"You do not have access to this resource."
       });
-    }
 
-    const {data,error}=await supabase
-      .storage
-      .from(BUCKET)
-      .createSignedUrl(resource.file_path,3600);
+    r.file_url=await signed(r.file_path);
 
-    if(error){
-      return res.status(500).json({
-        success:false,
-        message:"Unable to generate the resource link."
-      });
-    }
-
-    resource.file_url=data?.signedUrl||null;
-
-    return res.status(200).json({
-      success:true,
-      resource
-    });
-
-  }catch(error){
-    console.error("GET STAFF RESOURCE ERROR:",error.message);
-
-    return res.status(error.status||500).json({
+    res.json({success:true,resource:r});
+  }catch(e){
+    console.error("RESOURCE GET:",e);
+    res.status(e.status||500).json({
       success:false,
-      message:error.message||"Unable to retrieve resource."
+      message:e.message||"Unable to load resource."
     });
   }
 });
 
-/* UPLOAD RESOURCE */
+/* UPLOAD */
 router.post("/upload",upload.single("file"),async(req,res)=>{
-  let filePath=null;
+  let path=null;
 
   try{
-    const user=await getAuthUser(req);
-    const staff=await getStaff(user);
+    const user=await auth(req);
+    const st=await staff(user);
 
-    if(!req.file){
+    if(!req.file)
       return res.status(400).json({
-        success:false,
-        message:"Please select a file to upload."
+        success:false,message:"Please select a file."
       });
-    }
 
-    const title=clean(req.body?.title);
-    const description=clean(req.body?.description);
-    const category=cleanCategory(req.body?.category);
-    const subject=clean(req.body?.subject);
-    const classLevel=clean(req.body?.class_level).toUpperCase();
-    const academicYear=clean(req.body?.academic_year);
-    const term=clean(req.body?.term).toUpperCase();
+    const title=text(req.body.title);
+    const classLevel=text(req.body.class_level).toUpperCase();
 
-    if(!title){
+    if(!title)
       return res.status(400).json({
-        success:false,
-        message:"Resource title is required."
+        success:false,message:"Resource title is required."
       });
-    }
 
-    if(!classLevel){
+    if(!classLevel)
       return res.status(400).json({
-        success:false,
-        message:"Class level is required."
+        success:false,message:"Class level is required."
       });
-    }
 
-    const originalName=cleanFileName(req.file.originalname);
-    const extension=originalName.includes(".")
-      ?originalName.split(".").pop().toLowerCase()
+    const original=safe(req.file.originalname);
+    const ext=original.includes(".")
+      ?original.split(".").pop().toLowerCase()
       :"file";
 
-    filePath=
-      `resources/${category.toLowerCase().replace(/\s+/g,"-")}/`+
-      `${classLevel.replace(/[^\w\-]+/g,"-")}/`+
-      `${staff.id}/`+
-      `${Date.now()}-${crypto.randomUUID()}.${extension}`;
+    const cat=category(req.body.category);
 
-    const {error:storageError}=await supabase
-      .storage
+    path=
+      `resources/${cat.toLowerCase().replace(/\s+/g,"-")}/`+
+      `${classLevel.replace(/[^\w-]+/g,"-")}/`+
+      `${st.id}/${Date.now()}-${crypto.randomUUID()}.${ext}`;
+
+    const {error:storeError}=await supabase.storage
       .from(BUCKET)
-      .upload(
-        filePath,
-        req.file.buffer,
-        {
-          contentType:req.file.mimetype,
-          upsert:false
-        }
-      );
-
-    if(storageError){
-      return res.status(500).json({
-        success:false,
-        message:"Resource could not be uploaded: "+
-          storageError.message
+      .upload(path,req.file.buffer,{
+        contentType:req.file.mimetype,
+        upsert:false
       });
-    }
+
+    if(storeError)
+      throw new Error("Storage upload failed: "+storeError.message);
 
     const {rows}=await pool.query(
       `INSERT INTO staff_resources
-       (
-        title,
-        description,
-        category,
-        subject,
-        class_level,
-        academic_year,
-        term,
-        file_name,
-        file_path,
-        file_type,
-        file_size,
-        uploaded_by
-       )
-       VALUES
-       ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
+       (title,description,category,subject,class_level,academic_year,term,
+        file_name,file_path,file_type,file_size,uploaded_by)
+       VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
        RETURNING *`,
       [
         title,
-        description||null,
-        category,
-        subject||null,
+        text(req.body.description)||null,
+        cat,
+        text(req.body.subject)||null,
         classLevel,
-        academicYear||null,
-        term||null,
+        text(req.body.academic_year)||null,
+        text(req.body.term).toUpperCase()||null,
         req.file.originalname,
-        filePath,
+        path,
         req.file.mimetype||null,
         req.file.size||null,
-        staff.id
+        st.id
       ]
     );
 
-    return res.status(201).json({
+    res.status(201).json({
       success:true,
       message:"Educational resource uploaded successfully.",
       resource:rows[0]
     });
 
-  }catch(error){
-    console.error("UPLOAD STAFF RESOURCE ERROR:",error.message);
+  }catch(e){
+    console.error("RESOURCE UPLOAD:",e);
 
-    if(filePath){
+    if(path){
       try{
-        await supabase
-          .storage
-          .from(BUCKET)
-          .remove([filePath]);
-      }catch(removeError){
-        console.error(
-          "RESOURCE STORAGE ROLLBACK ERROR:",
-          removeError.message
-        );
+        await supabase.storage.from(BUCKET).remove([path]);
+      }catch(x){
+        console.error("STORAGE ROLLBACK:",x.message);
       }
     }
 
-    return res.status(error.status||500).json({
+    res.status(e.status||500).json({
       success:false,
-      message:error.message||"Unable to upload resource."
+      message:e.message||"Unable to upload resource."
     });
   }
 });
 
-/* DELETE RESOURCE */
+/* DELETE */
 router.delete("/:id",async(req,res)=>{
   try{
-    const user=await getAuthUser(req);
-    const staff=await getStaff(user);
+    const user=await auth(req);
+    const st=await staff(user);
 
     const {rows}=await pool.query(
-      `SELECT *
-       FROM staff_resources
-       WHERE id=$1
-       LIMIT 1`,
+      `SELECT * FROM staff_resources WHERE id=$1 LIMIT 1`,
       [req.params.id]
     );
 
-    const resource=rows[0];
+    const r=rows[0];
 
-    if(!resource){
+    if(!r)
       return res.status(404).json({
-        success:false,
-        message:"Resource was not found."
+        success:false,message:"Resource not found."
       });
-    }
 
-    if(
-      !isAdmin(user)&&
-      String(resource.uploaded_by)!==String(staff.id)
-    ){
+    if(!admin(user)&&String(r.uploaded_by)!==String(st.id))
       return res.status(403).json({
         success:false,
         message:"You can only delete resources you uploaded."
       });
-    }
 
-    if(resource.file_path){
-      const {error:storageError}=await supabase
-        .storage
+    if(r.file_path){
+      const {error}=await supabase.storage
         .from(BUCKET)
-        .remove([resource.file_path]);
+        .remove([r.file_path]);
 
-      if(storageError){
-        return res.status(500).json({
-          success:false,
-          message:"The resource file could not be removed from storage."
-        });
-      }
+      if(error)
+        throw new Error("Storage deletion failed: "+error.message);
     }
 
     await pool.query(
       `DELETE FROM staff_resources WHERE id=$1`,
-      [resource.id]
+      [r.id]
     );
 
-    return res.status(200).json({
+    res.json({
       success:true,
       message:"Resource deleted successfully."
     });
 
-  }catch(error){
-    console.error("DELETE STAFF RESOURCE ERROR:",error.message);
+  }catch(e){
+    console.error("RESOURCE DELETE:",e);
 
-    return res.status(error.status||500).json({
+    res.status(e.status||500).json({
       success:false,
-      message:error.message||"Unable to delete resource."
+      message:e.message||"Unable to delete resource."
     });
   }
 });
 
 module.exports=router;
+```
