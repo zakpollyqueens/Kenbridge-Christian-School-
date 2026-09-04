@@ -14,6 +14,7 @@ const staffResourcesRoutes = require("./routes/staff-resources");
 const staffContentRoutes = require("./routes/staff-content");
 const tasksRoutes = require("./routes/tasks");
 const messagesRoutes = require("./routes/messages");
+
 const adminNotificationsRoutes = require("./routes/admin-notifications");
 const reportsRoutes = require("./routes/reports");
 const boardRoutes=require("./routes/board");
@@ -24,6 +25,8 @@ const documentsRoutes = require("./routes/documents");
 const calendarRoutes = require("./routes/calendar");
 const attendanceRoutes = require("./routes/attendance");
 const staffRoutes = require("./routes/staff");
+const boardUploadRoutes=require("./routes/board-upload");
+const boardUploadRoutes=require("./routes/board-upload");
 const publicContentRoutes = require("./routes/public-content");
 
 // New submissions workflow
@@ -102,6 +105,7 @@ app.use("/api/public", publicContentRoutes);
 app.use("/api/resources", staffResourcesRoutes);
 app.use("/api/leave", leaveRoutes);
 app.use("/api/reports", reportsRoutes);
+app.use("/api/board-upload",boardUploadRoutes);
 app.use("/api/notifications", staffNotificationsRoutes);
 app.use("/api/admin/notifications", adminNotificationsRoutes);
 app.use("/api/staff", staffRoutes);
