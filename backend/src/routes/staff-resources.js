@@ -23,13 +23,18 @@ async function auth(req){
     throw Object.assign(new Error("Invalid or expired session."),{status:401});
 
   const {rows}=await pool.query(
-    `SELECT id,full_name,email,role,is_active FROM users WHERE id=$1 LIMIT 1`,
+    `SELECT id,full_name,email,role,is_active
+     FROM users
+     WHERE id=$1
+     LIMIT 1`,
     [data.user.id]
   );
 
   const user=rows[0];
+
   if(!user)
     throw Object.assign(new Error("User profile not found."),{status:403});
+
   if(user.is_active===false)
     throw Object.assign(new Error("Your account is inactive."),{status:403});
 
@@ -38,8 +43,11 @@ async function auth(req){
 
 async function staff(user){
   const {rows}=await pool.query(
-    `SELECT id,user_id,staff_number,first_name,last_name,department,job_title,employment_status
-     FROM staff WHERE user_id=$1 LIMIT 1`,
+    `SELECT id,user_id,staff_number,first_name,last_name,
+            department,job_title,employment_status
+     FROM staff
+     WHERE user_id=$1
+     LIMIT 1`,
     [user.id]
   );
 
@@ -58,19 +66,24 @@ function category(v){
     "SCHEMES OF WORK","PAST PAPERS","CHRISTIAN EDUCATION",
     "TEACHING AIDS","POLICIES","FORMS","OTHER"
   ];
+
   const x=text(v).toUpperCase();
   return allowed.includes(x)?x:"OTHER";
 }
 
 function safe(v){
-  return String(v||"").replace(/[^\w.\-]+/g,"_").replace(/_+/g,"_");
+  return String(v||"")
+    .replace(/[^\w.\-]+/g,"_")
+    .replace(/_+/g,"_");
 }
 
 async function signed(path){
   if(!path)return null;
+
   const {data,error}=await supabase.storage
     .from(BUCKET)
     .createSignedUrl(path,3600);
+
   return error?null:data?.signedUrl||null;
 }
 
@@ -92,6 +105,7 @@ router.get("/",async(req,res)=>{
       ["search",v=>{
         values.push(`%${text(v)}%`);
         const n=values.length;
+
         where.push(`(
           LOWER(COALESCE(r.title,'')) LIKE LOWER($${n}) OR
           LOWER(COALESCE(r.description,'')) LIKE LOWER($${n}) OR
@@ -125,7 +139,9 @@ router.get("/",async(req,res)=>{
       if(text(req.query[key]))fn(req.query[key]);
     });
 
-    const sqlWhere=where.length?`WHERE ${where.join(" AND ")}`:"";
+    const sqlWhere=where.length
+      ?`WHERE ${where.join(" AND ")}`
+      :"";
 
     const {rows}=await pool.query(
       `SELECT
@@ -134,7 +150,8 @@ router.get("/",async(req,res)=>{
         r.file_size,r.uploaded_by,r.created_at,r.updated_at,
         COALESCE(
           NULLIF(TRIM(CONCAT_WS(' ',s.first_name,s.last_name)),''),
-          u.full_name,'Staff'
+          u.full_name,
+          'Staff'
         ) AS uploader_name
        FROM staff_resources r
        LEFT JOIN staff s ON s.id=r.uploaded_by
@@ -144,15 +161,25 @@ router.get("/",async(req,res)=>{
       values
     );
 
-    const resources=await Promise.all(rows.map(async r=>({
-      ...r,
-      file_url:await signed(r.file_path),
-      can_delete:admin(user)||String(r.uploaded_by)===String(st.id)
-    })));
+    const resources=await Promise.all(
+      rows.map(async r=>({
+        ...r,
+        file_url:await signed(r.file_path),
+        can_delete:
+          admin(user)||
+          String(r.uploaded_by)===String(st.id)
+      }))
+    );
 
-    res.json({success:true,count:resources.length,resources});
+    res.json({
+      success:true,
+      count:resources.length,
+      resources
+    });
+
   }catch(e){
     console.error("RESOURCES LIST:",e);
+
     res.status(e.status||500).json({
       success:false,
       message:e.message||"Unable to load resources."
@@ -171,12 +198,14 @@ router.get("/:id",async(req,res)=>{
         r.*,
         COALESCE(
           NULLIF(TRIM(CONCAT_WS(' ',s.first_name,s.last_name)),''),
-          u.full_name,'Staff'
+          u.full_name,
+          'Staff'
         ) AS uploader_name
        FROM staff_resources r
        LEFT JOIN staff s ON s.id=r.uploaded_by
        LEFT JOIN users u ON u.id=s.user_id
-       WHERE r.id=$1 LIMIT 1`,
+       WHERE r.id=$1
+       LIMIT 1`,
       [req.params.id]
     );
 
@@ -184,19 +213,26 @@ router.get("/:id",async(req,res)=>{
 
     if(!r)
       return res.status(404).json({
-        success:false,message:"Resource not found."
+        success:false,
+        message:"Resource not found."
       });
 
     if(!admin(user)&&String(r.uploaded_by)!==String(st.id))
       return res.status(403).json({
-        success:false,message:"You do not have access to this resource."
+        success:false,
+        message:"You do not have access to this resource."
       });
 
     r.file_url=await signed(r.file_path);
 
-    res.json({success:true,resource:r});
+    res.json({
+      success:true,
+      resource:r
+    });
+
   }catch(e){
     console.error("RESOURCE GET:",e);
+
     res.status(e.status||500).json({
       success:false,
       message:e.message||"Unable to load resource."
@@ -214,7 +250,8 @@ router.post("/upload",upload.single("file"),async(req,res)=>{
 
     if(!req.file)
       return res.status(400).json({
-        success:false,message:"Please select a file."
+        success:false,
+        message:"Please select a file."
       });
 
     const title=text(req.body.title);
@@ -222,15 +259,18 @@ router.post("/upload",upload.single("file"),async(req,res)=>{
 
     if(!title)
       return res.status(400).json({
-        success:false,message:"Resource title is required."
+        success:false,
+        message:"Resource title is required."
       });
 
     if(!classLevel)
       return res.status(400).json({
-        success:false,message:"Class level is required."
+        success:false,
+        message:"Class level is required."
       });
 
     const original=safe(req.file.originalname);
+
     const ext=original.includes(".")
       ?original.split(".").pop().toLowerCase()
       :"file";
@@ -250,12 +290,17 @@ router.post("/upload",upload.single("file"),async(req,res)=>{
       });
 
     if(storeError)
-      throw new Error("Storage upload failed: "+storeError.message);
+      throw new Error(
+        "Storage upload failed: "+storeError.message
+      );
 
     const {rows}=await pool.query(
       `INSERT INTO staff_resources
-       (title,description,category,subject,class_level,academic_year,term,
-        file_name,file_path,file_type,file_size,uploaded_by)
+       (
+         title,description,category,subject,class_level,
+         academic_year,term,file_name,file_path,file_type,
+         file_size,uploaded_by
+       )
        VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
        RETURNING *`,
       [
@@ -285,7 +330,9 @@ router.post("/upload",upload.single("file"),async(req,res)=>{
 
     if(path){
       try{
-        await supabase.storage.from(BUCKET).remove([path]);
+        await supabase.storage
+          .from(BUCKET)
+          .remove([path]);
       }catch(x){
         console.error("STORAGE ROLLBACK:",x.message);
       }
@@ -305,7 +352,10 @@ router.delete("/:id",async(req,res)=>{
     const st=await staff(user);
 
     const {rows}=await pool.query(
-      `SELECT * FROM staff_resources WHERE id=$1 LIMIT 1`,
+      `SELECT *
+       FROM staff_resources
+       WHERE id=$1
+       LIMIT 1`,
       [req.params.id]
     );
 
@@ -313,7 +363,8 @@ router.delete("/:id",async(req,res)=>{
 
     if(!r)
       return res.status(404).json({
-        success:false,message:"Resource not found."
+        success:false,
+        message:"Resource not found."
       });
 
     if(!admin(user)&&String(r.uploaded_by)!==String(st.id))
@@ -328,7 +379,9 @@ router.delete("/:id",async(req,res)=>{
         .remove([r.file_path]);
 
       if(error)
-        throw new Error("Storage deletion failed: "+error.message);
+        throw new Error(
+          "Storage deletion failed: "+error.message
+        );
     }
 
     await pool.query(
