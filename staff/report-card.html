@@ -11,7 +11,6 @@
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f3f6f4;color:#24372d;font-family:Arial,sans-serif}
-.page{min-height:100vh}
 .topbar{background:#08783f;color:#fff;padding:15px 0}
 .topbar-in,.wrap{width:min(1100px,94%);margin:auto}
 .topbar-in{display:flex;align-items:center;justify-content:space-between;gap:15px}
@@ -140,7 +139,7 @@ body{background:#fff}
 
 <script>
 document.addEventListener("DOMContentLoaded",()=>{
-const API_BASE=""https://kenbridge-christian-school.onrender.com" (https://kenbridge-christian-school.onrender.com)";
+const API_BASE = "https://kenbridge-christian-school.onrender.com";
 const params=new URLSearchParams(location.search);
 const studentId=params.get("student")||params.get("studentId")||params.get("id");
 const selectedYear=params.get("year")||"",selectedTerm=params.get("term")||"",selectedClass=params.get("class")||"";
@@ -159,7 +158,7 @@ function showError(text){
 loading.style.display="none";errorBox.textContent=text;errorBox.style.display="block";
 }
 function escapeHtml(text){
-return String(text).replace(/&/g,"&").replace(/</g,"<").replace(/>/g,">").replace(/"/g,""").replace(/'/g,"'");
+return String(text).replace(/&/g,"&").replace(/</g,"<").replace(/>/g,">").replace(/"/g,"\"").replace(/'/g,"'");
 }
 function setPhoto(student){
 const photo=document.getElementById("studentPhoto"),url=student.photo_url||student.photo||student.image_url;
