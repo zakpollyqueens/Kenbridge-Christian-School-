@@ -10,130 +10,142 @@
 
 <style>
 /* =========================
-   KENBRIDGE OPENING SCREEN
+   KENBRIDGE COUNTDOWN
    ========================= */
 .opening-screen{
 position:fixed;
 inset:0;
 z-index:999999;
 width:100%;
+height:100%;
 min-height:100vh;
 min-height:100dvh;
 display:flex;
 align-items:center;
 justify-content:center;
 overflow:hidden;
-background:radial-gradient(circle at center,rgba(255,255,255,.1) 0%,rgba(8,120,63,.96) 45%,#033b20 100%);
+background:#08783f;
 opacity:1;
 visibility:visible;
 pointer-events:auto;
-transition:opacity .7s ease,visibility .7s ease;
+isolation:isolate;
+transition:opacity .8s ease,visibility .8s ease;
 }
 
 .opening-screen::before{
 content:"";
 position:absolute;
 inset:0;
-background:linear-gradient(135deg,rgba(242,140,40,.13),transparent 32%,rgba(255,255,255,.05) 55%,transparent 75%);
+z-index:-2;
+background:
+radial-gradient(circle at 50% 35%,rgba(255,255,255,.12),transparent 32%),
+linear-gradient(145deg,#08783f 0%,#075f34 52%,#033b20 100%);
+}
+
+.opening-screen::after{
+content:"";
+position:absolute;
+inset:0;
+z-index:-1;
+background:
+radial-gradient(circle at 15% 20%,rgba(242,140,40,.16),transparent 18%),
+radial-gradient(circle at 85% 80%,rgba(242,140,40,.12),transparent 20%);
 pointer-events:none;
 }
 
 .opening-content{
 position:relative;
-z-index:5;
+z-index:10;
 width:min(92%,620px);
 padding:30px 20px;
-text-align:center;
 display:flex;
 flex-direction:column;
 align-items:center;
 justify-content:center;
+text-align:center;
 }
 
 .opening-logo-background{
-position:absolute;
-left:50%;
-top:50%;
-width:min(75vw,650px);
-height:min(75vw,650px);
-transform:translate(-50%,-50%);
-background:url("images/logo.jpg") center/contain no-repeat;
-opacity:.065;
-filter:blur(1px);
-pointer-events:none;
-z-index:1;
+display:none!important;
 }
 
 .opening-school-logo{
-width:clamp(125px,19vw,190px);
-height:clamp(125px,19vw,190px);
+width:clamp(125px,24vw,190px);
+height:clamp(125px,24vw,190px);
 object-fit:contain;
 display:block;
 margin:0 auto 18px;
 padding:9px;
 background:#fff;
 border-radius:50%;
-box-shadow:0 0 0 5px rgba(255,255,255,.9),0 18px 50px rgba(0,0,0,.25);
+box-shadow:
+0 0 0 5px rgba(255,255,255,.95),
+0 18px 55px rgba(0,0,0,.32);
 animation:openingLogoIn 1s ease both;
 }
 
 .opening-school-name{
 margin:0;
 color:#fff;
-font-size:clamp(1.65rem,4vw,2.65rem);
+font-size:clamp(1.7rem,5vw,2.7rem);
 line-height:1.08;
 font-weight:900;
-letter-spacing:.03em;
-text-shadow:0 3px 15px rgba(0,0,0,.25);
+letter-spacing:.025em;
+text-align:center;
+text-shadow:0 4px 18px rgba(0,0,0,.28);
 }
 
 .opening-school-subtitle{
-margin:7px 0 12px;
+margin:7px 0 15px;
 color:rgba(255,255,255,.9);
-font-size:.82rem;
+font-size:.8rem;
 font-weight:700;
-letter-spacing:.18em;
+letter-spacing:.2em;
 text-transform:uppercase;
 }
 
 .opening-small{
-margin:0 0 4px;
-color:rgba(255,255,255,.8);
+margin:0 0 5px;
+color:rgba(255,255,255,.78);
 font-size:.72rem;
 font-weight:800;
-letter-spacing:.2em;
+letter-spacing:.22em;
 }
 
 .opening-motto{
-margin:0 0 10px;
+margin:0 0 12px;
 color:#fff;
-font-size:.9rem;
+font-size:.92rem;
 font-style:italic;
 font-weight:600;
 }
 
 .opening-counter{
+min-width:90px;
 color:#fff;
-font-size:clamp(2.5rem,8vw,4rem);
+font-size:clamp(3rem,10vw,4.8rem);
 line-height:1;
 font-weight:900;
-text-shadow:0 4px 20px rgba(0,0,0,.3);
+text-align:center;
+text-shadow:0 5px 25px rgba(0,0,0,.35);
 }
 
 .opening-message{
 min-height:25px;
-margin:10px 0 15px;
-color:rgba(255,255,255,.95);
+margin:11px 0 16px;
+color:rgba(255,255,255,.96);
 font-size:.95rem;
 font-weight:600;
+text-align:center;
 }
 
 .opening-line{
-width:min(90%,360px);
+width:min(90%,380px);
 height:5px;
 overflow:hidden;
 border-radius:20px;
-background:rgba(255,255,255,.22);
+background:rgba(255,255,255,.2);
+box-shadow:0 2px 12px rgba(0,0,0,.15);
 }
 
 .opening-line span{
@@ -152,17 +164,47 @@ pointer-events:none;
 }
 
 @keyframes openingLogoIn{
-0%{opacity:0;transform:scale(.7) translateY(-20px)}
+0%{opacity:0;transform:scale(.72) translateY(-20px)}
 60%{opacity:1;transform:scale(1.05) translateY(0)}
 100%{opacity:1;transform:scale(1) translateY(0)}
 }
 
 @keyframes counterPop{
-0%{opacity:.25;transform:scale(.8)}
+0%{opacity:.2;transform:scale(.8)}
 60%{opacity:1;transform:scale(1.08)}
 100%{opacity:1;transform:scale(1)}
 }
 
+@media(max-width:600px){
+.opening-content{
+width:94%;
+padding:20px 14px;
+}
+
+.opening-school-logo{
+width:125px;
+height:125px;
+padding:7px;
+margin-bottom:15px;
+}
+
+.opening-school-name{
+font-size:1.55rem;
+}
+
+.opening-school-subtitle{
+font-size:.7rem;
+letter-spacing:.14em;
+}
+
+.opening-counter{
+font-size:3.2rem;
+}
+
+.opening-message{
+font-size:.85rem;
+}
+   }
 /* =========================
    NAVIGATION
    ========================= */
