@@ -1,163 +1,45 @@
 /* =========================================================
    KENBRIDGE CHRISTIAN SCHOOL
-   OPENING SCREEN / COUNTDOWN
+   GLOBAL JAVASCRIPT
+   Version: 2026
    ========================================================= */
 
-document.addEventListener("DOMContentLoaded", function () {
-
-    const openingScreen = document.getElementById("openingScreen");
-    const openingCounter = document.getElementById("openingCounter");
-    const openingMessage = document.getElementById("openingMessage");
-    const openingProgress = document.getElementById("openingProgress");
-
-    if (!openingScreen) {
-        return;
-    }
-
-    let countdown = 10;
-    const totalTime = 10;
-
-    /* Keep the homepage completely locked underneath */
-    document.body.classList.add("opening-active");
-    document.body.style.overflow = "hidden";
-
-    /* Make absolutely sure the opening screen covers the viewport */
-    openingScreen.style.position = "fixed";
-    openingScreen.style.inset = "0";
-    openingScreen.style.width = "100%";
-    openingScreen.style.height = "100dvh";
-    openingScreen.style.minHeight = "100vh";
-    openingScreen.style.zIndex = "999999";
-    openingScreen.style.opacity = "1";
-    openingScreen.style.visibility = "visible";
-    openingScreen.style.pointerEvents = "all";
-
-    /* Starting state */
-    openingCounter.textContent = countdown;
-
-    if (openingMessage) {
-        openingMessage.textContent = "Preparing your experience...";
-    }
-
-    if (openingProgress) {
-        openingProgress.style.width = "0%";
-    }
-
-    /* Countdown */
-    const countdownTimer = setInterval(function () {
-
-        countdown--;
-
-        if (openingCounter) {
-            openingCounter.textContent = countdown;
-        }
-
-        /* Progress bar */
-        if (openingProgress) {
-            const progress =
-                ((totalTime - countdown) / totalTime) * 100;
-
-            openingProgress.style.width = progress + "%";
-        }
-
-        /* Messages */
-        if (openingMessage) {
-
-            if (countdown > 7) {
-                openingMessage.textContent =
-                    "Preparing your experience...";
-            }
-
-            else if (countdown > 4) {
-                openingMessage.textContent =
-                    "Welcome to Kenbridge...";
-            }
-
-            else if (countdown > 1) {
-                openingMessage.textContent =
-                    "Learning with Purpose...";
-            }
-
-            else if (countdown === 1) {
-                openingMessage.textContent =
-                    "Almost ready...";
-            }
-        }
-
-        /* Finish */
-        if (countdown <= 0) {
-
-            clearInterval(countdownTimer);
-
-            if (openingCounter) {
-                openingCounter.textContent = "0";
-            }
-
-            if (openingProgress) {
-                openingProgress.style.width = "100%";
-            }
-
-            if (openingMessage) {
-                openingMessage.textContent =
-                    "Welcome to Kenbridge Christian School";
-            }
-
-            /* Give the final message a moment */
-            setTimeout(function () {
-
-                openingScreen.classList.add("hide");
-
-                document.body.classList.remove(
-                    "opening-active"
-                );
-
-                document.body.style.overflow = "";
-
-                /* Completely remove the opening layer */
-                setTimeout(function () {
-                    openingScreen.style.display = "none";
-                }, 700);
-
-            }, 500);
-        }
-
-    }, 1000);
-
-});
-/* =========================================================
-   KENBRIDGE CHRISTIAN SCHOOL
-   MAIN JAVASCRIPT
-   ========================================================= */
-
-document.addEventListener("DOMContentLoaded", function () {
+(function () {
+    "use strict";
 
     /* =====================================================
-       10-SECOND OPENING SCREEN
+       HELPERS
        ===================================================== */
 
-    const openingScreen =
-        document.getElementById("openingScreen");
+    const $ = (selector, parent = document) =>
+        parent.querySelector(selector);
 
-    const openingCounter =
-        document.getElementById("openingCounter");
+    const $$ = (selector, parent = document) =>
+        Array.from(parent.querySelectorAll(selector));
 
-    const openingMessage =
-        document.getElementById("openingMessage");
+    const on = (element, event, handler, options) => {
+        if (element) {
+            element.addEventListener(event, handler, options);
+        }
+    };
 
-    const openingProgress =
-        document.getElementById("openingProgress");
+    /* =====================================================
+       OPENING SCREEN
+       Runs only when the page contains #openingScreen.
+       ===================================================== */
 
-    if (
-        openingScreen &&
-        openingCounter &&
-        openingMessage
-    ) {
+    function initOpeningScreen() {
+        const screen = $("#openingScreen");
+        const counter = $("#openingCounter");
+        const message = $("#openingMessage");
+        const progress = $("#openingProgress");
 
-        document.body.classList.add("opening-active");
+        if (!screen) return;
 
         let count = 10;
+        const total = 10;
 
-        const openingMessages = {
+        const messages = {
             10: "Preparing your experience...",
             9: "Welcome to Kenbridge...",
             8: "Building Character...",
@@ -170,326 +52,241 @@ document.addEventListener("DOMContentLoaded", function () {
             1: "Welcome to Kenbridge Christian School!"
         };
 
-        function updateOpeningScreen() {
+        document.body.classList.add("opening-active");
+        document.body.style.overflow = "hidden";
 
-            openingCounter.textContent = count;
+        screen.style.position = "fixed";
+        screen.style.inset = "0";
+        screen.style.width = "100%";
+        screen.style.height = "100dvh";
+        screen.style.minHeight = "100vh";
+        screen.style.zIndex = "999999";
+        screen.style.opacity = "1";
+        screen.style.visibility = "visible";
+        screen.style.pointerEvents = "all";
 
-            openingMessage.textContent =
-                openingMessages[count] ||
-                "Welcome to Kenbridge Christian School!";
-
-            if (openingProgress) {
-
-                const progress =
-                    ((10 - count) / 10) * 100;
-
-                openingProgress.style.width =
-                    progress + "%";
+        function update() {
+            if (counter) {
+                counter.textContent = count;
+                counter.style.animation = "none";
+                void counter.offsetWidth;
+                counter.style.animation = "counterPop 0.7s ease";
             }
 
-            openingCounter.style.animation = "none";
+            if (message) {
+                message.textContent =
+                    messages[count] ||
+                    "Welcome to Kenbridge Christian School!";
+            }
 
-            void openingCounter.offsetWidth;
+            if (progress) {
+                const percent =
+                    ((total - count) / total) * 100;
 
-            openingCounter.style.animation =
-                "counterPop 0.7s ease";
+                progress.style.width =
+                    Math.max(0, Math.min(100, percent)) + "%";
+            }
         }
 
-        updateOpeningScreen();
+        update();
 
-        const openingTimer =
-            setInterval(function () {
+        const timer = setInterval(function () {
+            count--;
 
-                count--;
+            if (count > 0) {
+                update();
+                return;
+            }
 
-                if (count > 0) {
+            clearInterval(timer);
 
-                    updateOpeningScreen();
+            if (counter) {
+                counter.textContent = "✓";
+            }
 
-                } else {
+            if (message) {
+                message.textContent =
+                    "Welcome to Kenbridge Christian School!";
+            }
 
-                    clearInterval(openingTimer);
+            if (progress) {
+                progress.style.width = "100%";
+            }
 
-                    openingCounter.textContent = "✓";
+            setTimeout(function () {
+                screen.classList.add("hide");
+                document.body.classList.remove("opening-active");
+                document.body.style.overflow = "";
 
-                    openingMessage.textContent =
-                        "Welcome to Kenbridge Christian School!";
-
-                    if (openingProgress) {
-                        openingProgress.style.width = "100%";
-                    }
-
-                    setTimeout(function () {
-
-                        openingScreen.classList.add("hide");
-
-                        document.body.classList.remove(
-                            "opening-active"
-                        );
-
-                    }, 900);
-                }
-
-            }, 1000);
+                setTimeout(function () {
+                    screen.style.display = "none";
+                }, 900);
+            }, 900);
+        }, 1000);
     }
-
 
     /* =====================================================
        MOBILE NAVIGATION
        ===================================================== */
 
-    const mobileMenuButton =
-        document.getElementById("mobileMenuButton");
+    function closeMobileMenu() {
+        const button = $("#mobileMenuButton");
+        const nav = $("#mobileNav");
 
-    const mobileNav =
-        document.getElementById("mobileNav");
+        if (!button || !nav) return;
 
-    if (mobileMenuButton && mobileNav) {
-
-        mobileMenuButton.addEventListener(
-            "click",
-            function () {
-
-                const isOpen =
-                    mobileNav.classList.toggle("open");
-
-                mobileMenuButton.classList.toggle(
-                    "active",
-                    isOpen
-                );
-
-                mobileMenuButton.setAttribute(
-                    "aria-expanded",
-                    String(isOpen)
-                );
-
-                document.body.classList.toggle(
-                    "menu-open",
-                    isOpen
-                );
-            }
-        );
-
-        const mobileLinks =
-            mobileNav.querySelectorAll("a");
-
-        mobileLinks.forEach(function (link) {
-
-            link.addEventListener(
-                "click",
-                function () {
-
-                    mobileNav.classList.remove("open");
-
-                    mobileMenuButton.classList.remove(
-                        "active"
-                    );
-
-                    mobileMenuButton.setAttribute(
-                        "aria-expanded",
-                        "false"
-                    );
-
-                    document.body.classList.remove(
-                        "menu-open"
-                    );
-                }
-            );
-        });
+        nav.classList.remove("open", "show", "active");
+        button.classList.remove("active");
+        button.setAttribute("aria-expanded", "false");
+        document.body.classList.remove("menu-open");
     }
 
+    function initMobileNavigation() {
+        const button = $("#mobileMenuButton");
+        const nav = $("#mobileNav");
 
-    /* =====================================================
-       CLOSE MOBILE MENU OUTSIDE
-       ===================================================== */
+        if (!button || !nav) return;
 
-    document.addEventListener(
-        "click",
-        function (event) {
+        button.setAttribute(
+            "aria-expanded",
+            nav.classList.contains("open") ? "true" : "false"
+        );
 
-            if (!mobileNav || !mobileMenuButton) {
-                return;
-            }
+        on(button, "click", function (event) {
+            event.stopPropagation();
 
-            if (
-                mobileNav.classList.contains("open") &&
-                !mobileNav.contains(event.target) &&
-                !mobileMenuButton.contains(event.target)
-            ) {
+            const open =
+                !nav.classList.contains("open");
 
-                mobileNav.classList.remove("open");
-
-                mobileMenuButton.classList.remove(
-                    "active"
-                );
-
-                mobileMenuButton.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-
-                document.body.classList.remove(
-                    "menu-open"
-                );
-            }
-        }
-    );
-
-
-    /* =====================================================
-       ESCAPE KEY CLOSES MOBILE MENU
-       ===================================================== */
-
-    document.addEventListener(
-        "keydown",
-        function (event) {
-
-            if (event.key !== "Escape") {
-                return;
-            }
-
-            if (!mobileNav || !mobileMenuButton) {
-                return;
-            }
-
-            mobileNav.classList.remove("open");
-
-            mobileMenuButton.classList.remove(
-                "active"
-            );
-
-            mobileMenuButton.setAttribute(
+            nav.classList.toggle("open", open);
+            nav.classList.toggle("active", open);
+            button.classList.toggle("active", open);
+            button.setAttribute(
                 "aria-expanded",
-                "false"
+                String(open)
             );
-
-            document.body.classList.remove(
-                "menu-open"
+            document.body.classList.toggle(
+                "menu-open",
+                open
             );
-        }
-    );
+        });
 
+        $$("#mobileNav a").forEach(function (link) {
+            on(link, "click", closeMobileMenu);
+        });
+
+        on(document, "click", function (event) {
+            if (
+                nav.classList.contains("open") &&
+                !nav.contains(event.target) &&
+                !button.contains(event.target)
+            ) {
+                closeMobileMenu();
+            }
+        });
+
+        on(document, "keydown", function (event) {
+            if (event.key === "Escape") {
+                closeMobileMenu();
+            }
+        });
+    }
 
     /* =====================================================
        MORE DROPDOWN
        ===================================================== */
 
-    const moreMenu =
-        document.querySelector(".more-menu");
+    function closeMoreMenu() {
+        const menu = $(".more-menu");
+        const button = $(".more-button");
 
-    const moreButton =
-        document.querySelector(".more-button");
+        if (!menu || !button) return;
 
-    if (moreMenu && moreButton) {
-
-        moreButton.addEventListener(
-            "click",
-            function (event) {
-
-                event.stopPropagation();
-
-                const isOpen =
-                    moreMenu.classList.toggle("open");
-
-                moreButton.setAttribute(
-                    "aria-expanded",
-                    String(isOpen)
-                );
-            }
-        );
-
-        const dropdown =
-            moreMenu.querySelector(".dropdown");
-
-        if (dropdown) {
-
-            dropdown.addEventListener(
-                "click",
-                function (event) {
-                    event.stopPropagation();
-                }
-            );
-        }
-
-        document.addEventListener(
-            "click",
-            function () {
-
-                moreMenu.classList.remove("open");
-
-                moreButton.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-            }
-        );
+        menu.classList.remove("open");
+        button.setAttribute("aria-expanded", "false");
     }
 
+    function initMoreMenu() {
+        const menu = $(".more-menu");
+        const button = $(".more-button");
+
+        if (!menu || !button) return;
+
+        on(button, "click", function (event) {
+            event.stopPropagation();
+
+            const open =
+                !menu.classList.contains("open");
+
+            menu.classList.toggle("open", open);
+            button.setAttribute(
+                "aria-expanded",
+                String(open)
+            );
+        });
+
+        const dropdown = $(".dropdown", menu);
+
+        on(dropdown, "click", function (event) {
+            event.stopPropagation();
+        });
+
+        $$(".dropdown a", menu).forEach(function (link) {
+            on(link, "click", closeMoreMenu);
+        });
+
+        on(document, "click", closeMoreMenu);
+
+        on(document, "keydown", function (event) {
+            if (event.key === "Escape") {
+                closeMoreMenu();
+            }
+        });
+    }
 
     /* =====================================================
        HEADER SCROLL EFFECT
        ===================================================== */
 
-    const header =
-        document.getElementById("header");
+    function initHeader() {
+        const header = $("#header");
 
-    function updateHeader() {
+        if (!header) return;
 
-        if (!header) {
-            return;
+        function update() {
+            header.classList.toggle(
+                "scrolled",
+                window.scrollY > 40
+            );
         }
 
-        if (window.scrollY > 40) {
+        on(window, "scroll", update, {
+            passive: true
+        });
 
-            header.classList.add("scrolled");
-
-        } else {
-
-            header.classList.remove("scrolled");
-        }
+        update();
     }
-
-    window.addEventListener(
-        "scroll",
-        updateHeader
-    );
-
-    updateHeader();
-
 
     /* =====================================================
        SMOOTH INTERNAL LINKS
        ===================================================== */
 
-    const internalLinks =
-        document.querySelectorAll(
-            'a[href^="#"]'
-        );
+    function initSmoothLinks() {
+        $$('a[href^="#"]').forEach(function (link) {
+            on(link, "click", function (event) {
+                const id = link.getAttribute("href");
 
-    internalLinks.forEach(function (link) {
+                if (!id || id === "#") return;
 
-        link.addEventListener(
-            "click",
-            function (event) {
+                let target = null;
 
-                const targetId =
-                    this.getAttribute("href");
-
-                if (
-                    !targetId ||
-                    targetId === "#"
-                ) {
+                try {
+                    target = document.querySelector(id);
+                } catch (error) {
                     return;
                 }
 
-                const target =
-                    document.querySelector(
-                        targetId
-                    );
-
-                if (!target) {
-                    return;
-                }
+                if (!target) return;
 
                 event.preventDefault();
 
@@ -497,566 +294,473 @@ document.addEventListener("DOMContentLoaded", function () {
                     behavior: "smooth",
                     block: "start"
                 });
-            }
-        );
-    });
 
+                history.replaceState(
+                    null,
+                    "",
+                    id
+                );
+            });
+        });
+    }
 
     /* =====================================================
-       SCROLL REVEAL ANIMATION
+       SCROLL REVEAL
        ===================================================== */
 
-    const revealElements =
-        document.querySelectorAll(
-            ".feature-card, .section-heading, .welcome-content, .welcome-image, .contact-form-wrapper, .contact-details"
-        );
+    function initReveal() {
+        const selector =
+            ".feature-card," +
+            ".section-heading," +
+            ".welcome-content," +
+            ".welcome-image," +
+            ".contact-form-wrapper," +
+            ".contact-details," +
+            ".page-card," +
+            ".info-card," +
+            ".content-card," +
+            ".project-card," +
+            ".sport-card," +
+            ".gallery-item," +
+            ".article-card," +
+            ".category-card," +
+            ".team-card," +
+            ".fee-card," +
+            ".boarding-card";
 
-    if (
-        revealElements.length > 0 &&
-        "IntersectionObserver" in window
-    ) {
+        const elements = $$(selector);
 
-        const revealObserver =
+        if (
+            !elements.length ||
+            !("IntersectionObserver" in window)
+        ) {
+            return;
+        }
+
+        const observer =
             new IntersectionObserver(
                 function (entries, observer) {
+                    entries.forEach(function (entry) {
+                        if (!entry.isIntersecting) return;
 
-                    entries.forEach(
-                        function (entry) {
+                        entry.target.classList.add(
+                            "visible"
+                        );
 
-                            if (
-                                entry.isIntersecting
-                            ) {
-
-                                entry.target.classList.add(
-                                    "visible"
-                                );
-
-                                observer.unobserve(
-                                    entry.target
-                                );
-                            }
-                        }
-                    );
+                        observer.unobserve(
+                            entry.target
+                        );
+                    });
                 },
                 {
                     threshold: 0.12
                 }
             );
 
-        revealElements.forEach(
-            function (element) {
-
-                element.classList.add(
-                    "reveal"
-                );
-
-                revealObserver.observe(
-                    element
-                );
-            }
-        );
+        elements.forEach(function (element) {
+            element.classList.add("reveal");
+            observer.observe(element);
+        });
     }
-
 
     /* =====================================================
        CONTACT FORM
        ===================================================== */
 
-    const contactForm =
-        document.getElementById(
-            "contactForm"
-        );
+    function initContactForm() {
+        const form = $("#contactForm");
+        const status = $("#contactStatus");
 
-    const contactStatus =
-        document.getElementById(
-            "contactStatus"
-        );
+        if (!form) return;
 
-    if (contactForm) {
+        on(form, "submit", function (event) {
+            event.preventDefault();
 
-        contactForm.addEventListener(
-            "submit",
-            function (event) {
+            if (status) {
+                status.textContent =
+                    "Thank you. Your message has been received by the website form.";
 
-                event.preventDefault();
-
-                if (contactStatus) {
-
-                    contactStatus.textContent =
-                        "Thank you. Your message has been received by the website form.";
-
-                    contactStatus.classList.add(
-                        "success"
-                    );
-                }
-
-                contactForm.reset();
+                status.classList.remove("error");
+                status.classList.add("success");
             }
-        );
-    }
 
+            form.reset();
+        });
+    }
 
     /* =====================================================
        FEEDBACK FORM
        ===================================================== */
 
-    const feedbackForm =
-        document.getElementById(
-            "feedbackForm"
-        );
+    function initFeedbackForm() {
+        const form = $("#feedbackForm");
+        const status = $("#feedbackStatus");
 
-    const feedbackStatus =
-        document.getElementById(
-            "feedbackStatus"
-        );
+        if (!form) return;
 
-    if (feedbackForm) {
+        on(form, "submit", function (event) {
+            event.preventDefault();
 
-        feedbackForm.addEventListener(
-            "submit",
-            function (event) {
+            if (status) {
+                status.textContent =
+                    "Thank you for your feedback.";
 
-                event.preventDefault();
-
-                if (feedbackStatus) {
-
-                    feedbackStatus.textContent =
-                        "Thank you for your feedback.";
-
-                    feedbackStatus.classList.add(
-                        "success"
-                    );
-                }
-
-                feedbackForm.reset();
+                status.classList.remove("error");
+                status.classList.add("success");
             }
-        );
-    }
 
+            form.reset();
+        });
+    }
 
     /* =====================================================
        IMAGE ERROR HANDLING
        ===================================================== */
 
-    const images =
-        document.querySelectorAll("img");
-
-    images.forEach(function (image) {
-
-        image.addEventListener(
-            "error",
-            function () {
-
-                this.classList.add(
-                    "image-error"
-                );
-            }
-        );
-    });
-
+    function initImageHandling() {
+        $$("img").forEach(function (image) {
+            on(image, "error", function () {
+                this.classList.add("image-error");
+            });
+        });
+    }
 
     /* =====================================================
        CURRENT YEAR
        ===================================================== */
 
-    const yearElements =
-        document.querySelectorAll(
-            "[data-current-year]"
+    function initYears() {
+        const year = new Date().getFullYear();
+
+        $$("[data-current-year]").forEach(
+            function (element) {
+                element.textContent = year;
+            }
         );
 
-    yearElements.forEach(
-        function (element) {
+        const footerYear = $("#footer-year");
 
-            element.textContent =
-                new Date().getFullYear();
+        if (footerYear) {
+            footerYear.textContent = year;
         }
-    );
-
+    }
 
     /* =====================================================
        BACK TO TOP
        ===================================================== */
 
-    const backToTop =
-        document.getElementById(
-            "backToTop"
-        );
+    function initBackToTop() {
+        const button = $("#backToTop");
 
-    if (backToTop) {
+        if (!button) return;
 
-        window.addEventListener(
-            "scroll",
-            function () {
+        function update() {
+            button.classList.toggle(
+                "show",
+                window.scrollY > 500
+            );
+        }
 
-                if (window.scrollY > 500) {
+        on(window, "scroll", update, {
+            passive: true
+        });
 
-                    backToTop.classList.add(
-                        "show"
-                    );
+        on(button, "click", function () {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
 
-                } else {
-
-                    backToTop.classList.remove(
-                        "show"
-                    );
-                }
-            }
-        );
-
-        backToTop.addEventListener(
-            "click",
-            function () {
-
-                window.scrollTo({
-                    top: 0,
-                    behavior: "smooth"
-                });
-            }
-        );
+        update();
     }
 
-});
-/* =========================================================
-   AUTOMATIC SHARED FOOTER
-   ---------------------------------------------------------
-   This section is ONLY for loading the shared footer.
-   DO NOT CHANGE THE HAMBURGER CODE ABOVE.
-   ========================================================= */
+    /* =====================================================
+       DEVELOPER CONTACT MODAL
+       ===================================================== */
 
-(function () {
+    function initDeveloperContact(root = document) {
+        const button =
+            $("#developerButton", root);
 
-    function loadSharedFooter() {
+        const modal =
+            $("#developerContact", root);
 
-        /* If the page already has the shared footer,
-           leave it completely alone. */
-        if (document.getElementById("site-footer")) {
+        const close =
+            $("#developerClose", root);
+
+        const overlay =
+            $("#developerOverlay", root);
+
+        if (!button || !modal) return;
+
+        if (
+            button.dataset.developerReady ===
+            "true"
+        ) {
             return;
         }
 
+        button.dataset.developerReady = "true";
+
+        function openDeveloper() {
+            modal.classList.add("show");
+
+            modal.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+
+            document.body.classList.add(
+                "developer-modal-open"
+            );
+        }
+
+        function closeDeveloper() {
+            modal.classList.remove("show");
+
+            modal.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+            document.body.classList.remove(
+                "developer-modal-open"
+            );
+        }
+
+        on(button, "click", openDeveloper);
+        on(close, "click", closeDeveloper);
+        on(overlay, "click", closeDeveloper);
+
+        on(document, "keydown", function (event) {
+            if (
+                event.key === "Escape" &&
+                modal.classList.contains("show")
+            ) {
+                closeDeveloper();
+            }
+        });
+    }
+
+    /* =====================================================
+       SHARED FOOTER LOADER
+       -----------------------------------------------------
+       Supports older pages that only have a footer
+       placeholder while leaving the newly updated pages
+       with their own .site-footer untouched.
+       ===================================================== */
+
+    function initSharedFooter() {
+        const existingFooter =
+            $(".site-footer");
 
         /*
-         * Find the location of script.js so this works
-         * from both:
-         *
-         * index.html
-         * page/about.html
-         * page/contact.html
-         * etc.
+         * If a real footer already exists,
+         * do not replace it.
          */
+        if (
+            existingFooter &&
+            existingFooter.tagName.toLowerCase() ===
+                "footer"
+        ) {
+            initDeveloperContact();
+            initYears();
+            return;
+        }
+
+        let container =
+            $("#site-footer");
+
+        /*
+         * If there is an old hard-coded footer
+         * but no modern footer container, replace it.
+         */
+        if (!container) {
+            const oldFooters =
+                $$("footer:not(.site-footer)");
+
+            if (oldFooters.length) {
+                oldFooters.forEach(function (footer) {
+                    footer.remove();
+                });
+
+                container =
+                    document.createElement("div");
+
+                container.id = "site-footer";
+                document.body.appendChild(container);
+            }
+        }
+
+        /*
+         * If neither exists, do nothing.
+         */
+        if (!container) {
+            initYears();
+            return;
+        }
+
+        /*
+         * If the placeholder already contains
+         * a footer, leave it alone.
+         */
+        if ($(".site-footer", container)) {
+            initDeveloperContact(container);
+            initYears();
+            return;
+        }
+
         const script =
             document.querySelector(
                 'script[src*="js/script.js"]'
             );
 
-
         if (!script) {
+            initYears();
             return;
         }
 
+        let scriptURL;
 
-        const scriptURL =
-            new URL(
+        try {
+            scriptURL = new URL(
                 script.getAttribute("src"),
                 document.baseURI
             );
-
-
-        /*
-         * Go from:
-         *
-         * /js/script.js
-         *
-         * back to project root.
-         */
-        const projectRoot =
-            new URL(
-                "../",
-                scriptURL
+        } catch (error) {
+            console.error(
+                "Kenbridge script URL error:",
+                error
             );
+            initYears();
+            return;
+        }
 
+        const projectRoot =
+            new URL("../", scriptURL);
 
-        /*
-         * Shared footer location.
-         */
         const footerURL =
             new URL(
                 "components/footer.html",
                 projectRoot
             );
 
-
-        /*
-         * Create the footer container automatically.
-         */
-        const footerContainer =
-            document.createElement("div");
-
-        footerContainer.id =
-            "site-footer";
-
-
-        /*
-         * Remove an old hard-coded footer if
-         * the page has one.
-         *
-         * This allows the new master footer
-         * to replace the old footer automatically.
-         */
-        document.querySelectorAll(
-            "footer:not(.site-footer)"
-        ).forEach(function (oldFooter) {
-
-            oldFooter.remove();
-
-        });
-
-
-        /*
-         * Put the new shared footer at the
-         * bottom of the page.
-         */
-        document.body.appendChild(
-            footerContainer
-        );
-
-
-        /*
-         * Load the master footer.
-         */
-        fetch(
-            footerURL.href,
-            {
-                cache: "no-cache"
-            }
-        )
-
-        .then(function (response) {
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Footer could not be loaded: " +
-                    response.status
-                );
-
-            }
-
-            return response.text();
-
+        fetch(footerURL.href, {
+            cache: "no-cache"
         })
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error(
+                        "Footer could not be loaded: " +
+                        response.status
+                    );
+                }
 
-        .then(function (html) {
+                return response.text();
+            })
+            .then(function (html) {
+                container.innerHTML = html;
 
-            footerContainer.innerHTML =
-                html;
-
-
-            /*
-             * Update footer year.
-             */
-            const year =
-                document.getElementById(
-                    "footer-year"
-                );
-
-
-            if (year) {
-
-                year.textContent =
-                    new Date().getFullYear();
-
-            }
-
-
-            /*
-             * Fix images inside the footer.
-             */
-            footerContainer
-                .querySelectorAll(
-                    "[data-asset]"
-                )
-                .forEach(function (element) {
-
+                /*
+                 * Resolve footer assets.
+                 */
+                $$(
+                    "[data-asset]",
+                    container
+                ).forEach(function (element) {
                     const asset =
                         element.getAttribute(
                             "data-asset"
                         );
 
+                    if (!asset) return;
 
-                    if (!asset) {
-                        return;
+                    try {
+                        element.src =
+                            new URL(
+                                asset.replace(
+                                    /^\/+/,
+                                    ""
+                                ),
+                                projectRoot
+                            ).href;
+                    } catch (error) {
+                        console.warn(
+                            "Footer asset error:",
+                            asset
+                        );
                     }
-
-
-                    element.src =
-                        new URL(
-                            asset.replace(
-                                /^\/+/,
-                                ""
-                            ),
-                            projectRoot
-                        ).href;
-
                 });
 
+                /*
+                 * Fix relative footer links.
+                 */
+                $$(
+                    "[data-footer-link]",
+                    container
+                ).forEach(function (link) {
+                    const target =
+                        link.getAttribute(
+                            "data-footer-link"
+                        );
 
-            /*
-             * Fix developer button if the
-             * developer section exists.
-             */
-            const developerButton =
-                document.getElementById(
-                    "developerButton"
-                );
+                    if (!target) return;
 
-
-            const developerModal =
-                document.getElementById(
-                    "developerContact"
-                );
-
-
-            const developerClose =
-                document.getElementById(
-                    "developerClose"
-                );
-
-
-            const developerOverlay =
-                document.getElementById(
-                    "developerOverlay"
-                );
-
-
-            if (
-                developerButton &&
-                developerModal &&
-                developerButton.dataset
-                    .developerReady !== "true"
-            ) {
-
-                developerButton.dataset
-                    .developerReady =
-                    "true";
-
-
-                function openDeveloper() {
-
-                    developerModal
-                        .classList
-                        .add("show");
-
-
-                    developerModal.setAttribute(
-                        "aria-hidden",
-                        "false"
-                    );
-
-
-                    document.body.classList.add(
-                        "developer-modal-open"
-                    );
-
-                }
-
-
-                function closeDeveloper() {
-
-                    developerModal
-                        .classList
-                        .remove("show");
-
-
-                    developerModal.setAttribute(
-                        "aria-hidden",
-                        "true"
-                    );
-
-
-                    document.body.classList.remove(
-                        "developer-modal-open"
-                    );
-
-                }
-
-
-                developerButton.addEventListener(
-                    "click",
-                    openDeveloper
-                );
-
-
-                if (developerClose) {
-
-                    developerClose.addEventListener(
-                        "click",
-                        closeDeveloper
-                    );
-
-                }
-
-
-                if (developerOverlay) {
-
-                    developerOverlay.addEventListener(
-                        "click",
-                        closeDeveloper
-                    );
-
-                }
-
-
-                document.addEventListener(
-                    "keydown",
-                    function (event) {
-
-                        if (
-                            event.key === "Escape" &&
-                            developerModal
-                                .classList
-                                .contains("show")
-                        ) {
-
-                            closeDeveloper();
-
-                        }
-
+                    try {
+                        link.href =
+                            new URL(
+                                target,
+                                projectRoot
+                            ).href;
+                    } catch (error) {
+                        console.warn(
+                            "Footer link error:",
+                            target
+                        );
                     }
+                });
+
+                initYears();
+                initDeveloperContact(container);
+            })
+            .catch(function (error) {
+                console.error(
+                    "Kenbridge shared footer error:",
+                    error
                 );
 
-            }
-
-        })
-
-        .catch(function (error) {
-
-            console.error(
-                "Kenbridge shared footer error:",
-                error
-            );
-
-        });
-
+                initYears();
+            });
     }
 
+    /* =====================================================
+       GLOBAL INITIALIZATION
+       ===================================================== */
 
-    /*
-     * Run after the page has loaded.
-     */
+    function init() {
+        initOpeningScreen();
+        initMobileNavigation();
+        initMoreMenu();
+        initHeader();
+        initSmoothLinks();
+        initReveal();
+        initContactForm();
+        initFeedbackForm();
+        initImageHandling();
+        initYears();
+        initBackToTop();
+        initSharedFooter();
+    }
+
     if (
-        document.readyState ===
-        "loading"
+        document.readyState === "loading"
     ) {
-
         document.addEventListener(
             "DOMContentLoaded",
-            loadSharedFooter
+            init
         );
-
     } else {
-
-        loadSharedFooter();
-
+        init();
     }
-
 })();
