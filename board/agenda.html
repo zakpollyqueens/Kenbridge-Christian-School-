@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Agendas | Kenbridge Christian School</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+:root{--p:#123c63;--s:#1f6f8b;--bg:#f4f7fb;--card:#fff;--text:#17212b;--muted:#64748b;--border:#e2e8f0;--danger:#b42318;--success:#067647;--warn:#b54708}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:260px;background:var(--p);color:#fff;display:flex;flex-direction:column;z-index:1000}
+.brand{padding:25px 22px;border-bottom:1px solid rgba(255,255,255,.12)}
+.brand small{display:block;opacity:.7;margin-bottom:6px;font-size:11px;letter-spacing:1px}
+.brand h2{margin:0;font-size:19px}
+.nav{flex:1;overflow:auto;padding:16px 10px}
+.label{margin:14px 12px 7px;font-size:10px;letter-spacing:1px;opacity:.55;font-weight:bold}
+.nav a{display:flex;gap:10px;padding:12px;color:#fff;text-decoration:none;border-radius:8px;font-size:14px;margin:3px 0}
+.nav a:hover,.nav a.active{background:rgba(255,255,255,.14)}
+.side-bottom{padding:14px;border-top:1px solid rgba(255,255,255,.12)}
+.logout{width:100%;padding:11px;border:1px solid rgba(255,255,255,.3);border-radius:8px;background:transparent;color:#fff;font-weight:bold;cursor:pointer}
+.main{margin-left:260px;min-height:100vh}
+.top{height:74px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.top h1{margin:0;color:var(--p);font-size:22px}
+.user{display:flex;align-items:center;gap:10px}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--s);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold}
+.uname{font-weight:bold;font-size:14px}
+.urole{font-size:12px;color:var(--muted)}
+.menu{display:none;border:0;background:var(--p);color:#fff;border-radius:7px;padding:9px 11px}
+.content{padding:28px}
+.heading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}
+.heading h2{margin:0;color:var(--p);font-size:24px}
+.heading p{margin:7px 0 0;color:var(--muted);font-size:14px}
+.btn{border:0;border-radius:8px;padding:10px 14px;font-weight:bold;cursor:pointer;font-size:13px;text-decoration:none;display:inline-block}
+.primary{background:var(--p);color:#fff}
+.secondary{background:#eef5f8;color:var(--s)}
+.danger{background:#fef3f2;color:var(--danger)}
+.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:18px}
+.filters{display:flex;gap:10px;flex-wrap:wrap}
+.filters input,.filters select{padding:10px 12px;border:1px solid var(--border);border-radius:8px;outline:none;background:#fff}
+.meeting{border:1px solid var(--border);border-radius:11px;margin-bottom:15px;overflow:hidden}
+.meeting-head{padding:17px 18px;background:#f8fafc;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.meeting-title{font-weight:bold;color:var(--p);font-size:16px}
+.meeting-meta{font-size:12px;color:var(--muted);margin-top:5px}
+.badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{padding:5px 9px;border-radius:20px;background:#f1f5f9;color:#475569;font-size:10px;font-weight:bold}
+.badge.scheduled{background:#ecfdf3;color:var(--success)}
+.badge.cancelled{background:#fef3f2;color:var(--danger)}
+.badge.pending{background:#fff7ed;color:var(--warn)}
+.badge.completed{background:#ecfdf3;color:var(--success)}
+.agenda{padding:17px 18px}
+.agenda-row{display:grid;grid-template-columns:55px 1fr auto;gap:12px;align-items:start;padding:13px 0;border-bottom:1px solid var(--border)}
+.agenda-row:last-child{border-bottom:0}
+.number{font-weight:bold;color:var(--s)}
+.item-title{font-weight:bold}
+.presenter{font-size:12px;color:var(--muted);margin-top:4px}
+.item-desc{font-size:13px;color:var(--muted);line-height:1.5;margin-top:6px}
+.status{font-size:10px;font-weight:bold;padding:5px 8px;border-radius:20px;background:#f1f5f9;color:#475569;white-space:nowrap}
+.row-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.small-btn{border:0;border-radius:6px;padding:7px 9px;font-size:11px;font-weight:bold;cursor:pointer}
+.edit{background:#eef5f8;color:var(--s)}
+.del{background:#fef3f2;color:var(--danger)}
+.empty,.loading{text-align:center;padding:35px;color:var(--muted)}
+.notice{display:none;padding:12px 14px;border-radius:8px;margin-bottom:16px;font-size:13px}
+.notice.show{display:block}
+.notice.error{background:#fef3f2;color:var(--danger)}
+.notice.success{background:#ecfdf3;color:var(--success)}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:2000}
+.modal.show{display:flex}
+.modal-box{background:#fff;width:min(100%,620px);max-height:90vh;overflow:auto;border-radius:14px;padding:24px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-head h3{margin:0;color:var(--p)}
+.close{border:0;background:#f1f5f9;border-radius:7px;padding:8px 11px;cursor:pointer}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.group.full{grid-column:1/-1}
+.group label{display:block;font-size:12px;font-weight:bold;margin-bottom:6px}
+.group input,.group textarea,.group select{width:100%;padding:10px 11px;border:1px solid var(--border);border-radius:8px;font:inherit;outline:none}
+.group textarea{min-height:90px;resize:vertical}
+@media(max-width:900px){
+.sidebar{transform:translateX(-100%);transition:.25s}
+.sidebar.open{transform:translateX(0)}
+.main{margin-left:0}
+.menu{display:block}
+.top{padding:0 16px}
+.content{padding:18px}
+}
+@media(max-width:650px){
+.user>div:not(.avatar){display:none}
+.heading{flex-direction:column;align-items:flex-start}
+.form-grid{grid-template-columns:1fr}
+.group.full{grid-column:auto}
+.agenda-row{grid-template-columns:40px 1fr}
+.agenda-row>.status{grid-column:2}
+}
+</style>
+</head>
+
+<body>
+
+<aside id="sidebar" class="sidebar">
+<div class="brand">
+<small>KENBRIDGE CHRISTIAN SCHOOL</small>
+<h2>Board of Governors</h2>
+</div>
+
+<nav class="nav">
+<a href="board-dashboard.html">🏠 Dashboard</a>
+<div class="label">GOVERNANCE</div>
+<a href="members.html">👥 Board Members</a>
+<a href="meetings.html">📅 Meetings</a>
+<a href="agendas.html" class="active">📋 Agendas</a>
+<a href="minutes.html">📝 Minutes</a>
+<div class="label">SCHOOL PLANNING</div>
+<a href="planning.html">🎯 School Planning</a>
+<a href="documents.html">📁 Board Documents</a>
+<a href="resolutions.html">⚖️ Resolutions</a>
+<div class="label">COMMUNICATION</div>
+<a href="announcements.html">📢 Announcements</a>
+</nav>
+
+<div class="side-bottom">
+<button id="logout" class="logout">Sign Out</button>
+</div>
+</aside>
+
+<main class="main">
+
+<header class="top">
+<div style="display:flex;align-items:center;gap:14px">
+<button id="menu" class="menu">☰</button>
+<h1>Agendas</h1>
+</div>
+
+<div class="user">
+<div id="avatar" class="avatar">B</div>
+<div>
+<div id="uname" class="uname">Loading...</div>
+<div id="urole" class="urole">Board Member</div>
+</div>
+</div>
+</header>
+
+<section class="content">
+
+<div class="heading">
+<div>
+<h2>Meeting Agendas</h2>
+<p>Prepare, review and manage agenda items for Board meetings.</p>
+</div>
+</div>
+
+<div id="notice" class="notice"></div>
+
+<div class="card">
+<div class="filters">
+
+<input id="search" type="search" placeholder="Search meetings or agenda items...">
+
+<select id="statusFilter">
+<option value="">All Meeting Statuses</option>
+<option value="scheduled">Scheduled</option>
+<option value="in_progress">In Progress</option>
+<option value="completed">Completed</option>
+<option value="cancelled">Cancelled</option>
+</select>
+
+<button id="refresh" class="btn secondary">↻ Refresh</button>
+
+</div>
+</div>
+
+<div id="meetings">
+<div class="card loading">Loading meeting agendas...</div>
+</div>
+
+</section>
+</main>
+
+<div id="modal" class="modal">
+
+<div class="modal-box">
+
+<div class="modal-head">
+<h3 id="modalTitle">Add Agenda Item</h3>
+<button id="closeModal" class="close">✕</button>
+</div>
+
+<div id="formNotice" class="notice"></div>
+
+<div class="form-grid">
+
+<div class="group">
+<label>Item Number *</label>
+<input id="itemNumber" type="number" min="1" placeholder="1">
+</div>
+
+<div class="group">
+<label>Status</label>
+<select id="itemStatus">
+<option value="pending">Pending</option>
+<option value="discussed">Discussed</option>
+<option value="deferred">Deferred</option>
+<option value="completed">Completed</option>
+</select>
+</div>
+
+<div class="group full">
+<label>Title *</label>
+<input id="itemTitle" placeholder="Agenda item title">
+</div>
+
+<div class="group full">
+<label>Presenter</label>
+<input id="presenter" placeholder="Person responsible for presenting">
+</div>
+
+<div class="group full">
+<label>Description</label>
+<textarea id="itemDescription" placeholder="Discussion details, background or notes"></textarea>
+</div>
+
+</div>
+
+<div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px">
+<button id="cancelModal" class="btn secondary">Cancel</button>
+<button id="saveItem" class="btn primary">Save Agenda Item</button>
+</div>
+
+</div>
+</div>
+
+<script src="../js/board-auth.js"></script>
+
+<script>
+(function(){
+
+"use strict";
+
+let meetings=[];
+let editing=null;
+
+const $=id=>document.getElementById(id);
+
+function esc(v){
+return String(v??"")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+}
+
+function msg(text,type="error",target="notice"){
+$(target).textContent=text;
+$(target).className=`notice show ${type}`;
+}
+
+function hideMsg(target="notice"){
+$(target).className="notice";
+}
+
+function titleText(v){
+return String(v||"").replace(/_/g," ").replace(/\b\w/g,x=>x.toUpperCase());
+}
+
+function dateText(v){
+if(!v)return"Date not specified";
+const d=new Date(`${v}T00:00:00`);
+return Number.isNaN(d.getTime())?v:d.toLocaleDateString(undefined,{
+weekday:"short",
+year:"numeric",
+month:"short",
+day:"numeric"
+});
+}
+
+function timeText(v){
+if(!v)return"";
+const p=String(v).split(":");
+if(p.length<2)return v;
+const h=Number(p[0]);
+if(Number.isNaN(h))return v;
+return `${h%12||12}:${p[1]} ${h>=12?"PM":"AM"}`;
+}
+
+function render(){
+
+const q=$("search").value.trim().toLowerCase();
+const status=$("statusFilter").value;
+
+let list=meetings.filter(m=>{
+
+const haystack=[
+m.title,
+m.description,
+m.meeting_type,
+m.status,
+...(Array.isArray(m.agenda)?m.agenda.map(a=>`${a.title} ${a.description||""} ${a.presenter||""}`):[])
+].join(" ").toLowerCase();
+
+const searchOk=!q||haystack.includes(q);
+const statusOk=!status||m.status===status;
+
+return searchOk&&statusOk;
+
+});
+
+const box=$("meetings");
+
+if(!list.length){
+box.innerHTML=`<div class="card empty">No meetings or agendas match your search.</div>`;
+return;
+}
+
+box.innerHTML=list.map(m=>{
+
+const agenda=Array.isArray(m.agenda)?m.agenda:[];
+
+return `
+<div class="card meeting">
+
+<div class="meeting-head">
+
+<div>
+<div class="meeting-title">${esc(m.title||"Board Meeting")}</div>
+<div class="meeting-meta">
+${esc(dateText(m.meeting_date))}
+${m.start_time?` • ${esc(timeText(m.start_time))}`:""}
+${m.meeting_type?` • ${esc(titleText(m.meeting_type))}`:""}
+</div>
+</div>
+
+<div class="badges">
+<span class="badge ${esc(m.status)}">${esc(titleText(m.status))}</span>
+<span class="badge">${agenda.length} item${agenda.length===1?"":"s"}</span>
+</div>
+
+</div>
+
+<div class="agenda">
+
+${agenda.length?agenda.map(item=>`
+
+<div class="agenda-row">
+
+<div class="number">
+${esc(item.item_number)}
+</div>
+
+<div>
+
+<div class="item-title">${esc(item.title||"Untitled Agenda Item")}</div>
+
+${item.presenter?
+`<div class="presenter"><strong>Presenter:</strong> ${esc(item.presenter)}</div>`:""}
+
+${item.description?
+`<div class="item-desc">${esc(item.description)}</div>`:""}
+
+<div class="row-actions">
+
+<button class="small-btn edit"
+data-meeting="${esc(m.id)}"
+data-item="${esc(item.id)}">
+Edit
+</button>
+
+<button class="small-btn del"
+data-item="${esc(item.id)}"
+data-meeting="${esc(m.id)}">
+Delete
+</button>
+
+</div>
+
+</div>
+
+<span class="status">${esc(titleText(item.status))}</span>
+
+</div>
+
+`).join(""):
+
+`<div class="empty" style="padding:20px">No agenda items have been added.</div>`
+
+}
+
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:15px">
+
+<button class="btn primary add"
+data-meeting="${esc(m.id)}">
+＋ Add Agenda Item
+</button>
+
+<a class="btn secondary"
+href="meeting-details.html?id=${encodeURIComponent(m.id)}">
+View Meeting
+</a>
+
+</div>
+
+</div>
+
+</div>
+`;
+
+}).join("");
+
+document.querySelectorAll(".add").forEach(b=>{
+b.addEventListener("click",()=>openAdd(b.dataset.meeting));
+});
+
+document.querySelectorAll(".edit").forEach(b=>{
+b.addEventListener("click",()=>openEdit(b.dataset.meeting,b.dataset.item));
+});
+
+document.querySelectorAll(".del").forEach(b=>{
+b.addEventListener("click",()=>deleteItem(b.dataset.item));
+});
+
+}
+
+async function load(){
+
+$("meetings").innerHTML=
+`<div class="card loading">Loading meeting agendas...</div>`;
+
+try{
+
+const data=
+await KenbridgeBoardAuth.request("/api/board/meetings");
+
+meetings=
+Array.isArray(data?.meetings)
+?data.meetings
+:Array.isArray(data)
+?data
+:[];
+
+await Promise.all(
+meetings.map(async m=>{
+try{
+
+const detail=
+await KenbridgeBoardAuth.request(
+`/api/board/meetings/${encodeURIComponent(m.id)}`
+);
+
+const full=detail?.meeting||detail;
+
+if(full)m.agenda=full.agenda||[];
+
+}catch(e){
+
+console.warn(
+"Unable to load agenda for meeting",
+m.id,
+e
+);
+
+m.agenda=[];
+
+}
+})
+);
+
+render();
+
+}catch(error){
+
+console.error(error);
+
+$("meetings").innerHTML=
+`<div class="card empty">Unable to load meeting agendas.</div>`;
+
+msg(error.message||"Unable to load meeting agendas.");
+
+}
+
+}
+
+function resetForm(){
+
+editing=null;
+
+$("modalTitle").textContent="Add Agenda Item";
+
+$("itemNumber").value="";
+$("itemTitle").value="";
+$("presenter").value="";
+$("itemDescription").value="";
+$("itemStatus").value="pending";
+
+hideMsg("formNotice");
+
+}
+
+function openAdd(meetingId){
+
+resetForm();
+
+editing={
+meetingId:meetingId,
+item:null
+};
+
+$("modalTitle").textContent="Add Agenda Item";
+
+$("modal").classList.add("show");
+
+$("itemNumber").focus();
+
+}
+
+function openEdit(meetingId,itemId){
+
+const meeting=meetings.find(
+m=>String(m.id)===String(meetingId)
+);
+
+if(!meeting)return;
+
+const item=(meeting.agenda||[]).find(
+x=>String(x.id)===String(itemId)
+);
+
+if(!item)return;
+
+editing={
+meetingId:meetingId,
+item:item
+};
+
+$("modalTitle").textContent="Edit Agenda Item";
+
+$("itemNumber").value=item.item_number||"";
+$("itemTitle").value=item.title||"";
+$("presenter").value=item.presenter||"";
+$("itemDescription").value=item.description||"";
+$("itemStatus").value=item.status||"pending";
+
+hideMsg("formNotice");
+
+$("modal").classList.add("show");
+
+$("itemTitle").focus();
+
+}
+
+function closeModal(){
+$("modal").classList.remove("show");
+editing=null;
+}
+
+async function save(){
+
+if(!editing)return;
+
+const title=$("itemTitle").value.trim();
+
+if(!title){
+msg("Agenda item title is required.","error","formNotice");
+return;
+}
+
+const payload={
+meeting_id:editing.meetingId,
+item_number:Number($("itemNumber").value)||1,
+title:title,
+description:$("itemDescription").value.trim()||null,
+presenter:$("presenter").value.trim()||null,
+status:$("itemStatus").value
+};
+
+$("saveItem").disabled=true;
+$("saveItem").textContent="Saving...";
+
+try{
+
+if(editing.item){
+
+await KenbridgeBoardAuth.request(
+`/api/board/agenda/${encodeURIComponent(editing.item.id)}`,
+{
+method:"PUT",
+body:JSON.stringify(payload)
+}
+);
+
+msg("Agenda item updated successfully.","success");
+
+}else{
+
+await KenbridgeBoardAuth.request(
+`/api/board/meetings/${encodeURIComponent(editing.meetingId)}/agenda`,
+{
+method:"POST",
+body:JSON.stringify(payload)
+}
+);
+
+msg("Agenda item added successfully.","success");
+
+}
+
+closeModal();
+
+await load();
+
+}catch(error){
+
+console.error(error);
+
+msg(
+error.message||"Unable to save agenda item.",
+"error",
+"formNotice"
+);
+
+}finally{
+
+$("saveItem").disabled=false;
+$("saveItem").textContent="Save Agenda Item";
+
+}
+
+}
+
+async function deleteItem(id){
+
+if(!confirm("Delete this agenda item?"))return;
+
+try{
+
+await KenbridgeBoardAuth.request(
+`/api/board/agenda/${encodeURIComponent(id)}`,
+{
+method:"DELETE"
+}
+);
+
+msg("Agenda item deleted successfully.","success");
+
+await load();
+
+}catch(error){
+
+console.error(error);
+
+msg(error.message||"Unable to delete agenda item.");
+
+}
+
+}
+
+async function init(){
+
+const user=
+await KenbridgeBoardAuth.requireBoard({
+redirect:true,
+loginPath:"login.html"
+});
+
+if(!user)return;
+
+const role=String(user.role||"").toUpperCase();
+
+const name=user.full_name||user.email||"Board Member";
+
+$("uname").textContent=name;
+
+$("urole").textContent=
+role==="ADMIN"?"Administrator":"Board Member";
+
+$("avatar").textContent=
+name.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0].toUpperCase()).join("")||"B";
+
+await load();
+
+}
+
+$("menu").addEventListener(
+"click",
+()=>$("sidebar").classList.toggle("open")
+);
+
+$("logout").addEventListener(
+"click",
+async function(){
+
+this.disabled=true;
+this.textContent="Signing Out...";
+
+await KenbridgeBoardAuth.logout({
+redirect:true,
+loginPath:"login.html"
+});
+
+}
+);
+
+$("refresh").addEventListener("click",load);
+$("search").addEventListener("input",render);
+$("statusFilter").addEventListener("change",render);
+
+$("closeModal").addEventListener("click",closeModal);
+$("cancelModal").addEventListener("click",closeModal);
+$("saveItem").addEventListener("click",save);
+
+$("modal").addEventListener("click",e=>{
+if(e.target===$("modal"))closeModal();
+});
+
+init().catch(error=>{
+console.error(error);
+msg(error.message||"Unable to initialize Agendas.");
+});
+
+})();
+</script>
+
+</body>
+</html>
