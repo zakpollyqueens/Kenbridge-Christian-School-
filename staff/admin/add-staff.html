@@ -4,7 +4,7 @@
 document.addEventListener("DOMContentLoaded",()=>{
 const API_BASE="https://kenbridge-christian-school.onrender.com",form=document.getElementById("staffForm"),message=document.getElementById("formMessage"),button=document.getElementById("submitButton"),classesBox=document.getElementById("classesBox"),classesGroup=document.getElementById("classesGroup"),classesNote=document.getElementById("classesNote"),nameInput=document.getElementById("staffName"),usernameInput=document.getElementById("staffUsername"),positionInput=document.getElementById("staffRole"),departmentInput=document.getElementById("staffDepartment"),emailInput=document.getElementById("staffEmail"),phoneInput=document.getElementById("staffPhone"),passwordInput=document.getElementById("staffPassword"),statusInput=document.getElementById("staffStatus"),notesInput=document.getElementById("staffNotes");
 let availableClasses=[];
-const FALLBACK_CLASSES=["BABY CLASS","MIDDLE CLASS","TOP CLASS","P1","P2","P3","P4","P5","P6","P7"];
+const FALLBACK_CLASSES=["KG 1","KG 2","KG 3","YEAR 1","YEAR 2","YEAR 3","YEAR 4","YEAR 5","YEAR 6","YEAR 7"];
 
 function getAccessToken(){for(const key of["access_token","kenbridge_access_token","kenbridgeAccessToken","token"]){const token=localStorage.getItem(key)||sessionStorage.getItem(key);if(token)return token}return null}
 function showMessage(text,type){message.textContent=text;message.className="form-message "+type}
