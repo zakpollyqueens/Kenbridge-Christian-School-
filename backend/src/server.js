@@ -16,6 +16,7 @@ const tasksRoutes = require("./routes/tasks");
 const messagesRoutes = require("./routes/messages");
 const adminNotificationsRoutes = require("./routes/admin-notifications");
 const reportsRoutes = require("./routes/reports");
+const boardRoutes=require("./routes/board");
 const trainingRoutes = require("./routes/training");
 const galleryRoutes = require("./routes/gallery");
 const studentsRoutes = require("./routes/students");
@@ -105,6 +106,7 @@ app.use("/api/notifications", staffNotificationsRoutes);
 app.use("/api/admin/notifications", adminNotificationsRoutes);
 app.use("/api/staff", staffRoutes);
 app.use("/api/students", studentsRoutes);
+app.use("/api/board",boardRoutes);
 app.use("/api/gallery", galleryRoutes);
 
 // Report submissions workflow
