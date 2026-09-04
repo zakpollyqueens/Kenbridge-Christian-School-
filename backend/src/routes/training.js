@@ -1,1394 +1,515 @@
 const express=require("express");
-const supabase=require("../supabase");
+const multer=require("multer");
+const crypto=require("crypto");
+const {createClient}=require("@supabase/supabase-js");
 const pool=require("../db");
-
 const router=express.Router();
 
-const ADMIN=["ADMIN"];
-const PROGRAM_STATUS=["DRAFT","UPCOMING","ONGOING","COMPLETED","CANCELLED"];
-const SESSION_STATUS=["SCHEDULED","LIVE","COMPLETED","CANCELLED"];
-const MEETING_TYPES=["PHYSICAL","ZOOM","GOOGLE_MEET","ONLINE","HYBRID"];
-const ENROLLMENT_STATUS=["ENROLLED","IN_PROGRESS","COMPLETED","ABSENT","WITHDRAWN"];
-const ATTENDANCE_STATUS=["PRESENT","ABSENT","LATE","EXCUSED"];
+const supabase=createClient(process.env.SUPABASE_URL,process.env.SUPABASE_SECRET_KEY);
+const BUCKET="staff-resources";
+const upload=multer({storage:multer.memoryStorage(),limits:{fileSize:25*1024*1024}});
 
-async function auth(req,res){
-    try{
-        const h=req.headers.authorization;
-        if(!h?.startsWith("Bearer ")){
-            res.status(401).json({success:false,message:"Authorization token is required."});
-            return null;
-        }
-
-        const token=h.replace("Bearer ","");
-        const {data,error}=await supabase.auth.getUser(token);
-
-        if(error||!data?.user){
-            res.status(401).json({success:false,message:"Invalid or expired staff session."});
-            return null;
-        }
-
-        const {rows}=await pool.query(
-            `SELECT id,full_name,username,email,role,position,department,phone,is_active
-             FROM users WHERE id=$1 LIMIT 1`,
-            [data.user.id]
-        );
-
-        const user=rows[0];
-
-        if(!user){
-            res.status(403).json({success:false,message:"Staff account was not found."});
-            return null;
-        }
-
-        if(!user.is_active){
-            res.status(403).json({success:false,message:"This staff account is inactive."});
-            return null;
-        }
-
-        const role=String(user.role||"").toUpperCase();
-
-        if(!["STAFF","ADMIN"].includes(role)){
-            res.status(403).json({success:false,message:"You do not have staff portal access."});
-            return null;
-        }
-
-        user.isAdmin=ADMIN.includes(role);
-        return user;
-    }catch(e){
-        console.error("TRAINING AUTH ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to authenticate staff account."});
-        return null;
-    }
+async function auth(req,res,next){
+  try{
+    const h=req.headers.authorization||"";
+    if(!h.startsWith("Bearer "))return res.status(401).json({error:"Authentication required"});
+    const token=h.slice(7);
+    const {data,error}=await supabase.auth.getUser(token);
+    if(error||!data?.user)return res.status(401).json({error:"Invalid authentication token"});
+    const {rows}=await pool.query("SELECT * FROM users WHERE id=$1 LIMIT 1",[data.user.id]);
+    if(!rows[0])return res.status(403).json({error:"User account not found"});
+    if(rows[0].status&&String(rows[0].status).toUpperCase()!=="ACTIVE")return res.status(403).json({error:"Account is inactive"});
+    const role=String(rows[0].role||"").toUpperCase();
+    if(!["STAFF","ADMIN"].includes(role))return res.status(403).json({error:"Staff access required"});
+    req.user={...rows[0],authUser:data.user};
+    next();
+  }catch(e){console.error("Training auth:",e);res.status(500).json({error:"Authentication failed"});}
 }
-
+function adminOnly(req,res,next){
+  if(String(req.user?.role||"").toUpperCase()!=="ADMIN")return res.status(403).json({error:"Administrator access required"});
+  next();
+}
 async function staffId(user){
-    const {rows}=await pool.query(
-        `SELECT id FROM staff WHERE user_id=$1 LIMIT 1`,
-        [user.id]
+  const {rows}=await pool.query("SELECT id FROM staff WHERE user_id=$1 LIMIT 1",[user.id]);
+  return rows[0]?.id||null;
+}
+function safeName(n){
+  return String(n||"file").replace(/[^a-zA-Z0-9._-]/g,"_").slice(-150);
+}
+function filePath(folder,file){
+  return `${folder}/${Date.now()}-${crypto.randomBytes(6).toString("hex")}-${safeName(file.originalname)}`;
+}
+async function signed(path){
+  if(!path)return null;
+  const {data,error}=await supabase.storage.from(BUCKET).createSignedUrl(path,3600);
+  return error?null:data?.signedUrl||null;
+}
+async function notifyAll(title,message,type="GENERAL",programId=null,sessionId=null){
+  const {rows}=await pool.query("SELECT id FROM staff WHERE employment_status IS NULL OR UPPER(employment_status) NOT IN ('INACTIVE','TERMINATED','LEFT')",[]);
+  if(!rows.length)return;
+  for(const s of rows){
+    await pool.query(
+      `INSERT INTO training_notifications(staff_id,program_id,session_id,title,message,notification_type)
+       VALUES($1,$2,$3,$4,$5,$6)`,
+      [s.id,programId,sessionId,title,message,type]
     );
-    return rows[0]?.id||null;
+  }
+}
+async function notifyStaff(staffIds,title,message,type="GENERAL",programId=null,sessionId=null){
+  for(const id of [...new Set((staffIds||[]).filter(Boolean))]){
+    await pool.query(
+      `INSERT INTO training_notifications(staff_id,program_id,session_id,title,message,notification_type)
+       VALUES($1,$2,$3,$4,$5,$6)`,
+      [id,programId,sessionId,title,message,type]
+    );
+  }
 }
 
-function adminOnly(user,res){
-    if(!user?.isAdmin){
-        res.status(403).json({
-            success:false,
-            message:"Only administrators can perform this action."
-        });
-        return false;
-    }
-    return true;
-}
-
-function id(value){
-    return String(value||"").trim();
-}
-
-function valid(value,list){
-    return list.includes(String(value||"").toUpperCase());
-}
-
-/* ============================================================
-   TRAINING DASHBOARD
-   GET /api/training/dashboard
-============================================================ */
-router.get("/dashboard",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user)return;
-
-        const sid=await staffId(user);
-
-        const [
-            programs,
-            upcoming,
-            enrollments,
-            certificates,
-            notifications
-        ]=await Promise.all([
-            pool.query(`
-                SELECT COUNT(*)::INTEGER count
-                FROM training_programs
-                WHERE status IN ('UPCOMING','ONGOING')
-            `),
-            pool.query(`
-                SELECT ts.*,tp.title program_title,tp.category
-                FROM training_sessions ts
-                JOIN training_programs tp ON tp.id=ts.program_id
-                WHERE ts.session_date>=NOW()
-                AND ts.status<>'CANCELLED'
-                ORDER BY ts.session_date ASC
-                LIMIT 5
-            `),
-            sid?pool.query(`
-                SELECT COUNT(*)::INTEGER count
-                FROM training_enrollments
-                WHERE staff_id=$1
-                AND status IN ('ENROLLED','IN_PROGRESS')
-            `,[sid]):{rows:[{count:0}]},
-            sid?pool.query(`
-                SELECT COUNT(*)::INTEGER count
-                FROM training_certificates
-                WHERE staff_id=$1
-                AND status='ACTIVE'
-            `,[sid]):{rows:[{count:0}]},
-            sid?pool.query(`
-                SELECT COUNT(*)::INTEGER count
-                FROM training_notifications
-                WHERE staff_id=$1
-                AND is_read=FALSE
-            `,[sid]):{rows:[{count:0}]}
-        ]);
-
-        res.json({
-            success:true,
-            statistics:{
-                activePrograms:programs.rows[0]?.count||0,
-                myActiveTraining:enrollments.rows[0]?.count||0,
-                certificates:certificates.rows[0]?.count||0,
-                unreadNotifications:notifications.rows[0]?.count||0
-            },
-            upcoming:upcoming.rows
-        });
-    }catch(e){
-        console.error("TRAINING DASHBOARD ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to load training dashboard."});
-    }
+/* DASHBOARD */
+router.get("/dashboard",auth,async(req,res)=>{
+  try{
+    const sid=await staffId(req.user);
+    const [p,a,c,n,s]=await Promise.all([
+      pool.query(`SELECT COUNT(*)::int count FROM training_programs WHERE status IN('UPCOMING','ONGOING')`),
+      sid?pool.query(`SELECT COUNT(*)::int count FROM training_enrollments WHERE staff_id=$1 AND status IN('ENROLLED','IN_PROGRESS')`,[sid]):{rows:[{count:0}]},
+      sid?pool.query(`SELECT COUNT(*)::int count FROM training_certificates WHERE staff_id=$1 AND status='ACTIVE'`,[sid]):{rows:[{count:0}]},
+      sid?pool.query(`SELECT COUNT(*)::int count FROM training_notifications WHERE staff_id=$1 AND is_read=false`,[sid]):{rows:[{count:0}]},
+      pool.query(`SELECT COUNT(*)::int count FROM training_sessions WHERE session_date>=NOW() AND status IN('SCHEDULED','LIVE')`)
+    ]);
+    res.json({activePrograms:p.rows[0].count,myActiveTraining:a.rows[0].count,certificates:c.rows[0].count,unreadNotifications:n.rows[0].count,upcomingSessions:s.rows[0].count});
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to load training dashboard"});}
 });
 
-/* ============================================================
-   PROGRAMS
-============================================================ */
-
-router.get("/programs",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user)return;
-
-        const {status,category,search}=req.query;
-        const params=[];
-        const where=[];
-
-        if(status){
-            params.push(String(status).toUpperCase());
-            where.push(`tp.status=$${params.length}`);
-        }
-
-        if(category){
-            params.push(String(category));
-            where.push(`LOWER(tp.category)=LOWER($${params.length})`);
-        }
-
-        if(search){
-            params.push(`%${String(search).trim()}%`);
-            where.push(`(
-                tp.title ILIKE $${params.length}
-                OR COALESCE(tp.description,'') ILIKE $${params.length}
-                OR COALESCE(tp.trainer_name,'') ILIKE $${params.length}
-                OR COALESCE(tp.category,'') ILIKE $${params.length}
-            )`);
-        }
-
-        const {rows}=await pool.query(`
-            SELECT
-                tp.*,
-                COUNT(DISTINCT te.id)::INTEGER enrolled_count
-            FROM training_programs tp
-            LEFT JOIN training_enrollments te ON te.program_id=tp.id
-            ${where.length?"WHERE "+where.join(" AND "):""}
-            GROUP BY tp.id
-            ORDER BY
-                CASE tp.status
-                    WHEN 'ONGOING' THEN 1
-                    WHEN 'UPCOMING' THEN 2
-                    WHEN 'DRAFT' THEN 3
-                    WHEN 'COMPLETED' THEN 4
-                    ELSE 5
-                END,
-                tp.start_date ASC NULLS LAST,
-                tp.created_at DESC
-        `,params);
-
-        res.json({success:true,programs:rows});
-    }catch(e){
-        console.error("GET TRAINING PROGRAMS ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to load training programs."});
-    }
+/* PROGRAMS */
+router.get("/programs",auth,async(req,res)=>{
+  try{
+    const {status,category,search}=req.query;
+    let q=`SELECT * FROM training_programs WHERE 1=1`,v=[];
+    if(status){v.push(status);q+=` AND status=$${v.length}`;}
+    if(category){v.push(category);q+=` AND category=$${v.length}`;}
+    if(search){v.push(`%${search}%`);q+=` AND(title ILIKE $${v.length} OR description ILIKE $${v.length} OR category ILIKE $${v.length})`;}
+    q+=" ORDER BY start_date ASC NULLS LAST,created_at DESC";
+    res.json((await pool.query(q,v)).rows);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to load training programs"});}
 });
 
-router.get("/programs/:id",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user)return;
-
-        const programId=id(req.params.id);
-
-        const [program,sessions,groups,materials]=await Promise.all([
-            pool.query(`SELECT * FROM training_programs WHERE id=$1 LIMIT 1`,[programId]),
-            pool.query(`
-                SELECT * FROM training_sessions
-                WHERE program_id=$1
-                ORDER BY session_date ASC
-            `,[programId]),
-            pool.query(`
-                SELECT tg.*,COUNT(tgm.id)::INTEGER member_count
-                FROM training_groups tg
-                LEFT JOIN training_group_members tgm ON tgm.group_id=tg.id
-                WHERE tg.program_id=$1
-                GROUP BY tg.id
-                ORDER BY tg.name
-            `,[programId]),
-            pool.query(`
-                SELECT * FROM training_materials
-                WHERE program_id=$1
-                ORDER BY created_at DESC
-            `,[programId])
-        ]);
-
-        if(!program.rows.length){
-            return res.status(404).json({
-                success:false,
-                message:"Training program was not found."
-            });
-        }
-
-        res.json({
-            success:true,
-            program:program.rows[0],
-            sessions:sessions.rows,
-            groups:groups.rows,
-            materials:materials.rows
-        });
-    }catch(e){
-        console.error("GET TRAINING PROGRAM ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to load training program."});
-    }
+router.get("/programs/:id",auth,async(req,res)=>{
+  try{
+    const id=req.params.id;
+    const p=(await pool.query("SELECT * FROM training_programs WHERE id=$1",[id])).rows[0];
+    if(!p)return res.status(404).json({error:"Training program not found"});
+    const [sessions,groups,materials]=await Promise.all([
+      pool.query("SELECT * FROM training_sessions WHERE program_id=$1 ORDER BY session_date ASC",[id]),
+      pool.query("SELECT * FROM training_groups WHERE program_id=$1 ORDER BY name",[id]),
+      pool.query("SELECT * FROM training_materials WHERE program_id=$1 ORDER BY created_at DESC",[id])
+    ]);
+    for(const m of materials.rows)m.signed_url=await signed(m.file_path);
+    res.json({...p,sessions:sessions.rows,groups:groups.rows,materials:materials.rows});
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to load program"});}
 });
 
-router.post("/programs",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user||!adminOnly(user,res))return;
-
-        const b=req.body||{};
-
-        if(!String(b.title||"").trim()){
-            return res.status(400).json({
-                success:false,
-                message:"Training title is required."
-            });
-        }
-
-        const status=String(b.status||"UPCOMING").toUpperCase();
-
-        if(!valid(status,PROGRAM_STATUS)){
-            return res.status(400).json({
-                success:false,
-                message:"Invalid training program status."
-            });
-        }
-
-        const {rows}=await pool.query(`
-            INSERT INTO training_programs
-            (title,description,category,trainer_name,trainer_organization,
-             start_date,end_date,duration_minutes,required,status,cover_image,created_by)
-            VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
-            RETURNING *
-        `,[
-            String(b.title).trim(),
-            b.description||null,
-            b.category||"Other",
-            b.trainer_name||null,
-            b.trainer_organization||null,
-            b.start_date||null,
-            b.end_date||null,
-            b.duration_minutes||null,
-            Boolean(b.required),
-            status,
-            b.cover_image||null,
-            user.id
-        ]);
-
-        res.status(201).json({
-            success:true,
-            message:"Training program created successfully.",
-            program:rows[0]
-        });
-    }catch(e){
-        console.error("CREATE TRAINING PROGRAM ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to create training program."});
-    }
+router.post("/programs",auth,adminOnly,async(req,res)=>{
+  try{
+    const x=req.body||{};
+    const r=await pool.query(
+      `INSERT INTO training_programs(title,description,category,trainer_name,trainer_organization,start_date,end_date,duration_minutes,required,status,cover_image,created_by)
+       VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *`,
+      [x.title,x.description||null,x.category||"Professional Development",x.trainer_name||null,x.trainer_organization||null,x.start_date||null,x.end_date||null,x.duration_minutes||null,!!x.required,x.status||"DRAFT",x.cover_image||null,req.user.id]
+    );
+    const p=r.rows[0];
+    if(p.required)await notifyAll("Required Training",`A required training program has been created: ${p.title}. Please check the Training Center for details.`,"REQUIRED",p.id,null);
+    res.status(201).json(p);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to create training program"});}
 });
 
-router.patch("/programs/:id",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user||!adminOnly(user,res))return;
-
-        const b=req.body||{};
-        const fields=[
-            "title","description","category","trainer_name",
-            "trainer_organization","start_date","end_date",
-            "duration_minutes","required","status","cover_image"
-        ];
-
-        const sets=[];
-        const values=[];
-
-        fields.forEach(f=>{
-            if(Object.prototype.hasOwnProperty.call(b,f)){
-                if(f==="status"&&!valid(b[f],PROGRAM_STATUS))return;
-                values.push(b[f]);
-                sets.push(`${f}=$${values.length}`);
-            }
-        });
-
-        if(!sets.length){
-            return res.status(400).json({
-                success:false,
-                message:"No valid changes were supplied."
-            });
-        }
-
-        values.push(req.params.id);
-
-        const {rows}=await pool.query(`
-            UPDATE training_programs
-            SET ${sets.join(",")},updated_at=NOW()
-            WHERE id=$${values.length}
-            RETURNING *
-        `,values);
-
-        if(!rows.length){
-            return res.status(404).json({
-                success:false,
-                message:"Training program was not found."
-            });
-        }
-
-        res.json({
-            success:true,
-            message:"Training program updated successfully.",
-            program:rows[0]
-        });
-    }catch(e){
-        console.error("UPDATE TRAINING PROGRAM ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to update training program."});
-    }
+router.patch("/programs/:id",auth,adminOnly,async(req,res)=>{
+  try{
+    const x=req.body||{},fields=["title","description","category","trainer_name","trainer_organization","start_date","end_date","duration_minutes","required","status","cover_image"];
+    let sets=[],v=[];
+    for(const f of fields)if(x[f]!==undefined){v.push(x[f]);sets.push(`${f}=$${v.length}`);}
+    if(!sets.length)return res.status(400).json({error:"No changes supplied"});
+    v.push(req.params.id);
+    const r=await pool.query(`UPDATE training_programs SET ${sets.join(",")},updated_at=NOW() WHERE id=$${v.length} RETURNING *`,v);
+    if(!r.rows[0])return res.status(404).json({error:"Training program not found"});
+    res.json(r.rows[0]);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to update program"});}
 });
 
-router.delete("/programs/:id",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user||!adminOnly(user,res))return;
-
-        const result=await pool.query(
-            `DELETE FROM training_programs WHERE id=$1`,
-            [req.params.id]
-        );
-
-        if(!result.rowCount){
-            return res.status(404).json({
-                success:false,
-                message:"Training program was not found."
-            });
-        }
-
-        res.json({
-            success:true,
-            message:"Training program deleted successfully."
-        });
-    }catch(e){
-        console.error("DELETE TRAINING PROGRAM ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to delete training program."});
-    }
+router.delete("/programs/:id",auth,adminOnly,async(req,res)=>{
+  try{
+    const r=await pool.query("DELETE FROM training_programs WHERE id=$1 RETURNING id",[req.params.id]);
+    if(!r.rows[0])return res.status(404).json({error:"Training program not found"});
+    res.json({success:true});
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to delete program"});}
 });
 
-/* ============================================================
-   SESSIONS / ZOOM
-============================================================ */
-
-router.get("/sessions",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user)return;
-
-        const {program_id,from,to}=req.query;
-        const params=[];
-        const where=[];
-
-        if(program_id){
-            params.push(program_id);
-            where.push(`ts.program_id=$${params.length}`);
-        }
-
-        if(from){
-            params.push(from);
-            where.push(`ts.session_date>=$${params.length}`);
-        }
-
-        if(to){
-            params.push(to);
-            where.push(`ts.session_date<=$${params.length}`);
-        }
-
-        const {rows}=await pool.query(`
-            SELECT
-                ts.*,
-                tp.title program_title,
-                tp.category program_category
-            FROM training_sessions ts
-            JOIN training_programs tp ON tp.id=ts.program_id
-            ${where.length?"WHERE "+where.join(" AND "):""}
-            ORDER BY ts.session_date ASC
-        `,params);
-
-        res.json({success:true,sessions:rows});
-    }catch(e){
-        console.error("GET TRAINING SESSIONS ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to load training sessions."});
-    }
+/* SESSIONS */
+router.get("/sessions",auth,async(req,res)=>{
+  try{
+    const {program_id,status}=req.query;
+    let q=`SELECT s.*,p.title program_title FROM training_sessions s LEFT JOIN training_programs p ON p.id=s.program_id WHERE 1=1`,v=[];
+    if(program_id){v.push(program_id);q+=` AND s.program_id=$${v.length}`;}
+    if(status){v.push(status);q+=` AND s.status=$${v.length}`;}
+    q+=" ORDER BY s.session_date ASC";
+    res.json((await pool.query(q,v)).rows);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to load sessions"});}
 });
 
-router.get("/sessions/upcoming",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user)return;
-
-        const {rows}=await pool.query(`
-            SELECT
-                ts.*,
-                tp.title program_title,
-                tp.category program_category
-            FROM training_sessions ts
-            JOIN training_programs tp ON tp.id=ts.program_id
-            WHERE ts.session_date>=NOW()
-            AND ts.status<>'CANCELLED'
-            ORDER BY ts.session_date ASC
-            LIMIT 20
-        `);
-
-        res.json({success:true,sessions:rows});
-    }catch(e){
-        console.error("GET UPCOMING TRAINING ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to load upcoming sessions."});
-    }
+router.get("/sessions/upcoming",auth,async(req,res)=>{
+  try{
+    res.json((await pool.query(
+      `SELECT s.*,p.title program_title,p.category FROM training_sessions s
+       LEFT JOIN training_programs p ON p.id=s.program_id
+       WHERE s.session_date>=NOW() AND s.status IN('SCHEDULED','LIVE')
+       ORDER BY s.session_date ASC LIMIT 20`
+    )).rows);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to load upcoming sessions"});}
 });
 
-router.post("/sessions",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user||!adminOnly(user,res))return;
-
-        const b=req.body||{};
-
-        if(!b.program_id||!String(b.title||"").trim()||!b.session_date){
-            return res.status(400).json({
-                success:false,
-                message:"Program, session title and session date are required."
-            });
-        }
-
-        const meeting=String(b.meeting_type||"PHYSICAL").toUpperCase();
-        const status=String(b.status||"SCHEDULED").toUpperCase();
-
-        if(!valid(meeting,MEETING_TYPES)||!valid(status,SESSION_STATUS)){
-            return res.status(400).json({
-                success:false,
-                message:"Invalid meeting type or session status."
-            });
-        }
-
-        const {rows}=await pool.query(`
-            INSERT INTO training_sessions
-            (program_id,title,description,session_date,end_date,location,
-             meeting_type,meeting_url,meeting_id,meeting_password,
-             recording_url,materials_url,trainer_name,status)
-            VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
-            RETURNING *
-        `,[
-            b.program_id,
-            String(b.title).trim(),
-            b.description||null,
-            b.session_date,
-            b.end_date||null,
-            b.location||null,
-            meeting,
-            b.meeting_url||null,
-            b.meeting_id||null,
-            b.meeting_password||null,
-            b.recording_url||null,
-            b.materials_url||null,
-            b.trainer_name||null,
-            status
-        ]);
-
-        res.status(201).json({
-            success:true,
-            message:"Training session scheduled successfully.",
-            session:rows[0]
-        });
-    }catch(e){
-        console.error("CREATE TRAINING SESSION ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to create training session."});
-    }
+router.post("/sessions",auth,adminOnly,async(req,res)=>{
+  try{
+    const x=req.body||{};
+    if(!x.title||!x.session_date)return res.status(400).json({error:"Title and session date are required"});
+    const r=await pool.query(
+      `INSERT INTO training_sessions(program_id,title,description,session_date,end_date,location,meeting_type,meeting_url,meeting_id,meeting_password,recording_url,materials_url,trainer_name,status)
+       VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING *`,
+      [x.program_id||null,x.title,x.description||null,x.session_date,x.end_date||null,x.location||null,x.meeting_type||"PHYSICAL",x.meeting_url||null,x.meeting_id||null,x.meeting_password||null,x.recording_url||null,x.materials_url||null,x.trainer_name||null,x.status||"SCHEDULED"]
+    );
+    const s=r.rows[0];
+    await notifyAll("Upcoming Training Session",`${s.title} is scheduled for ${new Date(s.session_date).toLocaleString()}. Check the Training Center for meeting details.`,"UPCOMING",s.program_id,s.id);
+    if(["ZOOM","GOOGLE_MEET","ONLINE","HYBRID"].includes(String(s.meeting_type).toUpperCase()))
+      await notifyAll("Online Training Meeting",`${s.title} includes an online meeting. Open the Training Center to join.`,"ZOOM",s.program_id,s.id);
+    res.status(201).json(s);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to create session"});}
 });
 
-router.patch("/sessions/:id",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user||!adminOnly(user,res))return;
-
-        const b=req.body||{};
-        const fields=[
-            "title","description","session_date","end_date","location",
-            "meeting_type","meeting_url","meeting_id","meeting_password",
-            "recording_url","materials_url","trainer_name","status"
-        ];
-
-        const sets=[];
-        const values=[];
-
-        fields.forEach(f=>{
-            if(Object.prototype.hasOwnProperty.call(b,f)){
-                if(f==="meeting_type"&&!valid(b[f],MEETING_TYPES))return;
-                if(f==="status"&&!valid(b[f],SESSION_STATUS))return;
-                values.push(b[f]);
-                sets.push(`${f}=$${values.length}`);
-            }
-        });
-
-        if(!sets.length){
-            return res.status(400).json({
-                success:false,
-                message:"No valid changes were supplied."
-            });
-        }
-
-        values.push(req.params.id);
-
-        const {rows}=await pool.query(`
-            UPDATE training_sessions
-            SET ${sets.join(",")},updated_at=NOW()
-            WHERE id=$${values.length}
-            RETURNING *
-        `,values);
-
-        if(!rows.length){
-            return res.status(404).json({
-                success:false,
-                message:"Training session was not found."
-            });
-        }
-
-        res.json({
-            success:true,
-            message:"Training session updated successfully.",
-            session:rows[0]
-        });
-    }catch(e){
-        console.error("UPDATE TRAINING SESSION ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to update training session."});
-    }
+router.patch("/sessions/:id",auth,adminOnly,async(req,res)=>{
+  try{
+    const x=req.body||{},fields=["program_id","title","description","session_date","end_date","location","meeting_type","meeting_url","meeting_id","meeting_password","recording_url","materials_url","trainer_name","status"];
+    let sets=[],v=[];
+    for(const f of fields)if(x[f]!==undefined){v.push(x[f]);sets.push(`${f}=$${v.length}`);}
+    if(!sets.length)return res.status(400).json({error:"No changes supplied"});
+    v.push(req.params.id);
+    const r=await pool.query(`UPDATE training_sessions SET ${sets.join(",")},updated_at=NOW() WHERE id=$${v.length} RETURNING *`,v);
+    if(!r.rows[0])return res.status(404).json({error:"Session not found"});
+    res.json(r.rows[0]);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to update session"});}
 });
 
-/* ============================================================
-   ENROLLMENT
-============================================================ */
-
-router.get("/my-training",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user)return;
-
-        const sid=await staffId(user);
-
-        if(!sid){
-            return res.json({success:true,staff_id:null,training:[]});
-        }
-
-        const {rows}=await pool.query(`
-            SELECT
-                te.*,
-                tp.title,
-                tp.description,
-                tp.category,
-                tp.trainer_name,
-                tp.start_date,
-                tp.end_date,
-                tp.required,
-                tg.name group_name,
-                tg.facilitator_name
-            FROM training_enrollments te
-            JOIN training_programs tp ON tp.id=te.program_id
-            LEFT JOIN training_groups tg ON tg.id=te.group_id
-            WHERE te.staff_id=$1
-            ORDER BY
-                CASE te.status
-                    WHEN 'IN_PROGRESS' THEN 1
-                    WHEN 'ENROLLED' THEN 2
-                    WHEN 'COMPLETED' THEN 3
-                    ELSE 4
-                END,
-                tp.start_date DESC NULLS LAST
-        `,[sid]);
-
-        res.json({success:true,staff_id:sid,training:rows});
-    }catch(e){
-        console.error("GET MY TRAINING ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to load your training."});
-    }
+/* MY TRAINING */
+router.get("/my-training",auth,async(req,res)=>{
+  try{
+    const sid=await staffId(req.user);
+    if(!sid)return res.status(404).json({error:"Staff profile could not be found"});
+    const r=await pool.query(
+      `SELECT e.*,p.title,p.description,p.category,p.trainer_name,p.start_date,p.end_date,p.required
+       FROM training_enrollments e JOIN training_programs p ON p.id=e.program_id
+       WHERE e.staff_id=$1 ORDER BY p.start_date DESC NULLS LAST,e.created_at DESC`,[sid]
+    );
+    res.json(r.rows);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to load your training"});}
 });
 
-router.post("/enroll",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user)return;
-
-        const sid=await staffId(user);
-
-        if(!sid){
-            return res.status(404).json({
-                success:false,
-                message:"Your staff profile could not be found."
-            });
-        }
-
-        const programId=req.body?.program_id;
-
-        if(!programId){
-            return res.status(400).json({
-                success:false,
-                message:"Training program is required."
-            });
-        }
-
-        const {rows}=await pool.query(`
-            INSERT INTO training_enrollments(program_id,staff_id)
-            VALUES($1,$2)
-            ON CONFLICT(program_id,staff_id)
-            DO UPDATE SET updated_at=NOW()
-            RETURNING *
-        `,[programId,sid]);
-
-        res.status(201).json({
-            success:true,
-            message:"You have been enrolled successfully.",
-            enrollment:rows[0]
-        });
-    }catch(e){
-        console.error("TRAINING ENROLL ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to enroll in training."});
-    }
+router.post("/enroll",auth,async(req,res)=>{
+  try{
+    const sid=await staffId(req.user);
+    if(!sid)return res.status(404).json({error:"Staff profile could not be found"});
+    const {program_id}=req.body||{};
+    if(!program_id)return res.status(400).json({error:"program_id is required"});
+    const r=await pool.query(
+      `INSERT INTO training_enrollments(program_id,staff_id,status,enrolled_at)
+       VALUES($1,$2,'ENROLLED',NOW())
+       ON CONFLICT(program_id,staff_id) DO UPDATE SET status='ENROLLED',updated_at=NOW()
+       RETURNING *`,[program_id,sid]
+    );
+    res.status(201).json(r.rows[0]);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to enroll"});}
 });
 
-/* ============================================================
-   ADMIN ENROLL / ASSIGN STAFF
-============================================================ */
-
-router.post("/enrollments",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user||!adminOnly(user,res))return;
-
-        const {program_id,staff_id,group_id,status}=req.body||{};
-
-        if(!program_id||!staff_id){
-            return res.status(400).json({
-                success:false,
-                message:"Program and staff member are required."
-            });
-        }
-
-        const s=String(status||"ENROLLED").toUpperCase();
-
-        if(!valid(s,ENROLLMENT_STATUS)){
-            return res.status(400).json({
-                success:false,
-                message:"Invalid enrollment status."
-            });
-        }
-
-        const {rows}=await pool.query(`
-            INSERT INTO training_enrollments
-            (program_id,staff_id,group_id,status)
-            VALUES($1,$2,$3,$4)
-            ON CONFLICT(program_id,staff_id)
-            DO UPDATE SET
-                group_id=EXCLUDED.group_id,
-                status=EXCLUDED.status,
-                updated_at=NOW()
-            RETURNING *
-        `,[program_id,staff_id,group_id||null,s]);
-
-        res.status(201).json({
-            success:true,
-            message:"Staff training assignment saved.",
-            enrollment:rows[0]
-        });
-    }catch(e){
-        console.error("ADMIN TRAINING ENROLL ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to assign staff training."});
-    }
+router.post("/enrollments",auth,adminOnly,async(req,res)=>{
+  try{
+    const x=req.body||{};
+    const r=await pool.query(
+      `INSERT INTO training_enrollments(program_id,staff_id,group_id,status,enrolled_at,progress,score,notes)
+       VALUES($1,$2,$3,$4,NOW(),$5,$6,$7)
+       ON CONFLICT(program_id,staff_id) DO UPDATE SET group_id=EXCLUDED.group_id,status=EXCLUDED.status,progress=EXCLUDED.progress,score=EXCLUDED.score,notes=EXCLUDED.notes,updated_at=NOW()
+       RETURNING *`,
+      [x.program_id,x.staff_id,x.group_id||null,x.status||"ENROLLED",x.progress||0,x.score||null,x.notes||null]
+    );
+    if(x.staff_id)await notifyStaff([x.staff_id],"Training Assignment",`You have been assigned to a training program. Open Training Center to view it.`,"REQUIRED",x.program_id,null);
+    res.status(201).json(r.rows[0]);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to assign training"});}
 });
 
-router.get("/enrollments/:programId",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user||!adminOnly(user,res))return;
-
-        const {rows}=await pool.query(`
-            SELECT
-                te.*,
-                s.id staff_id,
-                COALESCE(u.full_name,sp.full_name,'Staff') staff_name,
-                COALESCE(u.email,sp.email) email,
-                tg.name group_name
-            FROM training_enrollments te
-            JOIN staff s ON s.id=te.staff_id
-            LEFT JOIN users u ON u.id=s.user_id
-            LEFT JOIN staff_profiles sp ON sp.user_id=s.user_id
-            LEFT JOIN training_groups tg ON tg.id=te.group_id
-            WHERE te.program_id=$1
-            ORDER BY staff_name
-        `,[req.params.programId]);
-
-        res.json({success:true,enrollments:rows});
-    }catch(e){
-        console.error("GET TRAINING ENROLLMENTS ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to load training enrollments."});
-    }
+router.get("/enrollments/:programId",auth,adminOnly,async(req,res)=>{
+  try{
+    res.json((await pool.query(
+      `SELECT e.*,s.staff_number,s.first_name,s.last_name,s.department,s.job_title
+       FROM training_enrollments e JOIN staff s ON s.id=e.staff_id
+       WHERE e.program_id=$1 ORDER BY s.first_name,s.last_name`,[req.params.programId]
+    )).rows);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to load enrollments"});}
 });
 
-/* ============================================================
-   GROUPS
-============================================================ */
-
-router.get("/groups/:programId",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user)return;
-
-        const {rows}=await pool.query(`
-            SELECT
-                tg.*,
-                COUNT(tgm.id)::INTEGER member_count
-            FROM training_groups tg
-            LEFT JOIN training_group_members tgm ON tgm.group_id=tg.id
-            WHERE tg.program_id=$1
-            GROUP BY tg.id
-            ORDER BY tg.name
-        `,[req.params.programId]);
-
-        res.json({success:true,groups:rows});
-    }catch(e){
-        console.error("GET TRAINING GROUPS ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to load training groups."});
-    }
+/* GROUPS */
+router.get("/groups/:programId",auth,async(req,res)=>{
+  try{
+    res.json((await pool.query("SELECT * FROM training_groups WHERE program_id=$1 ORDER BY name",[req.params.programId])).rows);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to load groups"});}
 });
 
-router.post("/groups",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user||!adminOnly(user,res))return;
-
-        const {program_id,name,description,facilitator_name}=req.body||{};
-
-        if(!program_id||!String(name||"").trim()){
-            return res.status(400).json({
-                success:false,
-                message:"Program and group name are required."
-            });
-        }
-
-        const {rows}=await pool.query(`
-            INSERT INTO training_groups
-            (program_id,name,description,facilitator_name)
-            VALUES($1,$2,$3,$4)
-            RETURNING *
-        `,[
-            program_id,
-            String(name).trim(),
-            description||null,
-            facilitator_name||null
-        ]);
-
-        res.status(201).json({
-            success:true,
-            message:"Training group created successfully.",
-            group:rows[0]
-        });
-    }catch(e){
-        console.error("CREATE TRAINING GROUP ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to create training group."});
-    }
+router.post("/groups",auth,adminOnly,async(req,res)=>{
+  try{
+    const x=req.body||{};
+    const r=await pool.query(
+      `INSERT INTO training_groups(program_id,name,description,facilitator_name)
+       VALUES($1,$2,$3,$4) RETURNING *`,
+      [x.program_id,x.name,x.description||null,x.facilitator_name||null]
+    );
+    res.status(201).json(r.rows[0]);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to create group"});}
 });
 
-router.post("/groups/:groupId/members",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user||!adminOnly(user,res))return;
-
-        const staff_id=req.body?.staff_id;
-
-        if(!staff_id){
-            return res.status(400).json({
-                success:false,
-                message:"Staff member is required."
-            });
-        }
-
-        const {rows}=await pool.query(`
-            INSERT INTO training_group_members(group_id,staff_id)
-            VALUES($1,$2)
-            ON CONFLICT(group_id,staff_id)
-            DO NOTHING
-            RETURNING *
-        `,[req.params.groupId,staff_id]);
-
-        res.status(201).json({
-            success:true,
-            message:rows.length?"Staff member added to group.":"Staff member is already in this group.",
-            member:rows[0]||null
-        });
-    }catch(e){
-        console.error("ADD TRAINING GROUP MEMBER ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to add staff member to group."});
+router.post("/groups/:groupId/members",auth,adminOnly,async(req,res)=>{
+  try{
+    const ids=Array.isArray(req.body?.staff_ids)?req.body.staff_ids:[req.body?.staff_id];
+    const out=[];
+    for(const sid of ids.filter(Boolean)){
+      const r=await pool.query(
+        `INSERT INTO training_group_members(group_id,staff_id)
+         VALUES($1,$2) ON CONFLICT(group_id,staff_id) DO NOTHING RETURNING *`,
+        [req.params.groupId,sid]
+      );
+      if(r.rows[0])out.push(r.rows[0]);
     }
+    const g=(await pool.query("SELECT program_id,name FROM training_groups WHERE id=$1",[req.params.groupId])).rows[0];
+    if(g)await notifyStaff(ids.filter(Boolean),"Workshop Group Assignment",`You have been assigned to workshop group "${g.name}".`,"GROUP_ASSIGNMENT",g.program_id,null);
+    res.status(201).json(out);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to add group members"});}
 });
 
-router.get("/groups/:groupId/members",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user)return;
-
-        const {rows}=await pool.query(`
-            SELECT
-                tgm.id,
-                tgm.group_id,
-                tgm.staff_id,
-                COALESCE(u.full_name,sp.full_name,'Staff') staff_name,
-                COALESCE(u.email,sp.email) email,
-                u.position,
-                u.department
-            FROM training_group_members tgm
-            JOIN staff s ON s.id=tgm.staff_id
-            LEFT JOIN users u ON u.id=s.user_id
-            LEFT JOIN staff_profiles sp ON sp.user_id=s.user_id
-            WHERE tgm.group_id=$1
-            ORDER BY staff_name
-        `,[req.params.groupId]);
-
-        res.json({success:true,members:rows});
-    }catch(e){
-        console.error("GET TRAINING GROUP MEMBERS ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to load group members."});
-    }
+router.get("/groups/:groupId/members",auth,async(req,res)=>{
+  try{
+    res.json((await pool.query(
+      `SELECT gm.*,s.staff_number,s.first_name,s.last_name,s.department,s.job_title
+       FROM training_group_members gm JOIN staff s ON s.id=gm.staff_id
+       WHERE gm.group_id=$1 ORDER BY s.first_name,s.last_name`,[req.params.groupId]
+    )).rows);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to load group members"});}
 });
 
-/* ============================================================
-   ATTENDANCE
-============================================================ */
-
-router.post("/attendance",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user)return;
-
-        const sid=user.isAdmin&&req.body?.staff_id
-            ? req.body.staff_id
-            : await staffId(user);
-
-        if(!sid){
-            return res.status(404).json({
-                success:false,
-                message:"Staff profile could not be found."
-            });
-        }
-
-        const {session_id,status,joined_at,left_at,minutes_attended,notes}=req.body||{};
-        const s=String(status||"PRESENT").toUpperCase();
-
-        if(!session_id||!valid(s,ATTENDANCE_STATUS)){
-            return res.status(400).json({
-                success:false,
-                message:"Session and valid attendance status are required."
-            });
-        }
-
-        const {rows}=await pool.query(`
-            INSERT INTO training_attendance
-            (session_id,staff_id,status,joined_at,left_at,minutes_attended,notes)
-            VALUES($1,$2,$3,$4,$5,$6,$7)
-            ON CONFLICT(session_id,staff_id)
-            DO UPDATE SET
-                status=EXCLUDED.status,
-                joined_at=EXCLUDED.joined_at,
-                left_at=EXCLUDED.left_at,
-                minutes_attended=EXCLUDED.minutes_attended,
-                notes=EXCLUDED.notes,
-                updated_at=NOW()
-            RETURNING *
-        `,[
-            session_id,
-            sid,
-            s,
-            joined_at||new Date().toISOString(),
-            left_at||null,
-            minutes_attended||null,
-            notes||null
-        ]);
-
-        res.status(201).json({
-            success:true,
-            message:"Training attendance recorded.",
-            attendance:rows[0]
-        });
-    }catch(e){
-        console.error("TRAINING ATTENDANCE ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to record attendance."});
-    }
+/* ATTENDANCE */
+router.post("/attendance",auth,async(req,res)=>{
+  try{
+    const sid=String(req.user.role).toUpperCase()==="ADMIN"&&req.body?.staff_id?req.body.staff_id:await staffId(req.user);
+    if(!sid)return res.status(404).json({error:"Staff profile could not be found"});
+    const x=req.body||{};
+    const r=await pool.query(
+      `INSERT INTO training_attendance(session_id,staff_id,status,joined_at,left_at,minutes_attended,notes)
+       VALUES($1,$2,$3,$4,$5,$6,$7)
+       ON CONFLICT(session_id,staff_id) DO UPDATE SET status=EXCLUDED.status,joined_at=EXCLUDED.joined_at,left_at=EXCLUDED.left_at,minutes_attended=EXCLUDED.minutes_attended,notes=EXCLUDED.notes,updated_at=NOW()
+       RETURNING *`,
+      [x.session_id,sid,x.status||"PRESENT",x.joined_at||new Date(),x.left_at||null,x.minutes_attended||null,x.notes||null]
+    );
+    res.status(201).json(r.rows[0]);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to record attendance"});}
 });
 
-router.get("/attendance/:sessionId",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user||!adminOnly(user,res))return;
-
-        const {rows}=await pool.query(`
-            SELECT
-                ta.*,
-                COALESCE(u.full_name,sp.full_name,'Staff') staff_name,
-                COALESCE(u.email,sp.email) email
-            FROM training_attendance ta
-            JOIN staff s ON s.id=ta.staff_id
-            LEFT JOIN users u ON u.id=s.user_id
-            LEFT JOIN staff_profiles sp ON sp.user_id=s.user_id
-            WHERE ta.session_id=$1
-            ORDER BY staff_name
-        `,[req.params.sessionId]);
-
-        res.json({success:true,attendance:rows});
-    }catch(e){
-        console.error("GET TRAINING ATTENDANCE ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to load attendance."});
-    }
+router.get("/attendance/:sessionId",auth,adminOnly,async(req,res)=>{
+  try{
+    res.json((await pool.query(
+      `SELECT a.*,s.staff_number,s.first_name,s.last_name,s.department
+       FROM training_attendance a JOIN staff s ON s.id=a.staff_id
+       WHERE a.session_id=$1 ORDER BY s.first_name,s.last_name`,[req.params.sessionId]
+    )).rows);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to load attendance"});}
 });
 
-/* ============================================================
-   MATERIALS / TRAINING PACKAGES
-============================================================ */
-
-router.get("/materials",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user)return;
-
-        const {program_id,session_id,type,search}=req.query;
-        const params=[];
-        const where=[];
-
-        if(program_id){
-            params.push(program_id);
-            where.push(`tm.program_id=$${params.length}`);
-        }
-
-        if(session_id){
-            params.push(session_id);
-            where.push(`tm.session_id=$${params.length}`);
-        }
-
-        if(type){
-            params.push(String(type).toUpperCase());
-            where.push(`UPPER(tm.material_type)=$${params.length}`);
-        }
-
-        if(search){
-            params.push(`%${String(search).trim()}%`);
-            where.push(`(
-                tm.title ILIKE $${params.length}
-                OR COALESCE(tm.description,'') ILIKE $${params.length}
-            )`);
-        }
-
-        const {rows}=await pool.query(`
-            SELECT tm.*,tp.title program_title
-            FROM training_materials tm
-            LEFT JOIN training_programs tp ON tp.id=tm.program_id
-            ${where.length?"WHERE "+where.join(" AND "):""}
-            ORDER BY tm.created_at DESC
-        `,params);
-
-        res.json({success:true,materials:rows});
-    }catch(e){
-        console.error("GET TRAINING MATERIALS ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to load training materials."});
-    }
+/* TRAINING MATERIALS */
+router.get("/materials",auth,async(req,res)=>{
+  try{
+    const {program_id,session_id,material_type,search}=req.query;
+    let q=`SELECT * FROM training_materials WHERE 1=1`,v=[];
+    if(program_id){v.push(program_id);q+=` AND program_id=$${v.length}`;}
+    if(session_id){v.push(session_id);q+=` AND session_id=$${v.length}`;}
+    if(material_type){v.push(material_type);q+=` AND material_type=$${v.length}`;}
+    if(search){v.push(`%${search}%`);q+=` AND(title ILIKE $${v.length} OR description ILIKE $${v.length})`;}
+    q+=" ORDER BY created_at DESC";
+    const rows=(await pool.query(q,v)).rows;
+    for(const m of rows)m.signed_url=await signed(m.file_path);
+    res.json(rows);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to load training materials"});}
 });
 
-router.post("/materials",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user||!adminOnly(user,res))return;
-
-        const b=req.body||{};
-
-        if(!String(b.title||"").trim()){
-            return res.status(400).json({
-                success:false,
-                message:"Material title is required."
-            });
-        }
-
-        const {rows}=await pool.query(`
-            INSERT INTO training_materials
-            (program_id,session_id,title,description,material_type,
-             file_name,file_path,file_type,file_size,external_url,uploaded_by)
-            VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
-            RETURNING *
-        `,[
-            b.program_id||null,
-            b.session_id||null,
-            String(b.title).trim(),
-            b.description||null,
-            b.material_type||"DOCUMENT",
-            b.file_name||null,
-            b.file_path||null,
-            b.file_type||null,
-            b.file_size||null,
-            b.external_url||null,
-            user.id
-        ]);
-
-        res.status(201).json({
-            success:true,
-            message:"Training material added successfully.",
-            material:rows[0]
-        });
-    }catch(e){
-        console.error("CREATE TRAINING MATERIAL ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to add training material."});
-    }
+router.post("/materials",auth,adminOnly,async(req,res)=>{
+  try{
+    const x=req.body||{};
+    const r=await pool.query(
+      `INSERT INTO training_materials(program_id,session_id,title,description,material_type,external_url,uploaded_by)
+       VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *`,
+      [x.program_id||null,x.session_id||null,x.title,x.description||null,x.material_type||"OTHER",x.external_url||null,req.user.id]
+    );
+    res.status(201).json(r.rows[0]);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to add material"});}
 });
 
-/* ============================================================
-   MY CERTIFICATES
-============================================================ */
-
-router.get("/certificates",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user)return;
-
-        const sid=await staffId(user);
-
-        if(!sid){
-            return res.json({success:true,certificates:[]});
-        }
-
-        const {rows}=await pool.query(`
-            SELECT
-                tc.*,
-                tp.title program_title,
-                tp.category
-            FROM training_certificates tc
-            JOIN training_programs tp ON tp.id=tc.program_id
-            WHERE tc.staff_id=$1
-            ORDER BY tc.issued_date DESC
-        `,[sid]);
-
-        res.json({success:true,certificates:rows});
-    }catch(e){
-        console.error("GET TRAINING CERTIFICATES ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to load certificates."});
-    }
+router.post("/materials/upload",auth,adminOnly,upload.single("file"),async(req,res)=>{
+  try{
+    if(!req.file)return res.status(400).json({error:"Training file is required"});
+    const x=req.body||{};
+    if(!x.title)return res.status(400).json({error:"Material title is required"});
+    const path=filePath(`training/${x.program_id||"general"}`,req.file);
+    const up=await supabase.storage.from(BUCKET).upload(path,req.file.buffer,{contentType:req.file.mimetype||"application/octet-stream",upsert:false});
+    if(up.error)return res.status(500).json({error:"Training file upload failed",details:up.error.message});
+    const r=await pool.query(
+      `INSERT INTO training_materials(program_id,session_id,title,description,material_type,file_name,file_path,file_type,file_size,uploaded_by)
+       VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *`,
+      [x.program_id||null,x.session_id||null,x.title,x.description||null,x.material_type||"DOCUMENT",req.file.originalname,path,req.file.mimetype||null,req.file.size,req.user.id]
+    );
+    r.rows[0].signed_url=await signed(path);
+    if(x.program_id)await notifyAll("New Training Package",`A new training package "${x.title}" is available in the Training Center.`,"MATERIAL",x.program_id,x.session_id||null);
+    res.status(201).json(r.rows[0]);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to upload training material"});}
 });
 
-router.post("/certificates",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user||!adminOnly(user,res))return;
-
-        const b=req.body||{};
-
-        if(!b.program_id||!b.staff_id||!String(b.title||"").trim()){
-            return res.status(400).json({
-                success:false,
-                message:"Program, staff member and certificate title are required."
-            });
-        }
-
-        const certificateNumber=
-            String(b.certificate_number||`KCS-TR-${Date.now()}`).trim();
-
-        const verificationCode=
-            String(b.verification_code||certificateNumber).trim();
-
-        const {rows}=await pool.query(`
-            INSERT INTO training_certificates
-            (program_id,staff_id,certificate_number,title,issued_date,
-             expiry_date,issuer,certificate_url,file_name,file_path,
-             verification_code,status)
-            VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
-            RETURNING *
-        `,[
-            b.program_id,
-            b.staff_id,
-            certificateNumber,
-            String(b.title).trim(),
-            b.issued_date||new Date().toISOString().slice(0,10),
-            b.expiry_date||null,
-            b.issuer||"Kenbridge Christian School",
-            b.certificate_url||null,
-            b.file_name||null,
-            b.file_path||null,
-            verificationCode,
-            b.status||"ACTIVE"
-        ]);
-
-        res.status(201).json({
-            success:true,
-            message:"Training certificate issued successfully.",
-            certificate:rows[0]
-        });
-    }catch(e){
-        console.error("CREATE TRAINING CERTIFICATE ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to issue certificate."});
-    }
+router.delete("/materials/:id",auth,adminOnly,async(req,res)=>{
+  try{
+    const r=await pool.query("SELECT * FROM training_materials WHERE id=$1",[req.params.id]);
+    const m=r.rows[0];
+    if(!m)return res.status(404).json({error:"Material not found"});
+    if(m.file_path)await supabase.storage.from(BUCKET).remove([m.file_path]);
+    await pool.query("DELETE FROM training_materials WHERE id=$1",[req.params.id]);
+    res.json({success:true});
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to delete material"});}
 });
 
-/* ============================================================
-   TRAINING NOTIFICATIONS
-============================================================ */
-
-router.get("/notifications",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user)return;
-
-        const sid=await staffId(user);
-
-        if(!sid){
-            return res.json({
-                success:true,
-                notifications:[],
-                unreadCount:0
-            });
-        }
-
-        const {rows}=await pool.query(`
-            SELECT
-                tn.*,
-                tp.title program_title,
-                ts.title session_title
-            FROM training_notifications tn
-            LEFT JOIN training_programs tp ON tp.id=tn.program_id
-            LEFT JOIN training_sessions ts ON ts.id=tn.session_id
-            WHERE tn.staff_id=$1
-            ORDER BY tn.created_at DESC
-        `,[sid]);
-
-        res.json({
-            success:true,
-            notifications:rows,
-            unreadCount:rows.filter(x=>!x.is_read).length
-        });
-    }catch(e){
-        console.error("GET TRAINING NOTIFICATIONS ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to load training notifications."});
-    }
+/* CERTIFICATES */
+router.get("/certificates",auth,async(req,res)=>{
+  try{
+    const sid=await staffId(req.user);
+    if(!sid)return res.status(404).json({error:"Staff profile could not be found"});
+    const rows=(await pool.query(
+      `SELECT c.*,p.title program_title FROM training_certificates c
+       LEFT JOIN training_programs p ON p.id=c.program_id
+       WHERE c.staff_id=$1 ORDER BY c.issued_date DESC`,[sid]
+    )).rows;
+    for(const c of rows)c.signed_url=await signed(c.file_path);
+    res.json(rows);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to load certificates"});}
 });
 
-router.patch("/notifications/:id/read",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user)return;
-
-        const sid=await staffId(user);
-
-        const {rows}=await pool.query(`
-            UPDATE training_notifications
-            SET is_read=TRUE
-            WHERE id=$1 AND staff_id=$2
-            RETURNING *
-        `,[req.params.id,sid]);
-
-        if(!rows.length){
-            return res.status(404).json({
-                success:false,
-                message:"Training notification was not found."
-            });
-        }
-
-        res.json({
-            success:true,
-            message:"Notification marked as read.",
-            notification:rows[0]
-        });
-    }catch(e){
-        console.error("READ TRAINING NOTIFICATION ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to update notification."});
+router.post("/certificates",auth,adminOnly,upload.single("file"),async(req,res)=>{
+  try{
+    const x=req.body||{};
+    if(!x.program_id||!x.staff_id||!x.title)return res.status(400).json({error:"program_id, staff_id and title are required"});
+    let path=null,fileName=null;
+    if(req.file){
+      path=filePath(`training-certificates/${x.program_id}`,req.file);
+      const up=await supabase.storage.from(BUCKET).upload(path,req.file.buffer,{contentType:req.file.mimetype||"application/octet-stream",upsert:false});
+      if(up.error)return res.status(500).json({error:"Certificate upload failed",details:up.error.message});
+      fileName=req.file.originalname;
     }
+    const number=x.certificate_number||`KCS-${new Date().getFullYear()}-${crypto.randomBytes(5).toString("hex").toUpperCase()}`;
+    const verify=x.verification_code||crypto.randomBytes(8).toString("hex").toUpperCase();
+    const r=await pool.query(
+      `INSERT INTO training_certificates(program_id,staff_id,certificate_number,title,issued_date,expiry_date,issuer,certificate_url,file_name,file_path,verification_code,status)
+       VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,'ACTIVE') RETURNING *`,
+      [x.program_id,x.staff_id,number,x.title,x.issued_date||new Date(),x.expiry_date||null,x.issuer||"Kenbridge Christian School",x.certificate_url||null,fileName,path,verify]
+    );
+    r.rows[0].signed_url=await signed(path);
+    await notifyStaff([x.staff_id],"Certificate Issued",`Your training certificate "${x.title}" has been issued. Open the Certificates section in the Training Center.`,"CERTIFICATE",x.program_id,null);
+    res.status(201).json(r.rows[0]);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to issue certificate"});}
 });
 
-router.patch("/notifications/read-all",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user)return;
-
-        const sid=await staffId(user);
-
-        const result=await pool.query(`
-            UPDATE training_notifications
-            SET is_read=TRUE
-            WHERE staff_id=$1 AND is_read=FALSE
-        `,[sid]);
-
-        res.json({
-            success:true,
-            message:"Training notifications marked as read.",
-            updatedCount:result.rowCount
-        });
-    }catch(e){
-        console.error("READ ALL TRAINING NOTIFICATIONS ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to update notifications."});
-    }
+router.get("/certificates/verify/:code",async(req,res)=>{
+  try{
+    const r=await pool.query(
+      `SELECT c.certificate_number,c.title,c.issued_date,c.expiry_date,c.issuer,c.status,p.title program_title,s.first_name,s.last_name
+       FROM training_certificates c
+       LEFT JOIN training_programs p ON p.id=c.program_id
+       LEFT JOIN staff s ON s.id=c.staff_id
+       WHERE c.verification_code=$1 LIMIT 1`,[req.params.code]
+    );
+    if(!r.rows[0])return res.status(404).json({valid:false,error:"Certificate not found"});
+    const c=r.rows[0];
+    const expired=c.expiry_date&&new Date(c.expiry_date)<new Date();
+    res.json({valid:c.status==="ACTIVE"&&!expired,certificate:c});
+  }catch(e){console.error(e);res.status(500).json({error:"Certificate verification failed"});}
 });
 
-router.post("/notifications",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user||!adminOnly(user,res))return;
-
-        const b=req.body||{};
-
-        if(!String(b.title||"").trim()||!String(b.message||"").trim()){
-            return res.status(400).json({
-                success:false,
-                message:"Notification title and message are required."
-            });
-        }
-
-        const {rows}=await pool.query(`
-            INSERT INTO training_notifications
-            (staff_id,program_id,session_id,title,message,notification_type)
-            VALUES($1,$2,$3,$4,$5,$6)
-            RETURNING *
-        `,[
-            b.staff_id||null,
-            b.program_id||null,
-            b.session_id||null,
-            String(b.title).trim(),
-            String(b.message).trim(),
-            b.notification_type||"GENERAL"
-        ]);
-
-        res.status(201).json({
-            success:true,
-            message:"Training notification created.",
-            notification:rows[0]
-        });
-    }catch(e){
-        console.error("CREATE TRAINING NOTIFICATION ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to create training notification."});
-    }
+/* NOTIFICATIONS */
+router.get("/notifications",auth,async(req,res)=>{
+  try{
+    const sid=await staffId(req.user);
+    if(!sid)return res.status(404).json({error:"Staff profile could not be found"});
+    res.json((await pool.query(
+      `SELECT * FROM training_notifications WHERE staff_id=$1 ORDER BY created_at DESC LIMIT 100`,[sid]
+    )).rows);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to load training notifications"});}
 });
 
-/* ============================================================
-   FEEDBACK
-============================================================ */
-
-router.post("/feedback",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user)return;
-
-        const sid=await staffId(user);
-
-        if(!sid){
-            return res.status(404).json({
-                success:false,
-                message:"Staff profile could not be found."
-            });
-        }
-
-        const {program_id,session_id,rating,comments,suggestions}=req.body||{};
-
-        if(!program_id){
-            return res.status(400).json({
-                success:false,
-                message:"Training program is required."
-            });
-        }
-
-        if(rating!=null&&(Number(rating)<1||Number(rating)>5)){
-            return res.status(400).json({
-                success:false,
-                message:"Rating must be between 1 and 5."
-            });
-        }
-
-        const {rows}=await pool.query(`
-            INSERT INTO training_feedback
-            (program_id,session_id,staff_id,rating,comments,suggestions)
-            VALUES($1,$2,$3,$4,$5,$6)
-            ON CONFLICT(program_id,staff_id)
-            DO UPDATE SET
-                session_id=EXCLUDED.session_id,
-                rating=EXCLUDED.rating,
-                comments=EXCLUDED.comments,
-                suggestions=EXCLUDED.suggestions
-            RETURNING *
-        `,[
-            program_id,
-            session_id||null,
-            sid,
-            rating==null?null:Number(rating),
-            comments||null,
-            suggestions||null
-        ]);
-
-        res.status(201).json({
-            success:true,
-            message:"Training feedback saved successfully.",
-            feedback:rows[0]
-        });
-    }catch(e){
-        console.error("TRAINING FEEDBACK ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to save training feedback."});
-    }
+router.patch("/notifications/:id/read",auth,async(req,res)=>{
+  try{
+    const sid=await staffId(req.user);
+    const r=await pool.query(
+      `UPDATE training_notifications SET is_read=true WHERE id=$1 AND staff_id=$2 RETURNING *`,[req.params.id,sid]
+    );
+    if(!r.rows[0])return res.status(404).json({error:"Notification not found"});
+    res.json(r.rows[0]);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to update notification"});}
 });
 
-/* ============================================================
-   ADMIN STAFF LIST FOR TRAINING ASSIGNMENTS
-============================================================ */
+router.patch("/notifications/read-all",auth,async(req,res)=>{
+  try{
+    const sid=await staffId(req.user);
+    await pool.query("UPDATE training_notifications SET is_read=true WHERE staff_id=$1",[sid]);
+    res.json({success:true});
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to mark notifications read"});}
+});
 
-router.get("/admin/staff",async(req,res)=>{
-    try{
-        const user=await auth(req,res);
-        if(!user||!adminOnly(user,res))return;
-
-        const {rows}=await pool.query(`
-            SELECT
-                s.id staff_id,
-                s.user_id,
-                COALESCE(u.full_name,sp.full_name,'Staff') full_name,
-                COALESCE(u.email,sp.email) email,
-                COALESCE(u.position,sp.position) position,
-                COALESCE(u.department,sp.department) department,
-                u.phone
-            FROM staff s
-            LEFT JOIN users u ON u.id=s.user_id
-            LEFT JOIN staff_profiles sp ON sp.user_id=s.user_id
-            WHERE COALESCE(u.is_active,sp.is_active,TRUE)=TRUE
-            ORDER BY full_name
-        `);
-
-        res.json({success:true,staff:rows});
-    }catch(e){
-        console.error("GET TRAINING STAFF ERROR:",e);
-        res.status(500).json({success:false,message:"Unable to load staff list."});
+router.post("/notifications",auth,adminOnly,async(req,res)=>{
+  try{
+    const x=req.body||{};
+    if(x.staff_id){
+      const r=await pool.query(
+        `INSERT INTO training_notifications(staff_id,program_id,session_id,title,message,notification_type)
+         VALUES($1,$2,$3,$4,$5,$6) RETURNING *`,
+        [x.staff_id,x.program_id||null,x.session_id||null,x.title,x.message,x.notification_type||"GENERAL"]
+      );
+      return res.status(201).json(r.rows[0]);
     }
+    await notifyAll(x.title,x.message,x.notification_type||"GENERAL",x.program_id||null,x.session_id||null);
+    res.status(201).json({success:true,broadcast:true});
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to send notification"});}
+});
+
+/* FEEDBACK */
+router.post("/feedback",auth,async(req,res)=>{
+  try{
+    const sid=await staffId(req.user);
+    if(!sid)return res.status(404).json({error:"Staff profile could not be found"});
+    const x=req.body||{};
+    const r=await pool.query(
+      `INSERT INTO training_feedback(program_id,session_id,staff_id,rating,comments,suggestions)
+       VALUES($1,$2,$3,$4,$5,$6)
+       ON CONFLICT(program_id,staff_id) DO UPDATE SET session_id=EXCLUDED.session_id,rating=EXCLUDED.rating,comments=EXCLUDED.comments,suggestions=EXCLUDED.suggestions
+       RETURNING *`,
+      [x.program_id,x.session_id||null,sid,x.rating||null,x.comments||null,x.suggestions||null]
+    );
+    res.status(201).json(r.rows[0]);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to save feedback"});}
+});
+
+router.get("/admin/staff",auth,adminOnly,async(req,res)=>{
+  try{
+    res.json((await pool.query(
+      `SELECT id,staff_number,first_name,last_name,department,job_title,employment_status
+       FROM staff
+       WHERE employment_status IS NULL OR UPPER(employment_status) NOT IN('INACTIVE','TERMINATED','LEFT')
+       ORDER BY first_name,last_name`
+    )).rows);
+  }catch(e){console.error(e);res.status(500).json({error:"Failed to load staff"});}
 });
 
 module.exports=router;
