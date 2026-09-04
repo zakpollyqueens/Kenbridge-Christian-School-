@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Board Announcements | Kenbridge Christian School</title>
+<title>Announcements | Kenbridge Christian School</title>
 <link rel="stylesheet" href="../css/style.css">
 <style>
-:root{--p:#123c63;--s:#1f6f8b;--bg:#f4f7fb;--card:#fff;--text:#17212b;--muted:#64748b;--border:#e2e8f0;--danger:#b42318;--success:#067647;--warn:#b54708}
+:root{--p:#123c63;--s:#1f6f8b;--bg:#f4f7fb;--card:#fff;--text:#17212b;--muted:#64748b;--border:#e2e8f0;--danger:#b42318;--success:#087443;--warn:#a15c00}
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
 .sidebar{position:fixed;top:0;left:0;bottom:0;width:260px;background:var(--p);color:#fff;display:flex;flex-direction:column;z-index:1000}
@@ -28,7 +28,7 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 .urole{font-size:12px;color:var(--muted)}
 .menu{display:none;border:0;background:var(--p);color:#fff;border-radius:7px;padding:9px 11px}
 .content{padding:28px}
-.heading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}
+.heading{margin-bottom:22px}
 .heading h2{margin:0;color:var(--p);font-size:24px}
 .heading p{margin:7px 0 0;color:var(--muted);font-size:14px}
 .card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:18px}
@@ -38,8 +38,6 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 .primary{background:var(--p);color:#fff}
 .secondary{background:#eef5f8;color:var(--s)}
 .danger{background:#fef3f2;color:var(--danger)}
-.success{background:#ecfdf3;color:var(--success)}
-.warn{background:#fff7ed;color:var(--warn)}
 .notice{display:none;padding:12px 14px;border-radius:8px;margin-bottom:16px;font-size:13px;line-height:1.5}
 .notice.show{display:block}
 .notice.error{background:#fef3f2;color:var(--danger)}
@@ -49,31 +47,30 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 .stat strong{display:block;color:var(--p);font-size:22px}
 .stat span{font-size:12px;color:var(--muted)}
 .announcements{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-.announcement{border:1px solid var(--border);border-radius:11px;padding:19px;background:#fff;border-left:4px solid var(--s)}
-.announcement.important{border-left-color:var(--warn)}
-.announcement.urgent{border-left-color:var(--danger)}
-.a-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.priority{padding:5px 9px;border-radius:20px;font-size:10px;font-weight:bold}
-.priority.normal{background:#eef5f8;color:var(--s)}
-.priority.important{background:#fff7ed;color:var(--warn)}
-.priority.urgent{background:#fef3f2;color:var(--danger)}
-.title{font-size:17px;font-weight:bold;color:var(--p);margin-top:14px}
-.message{font-size:13px;color:var(--muted);line-height:1.7;margin-top:9px;white-space:pre-wrap}
-.meta{font-size:12px;color:var(--muted);line-height:1.8;margin-top:14px}
+.announcement{background:#fff;border:1px solid var(--border);border-radius:11px;padding:18px}
+.atop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.priority{font-size:10px;font-weight:bold;padding:5px 9px;border-radius:20px;white-space:nowrap}
+.normal{background:#eef5f8;color:var(--s)}
+.important{background:#fff4e5;color:var(--warn)}
+.urgent{background:#fef3f2;color:var(--danger)}
+.status{font-size:10px;font-weight:bold;padding:5px 9px;border-radius:20px;background:#ecfdf3;color:var(--success)}
+.unpublished{background:#f1f5f9;color:var(--muted)}
+.title{font-size:17px;font-weight:bold;color:var(--p);line-height:1.35;margin-top:12px}
+.message{font-size:13px;color:#475569;line-height:1.7;margin-top:10px;white-space:pre-wrap;word-break:break-word}
+.meta{font-size:12px;color:var(--muted);margin-top:13px;line-height:1.8}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
 .empty,.loading{text-align:center;padding:40px;color:var(--muted);grid-column:1/-1}
-.modal-wrap{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:2000}
-.modal-wrap.show{display:flex}
-.modal{background:#fff;border-radius:12px;width:min(620px,100%);max-height:90vh;overflow:auto;padding:22px}
-.modal h3{margin:0;color:var(--p)}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
-.field{display:flex;flex-direction:column;gap:6px}
-.field.full{grid-column:1/-1}
-.field label{font-size:12px;font-weight:bold;color:var(--p)}
-.field input,.field select,.field textarea{width:100%;padding:10px 11px;border:1px solid var(--border);border-radius:8px;font:inherit;outline:none}
-.field textarea{min-height:150px;resize:vertical}
-.check{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text)}
-.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:20px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2000;align-items:center;justify-content:center;padding:20px}
+.modal.show{display:flex}
+.modal-box{width:min(620px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:13px;padding:22px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-head h3{margin:0;color:var(--p);font-size:20px}
+.close{border:0;background:#eef2f6;border-radius:50%;width:34px;height:34px;font-size:20px;cursor:pointer}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;font-weight:bold;color:#475569;margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:8px;outline:none;background:#fff}
+.form-group textarea{min-height:150px;resize:vertical}
+.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
 @media(max-width:1000px){.announcements{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:900px){
 .sidebar{transform:translateX(-100%);transition:.25s}
@@ -85,10 +82,7 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 }
 @media(max-width:600px){
 .stats{grid-template-columns:1fr}
-.form-grid{grid-template-columns:1fr}
-.field.full{grid-column:auto}
 .user>div:not(.avatar){display:none}
-.heading{flex-direction:column;align-items:flex-start}
 }
 </style>
 </head>
@@ -136,16 +130,22 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 <header class="top">
 
 <div style="display:flex;align-items:center;gap:14px">
+
 <button id="menu" class="menu">☰</button>
+
 <h1>Announcements</h1>
+
 </div>
 
 <div class="user">
+
 <div id="avatar" class="avatar">B</div>
+
 <div>
 <div id="uname" class="uname">Loading...</div>
 <div id="urole" class="urole">Board Member</div>
 </div>
+
 </div>
 
 </header>
@@ -154,12 +154,11 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 
 <div class="heading">
 
-<div>
 <h2>Board Announcements</h2>
-<p>Important notices and official communications for the Board of Governors.</p>
-</div>
 
-<button id="addBtn" class="btn primary">＋ New Announcement</button>
+<p>
+Publish important notices and official communication for the Board of Governors.
+</p>
 
 </div>
 
@@ -193,22 +192,36 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 
 <div class="filters">
 
-<input id="search" type="search" placeholder="Search announcements...">
+<input
+id="search"
+type="search"
+placeholder="Search announcements..."
+>
 
 <select id="priorityFilter">
+
 <option value="">All Priorities</option>
 <option value="normal">Normal</option>
 <option value="important">Important</option>
 <option value="urgent">Urgent</option>
+
 </select>
 
 <select id="publishedFilter">
-<option value="">All Status</option>
+
+<option value="">All Publication Status</option>
 <option value="published">Published</option>
-<option value="draft">Draft</option>
+<option value="unpublished">Unpublished</option>
+
 </select>
 
-<button id="refresh" class="btn secondary">↻ Refresh</button>
+<button id="refresh" class="btn secondary">
+↻ Refresh
+</button>
+
+<button id="addBtn" class="btn primary" style="display:none">
+＋ New Announcement
+</button>
 
 </div>
 
@@ -217,14 +230,23 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 <div class="card">
 
 <div style="margin-bottom:18px">
-<h3 style="margin:0;color:var(--p);font-size:18px">Communication Register</h3>
+
+<h3 style="margin:0;color:var(--p);font-size:18px">
+Announcement Register
+</h3>
+
 <p style="margin:6px 0 0;color:var(--muted);font-size:13px">
-Official notices issued through the Board portal.
+Official Board notices and communications.
 </p>
+
 </div>
 
-<div id="announcements" class="announcements">
-<div class="loading">Loading announcements...</div>
+<div id="list" class="announcements">
+
+<div class="loading">
+Loading announcements...
+</div>
+
 </div>
 
 </div>
@@ -233,48 +255,101 @@ Official notices issued through the Board portal.
 
 </main>
 
-<div id="modalWrap" class="modal-wrap">
+<div id="modal" class="modal">
 
-<div class="modal">
+<div class="modal-box">
 
-<h3>Create Board Announcement</h3>
+<div class="modal-head">
+
+<h3 id="modalTitle">
+New Announcement
+</h3>
+
+<button id="closeModal" class="close">
+×
+</button>
+
+</div>
+
+<div id="formNotice" class="notice"></div>
 
 <form id="form">
 
-<div class="form-grid">
+<div class="form-group">
 
-<div class="field full">
-<label for="title">Title</label>
-<input id="title" type="text" placeholder="Announcement title" required>
+<label for="titleInput">
+Title
+</label>
+
+<input
+id="titleInput"
+required
+placeholder="Announcement title"
+>
+
 </div>
 
-<div class="field">
-<label for="priority">Priority</label>
-<select id="priority">
+<div class="form-group">
+
+<label for="priorityInput">
+Priority
+</label>
+
+<select id="priorityInput">
+
 <option value="normal">Normal</option>
 <option value="important">Important</option>
 <option value="urgent">Urgent</option>
+
 </select>
+
 </div>
 
-<div class="field">
-<label for="published">Publication</label>
-<select id="published">
-<option value="true">Publish Now</option>
-<option value="false">Save as Draft</option>
-</select>
+<div class="form-group">
+
+<label for="messageInput">
+Message
+</label>
+
+<textarea
+id="messageInput"
+required
+placeholder="Write the official announcement..."
+></textarea>
+
 </div>
 
-<div class="field full">
-<label for="message">Message</label>
-<textarea id="message" placeholder="Write the official announcement..." required></textarea>
-</div>
+<div class="form-group">
+
+<label for="publishedInput">
+Publication Status
+</label>
+
+<select id="publishedInput">
+
+<option value="true">Published</option>
+<option value="false">Unpublished</option>
+
+</select>
 
 </div>
 
 <div class="modal-actions">
-<button type="button" id="cancelBtn" class="btn secondary">Cancel</button>
-<button type="submit" id="saveBtn" class="btn primary">Save Announcement</button>
+
+<button
+type="button"
+id="cancelModal"
+class="btn secondary">
+Cancel
+</button>
+
+<button
+type="submit"
+id="saveBtn"
+class="btn primary">
+Publish Announcement
+</button>
+
 </div>
 
 </form>
@@ -291,152 +366,281 @@ Official notices issued through the Board portal.
 "use strict";
 
 let announcements=[];
+let currentUser=null;
+let editingId=null;
 
 const $=id=>document.getElementById(id);
 
 function esc(v){
+
 return String(v??"")
 .replace(/&/g,"&amp;")
 .replace(/</g,"&lt;")
 .replace(/>/g,"&gt;")
 .replace(/"/g,"&quot;")
 .replace(/'/g,"&#039;");
+
 }
 
-function notice(text,type="error"){
-$("notice").textContent=text;
-$("notice").className=`notice show ${type}`;
+function showNotice(text,error=false,target="notice"){
+
+const n=$(target);
+
+n.textContent=text;
+
+n.className=
+"notice show "+
+(error?"error":"success");
+
+if(target==="notice"){
+
+setTimeout(
+()=>n.className="notice",
+5000
+);
+
 }
 
-function dateText(v){
-if(!v)return"";
-const d=new Date(v);
-if(Number.isNaN(d.getTime()))return String(v);
+}
+
+function hideNotice(target="formNotice"){
+
+$(target).className="notice";
+
+}
+
+function isAdmin(){
+
+return String(
+currentUser?.role||""
+).toUpperCase()==="ADMIN";
+
+}
+
+function dateText(value){
+
+if(!value)return"";
+
+const d=new Date(value);
+
+if(Number.isNaN(d.getTime()))
+return String(value);
+
 return d.toLocaleDateString(undefined,{
 year:"numeric",
 month:"short",
 day:"numeric"
 });
+
+}
+
+function dateTimeText(value){
+
+if(!value)return"";
+
+const d=new Date(value);
+
+if(Number.isNaN(d.getTime()))
+return String(value);
+
+return d.toLocaleString(undefined,{
+year:"numeric",
+month:"short",
+day:"numeric",
+hour:"numeric",
+minute:"2-digit"
+});
+
 }
 
 function priorityName(value){
+
 const names={
 normal:"Normal",
 important:"Important",
 urgent:"Urgent"
 };
-return names[String(value||"").toLowerCase()]||"Normal";
+
+return names[
+String(value||"normal").toLowerCase()
+]||"Normal";
+
 }
 
-function updateStats(){
+function renderStats(){
 
-$("total").textContent=announcements.length;
+$("total").textContent=
+announcements.length;
 
 $("published").textContent=
-announcements.filter(x=>x.published===true).length;
+announcements.filter(
+x=>x.published===true
+).length;
 
 $("important").textContent=
-announcements.filter(x=>
-String(x.priority||"").toLowerCase()==="important"
+announcements.filter(
+x=>String(x.priority||"").toLowerCase()==="important"
 ).length;
 
 $("urgent").textContent=
-announcements.filter(x=>
-String(x.priority||"").toLowerCase()==="urgent"
+announcements.filter(
+x=>String(x.priority||"").toLowerCase()==="urgent"
 ).length;
 
 }
 
 function render(){
 
-const q=$("search").value.trim().toLowerCase();
-const priority=$("priorityFilter").value;
-const pub=$("publishedFilter").value;
+const q=
+$("search").value.trim().toLowerCase();
 
-const list=announcements.filter(item=>{
+const priority=
+$("priorityFilter").value;
 
-const p=String(item.priority||"normal").toLowerCase();
-const published=item.published===true;
+const published=
+$("publishedFilter").value;
+
+const list=announcements.filter(a=>{
+
+const p=
+String(a.priority||"normal").toLowerCase();
+
+const isPublished=
+a.published===true;
 
 const haystack=[
-item.title,
-item.message,
-item.priority
+a.title,
+a.message,
+a.priority,
+a.created_by_name,
+a.creator_name
 ].join(" ").toLowerCase();
 
 return(
 (!q||haystack.includes(q))&&
 (!priority||p===priority)&&
-(!pub||
-(pub==="published"&&published)||
-(pub==="draft"&&!published))
+(!published||
+(published==="published"&&isPublished)||
+(published==="unpublished"&&!isPublished))
 );
 
 });
 
-const box=$("announcements");
+const box=$("list");
 
 if(!list.length){
 
 box.innerHTML=
 `<div class="empty">
-No announcements found.
+No announcements match your search.
 </div>`;
 
 return;
 
 }
 
-box.innerHTML=list.map(item=>{
+box.innerHTML=list.map(a=>{
 
-const priority=
-String(item.priority||"normal").toLowerCase();
+const p=
+String(a.priority||"normal").toLowerCase();
 
-const published=item.published===true;
+const isPublished=
+a.published===true;
 
-return `
-<article class="announcement ${esc(priority)}">
+return`
 
-<div class="a-top">
+<article class="announcement">
 
-<strong style="font-size:12px;color:var(--muted)">
-${published?"PUBLISHED":"DRAFT"}
-</strong>
+<div class="atop">
 
-<span class="priority ${esc(priority)}">
-${esc(priorityName(priority))}
+<span class="priority ${esc(p)}">
+${esc(priorityName(p))}
+</span>
+
+<span class="status ${isPublished?"":"unpublished"}">
+${isPublished?
+"Published":
+"Unpublished"}
 </span>
 
 </div>
 
 <div class="title">
-${esc(item.title||"Untitled Announcement")}
+${esc(a.title||"Untitled Announcement")}
 </div>
 
 <div class="message">
-${esc(item.message||"")}
+${esc(a.message||"")}
 </div>
 
 <div class="meta">
 
-${item.created_at?
-`<div><strong>Created:</strong> ${esc(dateText(item.created_at))}</div>`:""}
+${a.created_at?
+`<div>
+<strong>Created:</strong>
+${esc(dateTimeText(a.created_at))}
+</div>`:""}
 
-${item.updated_at?
-`<div><strong>Updated:</strong> ${esc(dateText(item.updated_at))}</div>`:""}
+${a.created_by_name||a.creator_name?
+`<div>
+<strong>Created by:</strong>
+${esc(a.created_by_name||a.creator_name)}
+</div>`:""}
+
+${a.updated_at?
+`<div>
+<strong>Updated:</strong>
+${esc(dateTimeText(a.updated_at))}
+</div>`:""}
+
+</div>
+
+<div class="actions">
+
+${isAdmin()?
+`<button
+class="btn secondary edit"
+data-id="${esc(a.id)}">
+Edit
+</button>
+
+<button
+class="btn danger delete"
+data-id="${esc(a.id)}">
+Delete
+</button>`:""}
 
 </div>
 
 </article>
+
 `;
 
 }).join("");
+
+document.querySelectorAll(".edit").forEach(btn=>{
+
+btn.addEventListener(
+"click",
+()=>openEdit(btn.dataset.id)
+);
+
+});
+
+document.querySelectorAll(".delete").forEach(btn=>{
+
+btn.addEventListener(
+"click",
+()=>deleteAnnouncement(btn.dataset.id)
+);
+
+});
 
 }
 
 async function load(){
 
-$("announcements").innerHTML=
+$("list").innerHTML=
 `<div class="loading">
 Loading announcements...
 </div>`;
@@ -449,45 +653,109 @@ await KenbridgeBoardAuth.request(
 );
 
 announcements=
-Array.isArray(data?.announcements)
-?data.announcements
-:Array.isArray(data)
-?data
-:[];
+Array.isArray(data?.announcements)?
+data.announcements:
+Array.isArray(data)?
+data:
+Array.isArray(data?.data)?
+data.data:
+[];
 
-updateStats();
+renderStats();
 render();
 
 }catch(error){
 
 console.error(error);
 
-$("announcements").innerHTML=
+$("list").innerHTML=
 `<div class="empty">
 Unable to load announcements.
 </div>`;
 
-notice(
+showNotice(
 error.message||
-"Unable to load Board announcements."
+"Unable to load Board announcements.",
+true
 );
 
 }
 
 }
 
-function openModal(){
+function resetForm(){
+
+editingId=null;
+
+$("modalTitle").textContent=
+"New Announcement";
 
 $("form").reset();
-$("priority").value="normal";
-$("published").value="true";
-$("modalWrap").classList.add("show");
+
+$("priorityInput").value=
+"normal";
+
+$("publishedInput").value=
+"true";
+
+$("saveBtn").textContent=
+"Publish Announcement";
+
+hideNotice();
+
+}
+
+function openAdd(){
+
+resetForm();
+
+$("modal").classList.add("show");
+
+}
+
+function openEdit(id){
+
+const a=announcements.find(
+x=>String(x.id)===String(id)
+);
+
+if(!a)return;
+
+editingId=a.id;
+
+$("modalTitle").textContent=
+"Edit Announcement";
+
+$("titleInput").value=
+a.title||"";
+
+$("priorityInput").value=
+a.priority||"normal";
+
+$("messageInput").value=
+a.message||"";
+
+$("publishedInput").value=
+a.published===true?
+"true":
+"false";
+
+$("saveBtn").textContent=
+a.published===true?
+"Update Announcement":
+"Save Announcement";
+
+hideNotice();
+
+$("modal").classList.add("show");
 
 }
 
 function closeModal(){
 
-$("modalWrap").classList.remove("show");
+$("modal").classList.remove("show");
+
+resetForm();
 
 }
 
@@ -495,19 +763,72 @@ async function saveAnnouncement(event){
 
 event.preventDefault();
 
-const button=$("saveBtn");
+if(!isAdmin()){
 
-button.disabled=true;
-button.textContent="Saving...";
+showNotice(
+"Only administrators can manage announcements.",
+true,
+"formNotice"
+);
+
+return;
+
+}
+
+const title=
+$("titleInput").value.trim();
+
+const message=
+$("messageInput").value.trim();
+
+if(!title||!message){
+
+showNotice(
+"Title and message are required.",
+true,
+"formNotice"
+);
+
+return;
+
+}
 
 const payload={
-title:$("title").value.trim(),
-message:$("message").value.trim(),
-priority:$("priority").value,
-published:$("published").value==="true"
+
+title:title,
+
+message:message,
+
+priority:
+$("priorityInput").value,
+
+published:
+$("publishedInput").value==="true"
+
 };
 
+const btn=$("saveBtn");
+
+btn.disabled=true;
+
+btn.textContent=
+editingId?
+"Updating...":
+"Saving...";
+
 try{
+
+if(editingId){
+
+await KenbridgeBoardAuth.request(
+`/api/board/announcements/${encodeURIComponent(editingId)}`,
+{
+method:"PUT",
+body:JSON.stringify(payload)
+}
+);
+
+}else{
 
 await KenbridgeBoardAuth.request(
 "/api/board/announcements",
@@ -517,98 +838,97 @@ body:JSON.stringify(payload)
 }
 );
 
+}
+
+const wasPublished=
+payload.published;
+
 closeModal();
 
-await load();
-
-notice(
-"Announcement saved successfully.",
-"success"
+showNotice(
+editingId?
+"Announcement updated successfully.":
+wasPublished?
+"Announcement published successfully.":
+"Announcement saved as unpublished."
 );
+
+await load();
 
 }catch(error){
 
 console.error(error);
 
-notice(
+showNotice(
 error.message||
-"Unable to save announcement."
+"Unable to save announcement.",
+true,
+"formNotice"
 );
 
 }finally{
 
-button.disabled=false;
-button.textContent="Save Announcement";
+btn.disabled=false;
+
+if(document.querySelector(".modal.show")){
+
+btn.textContent=
+editingId?
+"Update Announcement":
+"Publish Announcement";
 
 }
 
 }
 
-async function init(){
-
-const user=
-await KenbridgeBoardAuth.requireBoard({
-redirect:true,
-loginPath:"login.html"
-});
-
-if(!user)return;
-
-const role=
-String(user.role||"").toUpperCase();
-
-const name=
-user.full_name||
-user.email||
-"Board Member";
-
-$("uname").textContent=name;
-
-$("urole").textContent=
-role==="ADMIN"
-?"Administrator"
-:"Board Member";
-
-$("avatar").textContent=
-name.split(/\s+/)
-.filter(Boolean)
-.slice(0,2)
-.map(x=>x[0].toUpperCase())
-.join("")||"B";
-
-if(role!=="ADMIN"){
-$("addBtn").style.display="none";
 }
+
+async function deleteAnnouncement(id){
+
+if(!isAdmin())return;
+
+const a=announcements.find(
+x=>String(x.id)===String(id)
+);
+
+if(!a)return;
+
+if(!confirm(
+`Delete announcement "${a.title||"this announcement"}"?`
+))return;
+
+try{
+
+await KenbridgeBoardAuth.request(
+`/api/board/announcements/${encodeURIComponent(id)}`,
+{
+method:"DELETE"
+}
+);
+
+showNotice(
+"Announcement deleted successfully."
+);
 
 await load();
+
+}catch(error){
+
+console.error(error);
+
+showNotice(
+error.message||
+"Unable to delete announcement.",
+true
+);
+
+}
 
 }
 
 $("menu").addEventListener(
 "click",
 ()=>$("sidebar").classList.toggle("open")
-);
-
-$("addBtn").addEventListener(
-"click",
-openModal
-);
-
-$("cancelBtn").addEventListener(
-"click",
-closeModal
-);
-
-$("modalWrap").addEventListener(
-"click",
-e=>{
-if(e.target===$("modalWrap"))closeModal();
-}
-);
-
-$("form").addEventListener(
-"submit",
-saveAnnouncement
 );
 
 $("refresh").addEventListener(
@@ -631,6 +951,50 @@ $("publishedFilter").addEventListener(
 render
 );
 
+$("addBtn").addEventListener(
+"click",
+openAdd
+);
+
+$("closeModal").addEventListener(
+"click",
+closeModal
+);
+
+$("cancelModal").addEventListener(
+"click",
+closeModal
+);
+
+$("modal").addEventListener(
+"click",
+e=>{
+if(e.target===$("modal"))
+closeModal();
+}
+);
+
+$("form").addEventListener(
+"submit",
+saveAnnouncement
+);
+
+$("publishedInput").addEventListener(
+"change",
+function(){
+
+$("saveBtn").textContent=
+this.value==="true"?
+(editingId?
+"Update Announcement":
+"Publish Announcement"):
+(editingId?
+"Update Announcement":
+"Save Announcement");
+
+}
+);
+
 $("logout").addEventListener(
 "click",
 async function(){
@@ -646,12 +1010,61 @@ loginPath:"login.html"
 }
 );
 
+async function init(){
+
+currentUser=
+await KenbridgeBoardAuth.requireBoard({
+redirect:true,
+loginPath:"login.html"
+});
+
+if(!currentUser)return;
+
+const role=
+String(currentUser.role||"").toUpperCase();
+
+const name=
+currentUser.full_name||
+currentUser.email||
+"Board Member";
+
+$("uname").textContent=name;
+
+$("urole").textContent=
+role==="ADMIN"?
+"Administrator":
+"Board Member";
+
+$("avatar").textContent=
+name.split(/\s+/)
+.filter(Boolean)
+.slice(0,2)
+.map(
+x=>x[0].toUpperCase()
+)
+.join("")||"B";
+
+if(isAdmin()){
+
+$("addBtn").style.display=
+"inline-block";
+
+}
+
+await load();
+
+}
+
 init().catch(error=>{
+
 console.error(error);
-notice(
+
+showNotice(
 error.message||
-"Unable to initialize Board Announcements."
+"Unable to initialize Announcements.",
+true
 );
+
 });
 
 })();
