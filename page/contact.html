@@ -1,237 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Contact Us | Kenbridge Christian School</title>
+<meta name="description" content="Contact Kenbridge Christian School for admissions, enquiries and general information.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
 
-    <title>Contact Us | Kenbridge Christian School</title>
-
-    <meta
-        name="description"
-        content="Contact Kenbridge Christian School for admissions, enquiries and general information."
-    >
-
-    <meta name="theme-color" content="#08783f">
-
-    <link rel="stylesheet" href="../css/style.css">
+<style>
+.contact-card{
+    transition:transform .25s ease,box-shadow .25s ease;
+}
+.contact-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+}
+.contact-detail-item{
+    display:flex;
+    align-items:flex-start;
+    gap:15px;
+    margin:0 0 20px;
+}
+.contact-detail-item .feature-icon{
+    flex-shrink:0;
+}
+.contact-detail-item strong{
+    display:block;
+    margin-bottom:5px;
+}
+.contact-detail-item a,
+.contact-detail-item span{
+    display:block;
+    color:#66736d;
+}
+.contact-detail-item a:hover{
+    color:#08783f;
+}
+.map-container{
+    width:100%;
+}
+.map-placeholder{
+    min-height:280px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:35px 20px;
+    border-radius:16px;
+    background:#eaf7ef;
+    border:1px solid #d7e9de;
+}
+.map-placeholder .feature-icon{
+    margin-bottom:10px;
+}
+.map-placeholder h3{
+    margin:5px 0 8px;
+}
+.map-placeholder p{
+    margin:0 0 20px;
+}
+.quick-contact-box{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:25px;
+    padding:30px;
+    border-radius:16px;
+    background:rgba(255,255,255,.98);
+}
+.quick-contact-content{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+.quick-contact-content .feature-icon{
+    flex-shrink:0;
+}
+.quick-contact-content h3{
+    margin:0 0 5px;
+}
+.quick-contact-content p{
+    margin:0;
+}
+@media(max-width:760px){
+    .quick-contact-box{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+    .quick-contact-content{
+        width:100%;
+    }
+}
+@media(max-width:500px){
+    .quick-contact-box{
+        padding:24px 20px;
+    }
+}
+</style>
 </head>
-
 
 <body>
 
-
-<!-- =====================================================
-     TOP BAR
-====================================================== -->
-
+<!-- TOP BAR -->
 <div class="top-bar">
+<div class="container top-bar-inner">
 
-    <div class="container top-bar-inner">
+    <div class="top-location">
+        📍 Old Butabika Road, Kampala, Uganda
+    </div>
 
-        <div class="top-location">
-            📍 Old Butabika Road, Kampala, Uganda
-        </div>
+    <div class="top-contact">
 
-        <div class="top-contact">
+        <a href="tel:+256789825517">
+            📞 +256 789 825 517
+        </a>
 
-            <a href="tel:+256789825517">
-                📞 +256 789 825 517
-            </a>
+        <span class="separator">|</span>
 
-            <span class="separator">|</span>
+        <span>
+            Mon–Fri: 8:00 AM–5:00 PM
+        </span>
 
-            <span>
-                Mon–Fri: 8:00 AM–5:00 PM
-            </span>
+        <span class="separator">|</span>
 
-            <span class="separator">|</span>
-
-            <span>
-                Sat: 8:00 AM–2:00 PM
-            </span>
-
-        </div>
+        <span>
+            Sat: 8:00 AM–2:00 PM
+        </span>
 
     </div>
 
 </div>
+</div>
 
-
-
-<!-- =====================================================
-     HEADER / NAVIGATION
-====================================================== -->
-
+<!-- HEADER -->
 <header class="header" id="header">
 
-    <div class="container nav-container">
+<div class="container nav-container">
 
+    <a href="../index.html" class="brand">
 
-        <!-- SCHOOL BRAND -->
+        <div class="logo-container">
 
-        <a
-            href="../index.html"
-            class="brand"
-        >
+            <img
+                src="../images/logo.png"
+                alt="Kenbridge Christian School Logo"
+                class="school-logo">
 
-            <div class="logo-container">
+        </div>
 
-                <img
-                    src="../images/logo.jpg"
-                    alt="Kenbridge Christian School Logo"
-                    class="school-logo"
-                >
+        <div class="brand-name">
 
-            </div>
+            <strong>KENBRIDGE</strong>
 
+            <span>CHRISTIAN SCHOOL</span>
 
-            <div class="brand-name">
+        </div>
 
-                <strong>
-                    KENBRIDGE
-                </strong>
+    </a>
 
-                <span>
-                    CHRISTIAN SCHOOL
-                </span>
-
-            </div>
-
-        </a>
-
-
-
-        <!-- DESKTOP NAVIGATION -->
-
-        <nav class="desktop-nav">
-
-            <a href="../index.html">
-                Home
-            </a>
-
-            <a href="about.html">
-                About
-            </a>
-
-            <a href="academics.html">
-                Academics
-            </a>
-
-            <a href="admissions.html">
-                Admissions
-            </a>
-
-            <a href="fees.html">
-                Fees
-            </a>
-
-            <a href="articles.html">
-                Articles
-            </a>
-
-            <a
-                href="contact.html"
-                class="active"
-            >
-                Contact
-            </a>
-
-
-            <!-- MORE MENU -->
-
-            <div class="more-menu">
-
-                <button
-                    class="more-button"
-                    type="button"
-                    aria-expanded="false"
-                >
-                    More
-                    <span>⌄</span>
-                </button>
-
-
-                <div class="dropdown">
-
-                    <a href="boarding.html">
-                        Boarding
-                    </a>
-
-                    <a href="gallery.html">
-                        Gallery
-                    </a>
-
-                    <a href="management.html">
-                        Management
-                    </a>
-
-                    <a href="announcements.html">
-                        Announcements
-                    </a>
-
-                    <a href="projects.html">
-                        Projects
-                    </a>
-
-                    <a href="sports.html">
-                        Sports
-                    </a>
-
-                    <a href="facilities.html">
-                        Facilities
-                    </a>
-
-                    <a href="careers.html">
-                        Careers
-                    </a>
-
-                    <a href="feedback.html">
-                        Feedback
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <a
-                href="admissions.html"
-                class="apply-button"
-            >
-                Apply Online
-            </a>
-
-        </nav>
-
-
-
-        <!-- MOBILE MENU BUTTON -->
-
-        <button
-            class="mobile-menu-button"
-            id="mobileMenuButton"
-            type="button"
-            aria-label="Open navigation"
-            aria-expanded="false"
-        >
-
-            <span></span>
-            <span></span>
-            <span></span>
-
-        </button>
-
-    </div>
-
-
-
-    <!-- MOBILE NAVIGATION -->
-
-    <nav
-        class="mobile-nav"
-        id="mobileNav"
-    >
+    <nav class="desktop-nav">
 
         <a href="../index.html">
             Home
@@ -253,632 +182,703 @@
             Fees
         </a>
 
-        <a href="boarding.html">
-            Boarding
-        </a>
-
         <a href="articles.html">
             Articles
         </a>
 
-        <a href="gallery.html">
-            Gallery
-        </a>
-
-        <a href="management.html">
-            Management
-        </a>
-
-        <a href="announcements.html">
-            Announcements
-        </a>
-
-        <a href="projects.html">
-            Projects
-        </a>
-
-        <a href="sports.html">
-            Sports
-        </a>
-
-        <a href="facilities.html">
-            Facilities
-        </a>
-
-        <a href="careers.html">
-            Careers
-        </a>
-
-        <a href="feedback.html">
-            Feedback
-        </a>
-
-        <a
-            href="contact.html"
-            class="active"
-        >
+        <a href="contact.html" class="active">
             Contact
         </a>
 
+        <div class="more-menu">
+
+            <button
+                class="more-button"
+                type="button"
+                aria-haspopup="true">
+
+                More <span>⌄</span>
+
+            </button>
+
+            <div class="dropdown">
+
+                <a href="boarding.html">
+                    Boarding
+                </a>
+
+                <a href="gallery.html">
+                    Gallery
+                </a>
+
+                <a href="management.html">
+                    Management
+                </a>
+
+                <a href="announcements.html">
+                    Announcements
+                </a>
+
+                <a href="projects.html">
+                    Projects
+                </a>
+
+                <a href="reports.html">
+                    Reports
+                </a>
+
+                <a href="sports.html">
+                    Sports
+                </a>
+
+                <a href="facilities.html">
+                    Facilities
+                </a>
+
+                <a href="careers.html">
+                    Careers
+                </a>
+
+                <a href="feedback.html">
+                    Feedback
+                </a>
+
+            </div>
+
+        </div>
+
         <a
-            href="admissions.html"
-            class="mobile-apply"
-        >
+            href="submissions.html"
+            class="apply-button">
+
             Apply Online
+
         </a>
 
     </nav>
 
+    <button
+        class="mobile-menu-button"
+        id="mobileMenuButton"
+        aria-label="Open navigation"
+        aria-expanded="false">
+
+        <span></span>
+        <span></span>
+        <span></span>
+
+    </button>
+
+</div>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav" id="mobileNav">
+
+    <a href="../index.html">
+        Home
+    </a>
+
+    <a href="about.html">
+        About
+    </a>
+
+    <a href="academics.html">
+        Academics
+    </a>
+
+    <a href="admissions.html">
+        Admissions
+    </a>
+
+    <a href="fees.html">
+        Fees
+    </a>
+
+    <a href="boarding.html">
+        Boarding
+    </a>
+
+    <a href="articles.html">
+        Articles
+    </a>
+
+    <a href="gallery.html">
+        Gallery
+    </a>
+
+    <a href="announcements.html">
+        Announcements
+    </a>
+
+    <a href="projects.html">
+        Projects
+    </a>
+
+    <a href="reports.html">
+        Reports
+    </a>
+
+    <a href="sports.html">
+        Sports
+    </a>
+
+    <a href="facilities.html">
+        Facilities
+    </a>
+
+    <a href="management.html">
+        Management
+    </a>
+
+    <a href="careers.html">
+        Careers
+    </a>
+
+    <a href="feedback.html">
+        Feedback
+    </a>
+
+    <a href="contact.html" class="active">
+        Contact
+    </a>
+
+    <a
+        href="submissions.html"
+        class="mobile-apply">
+
+        Apply Online
+
+    </a>
+
+</nav>
+
 </header>
 
-
-
-<!-- =====================================================
-     CONTACT HERO
-====================================================== -->
-
+<!-- HERO -->
 <section class="hero">
 
-    <div class="container hero-content">
+<div class="container hero-content">
 
-        <span class="hero-label">
-            GET IN TOUCH
+    <span class="hero-label">
+        GET IN TOUCH
+    </span>
+
+    <h1>
+        Contact
+        <span>Kenbridge.</span>
+    </h1>
+
+    <p>
+        We are here to answer your questions and
+        help you connect with our school community.
+    </p>
+
+</div>
+
+</section>
+
+<!-- CONTACT INFORMATION -->
+<section class="section">
+
+<div class="container">
+
+    <div class="section-heading">
+
+        <span class="section-label">
+            CONTACT INFORMATION
         </span>
 
-        <h1>
-            Contact <span>Kenbridge.</span>
-        </h1>
+        <h2>
+            We would love to hear from you.
+        </h2>
 
         <p>
-            We are here to answer your questions and help
-            you connect with our school community.
+            Reach out using any of the contact
+            options below.
         </p>
 
     </div>
 
-</section>
+    <div class="feature-grid">
 
+        <article class="feature-card contact-card">
 
+            <div class="feature-icon">
+                📍
+            </div>
 
-<!-- =====================================================
-     CONTACT INFORMATION
-====================================================== -->
-
-<section class="section">
-
-    <div class="container">
-
-        <div class="section-heading">
-
-            <span class="section-label">
-                CONTACT INFORMATION
-            </span>
-
-            <h2>
-                We would love to hear from you.
-            </h2>
+            <h3>
+                Visit Us
+            </h3>
 
             <p>
-                Reach out using any of the contact options below.
+                Old Butabika Road,
+                Kampala, Uganda
             </p>
-
-        </div>
-
-
-
-        <div class="feature-grid">
-
-
-            <!-- VISIT -->
-
-            <article class="feature-card">
-
-                <div class="feature-icon">
-                    📍
-                </div>
-
-                <h3>
-                    Visit Us
-                </h3>
-
-                <p>
-                    Old Butabika Road, Kampala, Uganda
-                </p>
-
-                <p>
-                    P.O. Box 520093, Luzira
-                </p>
-
-            </article>
-
-
-
-            <!-- CALL -->
-
-            <article class="feature-card">
-
-                <div class="feature-icon">
-                    📞
-                </div>
-
-                <h3>
-                    Call Us
-                </h3>
-
-                <p>
-                    Speak directly with the school.
-                </p>
-
-                <a
-                    href="tel:+256789825517"
-                    class="btn btn-primary"
-                >
-                    +256 789 825 517
-                </a>
-
-            </article>
-
-
-
-            <!-- EMAIL -->
-
-            <article class="feature-card">
-
-                <div class="feature-icon">
-                    ✉️
-                </div>
-
-                <h3>
-                    Email Us
-                </h3>
-
-                <p>
-                    Send us an enquiry by email.
-                </p>
-
-                <a
-                    href="mailto:kenbridgechristianschoolmutungo@gmail.com"
-                    class="btn btn-primary"
-                >
-                    Send Email
-                </a>
-
-            </article>
-
-
-
-            <!-- HOURS -->
-
-            <article class="feature-card">
-
-                <div class="feature-icon">
-                    🕐
-                </div>
-
-                <h3>
-                    Opening Hours
-                </h3>
-
-                <p>
-                    Monday–Friday: 8:00 AM–5:00 PM
-                </p>
-
-                <p>
-                    Saturday: 8:00 AM–2:00 PM
-                </p>
-
-            </article>
-
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- =====================================================
-     CONTACT FORM
-====================================================== -->
-
-<section class="section why-section">
-
-    <div class="container contact-grid">
-
-
-        <!-- CONTACT DETAILS -->
-
-        <div class="contact-details">
-
-            <span class="section-label">
-                SEND AN ENQUIRY
-            </span>
-
-            <h2>
-                How can we <span>help?</span>
-            </h2>
 
             <p>
-                Complete the form to send your message.
+                P.O. Box 520093,
+                Luzira
             </p>
 
+        </article>
 
+        <article class="feature-card contact-card">
 
-            <div class="contact-detail-item">
-
-                <div class="feature-icon">
-                    📞
-                </div>
-
-                <div>
-
-                    <strong>
-                        Phone
-                    </strong>
-
-                    <a href="tel:+256789825517">
-                        +256 789 825 517
-                    </a>
-
-                </div>
-
+            <div class="feature-icon">
+                📞
             </div>
 
-
-
-            <div class="contact-detail-item">
-
-                <div class="feature-icon">
-                    📍
-                </div>
-
-                <div>
-
-                    <strong>
-                        Address
-                    </strong>
-
-                    <span>
-                        Old Butabika Road,
-                        Kampala, Uganda
-                    </span>
-
-                </div>
-
-            </div>
-
-
-
-            <div class="contact-detail-item">
-
-                <div class="feature-icon">
-                    🏫
-                </div>
-
-                <div>
-
-                    <strong>
-                        School
-                    </strong>
-
-                    <span>
-                        Kenbridge Christian School
-                    </span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- CONTACT FORM -->
-
-        <div class="contact-form-wrapper">
-
-            <form
-                class="contact-form"
-                id="contactForm"
-                action="#"
-                method="POST"
-            >
-
-                <div class="form-group">
-
-                    <label for="contactName">
-                        Full Name
-                    </label>
-
-                    <input
-                        type="text"
-                        id="contactName"
-                        name="name"
-                        placeholder="Enter your full name"
-                        required
-                    >
-
-                </div>
-
-
-
-                <div class="form-group">
-
-                    <label for="contactEmail">
-                        Email Address
-                    </label>
-
-                    <input
-                        type="email"
-                        id="contactEmail"
-                        name="email"
-                        placeholder="Enter your email address"
-                        required
-                    >
-
-                </div>
-
-
-
-                <div class="form-group">
-
-                    <label for="contactPhone">
-                        Phone Number
-                    </label>
-
-                    <input
-                        type="tel"
-                        id="contactPhone"
-                        name="phone"
-                        placeholder="Enter your phone number"
-                    >
-
-                </div>
-
-
-
-                <div class="form-group">
-
-                    <label for="contactSubject">
-                        Subject
-                    </label>
-
-                    <input
-                        type="text"
-                        id="contactSubject"
-                        name="subject"
-                        placeholder="What is your enquiry about?"
-                        required
-                    >
-
-                </div>
-
-
-
-                <div class="form-group">
-
-                    <label for="contactMessage">
-                        Message
-                    </label>
-
-                    <textarea
-                        id="contactMessage"
-                        name="message"
-                        rows="7"
-                        placeholder="Write your message here..."
-                        required
-                    ></textarea>
-
-                </div>
-
-
-
-                <button
-                    type="submit"
-                    class="btn btn-primary"
-                >
-                    Send Message
-                </button>
-
-
-                <div
-                    id="contactStatus"
-                    class="form-status"
-                    aria-live="polite"
-                ></div>
-
-            </form>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- =====================================================
-     FIND US
-====================================================== -->
-
-<section class="section">
-
-    <div class="container">
-
-        <div class="section-heading">
-
-            <span class="section-label">
-                FIND US
-            </span>
-
-            <h2>
-                Visit Kenbridge Christian School.
-            </h2>
+            <h3>
+                Call Us
+            </h3>
 
             <p>
-                Find us on Google Maps.
+                Speak directly with the school.
             </p>
-
-        </div>
-
-
-
-        <div class="map-container">
-
-            <div class="map-placeholder">
-
-                <div class="feature-icon">
-                    📍
-                </div>
-
-                <h3>
-                    Kenbridge Christian School
-                </h3>
-
-                <p>
-                    Old Butabika Road, Kampala, Uganda
-                </p>
-
-                <a
-                    href="https://www.google.com/maps/search/?api=1&query=Kenbridge+Christian+School+Kampala+Uganda"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="btn btn-primary"
-                >
-                    Open in Google Maps
-                </a>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- =====================================================
-     QUICK CONTACT
-====================================================== -->
-
-<section class="school-life">
-
-    <div class="container">
-
-        <div class="section-heading light">
-
-            <span class="section-label">
-                QUICK CONTACT
-            </span>
-
-            <h2>
-                Need an answer quickly?
-            </h2>
-
-            <p>
-                Call the school directly for urgent enquiries.
-            </p>
-
-        </div>
-
-
-
-        <div class="updates-box">
-
-            <div>
-
-                <div class="feature-icon">
-                    📞
-                </div>
-
-                <h3>
-                    +256 789 825 517
-                </h3>
-
-                <p>
-                    Kenbridge Christian School
-                </p>
-
-            </div>
-
 
             <a
                 href="tel:+256789825517"
-                class="btn btn-primary"
-            >
-                Call Now
+                class="btn btn-primary">
+
+                +256 789 825 517
+
+            </a>
+
+        </article>
+
+        <article class="feature-card contact-card">
+
+            <div class="feature-icon">
+                ✉️
+            </div>
+
+            <h3>
+                Email Us
+            </h3>
+
+            <p>
+                Send us an enquiry by email.
+            </p>
+
+            <a
+                href="mailto:info@kenbridgechristianschool.com"
+                class="btn btn-primary">
+
+                Send Email
+
+            </a>
+
+        </article>
+
+        <article class="feature-card contact-card">
+
+            <div class="feature-icon">
+                🕐
+            </div>
+
+            <h3>
+                Opening Hours
+            </h3>
+
+            <p>
+                Monday–Friday:
+                8:00 AM–5:00 PM
+            </p>
+
+            <p>
+                Saturday:
+                8:00 AM–2:00 PM
+            </p>
+
+        </article>
+
+    </div>
+
+</div>
+
+</section>
+
+<!-- ENQUIRY -->
+<section class="section why-section">
+
+<div class="container contact-grid">
+
+    <div class="contact-details">
+
+        <span class="section-label">
+            SEND AN ENQUIRY
+        </span>
+
+        <h2>
+            How can we
+            <span>help?</span>
+        </h2>
+
+        <p>
+            Complete the form to send your message
+            to Kenbridge Christian School.
+        </p>
+
+        <div class="contact-detail-item">
+
+            <div class="feature-icon">
+                📞
+            </div>
+
+            <div>
+
+                <strong>
+                    Phone
+                </strong>
+
+                <a href="tel:+256789825517">
+                    +256 789 825 517
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="contact-detail-item">
+
+            <div class="feature-icon">
+                ✉️
+            </div>
+
+            <div>
+
+                <strong>
+                    Email
+                </strong>
+
+                <a href="mailto:info@kenbridgechristianschool.com">
+                    info@kenbridgechristianschool.com
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="contact-detail-item">
+
+            <div class="feature-icon">
+                📍
+            </div>
+
+            <div>
+
+                <strong>
+                    Address
+                </strong>
+
+                <span>
+                    Old Butabika Road,
+                    Kampala, Uganda
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="contact-detail-item">
+
+            <div class="feature-icon">
+                🏫
+            </div>
+
+            <div>
+
+                <strong>
+                    School
+                </strong>
+
+                <span>
+                    Kenbridge Christian School
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="contact-form-wrapper">
+
+        <form
+            class="contact-form"
+            id="contactForm"
+            action="#"
+            method="POST">
+
+            <div class="form-group">
+
+                <label for="contactName">
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="contactName"
+                    name="name"
+                    placeholder="Enter your full name"
+                    autocomplete="name"
+                    required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="contactEmail">
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="contactEmail"
+                    name="email"
+                    placeholder="Enter your email address"
+                    autocomplete="email"
+                    required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="contactPhone">
+                    Phone Number
+                </label>
+
+                <input
+                    type="tel"
+                    id="contactPhone"
+                    name="phone"
+                    placeholder="Enter your phone number"
+                    autocomplete="tel">
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="contactSubject">
+                    Subject
+                </label>
+
+                <input
+                    type="text"
+                    id="contactSubject"
+                    name="subject"
+                    placeholder="What is your enquiry about?"
+                    required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="contactMessage">
+                    Message
+                </label>
+
+                <textarea
+                    id="contactMessage"
+                    name="message"
+                    rows="7"
+                    placeholder="Write your message here..."
+                    required></textarea>
+
+            </div>
+
+            <button
+                type="submit"
+                class="btn btn-primary">
+
+                Send Message
+
+            </button>
+
+            <div
+                id="contactStatus"
+                class="form-status"
+                aria-live="polite">
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</section>
+
+<!-- FIND US -->
+<section class="section">
+
+<div class="container">
+
+    <div class="section-heading">
+
+        <span class="section-label">
+            FIND US
+        </span>
+
+        <h2>
+            Visit Kenbridge Christian School.
+        </h2>
+
+        <p>
+            Find the school using Google Maps.
+        </p>
+
+    </div>
+
+    <div class="map-container">
+
+        <div class="map-placeholder">
+
+            <div class="feature-icon">
+                📍
+            </div>
+
+            <h3>
+                Kenbridge Christian School
+            </h3>
+
+            <p>
+                Old Butabika Road,
+                Kampala, Uganda
+            </p>
+
+            <a
+                href="https://www.google.com/maps/search/?api=1&query=Kenbridge+Christian+School+Kampala+Uganda"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-primary">
+
+                Open in Google Maps
+
             </a>
 
         </div>
 
     </div>
 
+</div>
+
 </section>
 
+<!-- QUICK CONTACT -->
+<section class="school-life">
 
+<div class="container">
 
-<!-- =====================================================
-     ADMISSIONS CTA
-====================================================== -->
+    <div class="section-heading light">
 
-<section class="admissions-cta">
+        <span class="section-label">
+            QUICK CONTACT
+        </span>
 
-    <div class="container cta-inner">
+        <h2>
+            Need an answer quickly?
+        </h2>
 
-        <div>
+        <p>
+            Call the school directly for urgent enquiries.
+        </p>
 
-            <span class="section-label">
-                JOIN KENBRIDGE
-            </span>
+    </div>
 
-            <h2>
-                Ready to take the next step?
-            </h2>
+    <div class="quick-contact-box">
 
-            <p>
-                Learn more about admissions and how to apply.
-            </p>
+        <div class="quick-contact-content">
+
+            <div class="feature-icon">
+                📞
+            </div>
+
+            <div>
+
+                <h3>
+                    +256 789 825 517
+                </h3>
+
+                <p>
+                    Kenbridge Christian School
+                </p>
+
+            </div>
 
         </div>
 
-
         <a
-            href="admissions.html"
-            class="btn btn-primary"
-        >
-            Apply Online
+            href="tel:+256789825517"
+            class="btn btn-primary">
+
+            Call Now
+
         </a>
 
     </div>
 
-</section>
- <!-- =========================================
-     FOOTER
-========================================= --><footer class="footer"><div class="container footer-grid">
+</div>
 
+</section>
+
+<!-- CTA -->
+<section class="admissions-cta">
+
+<div class="container cta-inner">
+
+    <div>
+
+        <span class="section-label">
+            JOIN KENBRIDGE
+        </span>
+
+        <h2>
+            Ready to take the next step?
+        </h2>
+
+        <p>
+            Learn more about admissions and
+            submit your application online.
+        </p>
+
+    </div>
+
+    <a
+        href="submissions.html"
+        class="btn btn-primary">
+
+        Apply Online
+
+    </a>
+
+</div>
+
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+
+<div class="container footer-grid">
 
     <div class="footer-about">
 
         <img
             src="../images/logo.png"
             alt="Kenbridge Christian School Logo"
-            class="footer-logo"
-        >
+            class="footer-logo">
 
         <h3>
             Kenbridge Christian School
         </h3>
 
         <p>
-            Head and Not Tails.
+            Head and Not Tails.<br>
             Deuteronomy 28:13
         </p>
 
     </div>
-
-
 
     <div class="footer-column">
 
@@ -906,9 +906,11 @@
             Gallery
         </a>
 
+        <a href="announcements.html">
+            Announcements
+        </a>
+
     </div>
-
-
 
     <div class="footer-column">
 
@@ -922,6 +924,10 @@
 
         <a href="projects.html">
             Projects
+        </a>
+
+        <a href="reports.html">
+            Reports
         </a>
 
         <a href="facilities.html">
@@ -938,7 +944,33 @@
 
     </div>
 
+    <div class="footer-column">
 
+        <h4>
+            School & Support
+        </h4>
+
+        <a href="management.html">
+            Management
+        </a>
+
+        <a href="careers.html">
+            Careers
+        </a>
+
+        <a href="feedback.html">
+            Feedback
+        </a>
+
+        <a href="contact.html">
+            Contact
+        </a>
+
+        <a href="submissions.html">
+            Online Submission
+        </a>
+
+    </div>
 
     <div class="footer-column">
 
@@ -947,12 +979,12 @@
         </h4>
 
         <p>
-            Old Butabika Road,
+            Old Butabika Road,<br>
             Kampala, Uganda
         </p>
 
         <p>
-            P.O. Box 520093,
+            P.O. Box 520093,<br>
             Luzira
         </p>
 
@@ -960,11 +992,13 @@
             +256 789 825 517
         </a>
 
+        <a href="mailto:info@kenbridgechristianschool.com">
+            info@kenbridgechristianschool.com
+        </a>
+
     </div>
 
 </div>
-
-
 
 <div class="footer-bottom">
 
@@ -973,29 +1007,33 @@
         <span>
             © 2026 Kenbridge Christian School.
             All Rights Reserved.
-             Made with ❤️ by Zakmolanitech Solutions 
+            Made with ❤️ by Zakmolanitech Solutions
         </span>
 
         <span>
-        Our Motto; Heads and Not Tails
+            Our Motto; Heads and Not Tails
         </span>
 
     </div>
 
 </div>
 
-<a href="privacy.html">
-    Privacy Policy
-</a>
+<div class="footer-legal">
 
-<a href="terms.html">
-    Terms & Conditions
-</a>
+    <a href="privacy.html">
+        Privacy Policy
+    </a>
 
-<div id="site-footer"></div>
+    <a href="terms.html">
+        Terms & Conditions
+    </a>
 
+</div>
+
+</footer>
+
+<!-- GLOBAL JAVASCRIPT -->
 <script src="../js/script.js"></script>
-<script src="../js/components.js"></script>
 
 </body>
-  </html>
+</html>
