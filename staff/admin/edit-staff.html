@@ -205,12 +205,7 @@ const $=id=>document.getElementById(id);
 function getToken(){
 
 return (
-localStorage.getItem("access_token")||
-localStorage.getItem("accessToken")||
-localStorage.getItem("kenbridge_access_token")||
-sessionStorage.getItem("access_token")||
-sessionStorage.getItem("accessToken")||
-sessionStorage.getItem("kenbridge_access_token")||
+localStorage.setItem("kenbridgeAccessToken", data.session.access_token);
 ""
 ).trim();
 
