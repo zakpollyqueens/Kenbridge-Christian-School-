@@ -1,16 +1,20 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>Kenbridge Christian School | Kampala, Uganda</title>
+
 <meta name="description" content="Kenbridge Christian School — quality education, Christian values, and holistic learner development.">
 <meta name="theme-color" content="#08783f">
+
 <link rel="stylesheet" href="css/style.css">
 
 <style>
 /* =========================================================
-   KENBRIDGE OPENING SCREEN BADGE
+   OPENING SCREEN
    ========================================================= */
 
 .opening-screen{
@@ -24,56 +28,155 @@
     align-items:center;
     justify-content:center;
     overflow:hidden;
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(255,255,255,.10) 0%,
+            rgba(8,120,63,.96) 45%,
+            #033b20 100%
+        );
+}
+
+.opening-screen::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(242,140,40,.13),
+            transparent 32%,
+            rgba(255,255,255,.05) 55%,
+            transparent 75%
+        );
+    pointer-events:none;
 }
 
 .opening-content{
     position:relative;
     z-index:5;
     width:min(92%,620px);
+    padding:30px 20px;
+    text-align:center;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    text-align:center;
-    padding:35px 20px;
 }
 
-/* Real school badge/logo */
+.opening-logo-background{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:min(75vw,650px);
+    height:min(75vw,650px);
+    transform:translate(-50%,-50%);
+    background-image:url("images/logo.jpg");
+    background-position:center;
+    background-repeat:no-repeat;
+    background-size:contain;
+    opacity:.065;
+    filter:blur(1px);
+    pointer-events:none;
+    z-index:1;
+}
+
 .opening-school-logo{
-    width:clamp(120px,18vw,185px);
-    height:clamp(120px,18vw,185px);
+    width:clamp(125px,19vw,190px);
+    height:clamp(125px,19vw,190px);
     object-fit:contain;
     display:block;
-    margin:0 auto 20px;
-    border-radius:50%;
+    margin:0 auto 18px;
+    padding:9px;
     background:#fff;
-    padding:10px;
+    border-radius:50%;
     box-shadow:
-        0 0 0 5px rgba(255,255,255,.85),
-        0 16px 45px rgba(0,0,0,.20);
+        0 0 0 5px rgba(255,255,255,.9),
+        0 18px 50px rgba(0,0,0,.25);
     animation:openingLogoIn 1s ease both;
 }
 
 .opening-school-name{
-    margin:0 0 5px;
-    font-size:clamp(1.65rem,4vw,2.6rem);
-    line-height:1.05;
+    margin:0;
+    color:#fff;
+    font-size:clamp(1.65rem,4vw,2.65rem);
+    line-height:1.08;
     font-weight:900;
-    letter-spacing:.04em;
+    letter-spacing:.03em;
+    text-shadow:0 3px 15px rgba(0,0,0,.25);
 }
 
 .opening-school-subtitle{
-    margin:0 0 12px;
-    font-size:clamp(.8rem,2vw,1rem);
+    margin:7px 0 12px;
+    color:rgba(255,255,255,.9);
+    font-size:.82rem;
     font-weight:700;
     letter-spacing:.18em;
     text-transform:uppercase;
 }
 
+.opening-small{
+    margin:0 0 4px;
+    color:rgba(255,255,255,.8);
+    font-size:.72rem;
+    font-weight:800;
+    letter-spacing:.2em;
+}
+
+.opening-motto{
+    margin:0 0 10px;
+    color:#fff;
+    font-size:.9rem;
+    font-style:italic;
+    font-weight:600;
+}
+
+.opening-counter{
+    color:#fff;
+    font-size:clamp(2.5rem,8vw,4rem);
+    line-height:1;
+    font-weight:900;
+    text-shadow:0 4px 20px rgba(0,0,0,.3);
+}
+
+.opening-message{
+    min-height:25px;
+    margin:10px 0 15px;
+    color:rgba(255,255,255,.95);
+    font-size:.95rem;
+    font-weight:600;
+}
+
+.opening-line{
+    width:min(90%,360px);
+    height:5px;
+    overflow:hidden;
+    border-radius:20px;
+    background:rgba(255,255,255,.22);
+}
+
+.opening-line span{
+    display:block;
+    width:0;
+    height:100%;
+    border-radius:inherit;
+    background:#fff;
+    transition:width .8s ease;
+}
+
+.opening-screen.hide{
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+    transition:
+        opacity .7s ease,
+        visibility .7s ease;
+}
+
 @keyframes openingLogoIn{
     0%{
         opacity:0;
-        transform:scale(.72) translateY(-20px);
+        transform:scale(.7) translateY(-20px);
     }
     60%{
         opacity:1;
@@ -85,16 +188,115 @@
     }
 }
 
+@keyframes counterPop{
+    0%{
+        opacity:.25;
+        transform:scale(.8);
+    }
+    60%{
+        opacity:1;
+        transform:scale(1.08);
+    }
+    100%{
+        opacity:1;
+        transform:scale(1);
+    }
+}
+
+
+/* =========================================================
+   NAVIGATION IMPROVEMENTS
+   ========================================================= */
+
+.brand{
+    text-decoration:none;
+}
+
+.desktop-nav{
+    align-items:center;
+}
+
+.more-menu{
+    position:relative;
+}
+
+.more-button{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    border:0;
+    background:transparent;
+    cursor:pointer;
+    font:inherit;
+}
+
+.more-menu .dropdown{
+    min-width:220px;
+    max-height:75vh;
+    overflow-y:auto;
+}
+
+.more-menu .dropdown a{
+    display:block;
+}
+
+.portal-menu-link{
+    border-top:1px solid rgba(0,0,0,.08);
+    font-weight:800;
+}
+
+.mobile-nav{
+    max-height:0;
+    overflow:hidden;
+    transition:
+        max-height .35s ease,
+        padding .35s ease;
+}
+
+.mobile-nav.open,
+.mobile-nav.active{
+    max-height:calc(100vh - 70px);
+    overflow-y:auto;
+}
+
+.mobile-nav a{
+    display:block;
+}
+
+.mobile-special-link{
+    margin-top:4px;
+    font-weight:800;
+}
+
+.mobile-nav .mobile-special-link:first-of-type{
+    border-top:1px solid rgba(8,120,63,.15);
+}
+
+.mobile-apply{
+    margin:10px 0;
+}
+
+body.menu-open{
+    overflow:hidden;
+}
+
+
+/* =========================================================
+   MOBILE OPENING SCREEN
+   ========================================================= */
+
 @media(max-width:600px){
+
     .opening-content{
-        padding:25px 15px;
+        width:94%;
+        padding:20px 14px;
     }
 
     .opening-school-logo{
         width:125px;
         height:125px;
-        margin-bottom:16px;
-        padding:8px;
+        padding:7px;
+        margin-bottom:15px;
     }
 
     .opening-school-name{
@@ -102,8 +304,16 @@
     }
 
     .opening-school-subtitle{
-        font-size:.72rem;
+        font-size:.7rem;
         letter-spacing:.13em;
+    }
+
+    .opening-counter{
+        font-size:3rem;
+    }
+
+    .opening-message{
+        font-size:.85rem;
     }
 }
 </style>
@@ -111,32 +321,36 @@
 
 <body>
 
+
 <!-- =========================================================
      OPENING SCREEN
      ========================================================= -->
+
 <div id="openingScreen" class="opening-screen">
 
+    <div class="opening-logo-background"
+         aria-hidden="true"></div>
+
     <div class="bg-decoration bg-orange-circle"
-         style="left:8%;top:18%"></div>
+         style="left:7%;top:17%;opacity:.55"></div>
 
     <div class="bg-decoration bg-green-circle"
-         style="right:9%;bottom:18%"></div>
+         style="right:7%;bottom:17%;opacity:.55"></div>
 
     <div class="bg-decoration bg-star"
-         style="left:20%;bottom:25%"></div>
+         style="left:18%;bottom:23%;opacity:.6"></div>
 
     <div class="bg-decoration bg-star"
-         style="right:20%;top:25%"></div>
+         style="right:18%;top:22%;opacity:.6"></div>
 
     <div class="opening-content">
 
-        <!-- REAL SCHOOL BADGE -->
         <img
             src="images/logo.jpg"
             alt="Kenbridge Christian School Badge"
             class="opening-school-logo"
-            width="185"
-            height="185"
+            width="190"
+            height="190"
             fetchpriority="high"
             decoding="async"
         >
@@ -154,7 +368,7 @@
         </p>
 
         <p class="opening-motto">
-            “HEADS And Not TAILS”
+            “Heads And Not Tails”
         </p>
 
         <div id="openingCounter"
@@ -167,7 +381,8 @@
             Preparing your experience...
         </p>
 
-        <div class="opening-line">
+        <div class="opening-line"
+             aria-hidden="true">
             <span id="openingProgress"></span>
         </div>
 
@@ -178,7 +393,9 @@
 <!-- =========================================================
      TOP BAR
      ========================================================= -->
+
 <div class="top-bar">
+
     <div class="container">
 
         <div>
@@ -190,21 +407,26 @@
         </a>
 
     </div>
+
 </div>
 
 
 <!-- =========================================================
-     HEADER / NAVIGATION
+     MAIN HEADER
      ========================================================= -->
+
 <header class="header" id="header">
 
     <div class="container nav-container">
 
+
+        <!-- BRAND -->
         <a href="index.html"
            class="brand"
            aria-label="Kenbridge Christian School Home">
 
             <div class="logo-container">
+
                 <img
                     src="images/logo.jpg"
                     alt="Kenbridge Christian School Logo"
@@ -212,17 +434,28 @@
                     width="60"
                     height="60"
                 >
+
             </div>
 
             <div class="brand-name">
-                <strong>KENBRIDGE</strong>
-                <span>CHRISTIAN SCHOOL</span>
+
+                <strong>
+                    KENBRIDGE
+                </strong>
+
+                <span>
+                    CHRISTIAN SCHOOL
+                </span>
+
             </div>
 
         </a>
 
 
-        <!-- DESKTOP NAV -->
+        <!-- =================================================
+             DESKTOP NAVIGATION
+             ================================================= -->
+
         <nav class="desktop-nav"
              aria-label="Main navigation">
 
@@ -256,12 +489,14 @@
             </a>
 
 
+            <!-- MORE MENU -->
+
             <div class="more-menu">
 
                 <button
-                    class="more-button"
                     type="button"
-                    aria-label="Open additional pages"
+                    class="more-button"
+                    aria-label="Open more pages"
                     aria-expanded="false">
 
                     <span class="hamburger-icon">
@@ -323,10 +558,23 @@
                         Submissions
                     </a>
 
+                    <a href="staff/login.html"
+                       class="portal-menu-link">
+                        👨‍💼 Staff Portal
+                    </a>
+
+                    <a href="#developer"
+                       class="portal-menu-link"
+                       data-developer-trigger>
+                        💻 Developer
+                    </a>
+
                 </div>
 
             </div>
 
+
+            <!-- APPLY BUTTON -->
 
             <a href="page/submissions.html"
                class="apply-button">
@@ -336,7 +584,8 @@
         </nav>
 
 
-        <!-- MOBILE BUTTON -->
+        <!-- MOBILE HAMBURGER -->
+
         <button
             class="mobile-menu-button"
             id="mobileMenuButton"
@@ -353,7 +602,10 @@
     </div>
 
 
-    <!-- MOBILE NAV -->
+    <!-- =====================================================
+         MOBILE HAMBURGER MENU
+         ===================================================== -->
+
     <nav class="mobile-nav"
          id="mobileNav"
          aria-label="Mobile navigation">
@@ -431,10 +683,25 @@
             Contact
         </a>
 
-        <a href="staff/login.html">
-            Staff Login
+
+        <!-- STAFF PORTAL -->
+
+        <a href="staff/login.html"
+           class="mobile-special-link">
+            👨‍💼 Staff Portal
         </a>
-       <!-- DEVELOPER --> <a href="#developer" class="mobile-special-link" data-developer-trigger> 💻 Developer </a>
+
+
+        <!-- DEVELOPER -->
+
+        <a href="#developer"
+           class="mobile-special-link"
+           data-developer-trigger>
+            💻 Developer
+        </a>
+
+
+        <!-- APPLY -->
 
         <a href="page/submissions.html"
            class="mobile-apply">
@@ -449,6 +716,7 @@
 <!-- =========================================================
      HERO
      ========================================================= -->
+
 <section class="hero animated-bg">
 
     <div class="bg-decoration bg-leaf"
@@ -512,6 +780,7 @@
 <!-- =========================================================
      QUICK INFORMATION
      ========================================================= -->
+
 <section class="quick-info animated-bg">
 
     <div class="bg-decoration bg-green-circle"
@@ -530,6 +799,7 @@
             </div>
 
             <div>
+
                 <strong>
                     Quality Education
                 </strong>
@@ -537,6 +807,7 @@
                 <span>
                     Academic and personal growth
                 </span>
+
             </div>
 
         </div>
@@ -549,6 +820,7 @@
             </div>
 
             <div>
+
                 <strong>
                     Christian Values
                 </strong>
@@ -556,6 +828,7 @@
                 <span>
                     Character, discipline, and integrity
                 </span>
+
             </div>
 
         </div>
@@ -568,6 +841,7 @@
             </div>
 
             <div>
+
                 <strong>
                     Day & Boarding
                 </strong>
@@ -575,6 +849,7 @@
                 <span>
                     A supportive school environment
                 </span>
+
             </div>
 
         </div>
@@ -587,6 +862,7 @@
 <!-- =========================================================
      WELCOME
      ========================================================= -->
+
 <section class="section welcome animated-bg">
 
     <div class="bg-decoration bg-leaf"
@@ -656,6 +932,7 @@
 <!-- =========================================================
      ACADEMICS
      ========================================================= -->
+
 <section class="section why-section animated-bg">
 
     <div class="bg-decoration bg-book"
@@ -770,6 +1047,7 @@
 <!-- =========================================================
      WHY KENBRIDGE
      ========================================================= -->
+
 <section class="section animated-bg">
 
     <div class="bg-decoration bg-pencil"
@@ -885,6 +1163,7 @@
 <!-- =========================================================
      PROJECTS & SPORTS
      ========================================================= -->
+
 <section class="school-life section animated-bg">
 
     <div class="bg-decoration bg-star"
@@ -980,6 +1259,7 @@
 <!-- =========================================================
      SCHOOL NEWS
      ========================================================= -->
+
 <section class="section why-section animated-bg">
 
     <div class="bg-decoration bg-book"
@@ -1089,6 +1369,7 @@
 <!-- =========================================================
      SCHOOL LIFE
      ========================================================= -->
+
 <section class="section animated-bg">
 
     <div class="bg-decoration bg-green-circle"
@@ -1138,7 +1419,7 @@
 
                 <img
                     src="images/schoolenvironment.png"
-                    alt="Kenbridge Christian School activities"
+                    alt="Kenbridge Christian School environment"
                     loading="lazy"
                 >
 
@@ -1149,7 +1430,7 @@
 
                 <img
                     src="images/gallery.png"
-                    alt="Kenbridge Christian School learners"
+                    alt="Kenbridge Christian School activities"
                     loading="lazy"
                 >
 
@@ -1175,6 +1456,7 @@
 <!-- =========================================================
      PARENT VOICE
      ========================================================= -->
+
 <section class="section why-section animated-bg">
 
     <div class="bg-decoration bg-star"
@@ -1219,6 +1501,7 @@
 <!-- =========================================================
      ADMISSIONS CTA
      ========================================================= -->
+
 <section class="admissions-cta animated-bg">
 
     <div class="bg-decoration bg-orange-circle"
@@ -1261,6 +1544,7 @@
 <!-- =========================================================
      CONTACT
      ========================================================= -->
+
 <section class="section animated-bg">
 
     <div class="bg-decoration bg-book"
@@ -1304,16 +1588,19 @@
 
 
 <!-- =========================================================
-     FOOTER
+     SHARED FOOTER
      ========================================================= -->
+
 <div id="site-footer"></div>
 
 
 <!-- =========================================================
-     SCRIPTS
+     JAVASCRIPT
      ========================================================= -->
+
 <script src="js/script.js"></script>
 <script src="js/components.js"></script>
 
 </body>
 </html>
+```
