@@ -1,766 +1,1210 @@
+```javascript
 /* =========================================================
    KENBRIDGE CHRISTIAN SCHOOL
-   GLOBAL JAVASCRIPT
-   Version: 2026
+   MAIN JAVASCRIPT
    ========================================================= */
 
 (function () {
-    "use strict";
+"use strict";
 
-    /* =====================================================
-       HELPERS
-       ===================================================== */
+/* =========================================================
+   DOM READY
+   ========================================================= */
+document.addEventListener("DOMContentLoaded", function () {
 
-    const $ = (selector, parent = document) =>
-        parent.querySelector(selector);
+/* =========================================================
+   OPENING SCREEN / 10 SECOND COUNTDOWN
+   ---------------------------------------------------------
+   IMPORTANT:
+   The countdown is intentionally KEPT.
+   Only the duplicate implementation has been removed.
+   ========================================================= */
 
-    const $$ = (selector, parent = document) =>
-        Array.from(parent.querySelectorAll(selector));
+const openingScreen=document.getElementById("openingScreen");
+const openingCounter=document.getElementById("openingCounter");
+const openingMessage=document.getElementById("openingMessage");
+const openingProgress=document.getElementById("openingProgress");
+const openingLogo=document.querySelector(".opening-school-logo");
 
-    const on = (element, event, handler, options) => {
-        if (element) {
-            element.addEventListener(event, handler, options);
-        }
-    };
+if(openingScreen){
 
-    /* =====================================================
-       OPENING SCREEN
-       Runs only when the page contains #openingScreen.
-       ===================================================== */
+    document.body.classList.add("opening-active");
+    document.body.style.overflow="hidden";
 
-    function initOpeningScreen() {
-        const screen = $("#openingScreen");
-        const counter = $("#openingCounter");
-        const message = $("#openingMessage");
-        const progress = $("#openingProgress");
+    openingScreen.style.position="fixed";
+    openingScreen.style.inset="0";
+    openingScreen.style.width="100%";
+    openingScreen.style.height="100dvh";
+    openingScreen.style.minHeight="100vh";
+    openingScreen.style.zIndex="999999";
+    openingScreen.style.opacity="1";
+    openingScreen.style.visibility="visible";
+    openingScreen.style.pointerEvents="all";
 
-        if (!screen) return;
+    /* -----------------------------------------------------
+       Opening badge enhancement
+       ----------------------------------------------------- */
 
-        let count = 10;
-        const total = 10;
+    if(openingLogo){
 
-        const messages = {
-            10: "Preparing your experience...",
-            9: "Welcome to Kenbridge...",
-            8: "Building Character...",
-            7: "Quality Education...",
-            6: "Growing in Christian Values...",
-            5: "Learning with Purpose...",
-            4: "Serving with Excellence...",
-            3: "Building Tomorrow's Leaders...",
-            2: "Almost ready...",
-            1: "Welcome to Kenbridge Christian School!"
-        };
+        openingLogo.style.display="block";
+        openingLogo.style.objectFit="contain";
+        openingLogo.style.margin="0 auto 18px";
+        openingLogo.style.position="relative";
+        openingLogo.style.zIndex="3";
 
-        document.body.classList.add("opening-active");
-        document.body.style.overflow = "hidden";
+        /*
+         * Keep the real school badge visible while giving
+         * it a clean illuminated background.
+         */
+        openingLogo.style.filter=
+            "drop-shadow(0 12px 28px rgba(0,0,0,.25))";
 
-        screen.style.position = "fixed";
-        screen.style.inset = "0";
-        screen.style.width = "100%";
-        screen.style.height = "100dvh";
-        screen.style.minHeight = "100vh";
-        screen.style.zIndex = "999999";
-        screen.style.opacity = "1";
-        screen.style.visibility = "visible";
-        screen.style.pointerEvents = "all";
+        openingLogo.addEventListener("error",function(){
+            this.style.display="none";
+        });
 
-        function update() {
-            if (counter) {
-                counter.textContent = count;
-                counter.style.animation = "none";
-                void counter.offsetWidth;
-                counter.style.animation = "counterPop 0.7s ease";
+    }else{
+
+        /*
+         * If the homepage contains no logo element,
+         * create one automatically.
+         */
+        const content=document.querySelector(".opening-content");
+
+        if(content){
+
+            const logo=document.createElement("img");
+
+            logo.className="opening-school-logo";
+            logo.src="images/logo.jpg";
+            logo.alt="Kenbridge Christian School Badge";
+            logo.width=180;
+            logo.height=180;
+            logo.loading="eager";
+            logo.decoding="async";
+            logo.fetchPriority="high";
+
+            const firstChild=content.firstElementChild;
+
+            if(firstChild){
+                content.insertBefore(logo,firstChild);
+            }else{
+                content.appendChild(logo);
             }
 
-            if (message) {
-                message.textContent =
-                    messages[count] ||
+        }
+    }
+
+    /*
+     * Extra background logo effect.
+     * This does NOT replace the central badge.
+     * It gives the opening screen a school-branded
+     * background instead of a plain solid colour.
+     */
+    let openingBackground=document.querySelector(
+        ".opening-logo-background"
+    );
+
+    if(!openingBackground){
+
+        openingBackground=document.createElement("div");
+
+        openingBackground.className=
+            "opening-logo-background";
+
+        openingBackground.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        openingBackground.style.position="absolute";
+        openingBackground.style.left="50%";
+        openingBackground.style.top="50%";
+        openingBackground.style.width="min(72vw,620px)";
+        openingBackground.style.height="min(72vw,620px)";
+        openingBackground.style.transform=
+            "translate(-50%,-50%)";
+        openingBackground.style.backgroundImage=
+            'url("images/logo.jpg")';
+        openingBackground.style.backgroundPosition=
+            "center";
+        openingBackground.style.backgroundRepeat=
+            "no-repeat";
+        openingBackground.style.backgroundSize=
+            "contain";
+        openingBackground.style.opacity=".055";
+        openingBackground.style.filter=
+            "blur(1px)";
+        openingBackground.style.pointerEvents="none";
+        openingBackground.style.zIndex="1";
+
+        openingScreen.insertBefore(
+            openingBackground,
+            openingScreen.firstChild
+        );
+    }
+
+    /*
+     * Make sure opening content remains above
+     * the background badge.
+     */
+    const openingContent=document.querySelector(
+        ".opening-content"
+    );
+
+    if(openingContent){
+        openingContent.style.position="relative";
+        openingContent.style.zIndex="5";
+    }
+
+
+    /* -----------------------------------------------------
+       Countdown
+       ----------------------------------------------------- */
+
+    let count=10;
+    const totalTime=10;
+
+    const openingMessages={
+        10:"Preparing your experience...",
+        9:"Welcome to Kenbridge...",
+        8:"Building Character...",
+        7:"Quality Education...",
+        6:"Growing in Christian Values...",
+        5:"Learning with Purpose...",
+        4:"Serving with Excellence...",
+        3:"Building Tomorrow's Leaders...",
+        2:"Almost ready...",
+        1:"Welcome to Kenbridge Christian School!"
+    };
+
+    function updateOpeningScreen(){
+
+        if(openingCounter){
+            openingCounter.textContent=count;
+
+            /*
+             * Restart counter animation cleanly.
+             */
+            openingCounter.style.animation="none";
+
+            void openingCounter.offsetWidth;
+
+            openingCounter.style.animation=
+                "counterPop .7s ease";
+        }
+
+        if(openingMessage){
+            openingMessage.textContent=
+                openingMessages[count] ||
+                "Welcome to Kenbridge Christian School!";
+        }
+
+        if(openingProgress){
+
+            const progress=
+                ((totalTime-count)/totalTime)*100;
+
+            openingProgress.style.width=
+                progress+"%";
+        }
+    }
+
+    updateOpeningScreen();
+
+    const openingTimer=setInterval(function(){
+
+        count--;
+
+        if(count>0){
+
+            updateOpeningScreen();
+
+        }else{
+
+            clearInterval(openingTimer);
+
+            if(openingCounter){
+                openingCounter.textContent="✓";
+            }
+
+            if(openingMessage){
+                openingMessage.textContent=
                     "Welcome to Kenbridge Christian School!";
             }
 
-            if (progress) {
-                const percent =
-                    ((total - count) / total) * 100;
-
-                progress.style.width =
-                    Math.max(0, Math.min(100, percent)) + "%";
+            if(openingProgress){
+                openingProgress.style.width="100%";
             }
+
+            /*
+             * Keep the final welcome moment before
+             * revealing the homepage.
+             */
+            setTimeout(function(){
+
+                openingScreen.classList.add("hide");
+
+                document.body.classList.remove(
+                    "opening-active"
+                );
+
+                document.body.style.overflow="";
+
+                /*
+                 * Remove from layout after transition.
+                 */
+                setTimeout(function(){
+
+                    openingScreen.style.display="none";
+
+                },750);
+
+            },700);
         }
 
-        update();
+    },1000);
+}
 
-        const timer = setInterval(function () {
-            count--;
 
-            if (count > 0) {
-                update();
+/* =========================================================
+   MOBILE NAVIGATION
+   ========================================================= */
+
+const mobileMenuButton=
+    document.getElementById("mobileMenuButton");
+
+const mobileNav=
+    document.getElementById("mobileNav");
+
+function closeMobileMenu(){
+
+    if(!mobileNav){
+        return;
+    }
+
+    mobileNav.classList.remove("open");
+    mobileNav.classList.remove("active");
+
+    if(mobileMenuButton){
+
+        mobileMenuButton.classList.remove("active");
+
+        mobileMenuButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+    }
+
+    document.body.classList.remove("menu-open");
+}
+
+function openMobileMenu(){
+
+    if(!mobileNav){
+        return;
+    }
+
+    mobileNav.classList.add("open");
+    mobileNav.classList.add("active");
+
+    if(mobileMenuButton){
+
+        mobileMenuButton.classList.add("active");
+
+        mobileMenuButton.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+    }
+
+    document.body.classList.add("menu-open");
+}
+
+if(mobileMenuButton && mobileNav){
+
+    mobileMenuButton.addEventListener(
+        "click",
+        function(event){
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            if(
+                mobileNav.classList.contains("open") ||
+                mobileNav.classList.contains("active")
+            ){
+                closeMobileMenu();
+            }else{
+                openMobileMenu();
+            }
+        }
+    );
+
+    mobileNav.querySelectorAll("a").forEach(
+        function(link){
+
+            link.addEventListener(
+                "click",
+                function(){
+
+                    /*
+                     * Do not interfere with Developer
+                     * trigger. It is handled separately.
+                     */
+                    if(
+                        this.hasAttribute(
+                            "data-developer-trigger"
+                        )
+                    ){
+                        return;
+                    }
+
+                    closeMobileMenu();
+                }
+            );
+        }
+    );
+}
+
+
+/* =========================================================
+   CLOSE MOBILE MENU WHEN CLICKING OUTSIDE
+   ========================================================= */
+
+document.addEventListener(
+    "click",
+    function(event){
+
+        if(!mobileNav || !mobileMenuButton){
+            return;
+        }
+
+        if(
+            mobileNav.classList.contains("open") &&
+            !mobileNav.contains(event.target) &&
+            !mobileMenuButton.contains(event.target)
+        ){
+            closeMobileMenu();
+        }
+    }
+);
+
+
+/* =========================================================
+   ESCAPE KEY
+   ========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key!=="Escape"){
+            return;
+        }
+
+        closeMobileMenu();
+
+    }
+);
+
+
+/* =========================================================
+   MORE DROPDOWN
+   ========================================================= */
+
+const moreMenu=
+    document.querySelector(".more-menu");
+
+const moreButton=
+    document.querySelector(".more-button");
+
+if(moreMenu && moreButton){
+
+    moreButton.addEventListener(
+        "click",
+        function(event){
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            const isOpen=
+                moreMenu.classList.toggle("open");
+
+            moreButton.setAttribute(
+                "aria-expanded",
+                String(isOpen)
+            );
+        }
+    );
+
+    const dropdown=
+        moreMenu.querySelector(".dropdown");
+
+    if(dropdown){
+
+        dropdown.addEventListener(
+            "click",
+            function(event){
+                event.stopPropagation();
+            }
+        );
+    }
+
+    document.addEventListener(
+        "click",
+        function(){
+
+            moreMenu.classList.remove("open");
+
+            moreButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+        }
+    );
+}
+
+
+/* =========================================================
+   HEADER SCROLL EFFECT
+   ========================================================= */
+
+const header=
+    document.getElementById("header");
+
+let scrollTicking=false;
+
+function updateHeader(){
+
+    if(!header){
+        return;
+    }
+
+    if(window.scrollY>40){
+        header.classList.add("scrolled");
+    }else{
+        header.classList.remove("scrolled");
+    }
+
+    scrollTicking=false;
+}
+
+window.addEventListener(
+    "scroll",
+    function(){
+
+        if(!scrollTicking){
+
+            window.requestAnimationFrame(
+                updateHeader
+            );
+
+            scrollTicking=true;
+        }
+
+    },
+    {passive:true}
+);
+
+updateHeader();
+
+
+/* =========================================================
+   INTERNAL SMOOTH LINKS
+   ========================================================= */
+
+document.querySelectorAll(
+    'a[href^="#"]'
+).forEach(function(link){
+
+    link.addEventListener(
+        "click",
+        function(event){
+
+            const targetId=
+                this.getAttribute("href");
+
+            if(
+                !targetId ||
+                targetId==="#" ||
+                targetId==="javascript:void(0)"
+            ){
                 return;
             }
 
-            clearInterval(timer);
+            let target=null;
 
-            if (counter) {
-                counter.textContent = "✓";
-            }
-
-            if (message) {
-                message.textContent =
-                    "Welcome to Kenbridge Christian School!";
-            }
-
-            if (progress) {
-                progress.style.width = "100%";
-            }
-
-            setTimeout(function () {
-                screen.classList.add("hide");
-                document.body.classList.remove("opening-active");
-                document.body.style.overflow = "";
-
-                setTimeout(function () {
-                    screen.style.display = "none";
-                }, 900);
-            }, 900);
-        }, 1000);
-    }
-
-    /* =====================================================
-       MOBILE NAVIGATION
-       ===================================================== */
-
-    function closeMobileMenu() {
-        const button = $("#mobileMenuButton");
-        const nav = $("#mobileNav");
-
-        if (!button || !nav) return;
-
-        nav.classList.remove("open", "show", "active");
-        button.classList.remove("active");
-        button.setAttribute("aria-expanded", "false");
-        document.body.classList.remove("menu-open");
-    }
-
-    function initMobileNavigation() {
-        const button = $("#mobileMenuButton");
-        const nav = $("#mobileNav");
-
-        if (!button || !nav) return;
-
-        button.setAttribute(
-            "aria-expanded",
-            nav.classList.contains("open") ? "true" : "false"
-        );
-
-        on(button, "click", function (event) {
-            event.stopPropagation();
-
-            const open =
-                !nav.classList.contains("open");
-
-            nav.classList.toggle("open", open);
-            nav.classList.toggle("active", open);
-            button.classList.toggle("active", open);
-            button.setAttribute(
-                "aria-expanded",
-                String(open)
-            );
-            document.body.classList.toggle(
-                "menu-open",
-                open
-            );
-        });
-
-        $$("#mobileNav a").forEach(function (link) {
-            on(link, "click", closeMobileMenu);
-        });
-
-        on(document, "click", function (event) {
-            if (
-                nav.classList.contains("open") &&
-                !nav.contains(event.target) &&
-                !button.contains(event.target)
-            ) {
-                closeMobileMenu();
-            }
-        });
-
-        on(document, "keydown", function (event) {
-            if (event.key === "Escape") {
-                closeMobileMenu();
-            }
-        });
-    }
-
-    /* =====================================================
-       MORE DROPDOWN
-       ===================================================== */
-
-    function closeMoreMenu() {
-        const menu = $(".more-menu");
-        const button = $(".more-button");
-
-        if (!menu || !button) return;
-
-        menu.classList.remove("open");
-        button.setAttribute("aria-expanded", "false");
-    }
-
-    function initMoreMenu() {
-        const menu = $(".more-menu");
-        const button = $(".more-button");
-
-        if (!menu || !button) return;
-
-        on(button, "click", function (event) {
-            event.stopPropagation();
-
-            const open =
-                !menu.classList.contains("open");
-
-            menu.classList.toggle("open", open);
-            button.setAttribute(
-                "aria-expanded",
-                String(open)
-            );
-        });
-
-        const dropdown = $(".dropdown", menu);
-
-        on(dropdown, "click", function (event) {
-            event.stopPropagation();
-        });
-
-        $$(".dropdown a", menu).forEach(function (link) {
-            on(link, "click", closeMoreMenu);
-        });
-
-        on(document, "click", closeMoreMenu);
-
-        on(document, "keydown", function (event) {
-            if (event.key === "Escape") {
-                closeMoreMenu();
-            }
-        });
-    }
-
-    /* =====================================================
-       HEADER SCROLL EFFECT
-       ===================================================== */
-
-    function initHeader() {
-        const header = $("#header");
-
-        if (!header) return;
-
-        function update() {
-            header.classList.toggle(
-                "scrolled",
-                window.scrollY > 40
-            );
-        }
-
-        on(window, "scroll", update, {
-            passive: true
-        });
-
-        update();
-    }
-
-    /* =====================================================
-       SMOOTH INTERNAL LINKS
-       ===================================================== */
-
-    function initSmoothLinks() {
-        $$('a[href^="#"]').forEach(function (link) {
-            on(link, "click", function (event) {
-                const id = link.getAttribute("href");
-
-                if (!id || id === "#") return;
-
-                let target = null;
-
-                try {
-                    target = document.querySelector(id);
-                } catch (error) {
-                    return;
-                }
-
-                if (!target) return;
-
-                event.preventDefault();
-
-                target.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
-
-                history.replaceState(
-                    null,
-                    "",
-                    id
+            try{
+                target=document.querySelector(
+                    targetId
                 );
-            });
-        });
-    }
+            }catch(error){
+                return;
+            }
 
-    /* =====================================================
-       SCROLL REVEAL
-       ===================================================== */
+            if(!target){
+                return;
+            }
 
-    function initReveal() {
-        const selector =
-            ".feature-card," +
-            ".section-heading," +
-            ".welcome-content," +
-            ".welcome-image," +
-            ".contact-form-wrapper," +
-            ".contact-details," +
-            ".page-card," +
-            ".info-card," +
-            ".content-card," +
-            ".project-card," +
-            ".sport-card," +
-            ".gallery-item," +
-            ".article-card," +
-            ".category-card," +
-            ".team-card," +
-            ".fee-card," +
-            ".boarding-card";
-
-        const elements = $$(selector);
-
-        if (
-            !elements.length ||
-            !("IntersectionObserver" in window)
-        ) {
-            return;
-        }
-
-        const observer =
-            new IntersectionObserver(
-                function (entries, observer) {
-                    entries.forEach(function (entry) {
-                        if (!entry.isIntersecting) return;
-
-                        entry.target.classList.add(
-                            "visible"
-                        );
-
-                        observer.unobserve(
-                            entry.target
-                        );
-                    });
-                },
-                {
-                    threshold: 0.12
-                }
-            );
-
-        elements.forEach(function (element) {
-            element.classList.add("reveal");
-            observer.observe(element);
-        });
-    }
-
-    /* =====================================================
-       CONTACT FORM
-       ===================================================== */
-
-    function initContactForm() {
-        const form = $("#contactForm");
-        const status = $("#contactStatus");
-
-        if (!form) return;
-
-        on(form, "submit", function (event) {
             event.preventDefault();
 
-            if (status) {
-                status.textContent =
+            closeMobileMenu();
+
+            target.scrollIntoView({
+                behavior:"smooth",
+                block:"start"
+            });
+        }
+    );
+});
+
+
+/* =========================================================
+   SCROLL REVEAL
+   ========================================================= */
+
+const revealElements=
+    document.querySelectorAll(
+        ".feature-card,"+
+        ".section-heading,"+
+        ".welcome-content,"+
+        ".welcome-image,"+
+        ".contact-form-wrapper,"+
+        ".contact-details"
+    );
+
+if(
+    revealElements.length &&
+    "IntersectionObserver" in window
+){
+
+    const revealObserver=
+        new IntersectionObserver(
+            function(entries,observer){
+
+                entries.forEach(
+                    function(entry){
+
+                        if(entry.isIntersecting){
+
+                            entry.target.classList.add(
+                                "visible"
+                            );
+
+                            observer.unobserve(
+                                entry.target
+                            );
+                        }
+                    }
+                );
+
+            },
+            {
+                threshold:.12,
+                rootMargin:"0px 0px -30px 0px"
+            }
+        );
+
+    revealElements.forEach(
+        function(element){
+
+            element.classList.add("reveal");
+
+            revealObserver.observe(
+                element
+            );
+        }
+    );
+
+}else{
+
+    /*
+     * Fallback for browsers without
+     * IntersectionObserver.
+     */
+    revealElements.forEach(
+        function(element){
+            element.classList.add("visible");
+        }
+    );
+}
+
+
+/* =========================================================
+   CONTACT FORM
+   ========================================================= */
+
+const contactForm=
+    document.getElementById("contactForm");
+
+const contactStatus=
+    document.getElementById("contactStatus");
+
+if(contactForm){
+
+    contactForm.addEventListener(
+        "submit",
+        function(event){
+
+            event.preventDefault();
+
+            if(contactStatus){
+
+                contactStatus.textContent=
                     "Thank you. Your message has been received by the website form.";
 
-                status.classList.remove("error");
-                status.classList.add("success");
+                contactStatus.classList.add(
+                    "success"
+                );
             }
 
-            form.reset();
-        });
-    }
+            contactForm.reset();
+        }
+    );
+}
 
-    /* =====================================================
-       FEEDBACK FORM
-       ===================================================== */
 
-    function initFeedbackForm() {
-        const form = $("#feedbackForm");
-        const status = $("#feedbackStatus");
+/* =========================================================
+   FEEDBACK FORM
+   ========================================================= */
 
-        if (!form) return;
+const feedbackForm=
+    document.getElementById("feedbackForm");
 
-        on(form, "submit", function (event) {
+const feedbackStatus=
+    document.getElementById("feedbackStatus");
+
+if(feedbackForm){
+
+    feedbackForm.addEventListener(
+        "submit",
+        function(event){
+
             event.preventDefault();
 
-            if (status) {
-                status.textContent =
+            if(feedbackStatus){
+
+                feedbackStatus.textContent=
                     "Thank you for your feedback.";
 
-                status.classList.remove("error");
-                status.classList.add("success");
+                feedbackStatus.classList.add(
+                    "success"
+                );
             }
 
-            form.reset();
-        });
+            feedbackForm.reset();
+        }
+    );
+}
+
+
+/* =========================================================
+   IMAGE ERROR HANDLING
+   ========================================================= */
+
+document.querySelectorAll("img").forEach(
+    function(image){
+
+        image.addEventListener(
+            "error",
+            function(){
+
+                this.classList.add(
+                    "image-error"
+                );
+            },
+            {once:true}
+        );
+    }
+);
+
+
+/* =========================================================
+   CURRENT YEAR
+   ========================================================= */
+
+document.querySelectorAll(
+    "[data-current-year]"
+).forEach(
+    function(element){
+
+        element.textContent=
+            new Date().getFullYear();
+    }
+);
+
+
+/* =========================================================
+   BACK TO TOP
+   ========================================================= */
+
+const backToTop=
+    document.getElementById("backToTop");
+
+if(backToTop){
+
+    let topTicking=false;
+
+    function updateBackToTop(){
+
+        if(window.scrollY>500){
+
+            backToTop.classList.add("show");
+
+        }else{
+
+            backToTop.classList.remove("show");
+        }
+
+        topTicking=false;
     }
 
-    /* =====================================================
-       IMAGE ERROR HANDLING
-       ===================================================== */
+    window.addEventListener(
+        "scroll",
+        function(){
 
-    function initImageHandling() {
-        $$("img").forEach(function (image) {
-            on(image, "error", function () {
-                this.classList.add("image-error");
+            if(!topTicking){
+
+                window.requestAnimationFrame(
+                    updateBackToTop
+                );
+
+                topTicking=true;
+            }
+
+        },
+        {passive:true}
+    );
+
+    backToTop.addEventListener(
+        "click",
+        function(){
+
+            window.scrollTo({
+                top:0,
+                behavior:"smooth"
             });
-        });
+        }
+    );
+}
+
+});
+
+
+/* =========================================================
+   DEVELOPER SYSTEM
+   ---------------------------------------------------------
+   Supports:
+   - Existing developerButton
+   - Mobile hamburger developer link
+   - Desktop developer link
+   ========================================================= */
+
+function setupDeveloper(){
+
+    const modal=
+        document.getElementById(
+            "developerContact"
+        );
+
+    const closeButton=
+        document.getElementById(
+            "developerClose"
+        );
+
+    const overlay=
+        document.getElementById(
+            "developerOverlay"
+        );
+
+    const developerButtons=
+        document.querySelectorAll(
+            "#developerButton,"+
+            "[data-developer-trigger]"
+        );
+
+    if(!modal){
+        return;
     }
 
-    /* =====================================================
-       CURRENT YEAR
-       ===================================================== */
+    function closeDeveloper(){
 
-    function initYears() {
-        const year = new Date().getFullYear();
+        modal.classList.remove("show");
 
-        $$("[data-current-year]").forEach(
-            function (element) {
-                element.textContent = year;
+        modal.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        document.body.classList.remove(
+            "developer-modal-open"
+        );
+    }
+
+    function openDeveloper(event){
+
+        if(event){
+            event.preventDefault();
+        }
+
+        modal.classList.add("show");
+
+        modal.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+        document.body.classList.add(
+            "developer-modal-open"
+        );
+
+        /*
+         * Close mobile navigation when
+         * Developer is selected.
+         */
+        const mobileNav=
+            document.getElementById("mobileNav");
+
+        const mobileButton=
+            document.getElementById(
+                "mobileMenuButton"
+            );
+
+        if(mobileNav){
+            mobileNav.classList.remove("open");
+            mobileNav.classList.remove("active");
+        }
+
+        if(mobileButton){
+
+            mobileButton.classList.remove(
+                "active"
+            );
+
+            mobileButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+        }
+
+        document.body.classList.remove(
+            "menu-open"
+        );
+    }
+
+    developerButtons.forEach(
+        function(button){
+
+            /*
+             * Prevent duplicate listeners.
+             */
+            if(
+                button.dataset.developerReady===
+                "true"
+            ){
+                return;
+            }
+
+            button.dataset.developerReady=
+                "true";
+
+            button.addEventListener(
+                "click",
+                openDeveloper
+            );
+        }
+    );
+
+    if(closeButton){
+
+        closeButton.addEventListener(
+            "click",
+            closeDeveloper
+        );
+    }
+
+    if(overlay){
+
+        overlay.addEventListener(
+            "click",
+            closeDeveloper
+        );
+    }
+
+    document.addEventListener(
+        "keydown",
+        function(event){
+
+            if(
+                event.key==="Escape" &&
+                modal.classList.contains("show")
+            ){
+                closeDeveloper();
+            }
+        }
+    );
+}
+
+
+/* =========================================================
+   SHARED FOOTER
+   ---------------------------------------------------------
+   Loads components/footer.html only when necessary.
+   Uses the existing #site-footer when present.
+   ========================================================= */
+
+function loadSharedFooter(){
+
+    let footerContainer=
+        document.getElementById("site-footer");
+
+    /*
+     * Find script.js path so this works from:
+     * /index.html
+     * /page/about.html
+     * /page/contact.html
+     * etc.
+     */
+    const script=
+        document.querySelector(
+            'script[src*="js/script.js"]'
+        );
+
+    if(!script){
+        setupDeveloper();
+        return;
+    }
+
+    const scriptURL=
+        new URL(
+            script.getAttribute("src"),
+            document.baseURI
+        );
+
+    const projectRoot=
+        new URL(
+            "../",
+            scriptURL
+        );
+
+    const footerURL=
+        new URL(
+            "components/footer.html",
+            projectRoot
+        );
+
+    /*
+     * If there is no footer container,
+     * create one at the bottom.
+     */
+    if(!footerContainer){
+
+        /*
+         * Remove legacy hard-coded footers.
+         */
+        document.querySelectorAll(
+            "footer:not(.site-footer)"
+        ).forEach(
+            function(oldFooter){
+                oldFooter.remove();
             }
         );
 
-        const footerYear = $("#footer-year");
+        footerContainer=
+            document.createElement("div");
 
-        if (footerYear) {
-            footerYear.textContent = year;
-        }
+        footerContainer.id=
+            "site-footer";
+
+        document.body.appendChild(
+            footerContainer
+        );
     }
 
-    /* =====================================================
-       BACK TO TOP
-       ===================================================== */
+    /*
+     * If the footer has already been loaded,
+     * do not request it again.
+     */
+    if(
+        footerContainer.dataset.loaded===
+        "true"
+    ){
 
-    function initBackToTop() {
-        const button = $("#backToTop");
-
-        if (!button) return;
-
-        function update() {
-            button.classList.toggle(
-                "show",
-                window.scrollY > 500
-            );
-        }
-
-        on(window, "scroll", update, {
-            passive: true
-        });
-
-        on(button, "click", function () {
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-        });
-
-        update();
+        setupDeveloper();
+        return;
     }
 
-    /* =====================================================
-       DEVELOPER CONTACT MODAL
-       ===================================================== */
+    footerContainer.dataset.loading=
+        "true";
 
-    function initDeveloperContact(root = document) {
-        const button =
-            $("#developerButton", root);
-
-        const modal =
-            $("#developerContact", root);
-
-        const close =
-            $("#developerClose", root);
-
-        const overlay =
-            $("#developerOverlay", root);
-
-        if (!button || !modal) return;
-
-        if (
-            button.dataset.developerReady ===
-            "true"
-        ) {
-            return;
+    fetch(
+        footerURL.href,
+        {
+            cache:"default"
         }
+    )
+    .then(
+        function(response){
 
-        button.dataset.developerReady = "true";
+            if(!response.ok){
 
-        function openDeveloper() {
-            modal.classList.add("show");
-
-            modal.setAttribute(
-                "aria-hidden",
-                "false"
-            );
-
-            document.body.classList.add(
-                "developer-modal-open"
-            );
-        }
-
-        function closeDeveloper() {
-            modal.classList.remove("show");
-
-            modal.setAttribute(
-                "aria-hidden",
-                "true"
-            );
-
-            document.body.classList.remove(
-                "developer-modal-open"
-            );
-        }
-
-        on(button, "click", openDeveloper);
-        on(close, "click", closeDeveloper);
-        on(overlay, "click", closeDeveloper);
-
-        on(document, "keydown", function (event) {
-            if (
-                event.key === "Escape" &&
-                modal.classList.contains("show")
-            ) {
-                closeDeveloper();
+                throw new Error(
+                    "Footer could not be loaded: "+
+                    response.status
+                );
             }
-        });
-    }
 
-    /* =====================================================
-       SHARED FOOTER LOADER
-       -----------------------------------------------------
-       Supports older pages that only have a footer
-       placeholder while leaving the newly updated pages
-       with their own .site-footer untouched.
-       ===================================================== */
-
-    function initSharedFooter() {
-        const existingFooter =
-            $(".site-footer");
-
-        /*
-         * If a real footer already exists,
-         * do not replace it.
-         */
-        if (
-            existingFooter &&
-            existingFooter.tagName.toLowerCase() ===
-                "footer"
-        ) {
-            initDeveloperContact();
-            initYears();
-            return;
+            return response.text();
         }
+    )
+    .then(
+        function(html){
 
-        let container =
-            $("#site-footer");
+            footerContainer.innerHTML=
+                html;
 
-        /*
-         * If there is an old hard-coded footer
-         * but no modern footer container, replace it.
-         */
-        if (!container) {
-            const oldFooters =
-                $$("footer:not(.site-footer)");
+            footerContainer.dataset.loaded=
+                "true";
 
-            if (oldFooters.length) {
-                oldFooters.forEach(function (footer) {
-                    footer.remove();
-                });
+            footerContainer.dataset.loading=
+                "false";
 
-                container =
-                    document.createElement("div");
+            /*
+             * Update footer year.
+             */
+            const footerYear=
+                document.getElementById(
+                    "footer-year"
+                );
 
-                container.id = "site-footer";
-                document.body.appendChild(container);
+            if(footerYear){
+
+                footerYear.textContent=
+                    new Date().getFullYear();
             }
-        }
 
-        /*
-         * If neither exists, do nothing.
-         */
-        if (!container) {
-            initYears();
-            return;
-        }
+            /*
+             * Correct footer assets.
+             */
+            footerContainer.querySelectorAll(
+                "[data-asset]"
+            ).forEach(
+                function(element){
 
-        /*
-         * If the placeholder already contains
-         * a footer, leave it alone.
-         */
-        if ($(".site-footer", container)) {
-            initDeveloperContact(container);
-            initYears();
-            return;
-        }
-
-        const script =
-            document.querySelector(
-                'script[src*="js/script.js"]'
-            );
-
-        if (!script) {
-            initYears();
-            return;
-        }
-
-        let scriptURL;
-
-        try {
-            scriptURL = new URL(
-                script.getAttribute("src"),
-                document.baseURI
-            );
-        } catch (error) {
-            console.error(
-                "Kenbridge script URL error:",
-                error
-            );
-            initYears();
-            return;
-        }
-
-        const projectRoot =
-            new URL("../", scriptURL);
-
-        const footerURL =
-            new URL(
-                "components/footer.html",
-                projectRoot
-            );
-
-        fetch(footerURL.href, {
-            cache: "no-cache"
-        })
-            .then(function (response) {
-                if (!response.ok) {
-                    throw new Error(
-                        "Footer could not be loaded: " +
-                        response.status
-                    );
-                }
-
-                return response.text();
-            })
-            .then(function (html) {
-                container.innerHTML = html;
-
-                /*
-                 * Resolve footer assets.
-                 */
-                $$(
-                    "[data-asset]",
-                    container
-                ).forEach(function (element) {
-                    const asset =
+                    const asset=
                         element.getAttribute(
                             "data-asset"
                         );
 
-                    if (!asset) return;
+                    if(!asset){
+                        return;
+                    }
 
-                    try {
-                        element.src =
+                    const cleanAsset=
+                        asset.replace(
+                            /^\/+/,
+                            ""
+                        );
+
+                    /*
+                     * Support both image and source
+                     * elements.
+                     */
+                    if(
+                        element.tagName===
+                        "IMG"
+                    ){
+
+                        element.src=
                             new URL(
-                                asset.replace(
-                                    /^\/+/,
-                                    ""
-                                ),
+                                cleanAsset,
                                 projectRoot
                             ).href;
-                    } catch (error) {
-                        console.warn(
-                            "Footer asset error:",
-                            asset
-                        );
-                    }
-                });
 
-                /*
-                 * Fix relative footer links.
-                 */
-                $$(
-                    "[data-footer-link]",
-                    container
-                ).forEach(function (link) {
-                    const target =
-                        link.getAttribute(
-                            "data-footer-link"
-                        );
+                    }else{
 
-                    if (!target) return;
-
-                    try {
-                        link.href =
+                        element.setAttribute(
+                            "src",
                             new URL(
-                                target,
+                                cleanAsset,
                                 projectRoot
-                            ).href;
-                    } catch (error) {
-                        console.warn(
-                            "Footer link error:",
-                            target
+                            ).href
                         );
                     }
-                });
+                }
+            );
 
-                initYears();
-                initDeveloperContact(container);
-            })
-            .catch(function (error) {
-                console.error(
-                    "Kenbridge shared footer error:",
-                    error
-                );
+            /*
+             * Setup developer controls after
+             * the footer has been inserted.
+             */
+            setupDeveloper();
+        }
+    )
+    .catch(
+        function(error){
 
-                initYears();
-            });
-    }
+            footerContainer.dataset.loading=
+                "false";
 
-    /* =====================================================
-       GLOBAL INITIALIZATION
-       ===================================================== */
+            console.error(
+                "Kenbridge shared footer error:",
+                error
+            );
 
-    function init() {
-        initOpeningScreen();
-        initMobileNavigation();
-        initMoreMenu();
-        initHeader();
-        initSmoothLinks();
-        initReveal();
-        initContactForm();
-        initFeedbackForm();
-        initImageHandling();
-        initYears();
-        initBackToTop();
-        initSharedFooter();
-    }
+            /*
+             * Do not block the rest of the
+             * website if the footer fails.
+             */
+            setupDeveloper();
+        }
+    );
+}
 
-    if (
-        document.readyState === "loading"
-    ) {
-        document.addEventListener(
-            "DOMContentLoaded",
-            init
+
+/* =========================================================
+   START SHARED FOOTER
+   ========================================================= */
+
+if(
+    document.readyState===
+    "loading"
+){
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        loadSharedFooter,
+        {once:true}
+    );
+
+}else{
+
+    loadSharedFooter();
+}
+
+
+/* =========================================================
+   GLOBAL DEVELOPER FALLBACK
+   ========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        /*
+         * If there is no dynamically loaded footer,
+         * still initialise developer controls.
+         */
+        setTimeout(
+            setupDeveloper,
+            0
         );
-    } else {
-        init();
-    }
+
+    },
+    {once:true}
+);
+
 })();
+```
