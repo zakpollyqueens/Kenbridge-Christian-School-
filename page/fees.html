@@ -1,28 +1,121 @@
-<!DOCTYPE html><html lang="en">
-<head><meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>School Fees | Kenbridge Christian School</title>
-
-<meta
-    name="description"
-    content="School fees and payment information for Kenbridge Christian School."
->
-
+<meta name="description" content="School fees and payment information for Kenbridge Christian School.">
 <meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
 
-<link
-    rel="stylesheet"
-    href="../css/style.css"
->
+<style>
+.fee-intro{
+    max-width:760px;
+    margin:0 auto;
+}
+.fee-card{
+    transition:transform .25s ease,box-shadow .25s ease;
+}
+.fee-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+}
+.fee-table-wrapper{
+    width:100%;
+    overflow-x:auto;
+    border-radius:16px;
+    box-shadow:0 8px 25px rgba(0,0,0,.05);
+}
+.fee-table{
+    width:100%;
+    min-width:650px;
+    border-collapse:collapse;
+    background:#fff;
+}
+.fee-table th,
+.fee-table td{
+    padding:17px 20px;
+    text-align:left;
+    border-bottom:1px solid #e5ebe7;
+}
+.fee-table th{
+    background:#08783f;
+    color:#fff;
+    font-weight:700;
+}
+.fee-table tr:last-child td{
+    border-bottom:0;
+}
+.fee-table tbody tr:hover{
+    background:#f5faf7;
+}
+.fee-table td:nth-child(2){
+    font-weight:600;
+}
+.payment-note{
+    display:flex;
+    align-items:flex-start;
+    gap:18px;
+}
+.payment-note .feature-icon{
+    flex-shrink:0;
+}
+.payment-note h3{
+    margin:0 0 8px;
+}
+.payment-note p{
+    margin:0;
+}
+.fee-contact-box{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:25px;
+    padding:30px;
+    background:#fff;
+    border:1px solid #dfe8e3;
+    border-radius:16px;
+}
+.fee-contact-content{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+.fee-contact-content .feature-icon{
+    flex-shrink:0;
+}
+.fee-contact-content h3{
+    margin:0 0 5px;
+}
+.fee-contact-content p{
+    margin:0;
+}
+@media(max-width:760px){
+    .fee-contact-box{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+    .fee-contact-content{
+        width:100%;
+    }
+}
+@media(max-width:500px){
+    .fee-table th,
+    .fee-table td{
+        padding:14px 15px;
+    }
+    .fee-contact-box{
+        padding:23px 18px;
+    }
+}
+</style>
+</head>
 
-</head><body><!-- =========================================
-     TOP BAR
-========================================= --><div class="top-bar"><div class="container top-bar-inner">
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+<div class="container top-bar-inner">
 
     <div class="top-location">
         📍 Old Butabika Road, Kampala, Uganda
@@ -49,46 +142,33 @@
     </div>
 
 </div>
+</div>
 
-</div><!-- =========================================
-     HEADER
-========================================= --><header class="header" id="header"><div class="container nav-container">
+<!-- HEADER -->
+<header class="header" id="header">
 
+<div class="container nav-container">
 
-    <!-- BRAND -->
-
-    <a
-        href="../index.html"
-        class="brand"
-    >
+    <a href="../index.html" class="brand">
 
         <div class="logo-container">
 
             <img
-                src="../images/logo.jpg"
+                src="../images/logo.png"
                 alt="Kenbridge Christian School Logo"
-                class="school-logo"
-            >
+                class="school-logo">
 
         </div>
 
         <div class="brand-name">
 
-            <strong>
-                KENBRIDGE
-            </strong>
+            <strong>KENBRIDGE</strong>
 
-            <span>
-                CHRISTIAN SCHOOL
-            </span>
+            <span>CHRISTIAN SCHOOL</span>
 
         </div>
 
     </a>
-
-
-
-    <!-- DESKTOP NAVIGATION -->
 
     <nav class="desktop-nav">
 
@@ -108,10 +188,7 @@
             Admissions
         </a>
 
-        <a
-            href="fees.html"
-            class="active"
-        >
+        <a href="fees.html" class="active">
             Fees
         </a>
 
@@ -123,16 +200,16 @@
             Contact
         </a>
 
-
         <div class="more-menu">
 
             <button
                 class="more-button"
                 type="button"
-            >
-                More <span>⌄</span>
-            </button>
+                aria-haspopup="true">
 
+                More <span>⌄</span>
+
+            </button>
 
             <div class="dropdown">
 
@@ -156,6 +233,10 @@
                     Projects
                 </a>
 
+                <a href="reports.html">
+                    Reports
+                </a>
+
                 <a href="sports.html">
                     Sports
                 </a>
@@ -176,26 +257,23 @@
 
         </div>
 
-
         <a
-            href="admissions.html"
-            class="apply-button"
-        >
+            href="submissions.html"
+            class="apply-button">
+
             Apply Online
+
         </a>
 
     </nav>
 
-
-
-    <!-- MOBILE MENU BUTTON -->
-
     <button
         class="mobile-menu-button"
         id="mobileMenuButton"
+        type="button"
         aria-label="Open navigation"
         aria-expanded="false"
-    >
+        aria-controls="mobileNav">
 
         <span></span>
         <span></span>
@@ -205,14 +283,8 @@
 
 </div>
 
-
-
 <!-- MOBILE NAVIGATION -->
-
-<nav
-    class="mobile-nav"
-    id="mobileNav"
->
+<nav class="mobile-nav" id="mobileNav">
 
     <a href="../index.html">
         Home
@@ -230,7 +302,7 @@
         Admissions
     </a>
 
-    <a href="fees.html">
+    <a href="fees.html" class="active">
         Fees
     </a>
 
@@ -252,6 +324,10 @@
 
     <a href="projects.html">
         Projects
+    </a>
+
+    <a href="reports.html">
+        Reports
     </a>
 
     <a href="sports.html">
@@ -279,17 +355,21 @@
     </a>
 
     <a
-        href="admissions.html"
-        class="mobile-apply"
-    >
+        href="submissions.html"
+        class="mobile-apply">
+
         Apply Online
+
     </a>
 
 </nav>
 
-</header><!-- =========================================
-     PAGE HERO
-========================================= --><section class="hero"><div class="container hero-content">
+</header>
+
+<!-- HERO -->
+<section class="hero">
+
+<div class="container hero-content">
 
     <span class="hero-label">
         SCHOOL FEES
@@ -310,23 +390,22 @@
 
 </div>
 
-</section><!-- =========================================
-     FEES INTRODUCTION
-========================================= --><section class="section welcome"><div class="container welcome-grid">
+</section>
 
+<!-- FEES INTRODUCTION -->
+<section class="section welcome">
+
+<div class="container welcome-grid">
 
     <div class="welcome-image">
 
         <img
             src="../images/school.jpg"
-            alt="Kenbridge Christian School"
-        >
+            alt="Kenbridge Christian School">
 
     </div>
 
-
-
-    <div class="welcome-content">
+    <div class="welcome-content fee-intro">
 
         <span class="section-label">
             FEES & PAYMENTS
@@ -355,18 +434,22 @@
 
         <a
             href="contact.html"
-            class="btn btn-primary"
-        >
+            class="btn btn-primary">
+
             Enquire About Fees
+
         </a>
 
     </div>
 
 </div>
 
-</section><!-- =========================================
-     FEE CATEGORIES
-========================================= --><section class="section why-section"><div class="container">
+</section>
+
+<!-- FEE CATEGORIES -->
+<section class="section why-section">
+
+<div class="container">
 
     <div class="section-heading">
 
@@ -386,14 +469,9 @@
 
     </div>
 
-
-
     <div class="feature-grid">
 
-
-        <!-- TUITION -->
-
-        <article class="feature-card">
+        <article class="feature-card fee-card">
 
             <div class="feature-icon">
                 📚
@@ -411,11 +489,7 @@
 
         </article>
 
-
-
-        <!-- BOARDING -->
-
-        <article class="feature-card">
+        <article class="feature-card fee-card">
 
             <div class="feature-icon">
                 🛏️
@@ -433,11 +507,7 @@
 
         </article>
 
-
-
-        <!-- REGISTRATION -->
-
-        <article class="feature-card">
+        <article class="feature-card fee-card">
 
             <div class="feature-icon">
                 📝
@@ -455,11 +525,7 @@
 
         </article>
 
-
-
-        <!-- ACTIVITIES -->
-
-        <article class="feature-card">
+        <article class="feature-card fee-card">
 
             <div class="feature-icon">
                 ⚽
@@ -477,11 +543,7 @@
 
         </article>
 
-
-
-        <!-- UNIFORM -->
-
-        <article class="feature-card">
+        <article class="feature-card fee-card">
 
             <div class="feature-icon">
                 👕
@@ -499,11 +561,7 @@
 
         </article>
 
-
-
-        <!-- OTHER -->
-
-        <article class="feature-card">
+        <article class="feature-card fee-card">
 
             <div class="feature-icon">
                 ℹ️
@@ -525,9 +583,12 @@
 
 </div>
 
-</section><!-- =========================================
-     FEE TABLE
-========================================= --><section class="section"><div class="container">
+</section>
+
+<!-- FEE TABLE -->
+<section class="section">
+
+<div class="container">
 
     <div class="section-heading">
 
@@ -546,8 +607,6 @@
         </p>
 
     </div>
-
-
 
     <div class="fee-table-wrapper">
 
@@ -573,7 +632,6 @@
 
             </thead>
 
-
             <tbody>
 
                 <tr>
@@ -592,7 +650,6 @@
 
                 </tr>
 
-
                 <tr>
 
                     <td>
@@ -609,7 +666,6 @@
 
                 </tr>
 
-
                 <tr>
 
                     <td>
@@ -625,7 +681,6 @@
                     </td>
 
                 </tr>
-
 
                 <tr>
 
@@ -651,10 +706,12 @@
 
 </div>
 
-</section><!-- =========================================
-     PAYMENT INFORMATION
-========================================= --><section class="section requirements-section"><div class="container requirements-grid">
+</section>
 
+<!-- PAYMENT INFORMATION -->
+<section class="section requirements-section">
+
+<div class="container requirements-grid">
 
     <div>
 
@@ -674,16 +731,11 @@
 
     </div>
 
-
-
     <div class="requirements-list">
-
 
         <div class="requirement-item">
 
-            <span>
-                ✓
-            </span>
+            <span>✓</span>
 
             <p>
                 Confirm the current fee structure.
@@ -691,12 +743,9 @@
 
         </div>
 
-
         <div class="requirement-item">
 
-            <span>
-                ✓
-            </span>
+            <span>✓</span>
 
             <p>
                 Confirm the correct payment method.
@@ -704,12 +753,9 @@
 
         </div>
 
-
         <div class="requirement-item">
 
-            <span>
-                ✓
-            </span>
+            <span>✓</span>
 
             <p>
                 Confirm the correct school account
@@ -718,12 +764,9 @@
 
         </div>
 
-
         <div class="requirement-item">
 
-            <span>
-                ✓
-            </span>
+            <span>✓</span>
 
             <p>
                 Keep your payment receipt or proof
@@ -732,12 +775,9 @@
 
         </div>
 
-
         <div class="requirement-item">
 
-            <span>
-                ✓
-            </span>
+            <span>✓</span>
 
             <p>
                 Contact the school if you need
@@ -750,11 +790,14 @@
 
 </div>
 
-</section><!-- =========================================
-     IMPORTANT NOTICE
-========================================= --><section class="notice-section"><div class="container">
+</section>
 
-    <div class="notice-box">
+<!-- IMPORTANT NOTICE -->
+<section class="notice-section">
+
+<div class="container">
+
+    <div class="notice-box payment-note">
 
         <div class="notice-icon">
             ℹ️
@@ -785,14 +828,17 @@
 
 </div>
 
-</section><!-- =========================================
-     CTA
-========================================= --><section class="admissions-cta"><div class="container cta-inner">
+</section>
 
-    <div>
+<!-- CONTACT FEES -->
+<section class="section why-section">
+
+<div class="container">
+
+    <div class="section-heading">
 
         <span class="section-label">
-            NEED MORE INFORMATION?
+            NEED CLARIFICATION?
         </span>
 
         <h2>
@@ -800,49 +846,104 @@
         </h2>
 
         <p>
-            Contact Kenbridge Christian School
-            for the latest fees and payment
-            information.
+            Get the latest information about fees,
+            payment procedures and school requirements.
         </p>
 
     </div>
 
+    <div class="fee-contact-box">
+
+        <div class="fee-contact-content">
+
+            <div class="feature-icon">
+                📞
+            </div>
+
+            <div>
+
+                <h3>
+                    +256 789 825 517
+                </h3>
+
+                <p>
+                    Kenbridge Christian School
+                </p>
+
+            </div>
+
+        </div>
+
+        <a
+            href="contact.html"
+            class="btn btn-primary">
+
+            Contact School
+
+        </a>
+
+    </div>
+
+</div>
+
+</section>
+
+<!-- CTA -->
+<section class="admissions-cta">
+
+<div class="container cta-inner">
+
+    <div>
+
+        <span class="section-label">
+            KENBRIDGE CHRISTIAN SCHOOL
+        </span>
+
+        <h2>
+            Ready to take the next step?
+        </h2>
+
+        <p>
+            Learn more about admissions or
+            submit an application online.
+        </p>
+
+    </div>
 
     <a
-        href="contact.html"
-        class="btn btn-primary"
-    >
-        Contact Us
+        href="submissions.html"
+        class="btn btn-primary">
+
+        Apply Online
+
     </a>
 
 </div>
 
 </section>
-     <!-- =========================================
-     FOOTER
-========================================= --><footer class="footer"><div class="container footer-grid">
 
+<!-- FOOTER -->
+<footer class="footer">
+
+<div class="container footer-grid">
 
     <div class="footer-about">
 
         <img
             src="../images/logo.png"
             alt="Kenbridge Christian School Logo"
-            class="footer-logo"
-        >
+            class="footer-logo">
 
         <h3>
             Kenbridge Christian School
         </h3>
 
         <p>
-            Head and Not Tails.
+            Head and Not Tails.<br>
             Deuteronomy 28:13
         </p>
 
     </div>
-
-
 
     <div class="footer-column">
 
@@ -870,9 +971,11 @@
             Gallery
         </a>
 
+        <a href="announcements.html">
+            Announcements
+        </a>
+
     </div>
-
-
 
     <div class="footer-column">
 
@@ -886,6 +989,10 @@
 
         <a href="projects.html">
             Projects
+        </a>
+
+        <a href="reports.html">
+            Reports
         </a>
 
         <a href="facilities.html">
@@ -902,7 +1009,33 @@
 
     </div>
 
+    <div class="footer-column">
 
+        <h4>
+            School & Support
+        </h4>
+
+        <a href="management.html">
+            Management
+        </a>
+
+        <a href="careers.html">
+            Careers
+        </a>
+
+        <a href="feedback.html">
+            Feedback
+        </a>
+
+        <a href="contact.html">
+            Contact
+        </a>
+
+        <a href="submissions.html">
+            Online Submission
+        </a>
+
+    </div>
 
     <div class="footer-column">
 
@@ -911,12 +1044,12 @@
         </h4>
 
         <p>
-            Old Butabika Road,
+            Old Butabika Road,<br>
             Kampala, Uganda
         </p>
 
         <p>
-            P.O. Box 520093,
+            P.O. Box 520093,<br>
             Luzira
         </p>
 
@@ -924,11 +1057,13 @@
             +256 789 825 517
         </a>
 
+        <a href="mailto:info@kenbridgechristianschool.com">
+            info@kenbridgechristianschool.com
+        </a>
+
     </div>
 
 </div>
-
-
 
 <div class="footer-bottom">
 
@@ -937,28 +1072,33 @@
         <span>
             © 2026 Kenbridge Christian School.
             All Rights Reserved.
-             Made with ❤️ by Zakmolanitech Solutions 
+            Made with ❤️ by Zakmolanitech Solutions
         </span>
 
         <span>
-        Our Motto; Heads and Not Tails
+            Our Motto; Heads and Not Tails
         </span>
 
     </div>
 
 </div>
 
-<a href="privacy.html">
-    Privacy Policy
-</a>
+<div class="footer-legal">
 
-<a href="terms.html">
-    Terms & Conditions
-</a>
+    <a href="privacy.html">
+        Privacy Policy
+    </a>
 
-<div id="site-footer"></div>
+    <a href="terms.html">
+        Terms & Conditions
+    </a>
 
+</div>
+
+</footer>
+
+<!-- GLOBAL JAVASCRIPT -->
 <script src="../js/script.js"></script>
-<script src="../js/components.js"></script>
 
-  </html>
+</body>
+</html>
