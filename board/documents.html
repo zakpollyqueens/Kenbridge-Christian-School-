@@ -37,23 +37,44 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 .btn{border:0;border-radius:8px;padding:10px 14px;font-weight:bold;cursor:pointer;font-size:13px;text-decoration:none;display:inline-block}
 .primary{background:var(--p);color:#fff}
 .secondary{background:#eef5f8;color:var(--s)}
+.danger{background:#fef3f2;color:var(--danger)}
 .notice{display:none;padding:12px 14px;border-radius:8px;margin-bottom:16px;font-size:13px}
 .notice.show{display:block}
 .notice.error{background:#fef3f2;color:var(--danger)}
+.notice.success{background:#ecfdf3;color:#087443}
 .docs{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
 .doc{border:1px solid var(--border);border-radius:11px;padding:18px;background:#fff}
 .doc-top{display:flex;justify-content:space-between;gap:12px}
 .icon{width:44px;height:44px;border-radius:10px;background:#eef5f8;display:flex;align-items:center;justify-content:center;font-size:21px}
 .badge{padding:5px 9px;border-radius:20px;background:#eef5f8;color:var(--s);font-size:10px;font-weight:bold;height:max-content}
+.badge.conf{background:#fff4e5;color:#a15c00}
 .title{font-size:16px;font-weight:bold;color:var(--p);margin-top:13px}
 .desc{font-size:13px;color:var(--muted);line-height:1.6;margin-top:8px}
-.meta{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.7}
+.meta{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.7;word-break:break-word}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
 .empty,.loading{text-align:center;padding:40px;color:var(--muted);grid-column:1/-1}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
 .stat{background:#fff;border:1px solid var(--border);border-radius:11px;padding:17px}
 .stat strong{display:block;color:var(--p);font-size:22px}
 .stat span{font-size:12px;color:var(--muted)}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2000;align-items:center;justify-content:center;padding:20px}
+.modal.show{display:flex}
+.modal-box{width:min(620px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:13px;padding:22px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-head h3{margin:0;color:var(--p);font-size:20px}
+.close{border:0;background:#eef2f6;border-radius:50%;width:34px;height:34px;font-size:20px;cursor:pointer}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;font-weight:bold;color:#475569;margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:8px;outline:none;background:#fff}
+.form-group textarea{min-height:90px;resize:vertical}
+.filebox{padding:14px;border:1px dashed #b8c5d3;border-radius:9px;background:#f8fafc}
+.filebox small{display:block;margin-top:6px;color:var(--muted);font-size:11px;line-height:1.5}
+.check{display:flex!important;align-items:center;gap:8px}
+.check input{width:auto!important}
+.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
+.progress{display:none;margin-top:12px;height:8px;background:#e8edf3;border-radius:20px;overflow:hidden}
+.progress.show{display:block}
+.progress div{width:0;height:100%;background:var(--s);transition:.2s}
 @media(max-width:1000px){.docs{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:900px){
 .sidebar{transform:translateX(-100%);transition:.25s}
@@ -69,49 +90,37 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 }
 </style>
 </head>
-
 <body>
 
 <aside id="sidebar" class="sidebar">
-
 <div class="brand">
 <small>KENBRIDGE CHRISTIAN SCHOOL</small>
 <h2>Board of Governors</h2>
 </div>
 
 <nav class="nav">
-
 <a href="board-dashboard.html">🏠 Dashboard</a>
-
 <div class="label">GOVERNANCE</div>
-
 <a href="members.html">👥 Board Members</a>
 <a href="meetings.html">📅 Meetings</a>
 <a href="agendas.html">📋 Agendas</a>
 <a href="minutes.html">📝 Minutes</a>
-
 <div class="label">SCHOOL PLANNING</div>
-
 <a href="planning.html">🎯 School Planning</a>
 <a href="documents.html" class="active">📁 Board Documents</a>
 <a href="resolutions.html">⚖️ Resolutions</a>
-
 <div class="label">COMMUNICATION</div>
-
 <a href="announcements.html">📢 Announcements</a>
-
 </nav>
 
 <div class="side-bottom">
 <button id="logout" class="logout">Sign Out</button>
 </div>
-
 </aside>
 
 <main class="main">
 
 <header class="top">
-
 <div style="display:flex;align-items:center;gap:14px">
 <button id="menu" class="menu">☰</button>
 <h1>Board Documents</h1>
@@ -124,7 +133,6 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 <div id="urole" class="urole">Board Member</div>
 </div>
 </div>
-
 </header>
 
 <section class="content">
@@ -137,28 +145,14 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 <div id="notice" class="notice"></div>
 
 <div class="stats">
-<div class="stat">
-<strong id="total">0</strong>
-<span>Total Documents</span>
-</div>
-<div class="stat">
-<strong id="minutes">0</strong>
-<span>Minutes</span>
-</div>
-<div class="stat">
-<strong id="plans">0</strong>
-<span>Plans</span>
-</div>
-<div class="stat">
-<strong id="confidential">0</strong>
-<span>Confidential</span>
-</div>
+<div class="stat"><strong id="total">0</strong><span>Total Documents</span></div>
+<div class="stat"><strong id="minutes">0</strong><span>Minutes</span></div>
+<div class="stat"><strong id="plans">0</strong><span>Plans</span></div>
+<div class="stat"><strong id="confidential">0</strong><span>Confidential</span></div>
 </div>
 
 <div class="card">
-
 <div class="filters">
-
 <input id="search" type="search" placeholder="Search documents...">
 
 <select id="type">
@@ -180,13 +174,11 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 </select>
 
 <button id="refresh" class="btn secondary">↻ Refresh</button>
-
+<button id="uploadBtn" class="btn primary" style="display:none">＋ Upload Document</button>
 </div>
-
 </div>
 
 <div class="card">
-
 <div style="margin-bottom:18px">
 <h3 style="margin:0;color:var(--p);font-size:18px">Available Documents</h3>
 <p style="margin:6px 0 0;color:var(--muted);font-size:13px">
@@ -197,12 +189,78 @@ Board records available to authorized members.
 <div id="docs" class="docs">
 <div class="loading">Loading documents...</div>
 </div>
-
 </div>
 
 </section>
-
 </main>
+
+<div id="modal" class="modal">
+<div class="modal-box">
+
+<div class="modal-head">
+<h3>Upload Board Document</h3>
+<button id="closeModal" class="close">×</button>
+</div>
+
+<form id="uploadForm">
+
+<div class="form-group">
+<label>Document File</label>
+<div class="filebox">
+<input id="file" type="file" required>
+<small>
+Maximum size: 25 MB. Supported PDF, Word, Excel, PowerPoint,
+TXT, JPG, PNG and WEBP files.
+</small>
+</div>
+</div>
+
+<div class="form-group">
+<label for="titleInput">Document Title</label>
+<input id="titleInput" required placeholder="e.g. Board Meeting Minutes - August 2026">
+</div>
+
+<div class="form-group">
+<label for="typeInput">Document Type</label>
+<select id="typeInput" required>
+<option value="document">Document</option>
+<option value="agenda">Agenda</option>
+<option value="minutes">Minutes</option>
+<option value="policy">Policy</option>
+<option value="plan">Plan</option>
+<option value="report">Report</option>
+<option value="resolution">Resolution</option>
+<option value="other">Other</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="meetingInput">Meeting ID <span style="font-weight:normal">(optional)</span></label>
+<input id="meetingInput" placeholder="Paste meeting UUID if applicable">
+</div>
+
+<div class="form-group">
+<label for="descriptionInput">Description</label>
+<textarea id="descriptionInput" placeholder="Brief description of the document"></textarea>
+</div>
+
+<div class="form-group">
+<label class="check">
+<input id="confidentialInput" type="checkbox">
+Mark as confidential
+</label>
+</div>
+
+<div id="progress" class="progress"><div></div></div>
+
+<div class="modal-actions">
+<button type="button" id="cancelModal" class="btn secondary">Cancel</button>
+<button type="submit" id="submitUpload" class="btn primary">Upload & Save</button>
+</div>
+
+</form>
+</div>
+</div>
 
 <script src="../js/board-auth.js"></script>
 
@@ -212,6 +270,7 @@ Board records available to authorized members.
 "use strict";
 
 let documents=[];
+let currentUser=null;
 
 const $=id=>document.getElementById(id);
 
@@ -224,9 +283,11 @@ return String(v??"")
 .replace(/'/g,"&#039;");
 }
 
-function showError(text){
-$("notice").textContent=text;
-$("notice").className="notice show error";
+function showNotice(text,error=false){
+const n=$("notice");
+n.textContent=text;
+n.className="notice show "+(error?"error":"success");
+setTimeout(()=>n.className="notice",5000);
 }
 
 function dateText(v){
@@ -268,23 +329,21 @@ other:"📁"
 return icons[String(type||"").toLowerCase()]||"📄";
 }
 
+function isAdmin(){
+return String(currentUser?.role||"").toUpperCase()==="ADMIN";
+}
+
+function storageUrl(storagePath){
+if(!storagePath)return"";
+const base=window.KENBRIDGE_API_BASE||"";
+return `${base}/api/board-upload/download?path=${encodeURIComponent(storagePath)}`;
+}
+
 function renderStats(){
-
 $("total").textContent=documents.length;
-
-$("minutes").textContent=
-documents.filter(x=>
-String(x.document_type||"").toLowerCase()==="minutes"
-).length;
-
-$("plans").textContent=
-documents.filter(x=>
-String(x.document_type||"").toLowerCase()==="plan"
-).length;
-
-$("confidential").textContent=
-documents.filter(x=>x.is_confidential===true).length;
-
+$("minutes").textContent=documents.filter(x=>String(x.document_type||"").toLowerCase()==="minutes").length;
+$("plans").textContent=documents.filter(x=>String(x.document_type||"").toLowerCase()==="plan").length;
+$("confidential").textContent=documents.filter(x=>x.is_confidential===true).length;
 }
 
 function render(){
@@ -295,10 +354,7 @@ const confidential=$("confidentialFilter").value;
 
 const list=documents.filter(doc=>{
 
-const docType=String(
-doc.document_type||""
-).toLowerCase();
-
+const docType=String(doc.document_type||"").toLowerCase();
 const isConf=doc.is_confidential===true;
 
 const haystack=[
@@ -306,7 +362,10 @@ doc.title,
 doc.description,
 doc.document_type,
 doc.storage_path,
-doc.file_url
+doc.file_url,
+doc.meeting_title,
+doc.uploader_name,
+doc.uploaded_by_name
 ].join(" ").toLowerCase();
 
 return(
@@ -322,34 +381,28 @@ return(
 const box=$("docs");
 
 if(!list.length){
-
-box.innerHTML=
-`<div class="empty">
-No documents match your search.
-</div>`;
-
+box.innerHTML='<div class="empty">No documents match your search.</div>';
 return;
-
 }
 
 box.innerHTML=list.map(doc=>{
 
-const docType=
-String(doc.document_type||"other").toLowerCase();
-
+const docType=String(doc.document_type||"other").toLowerCase();
 const confidential=doc.is_confidential===true;
+
+const openUrl=
+doc.storage_path?
+storageUrl(doc.storage_path):
+doc.file_url||"";
 
 return `
 <article class="doc">
 
 <div class="doc-top">
-
 <div class="icon">${typeIcon(docType)}</div>
-
-<span class="badge">
+<span class="badge ${confidential?"conf":""}">
 ${confidential?"🔒 Confidential":esc(typeName(docType))}
 </span>
-
 </div>
 
 <div class="title">
@@ -357,10 +410,7 @@ ${esc(doc.title||"Untitled Document")}
 </div>
 
 <div class="desc">
-${esc(
-doc.description||
-"No description was provided for this document."
-)}
+${esc(doc.description||"No description was provided for this document.")}
 </div>
 
 <div class="meta">
@@ -368,32 +418,40 @@ doc.description||
 ${doc.created_at?
 `<div><strong>Added:</strong> ${esc(dateText(doc.created_at))}</div>`:""}
 
-${doc.uploaded_by_name?
-`<div><strong>Uploaded by:</strong> ${esc(doc.uploaded_by_name)}</div>`:""}
+${doc.uploader_name||doc.uploaded_by_name?
+`<div><strong>Uploaded by:</strong> ${esc(doc.uploader_name||doc.uploaded_by_name)}</div>`:""}
+
+${doc.meeting_title?
+`<div><strong>Meeting:</strong> ${esc(doc.meeting_title)}</div>`:""}
 
 ${doc.storage_path?
-`<div><strong>Storage:</strong> ${esc(doc.storage_path)}</div>`:""}
+`<div><strong>Stored in:</strong> School Documents</div>`:""}
 
 </div>
 
 <div class="actions">
 
-${doc.file_url?
+${openUrl?
 `<a class="btn primary"
-href="${esc(doc.file_url)}"
+href="${esc(openUrl)}"
 target="_blank"
-rel="noopener">
+rel="noopener noreferrer">
 📄 Open Document
 </a>`:
-`<span class="btn secondary" style="opacity:.7;cursor:default">
-File Link Unavailable
-</span>`}
+`<span class="btn secondary" style="opacity:.7">File Unavailable</span>`
+}
 
 ${doc.meeting_id?
 `<a class="btn secondary"
 href="meeting-details.html?id=${encodeURIComponent(doc.meeting_id)}">
 View Meeting
 </a>`:""}
+
+${isAdmin()?
+`<button class="btn danger"
+onclick="deleteDocument('${esc(doc.id)}','${esc(doc.storage_path||"")}')">
+Delete
+</button>`:""}
 
 </div>
 
@@ -406,24 +464,20 @@ View Meeting
 
 async function load(){
 
-$("docs").innerHTML=
-`<div class="loading">
-Loading documents...
-</div>`;
+$("docs").innerHTML='<div class="loading">Loading documents...</div>';
 
 try{
 
-const data=
-await KenbridgeBoardAuth.request(
-"/api/board/documents"
-);
+const data=await KenbridgeBoardAuth.request("/api/board/documents");
 
 documents=
-Array.isArray(data?.documents)
-?data.documents
-:Array.isArray(data)
-?data
-:[];
+Array.isArray(data?.documents)?
+data.documents:
+Array.isArray(data)?
+data:
+Array.isArray(data?.data)?
+data.data:
+[];
 
 renderStats();
 render();
@@ -433,13 +487,210 @@ render();
 console.error(error);
 
 $("docs").innerHTML=
-`<div class="empty">
-Unable to load Board documents.
-</div>`;
+'<div class="empty">Unable to load Board documents.</div>';
 
-showError(
-error.message||
-"Unable to load Board documents."
+showNotice(
+error.message||"Unable to load Board documents.",
+true
+);
+
+}
+
+}
+
+function openModal(){
+$("uploadForm").reset();
+$("modal").classList.add("show");
+}
+
+function closeModal(){
+$("modal").classList.remove("show");
+$("uploadForm").reset();
+$("progress").classList.remove("show");
+$("progress").firstElementChild.style.width="0";
+}
+
+async function uploadFile(file){
+
+const base=window.KENBRIDGE_API_BASE||"";
+
+const response=await fetch(
+`${base}/api/board-upload/upload`,
+{
+method:"POST",
+headers:{
+...KenbridgeBoardAuth.authHeaders(),
+"Content-Type":"application/octet-stream",
+"X-File-Name":file.name,
+"X-File-Type":file.type||"application/octet-stream",
+"X-Folder":"board"
+},
+body:file
+}
+);
+
+let data=null;
+
+try{
+data=await response.json();
+}catch{}
+
+if(!response.ok||!data?.success){
+throw new Error(
+data?.message||
+"Unable to upload the file."
+);
+}
+
+return data.file;
+
+}
+
+async function saveDocument(event){
+
+event.preventDefault();
+
+if(!isAdmin()){
+showNotice("Only administrators can upload Board documents.",true);
+return;
+}
+
+const file=$("file").files[0];
+
+if(!file){
+showNotice("Please select a file.",true);
+return;
+}
+
+if(file.size>25*1024*1024){
+showNotice("The maximum file size is 25 MB.",true);
+return;
+}
+
+const title=$("titleInput").value.trim();
+
+if(!title){
+showNotice("Please enter a document title.",true);
+return;
+}
+
+const button=$("submitUpload");
+
+button.disabled=true;
+button.textContent="Uploading...";
+
+$("progress").classList.add("show");
+$("progress").firstElementChild.style.width="30%";
+
+try{
+
+const uploaded=await uploadFile(file);
+
+$("progress").firstElementChild.style.width="70%";
+
+const payload={
+title:title,
+description:$("descriptionInput").value.trim()||null,
+document_type:$("typeInput").value,
+file_url:null,
+storage_path:uploaded.storage_path,
+meeting_id:$("meetingInput").value.trim()||null,
+is_confidential:$("confidentialInput").checked
+};
+
+await KenbridgeBoardAuth.request(
+"/api/board/documents",
+{
+method:"POST",
+body:JSON.stringify(payload)
+}
+);
+
+$("progress").firstElementChild.style.width="100%";
+
+closeModal();
+
+showNotice("Document uploaded to School Documents and saved successfully.");
+
+await load();
+
+}catch(error){
+
+console.error(error);
+
+showNotice(
+error.message||"Document upload failed.",
+true
+);
+
+}finally{
+
+button.disabled=false;
+button.textContent="Upload & Save";
+
+}
+
+}
+
+async function deleteDocument(id,storagePath){
+
+if(!isAdmin())return;
+
+if(!confirm("Delete this Board document and its stored file?"))return;
+
+try{
+
+await KenbridgeBoardAuth.request(
+`/api/board/documents/${encodeURIComponent(id)}`,
+{
+method:"DELETE"
+}
+);
+
+if(storagePath){
+
+try{
+
+await KenbridgeBoardAuth.request(
+"/api/board-upload/delete",
+{
+method:"DELETE",
+body:JSON.stringify({
+storage_path:storagePath
+})
+}
+);
+
+}catch(storageError){
+
+console.warn(
+"Database record deleted but storage deletion failed:",
+storageError
+);
+
+showNotice(
+"Document record deleted, but the stored file could not be removed.",
+true
+);
+
+await load();
+return;
+
+}
+
+}
+
+showNotice("Document and stored file deleted successfully.");
+
+await load();
+
+}catch(error){
+
+console.error(error);
+
+showNotice(
+error.message||"Unable to delete document.",
+true
 );
 
 }
@@ -448,28 +699,28 @@ error.message||
 
 async function init(){
 
-const user=
+currentUser=
 await KenbridgeBoardAuth.requireBoard({
 redirect:true,
 loginPath:"login.html"
 });
 
-if(!user)return;
+if(!currentUser)return;
 
 const role=
-String(user.role||"").toUpperCase();
+String(currentUser.role||"").toUpperCase();
 
 const name=
-user.full_name||
-user.email||
+currentUser.full_name||
+currentUser.email||
 "Board Member";
 
 $("uname").textContent=name;
 
 $("urole").textContent=
-role==="ADMIN"
-?"Administrator"
-:"Board Member";
+role==="ADMIN"?
+"Administrator":
+"Board Member";
 
 $("avatar").textContent=
 name.split(/\s+/)
@@ -477,6 +728,10 @@ name.split(/\s+/)
 .slice(0,2)
 .map(x=>x[0].toUpperCase())
 .join("")||"B";
+
+if(isAdmin()){
+$("uploadBtn").style.display="inline-block";
+}
 
 await load();
 
@@ -507,6 +762,33 @@ $("confidentialFilter").addEventListener(
 render
 );
 
+$("uploadBtn").addEventListener(
+"click",
+openModal
+);
+
+$("closeModal").addEventListener(
+"click",
+closeModal
+);
+
+$("cancelModal").addEventListener(
+"click",
+closeModal
+);
+
+$("modal").addEventListener(
+"click",
+e=>{
+if(e.target===$("modal"))closeModal();
+}
+);
+
+$("uploadForm").addEventListener(
+"submit",
+saveDocument
+);
+
 $("logout").addEventListener(
 "click",
 async function(){
@@ -522,11 +804,14 @@ loginPath:"login.html"
 }
 );
 
+window.deleteDocument=deleteDocument;
+
 init().catch(error=>{
 console.error(error);
-showError(
+showNotice(
 error.message||
-"Unable to initialize Board Documents."
+"Unable to initialize Board Documents.",
+true
 );
 });
 
