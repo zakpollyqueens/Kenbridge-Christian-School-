@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Board Settings | Kenbridge Christian School</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+:root{--p:#123c63;--s:#1f6f8b;--bg:#f4f7fb;--card:#fff;--text:#17212b;--muted:#64748b;--border:#e2e8f0;--danger:#b42318;--success:#067647}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:260px;background:var(--p);color:#fff;display:flex;flex-direction:column;z-index:1000}
+.brand{padding:25px 22px;border-bottom:1px solid rgba(255,255,255,.12)}
+.brand small{display:block;opacity:.7;margin-bottom:6px;font-size:11px;letter-spacing:1px}
+.brand h2{margin:0;font-size:19px}
+.nav{flex:1;overflow:auto;padding:16px 10px}
+.label{margin:14px 12px 7px;font-size:10px;letter-spacing:1px;opacity:.55;font-weight:bold}
+.nav a{display:flex;gap:10px;padding:12px;color:#fff;text-decoration:none;border-radius:8px;font-size:14px;margin:3px 0}
+.nav a:hover,.nav a.active{background:rgba(255,255,255,.14)}
+.side-bottom{padding:14px;border-top:1px solid rgba(255,255,255,.12)}
+.logout{width:100%;padding:11px;border:1px solid rgba(255,255,255,.3);border-radius:8px;background:transparent;color:#fff;font-weight:bold;cursor:pointer}
+.main{margin-left:260px;min-height:100vh}
+.top{height:74px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.top h1{margin:0;color:var(--p);font-size:22px}
+.user{display:flex;align-items:center;gap:10px}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--s);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold}
+.uname{font-weight:bold;font-size:14px}
+.urole{font-size:12px;color:var(--muted)}
+.menu{display:none;border:0;background:var(--p);color:#fff;border-radius:7px;padding:9px 11px}
+.content{padding:28px;max-width:1100px}
+.heading{margin-bottom:22px}
+.heading h2{margin:0;color:var(--p);font-size:24px}
+.heading p{margin:7px 0 0;color:var(--muted);font-size:14px}
+.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:18px}
+.card h3{margin:0;color:var(--p);font-size:18px}
+.card-sub{margin:6px 0 20px;color:var(--muted);font-size:13px}
+.profile{display:grid;grid-template-columns:150px 1fr;gap:25px;align-items:start}
+.profile-avatar{width:120px;height:120px;border-radius:50%;background:var(--s);color:#fff;display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:bold}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.item{padding:15px;border:1px solid var(--border);border-radius:9px;background:#f8fafc}
+.item label{display:block;font-size:11px;color:var(--muted);font-weight:bold;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.item strong{display:block;color:var(--text);font-size:14px;word-break:break-word}
+.badge{display:inline-block;padding:6px 10px;border-radius:20px;background:#ecfdf3;color:var(--success);font-size:11px;font-weight:bold}
+.access{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.access-item{border:1px solid var(--border);border-radius:10px;padding:17px;background:#f8fafc}
+.access-icon{font-size:22px;margin-bottom:10px}
+.access-item strong{display:block;color:var(--p);font-size:14px}
+.access-item span{display:block;color:var(--muted);font-size:12px;line-height:1.5;margin-top:5px}
+.session{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:15px;border:1px solid var(--border);border-radius:9px;background:#f8fafc}
+.btn{border:0;border-radius:8px;padding:10px 14px;font-weight:bold;cursor:pointer;font-size:13px;text-decoration:none;display:inline-block}
+.primary{background:var(--p);color:#fff}
+.secondary{background:#eef5f8;color:var(--s)}
+.danger{background:#fef3f2;color:var(--danger)}
+.notice{display:none;padding:12px 14px;border-radius:8px;margin-bottom:16px;font-size:13px;line-height:1.5}
+.notice.show{display:block}
+.notice.error{background:#fef3f2;color:var(--danger)}
+.notice.success{background:#ecfdf3;color:var(--success)}
+@media(max-width:900px){
+.sidebar{transform:translateX(-100%);transition:.25s}
+.sidebar.open{transform:translateX(0)}
+.main{margin-left:0}
+.menu{display:block}
+.top{padding:0 16px}
+.content{padding:18px}
+}
+@media(max-width:700px){
+.profile{grid-template-columns:1fr}
+.profile-avatar{width:90px;height:90px;font-size:30px}
+.grid{grid-template-columns:1fr}
+.access{grid-template-columns:1fr}
+.session{align-items:flex-start;flex-direction:column}
+.user>div:not(.avatar){display:none}
+}
+</style>
+</head>
+
+<body>
+
+<aside id="sidebar" class="sidebar">
+
+<div class="brand">
+<small>KENBRIDGE CHRISTIAN SCHOOL</small>
+<h2>Board of Governors</h2>
+</div>
+
+<nav class="nav">
+
+<a href="board-dashboard.html">🏠 Dashboard</a>
+
+<div class="label">GOVERNANCE</div>
+
+<a href="members.html">👥 Board Members</a>
+<a href="meetings.html">📅 Meetings</a>
+<a href="agendas.html">📋 Agendas</a>
+<a href="minutes.html">📝 Minutes</a>
+
+<div class="label">SCHOOL PLANNING</div>
+
+<a href="planning.html">🎯 School Planning</a>
+<a href="documents.html">📁 Board Documents</a>
+<a href="resolutions.html">⚖️ Resolutions</a>
+
+<div class="label">COMMUNICATION</div>
+
+<a href="announcements.html">📢 Announcements</a>
+
+<div class="label">ACCOUNT</div>
+
+<a href="settings.html" class="active">⚙️ Settings</a>
+
+</nav>
+
+<div class="side-bottom">
+<button id="logout" class="logout">Sign Out</button>
+</div>
+
+</aside>
+
+<main class="main">
+
+<header class="top">
+
+<div style="display:flex;align-items:center;gap:14px">
+<button id="menu" class="menu">☰</button>
+<h1>Settings</h1>
+</div>
+
+<div class="user">
+<div id="topAvatar" class="avatar">B</div>
+<div>
+<div id="topName" class="uname">Loading...</div>
+<div id="topRole" class="urole">Board Member</div>
+</div>
+</div>
+
+</header>
+
+<section class="content">
+
+<div class="heading">
+<h2>Account Settings</h2>
+<p>View your Kenbridge Christian School Board portal account information.</p>
+</div>
+
+<div id="notice" class="notice"></div>
+
+<div class="card">
+
+<h3>My Profile</h3>
+<p class="card-sub">Information associated with your Board portal account.</p>
+
+<div class="profile">
+
+<div>
+<div id="profileAvatar" class="profile-avatar">B</div>
+</div>
+
+<div class="grid">
+
+<div class="item">
+<label>Full Name</label>
+<strong id="fullName">Loading...</strong>
+</div>
+
+<div class="item">
+<label>Role</label>
+<strong id="role">Loading...</strong>
+</div>
+
+<div class="item">
+<label>Position</label>
+<strong id="position">Not specified</strong>
+</div>
+
+<div class="item">
+<label>Department</label>
+<strong id="department">Not specified</strong>
+</div>
+
+<div class="item">
+<label>Email</label>
+<strong id="email">Not specified</strong>
+</div>
+
+<div class="item">
+<label>Phone</label>
+<strong id="phone">Not specified</strong>
+</div>
+
+<div class="item">
+<label>Username</label>
+<strong id="username">Not specified</strong>
+</div>
+
+<div class="item">
+<label>Account Status</label>
+<strong><span id="status" class="badge">Active</span></strong>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>Board Portal Access</h3>
+<p class="card-sub">Sections available through your current account role.</p>
+
+<div class="access">
+
+<div class="access-item">
+<div class="access-icon">👥</div>
+<strong>Board Members</strong>
+<span>View Board membership and governance information.</span>
+</div>
+
+<div class="access-item">
+<div class="access-icon">📅</div>
+<strong>Meetings</strong>
+<span>Review scheduled Board meetings and meeting details.</span>
+</div>
+
+<div class="access-item">
+<div class="access-icon">📋</div>
+<strong>Agendas</strong>
+<span>Review meeting agenda items and their status.</span>
+</div>
+
+<div class="access-item">
+<div class="access-icon">📝</div>
+<strong>Minutes</strong>
+<span>Access available official Board meeting minutes.</span>
+</div>
+
+<div class="access-item">
+<div class="access-icon">🎯</div>
+<strong>Planning</strong>
+<span>Review school strategic and development planning records.</span>
+</div>
+
+<div class="access-item">
+<div class="access-icon">⚖️</div>
+<strong>Resolutions</strong>
+<span>Review Board decisions and implementation status.</span>
+</div>
+
+<div class="access-item">
+<div class="access-icon">📢</div>
+<strong>Announcements</strong>
+<span>Read official Board communications and notices.</span>
+</div>
+
+<div class="access-item">
+<div class="access-icon">📁</div>
+<strong>Documents</strong>
+<span>Access authorized Board documents and records.</span>
+</div>
+
+<div class="access-item">
+<div class="access-icon">🔐</div>
+<strong>Protected Portal</strong>
+<span>Your access is controlled by your Kenbridge account role.</span>
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>Current Session</h3>
+<p class="card-sub">Your current authenticated Board portal session.</p>
+
+<div class="session">
+
+<div>
+<strong id="sessionName">Loading...</strong>
+<div style="font-size:12px;color:var(--muted);margin-top:5px">
+Authenticated Board portal session
+</div>
+</div>
+
+<button id="sessionLogout" class="btn danger">
+Sign Out
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+<script src="../js/board-auth.js"></script>
+
+<script>
+(function(){
+
+"use strict";
+
+const $=id=>document.getElementById(id);
+
+function esc(v){
+return String(v??"")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+}
+
+function initials(name){
+
+return String(name||"Board Member")
+.split(/\s+/)
+.filter(Boolean)
+.slice(0,2)
+.map(x=>x[0].toUpperCase())
+.join("")||"B";
+
+}
+
+function showNotice(text,type="error"){
+
+$("notice").textContent=text;
+$("notice").className=`notice show ${type}`;
+
+}
+
+function display(id,value,fallback="Not specified"){
+
+$(id).textContent=
+value!==undefined&&
+value!==null&&
+String(value).trim()
+?String(value)
+:fallback;
+
+}
+
+async function init(){
+
+const user=
+await KenbridgeBoardAuth.requireBoard({
+redirect:true,
+loginPath:"login.html"
+});
+
+if(!user)return;
+
+const role=
+String(user.role||"").toUpperCase();
+
+const name=
+user.full_name||
+user.email||
+"Board Member";
+
+const initialsText=initials(name);
+
+$("topName").textContent=name;
+$("topRole").textContent=
+role==="ADMIN"
+?"Administrator"
+:"Board Member";
+
+$("topAvatar").textContent=initialsText;
+
+$("profileAvatar").textContent=initialsText;
+
+display("fullName",user.full_name,"Not specified");
+
+display(
+"role",
+role==="ADMIN"?"Administrator":"Board Member",
+"Not specified"
+);
+
+display("position",user.position);
+display("department",user.department);
+display("email",user.email);
+display("phone",user.phone);
+display("username",user.username);
+
+$("status").textContent=
+user.is_active===false
+?"Inactive"
+:"Active";
+
+if(user.is_active===false){
+
+$("status").style.background="#fef3f2";
+$("status").style.color="#b42318";
+
+}
+
+$("sessionName").textContent=
+`${name} • ${role==="ADMIN"?"Administrator":"Board Member"}`;
+
+}
+
+async function logout(){
+
+await KenbridgeBoardAuth.logout({
+redirect:true,
+loginPath:"login.html"
+});
+
+}
+
+$("menu").addEventListener(
+"click",
+()=>$("sidebar").classList.toggle("open")
+);
+
+$("logout").addEventListener(
+"click",
+logout
+);
+
+$("sessionLogout").addEventListener(
+"click",
+logout
+);
+
+init().catch(error=>{
+console.error(error);
+
+showNotice(
+error.message||
+"Unable to load account settings."
+);
+
+});
+
+})();
+</script>
+
+</body>
+</html>
