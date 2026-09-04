@@ -5,18 +5,34 @@ const router=express.Router();
 
 async function getUser(req){
  const authorization=req.headers.authorization;
- if(!authorization?.startsWith("Bearer ")){const e=new Error("Authorization token is required.");e.status=401;throw e}
+ if(!authorization?.startsWith("Bearer ")){
+  const e=new Error("Authorization token is required.");
+  e.status=401;
+  throw e;
+ }
  const token=authorization.replace("Bearer ","");
  const{data,error}=await supabase.auth.getUser(token);
- if(error||!data?.user){const e=new Error("Invalid or expired session.");e.status=401;throw e}
+ if(error||!data?.user){
+  const e=new Error("Invalid or expired session.");
+  e.status=401;
+  throw e;
+ }
  const{rows}=await pool.query(
   `SELECT id,full_name,username,email,role,position,department,phone,is_active
    FROM users WHERE id=$1 LIMIT 1`,
   [data.user.id]
  );
  const user=rows[0];
- if(!user){const e=new Error("Your Kenbridge profile was not found.");e.status=403;throw e}
- if(!user.is_active){const e=new Error("Your account is inactive.");e.status=403;throw e}
+ if(!user){
+  const e=new Error("Your Kenbridge profile was not found.");
+  e.status=403;
+  throw e;
+ }
+ if(!user.is_active){
+  const e=new Error("Your account is inactive.");
+  e.status=403;
+  throw e;
+ }
  return user;
 }
 
@@ -277,8 +293,16 @@ router.post("/members",async(req,res)=>{
    });
   }catch(error){
    if(createdUserId){
-    await pool.query(`DELETE FROM board_members WHERE user_id=$1`,[createdUserId]).catch(()=>{});
-    await pool.query(`DELETE FROM users WHERE id=$1`,[createdUserId]).catch(()=>{});
+    await pool.query(
+     `DELETE FROM board_members WHERE user_id=$1`,
+     [createdUserId]
+    ).catch(()=>{});
+
+    await pool.query(
+     `DELETE FROM users WHERE id=$1`,
+     [createdUserId]
+    ).catch(()=>{});
+
     await supabase.auth.admin.deleteUser(createdUserId).catch(()=>{});
    }
    throw error;
@@ -416,6 +440,14 @@ router.put("/members/:id",async(req,res)=>{
   }
  }catch(error){
   console.error("UPDATE BOARD MEMBER ERROR:",error.message);
+
+  if(error.code==="23505"){
+   return res.status(409).json({
+    success:false,
+    message:"That username or email is already in use."
+   });
+  }
+
   return res.status(500).json({
    success:false,
    message:"Unable to update Board member."
@@ -508,7 +540,12 @@ router.delete("/members/:id",async(req,res)=>{
 
   const{error}=await supabase.auth.admin.deleteUser(req.params.id);
 
-  if(error)console.error("SUPABASE BOARD DELETE ERROR:",error.message);
+  if(error){
+   console.error(
+    "SUPABASE BOARD DELETE ERROR:",
+    error.message
+   );
+  }
 
   return res.status(200).json({
    success:true,
@@ -623,7 +660,9 @@ router.post("/meetings",async(req,res)=>{
    });
   }
 
-  const type=String(meeting_type||"online").toLowerCase();
+  const type=String(
+   meeting_type||"online"
+  ).toLowerCase();
 
   if(!["online","physical","hybrid"].includes(type)){
    return res.status(400).json({
@@ -632,7 +671,9 @@ router.post("/meetings",async(req,res)=>{
    });
   }
 
-  const meetingStatus=String(status||"scheduled").toLowerCase();
+  const meetingStatus=String(
+   status||"scheduled"
+  ).toLowerCase();
 
   if(!["scheduled","in_progress","completed","cancelled"].includes(meetingStatus)){
    return res.status(400).json({
@@ -708,8 +749,13 @@ router.put("/meetings/:id",async(req,res)=>{
    });
   }
 
-  const type=String(meeting_type||"online").toLowerCase();
-  const meetingStatus=String(status||"scheduled").toLowerCase();
+  const type=String(
+   meeting_type||"online"
+  ).toLowerCase();
+
+  const meetingStatus=String(
+   status||"scheduled"
+  ).toLowerCase();
 
   if(!["online","physical","hybrid"].includes(type)){
    return res.status(400).json({
@@ -860,7 +906,9 @@ router.post("/meetings/:id/agenda",async(req,res)=>{
    });
   }
 
-  const agendaStatus=String(status||"pending").toLowerCase();
+  const agendaStatus=String(
+   status||"pending"
+  ).toLowerCase();
 
   if(!["pending","discussed","deferred","completed"].includes(agendaStatus)){
    return res.status(400).json({
@@ -927,7 +975,9 @@ router.put("/agenda/:id",async(req,res)=>{
    });
   }
 
-  const agendaStatus=String(status||"pending").toLowerCase();
+  const agendaStatus=String(
+   status||"pending"
+  ).toLowerCase();
 
   if(!["pending","discussed","deferred","completed"].includes(agendaStatus)){
    return res.status(400).json({
@@ -970,6 +1020,14 @@ router.put("/agenda/:id",async(req,res)=>{
   });
  }catch(error){
   console.error("UPDATE BOARD AGENDA ERROR:",error.message);
+
+  if(error.code==="23505"){
+   return res.status(409).json({
+    success:false,
+    message:"That agenda item number already exists for this meeting."
+   });
+  }
+
   return res.status(500).json({
    success:false,
    message:"Unable to update agenda item."
@@ -1063,9 +1121,20 @@ router.post("/documents",async(req,res)=>{
    });
   }
 
-  const type=String(document_type||"document").toLowerCase();
+  const type=String(
+   document_type||"document"
+  ).toLowerCase();
 
-  if(!["agenda","minutes","policy","plan","report","resolution","document","other"].includes(type)){
+  if(![
+   "agenda",
+   "minutes",
+   "policy",
+   "plan",
+   "report",
+   "resolution",
+   "document",
+   "other"
+  ].includes(type)){
    return res.status(400).json({
     success:false,
     message:"Invalid document type."
@@ -1147,9 +1216,20 @@ router.put("/documents/:id",async(req,res)=>{
    });
   }
 
-  const type=String(document_type||"document").toLowerCase();
+  const type=String(
+   document_type||"document"
+  ).toLowerCase();
 
-  if(!["agenda","minutes","policy","plan","report","resolution","document","other"].includes(type)){
+  if(![
+   "agenda",
+   "minutes",
+   "policy",
+   "plan",
+   "report",
+   "resolution",
+   "document",
+   "other"
+  ].includes(type)){
    return res.status(400).json({
     success:false,
     message:"Invalid document type."
@@ -1253,7 +1333,7 @@ router.delete("/documents/:id",async(req,res)=>{
  }
 });
 
-/* RESOLUTIONS */
+/* RESOLUTIONS - BOARD/ADMIN READ */
 router.get("/resolutions",async(req,res)=>{
  const user=await requireBoard(req,res);
  if(!user)return;
@@ -1262,9 +1342,12 @@ router.get("/resolutions",async(req,res)=>{
   const{rows}=await pool.query(
    `SELECT
       br.*,
-      u.full_name AS creator_name
+      u.full_name AS creator_name,
+      m.title AS meeting_title,
+      m.meeting_date
     FROM board_resolutions br
     LEFT JOIN users u ON u.id=br.created_by
+    LEFT JOIN board_meetings m ON m.id=br.meeting_id
     ORDER BY br.created_at DESC`
   );
 
@@ -1281,9 +1364,10 @@ router.get("/resolutions",async(req,res)=>{
  }
 });
 
+/* CREATE RESOLUTION - ADMIN */
 router.post("/resolutions",async(req,res)=>{
- const user=await requireBoard(req,res);
- if(!user)return;
+ const admin=await requireAdmin(req,res);
+ if(!admin)return;
 
  try{
   const{
@@ -1305,9 +1389,16 @@ router.post("/resolutions",async(req,res)=>{
    });
   }
 
-  const resolutionStatus=String(status||"open").toLowerCase();
+  const resolutionStatus=String(
+   status||"open"
+  ).toLowerCase();
 
-  if(!["open","in_progress","completed","cancelled"].includes(resolutionStatus)){
+  if(![
+   "open",
+   "in_progress",
+   "completed",
+   "cancelled"
+  ].includes(resolutionStatus)){
    return res.status(400).json({
     success:false,
     message:"Invalid resolution status."
@@ -1332,7 +1423,7 @@ router.post("/resolutions",async(req,res)=>{
     responsible_person?String(responsible_person).trim():null,
     due_date||null,
     resolutionStatus,
-    user.id
+    admin.id
    ]
   );
 
@@ -1343,6 +1434,14 @@ router.post("/resolutions",async(req,res)=>{
   });
  }catch(error){
   console.error("CREATE BOARD RESOLUTION ERROR:",error.message);
+
+  if(error.code==="23503"){
+   return res.status(400).json({
+    success:false,
+    message:"The selected meeting or account could not be found."
+   });
+  }
+
   return res.status(500).json({
    success:false,
    message:"Unable to create Board resolution."
@@ -1350,27 +1449,180 @@ router.post("/resolutions",async(req,res)=>{
  }
 });
 
-/* ANNOUNCEMENTS */
+/* UPDATE RESOLUTION - ADMIN */
+router.put("/resolutions/:id",async(req,res)=>{
+ const admin=await requireAdmin(req,res);
+ if(!admin)return;
+
+ try{
+  const{
+   meeting_id,
+   resolution_number,
+   title,
+   description,
+   decision,
+   action_required,
+   responsible_person,
+   due_date,
+   status
+  }=req.body||{};
+
+  if(!title||!description){
+   return res.status(400).json({
+    success:false,
+    message:"Resolution title and description are required."
+   });
+  }
+
+  const resolutionStatus=String(
+   status||"open"
+  ).toLowerCase();
+
+  if(![
+   "open",
+   "in_progress",
+   "completed",
+   "cancelled"
+  ].includes(resolutionStatus)){
+   return res.status(400).json({
+    success:false,
+    message:"Invalid resolution status."
+   });
+  }
+
+  const{rows}=await pool.query(
+   `UPDATE board_resolutions
+    SET meeting_id=$1,
+        resolution_number=$2,
+        title=$3,
+        description=$4,
+        decision=$5,
+        action_required=$6,
+        responsible_person=$7,
+        due_date=$8,
+        status=$9,
+        updated_at=NOW()
+    WHERE id=$10
+    RETURNING *`,
+   [
+    meeting_id||null,
+    resolution_number?String(resolution_number).trim():null,
+    String(title).trim(),
+    String(description).trim(),
+    decision?String(decision).trim():null,
+    action_required?String(action_required).trim():null,
+    responsible_person?String(responsible_person).trim():null,
+    due_date||null,
+    resolutionStatus,
+    req.params.id
+   ]
+  );
+
+  if(!rows[0]){
+   return res.status(404).json({
+    success:false,
+    message:"Board resolution was not found."
+   });
+  }
+
+  return res.status(200).json({
+   success:true,
+   message:"Board resolution updated successfully.",
+   resolution:rows[0]
+  });
+ }catch(error){
+  console.error("UPDATE BOARD RESOLUTION ERROR:",error.message);
+
+  if(error.code==="23503"){
+   return res.status(400).json({
+    success:false,
+    message:"The selected meeting could not be found."
+   });
+  }
+
+  return res.status(500).json({
+   success:false,
+   message:"Unable to update Board resolution."
+  });
+ }
+});
+
+/* DELETE RESOLUTION - ADMIN */
+router.delete("/resolutions/:id",async(req,res)=>{
+ const admin=await requireAdmin(req,res);
+ if(!admin)return;
+
+ try{
+  const{rows}=await pool.query(
+   `DELETE FROM board_resolutions
+    WHERE id=$1
+    RETURNING id,title,resolution_number`,
+   [req.params.id]
+  );
+
+  if(!rows[0]){
+   return res.status(404).json({
+    success:false,
+    message:"Board resolution was not found."
+   });
+  }
+
+  return res.status(200).json({
+   success:true,
+   message:"Board resolution deleted successfully.",
+   resolution:rows[0]
+  });
+ }catch(error){
+  console.error("DELETE BOARD RESOLUTION ERROR:",error.message);
+
+  if(error.code==="23503"){
+   return res.status(400).json({
+    success:false,
+    message:"This resolution cannot be deleted because it is referenced by another record."
+   });
+  }
+
+  return res.status(500).json({
+   success:false,
+   message:"Unable to delete Board resolution."
+  });
+ }
+});
+
+/* ANNOUNCEMENTS - BOARD/ADMIN READ */
 router.get("/announcements",async(req,res)=>{
  const user=await requireBoard(req,res);
  if(!user)return;
 
  try{
-  const{rows}=await pool.query(
-   `SELECT
+  const query=isAdmin(user)
+   ?`SELECT
       ba.*,
       u.full_name AS creator_name
-    FROM board_announcements ba
-    LEFT JOIN users u ON u.id=ba.created_by
-    WHERE ba.published=true
-    ORDER BY
+     FROM board_announcements ba
+     LEFT JOIN users u ON u.id=ba.created_by
+     ORDER BY
       CASE ba.priority
        WHEN 'urgent' THEN 1
        WHEN 'important' THEN 2
        ELSE 3
       END,
       ba.created_at DESC`
-  );
+   :`SELECT
+      ba.*,
+      u.full_name AS creator_name
+     FROM board_announcements ba
+     LEFT JOIN users u ON u.id=ba.created_by
+     WHERE ba.published=true
+     ORDER BY
+      CASE ba.priority
+       WHEN 'urgent' THEN 1
+       WHEN 'important' THEN 2
+       ELSE 3
+      END,
+      ba.created_at DESC`;
+
+  const{rows}=await pool.query(query);
 
   return res.status(200).json({
    success:true,
@@ -1385,12 +1637,18 @@ router.get("/announcements",async(req,res)=>{
  }
 });
 
+/* CREATE ANNOUNCEMENT - ADMIN */
 router.post("/announcements",async(req,res)=>{
- const user=await requireBoard(req,res);
- if(!user)return;
+ const admin=await requireAdmin(req,res);
+ if(!admin)return;
 
  try{
-  const{title,message,priority,published}=req.body||{};
+  const{
+   title,
+   message,
+   priority,
+   published
+  }=req.body||{};
 
   if(!title||!message){
    return res.status(400).json({
@@ -1399,9 +1657,15 @@ router.post("/announcements",async(req,res)=>{
    });
   }
 
-  const announcementPriority=String(priority||"normal").toLowerCase();
+  const announcementPriority=String(
+   priority||"normal"
+  ).toLowerCase();
 
-  if(!["normal","important","urgent"].includes(announcementPriority)){
+  if(![
+   "normal",
+   "important",
+   "urgent"
+  ].includes(announcementPriority)){
    return res.status(400).json({
     success:false,
     message:"Invalid announcement priority."
@@ -1419,7 +1683,7 @@ router.post("/announcements",async(req,res)=>{
     String(message).trim(),
     announcementPriority,
     published!==false,
-    user.id
+    admin.id
    ]
   );
 
@@ -1433,6 +1697,116 @@ router.post("/announcements",async(req,res)=>{
   return res.status(500).json({
    success:false,
    message:"Unable to create Board announcement."
+  });
+ }
+});
+
+/* UPDATE ANNOUNCEMENT - ADMIN */
+router.put("/announcements/:id",async(req,res)=>{
+ const admin=await requireAdmin(req,res);
+ if(!admin)return;
+
+ try{
+  const{
+   title,
+   message,
+   priority,
+   published
+  }=req.body||{};
+
+  if(!title||!message){
+   return res.status(400).json({
+    success:false,
+    message:"Announcement title and message are required."
+   });
+  }
+
+  const announcementPriority=String(
+   priority||"normal"
+  ).toLowerCase();
+
+  if(![
+   "normal",
+   "important",
+   "urgent"
+  ].includes(announcementPriority)){
+   return res.status(400).json({
+    success:false,
+    message:"Invalid announcement priority."
+   });
+  }
+
+  const{rows}=await pool.query(
+   `UPDATE board_announcements
+    SET title=$1,
+        message=$2,
+        priority=$3,
+        published=$4,
+        updated_at=NOW()
+    WHERE id=$5
+    RETURNING *`,
+   [
+    String(title).trim(),
+    String(message).trim(),
+    announcementPriority,
+    published===true,
+    req.params.id
+   ]
+  );
+
+  if(!rows[0]){
+   return res.status(404).json({
+    success:false,
+    message:"Board announcement was not found."
+   });
+  }
+
+  return res.status(200).json({
+   success:true,
+   message:"Board announcement updated successfully.",
+   announcement:rows[0]
+  });
+ }catch(error){
+  console.error("UPDATE BOARD ANNOUNCEMENT ERROR:",error.message);
+
+  return res.status(500).json({
+   success:false,
+   message:"Unable to update Board announcement."
+  });
+ }
+});
+
+/* DELETE ANNOUNCEMENT - ADMIN */
+router.delete("/announcements/:id",async(req,res)=>{
+ const admin=await requireAdmin(req,res);
+ if(!admin)return;
+
+ try{
+  const{rows}=await pool.query(
+   `DELETE FROM board_announcements
+    WHERE id=$1
+    RETURNING id,title`,
+   [req.params.id]
+  );
+
+  if(!rows[0]){
+   return res.status(404).json({
+    success:false,
+    message:"Board announcement was not found."
+   });
+  }
+
+  return res.status(200).json({
+   success:true,
+   message:"Board announcement deleted successfully.",
+   announcement:rows[0]
+  });
+ }catch(error){
+  console.error("DELETE BOARD ANNOUNCEMENT ERROR:",error.message);
+
+  return res.status(500).json({
+   success:false,
+   message:"Unable to delete Board announcement."
   });
  }
 });
