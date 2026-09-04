@@ -1,42 +1,74 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Edit Staff | Kenbridge Administrator</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f4f7f9;color:#1f2937}
+html{width:100%;overflow-x:hidden}
+body{margin:0;width:100%;min-width:0;font-family:Arial,sans-serif;background:#f4f7f9;color:#1f2937;overflow-x:hidden}
 header{background:#0b5d3b;color:#fff;padding:18px 22px}
-header h1{margin:0;font-size:22px}
-main{max-width:900px;margin:25px auto;padding:0 16px}
-.card{background:#fff;border-radius:12px;padding:24px;box-shadow:0 3px 14px #0001}
-h2{margin-top:0;color:#0b5d3b}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+header h1{margin:0;font-size:22px;line-height:1.35;overflow-wrap:anywhere}
+main{width:100%;max-width:900px;margin:25px auto;padding:0 16px}
+.card{width:100%;min-width:0;background:#fff;border-radius:12px;padding:24px;box-shadow:0 3px 14px #0001}
+h2{margin:0 0 20px;color:#0b5d3b;font-size:21px;line-height:1.35;overflow-wrap:anywhere}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.grid>div{min-width:0}
 .full{grid-column:1/-1}
-label{display:block;font-weight:700;margin-bottom:6px}
-input,select,textarea{width:100%;padding:11px;border:1px solid #ccd5d9;border-radius:7px;font-size:14px}
+label{display:block;font-weight:700;margin-bottom:6px;line-height:1.35}
+input,select,textarea{display:block;width:100%;max-width:100%;min-width:0;padding:11px;border:1px solid #ccd5d9;border-radius:7px;font-size:14px;font-family:inherit;background:#fff;color:#1f2937}
+input:focus,select:focus,textarea:focus{outline:2px solid #0b5d3b33;border-color:#0b5d3b}
 textarea{min-height:90px;resize:vertical}
-.classes-box{border:1px solid #ccd5d9;border-radius:8px;padding:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:8px;background:#fafafa}
-.class-item{display:flex;align-items:center;gap:8px;padding:8px;border-radius:6px;background:#fff}
-.class-item input{width:auto}
-.class-help{font-size:12px;color:#68747c;margin-top:7px}
-.actions{display:flex;gap:10px;margin-top:22px}
-button{border:0;border-radius:7px;padding:11px 18px;font-weight:700;cursor:pointer}
+.classes-box{width:100%;min-width:0;border:1px solid #ccd5d9;border-radius:8px;padding:12px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;background:#fafafa}
+.class-item{display:flex;align-items:center;gap:8px;min-width:0;padding:9px;border-radius:6px;background:#fff;cursor:pointer;overflow:hidden}
+.class-item input{width:18px;min-width:18px;height:18px;margin:0;flex:0 0 auto}
+.class-item span{min-width:0;overflow-wrap:anywhere;word-break:break-word}
+.class-help{font-size:12px;color:#68747c;margin:7px 0 0;line-height:1.5}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+button{min-height:44px;border:0;border-radius:7px;padding:11px 18px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer}
+button:disabled{opacity:.65;cursor:not-allowed}
 .save{background:#0b5d3b;color:#fff}
-.cancel{background:#e5e7eb}
-.msg{margin-top:15px;padding:11px;border-radius:7px;display:none}
+.cancel{background:#e5e7eb;color:#1f2937}
+.msg{width:100%;margin-top:15px;padding:11px;border-radius:7px;display:none;line-height:1.5;overflow-wrap:anywhere;word-break:break-word}
 .success{display:block;background:#dcfce7;color:#166534}
 .error{display:block;background:#fee2e2;color:#991b1b}
-.loading{text-align:center;padding:30px}
-@media(max-width:650px){
-.grid{grid-template-columns:1fr}
+.loading{text-align:center;padding:30px;line-height:1.5}
+@media(max-width:760px){
+header{padding:16px}
+header h1{font-size:19px}
+main{margin:18px auto;padding:0 12px}
+.card{padding:20px;border-radius:10px}
+.grid{grid-template-columns:1fr;gap:14px}
 .full{grid-column:auto}
-.classes-box{grid-template-columns:1fr}
+.classes-box{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:520px){
+header{padding:14px 12px}
+header h1{font-size:17px}
+main{margin:12px auto;padding:0 8px}
+.card{padding:16px;border-radius:9px}
+h2{font-size:19px;margin-bottom:17px}
+.grid{gap:13px}
+input,select,textarea{font-size:16px;padding:12px}
+.classes-box{grid-template-columns:1fr;padding:9px}
+.class-item{padding:10px}
+.actions{flex-direction:column;gap:9px}
+.actions button{width:100%}
+.msg{font-size:14px}
+.loading{padding:24px 10px}
+}
+@media(max-width:360px){
+header h1{font-size:16px}
+main{padding:0 6px}
+.card{padding:13px}
+h2{font-size:18px}
+.classes-box{padding:7px}
+.class-item{padding:9px}
 }
 </style>
 </head>
-
 <body>
 <header>
 <h1>Kenbridge Christian School — Edit Staff</h1>
@@ -53,12 +85,12 @@ button{border:0;border-radius:7px;padding:11px 18px;font-weight:700;cursor:point
 
 <div>
 <label for="full_name">Full Name</label>
-<input id="full_name" required>
+<input id="full_name" required autocomplete="name">
 </div>
 
 <div>
 <label for="username">Username</label>
-<input id="username" required>
+<input id="username" required autocomplete="username">
 </div>
 
 <div>
@@ -84,12 +116,12 @@ button{border:0;border-radius:7px;padding:11px 18px;font-weight:700;cursor:point
 
 <div>
 <label for="email">Email</label>
-<input id="email" type="email" required>
+<input id="email" type="email" required autocomplete="email">
 </div>
 
 <div>
 <label for="phone">Phone</label>
-<input id="phone">
+<input id="phone" autocomplete="tel">
 </div>
 
 <div>
@@ -117,7 +149,7 @@ Administrators do not require class restrictions.
 </div>
 
 <div class="actions">
-<button type="submit" class="save">Save Changes</button>
+<button type="submit" class="save" id="saveBtn">Save Changes</button>
 <button type="button" class="cancel" onclick="history.back()">Cancel</button>
 </div>
 
@@ -133,16 +165,16 @@ const API_BASE="https://kenbridge-christian-school.onrender.com";
 const id=new URLSearchParams(location.search).get("id");
 
 const CLASS_LIST=[
-["BABY","Baby Class"],
-["MIDDLE","Middle Class"],
-["TOP","Top Class"],
-["P1","P1"],
-["P2","P2"],
-["P3","P3"],
-["P4","P4"],
-["P5","P5"],
-["P6","P6"],
-["P7","P7"]
+["BABY","KG 1"],
+["MIDDLE","KG 2"],
+["TOP","KG 3"],
+["P1","YEAR 1"],
+["P2","YEAR 2"],
+["P3","YEAR 3"],
+["P4","YEAR 4"],
+["P5","YEAR 5"],
+["P6","YEAR 6"],
+["P7","YEAR 7"]
 ];
 
 const $=x=>document.getElementById(x);
@@ -162,9 +194,9 @@ return{
 
 function normalizeClasses(list){
 if(!Array.isArray(list))return[];
-
 return list.map(x=>{
-if(typeof x==="object")return String(x.class_name||x.name||"").trim().toUpperCase();
+if(typeof x==="object")
+return String(x.class_name||x.name||"").trim().toUpperCase();
 return String(x).trim().toUpperCase();
 }).filter(Boolean);
 }
@@ -198,15 +230,17 @@ box.className="msg "+type;
 async function loadStaff(){
 
 if(!id){
-showMessage("No staff account ID was provided.","error");
 $("loading").style.display="none";
+showMessage("No staff account ID was provided.","error");
 return;
 }
 
 try{
-const res=await fetch(API_BASE+"/api/auth/staff/"+encodeURIComponent(id),{
-headers:headers()
-});
+
+const res=await fetch(
+API_BASE+"/api/auth/staff/"+encodeURIComponent(id),
+{headers:headers()}
+);
 
 const data=await res.json();
 
@@ -238,8 +272,13 @@ $("loading").style.display="none";
 $("staffForm").style.display="block";
 
 }catch(error){
+
 $("loading").style.display="none";
-showMessage(error.message||"Unable to load staff account.","error");
+showMessage(
+error.message||"Unable to load staff account.",
+"error"
+);
+
 }
 
 }
@@ -250,7 +289,9 @@ $("staffForm").addEventListener("submit",async e=>{
 
 e.preventDefault();
 
-const isAdmin=$("position").value.trim().toLowerCase()==="administrator";
+const isAdmin=
+$("position").value.trim().toLowerCase()==="administrator";
+
 const classes=isAdmin?[]:selectedClasses();
 
 const payload={
@@ -265,7 +306,12 @@ is_active:$("status").value==="true",
 classes:classes
 };
 
+const saveBtn=$("saveBtn");
+
 try{
+
+saveBtn.disabled=true;
+saveBtn.textContent="Saving...";
 
 showMessage("Saving changes...","success");
 
@@ -281,7 +327,9 @@ body:JSON.stringify(payload)
 const data=await res.json();
 
 if(!res.ok||!data.success){
-throw new Error(data.message||"Unable to update staff account.");
+throw new Error(
+data.message||"Unable to update staff account."
+);
 }
 
 showMessage(
@@ -290,10 +338,17 @@ showMessage(
 );
 
 }catch(error){
+
 showMessage(
 error.message||"Unable to update staff account.",
 "error"
 );
+
+}finally{
+
+saveBtn.disabled=false;
+saveBtn.textContent="Save Changes";
+
 }
 
 });
@@ -303,4 +358,5 @@ loadStaff();
 });
 </script>
 </body>
-  </html>
+</html>
+```
