@@ -1,959 +1,1040 @@
-<!DOCTYPE html><html lang="en">
-<head><meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
-<title>Boarding | Kenbridge Christian School</title>
-
-<meta
-    name="description"
-    content="Discover boarding and residential life at Kenbridge Christian School."
->
-
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Discover boarding and residential life at Kenbridge Christian School.">
 <meta name="theme-color" content="#08783f">
+<title>Boarding | Kenbridge Christian School</title>
+<link rel="stylesheet" href="../css/style.css">
 
-<link
-    rel="stylesheet"
-    href="../css/style.css"
->
+<style>
+.boarding-actions{
+display:flex;
+flex-wrap:wrap;
+gap:14px;
+margin-top:24px
+}
+.boarding-actions .btn{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+text-decoration:none
+}
+.boarding-highlight{
+margin-top:24px;
+padding:18px 20px;
+border-left:4px solid #08783f;
+border-radius:12px;
+background:rgba(8,120,63,.07)
+}
+.boarding-highlight strong{
+display:block;
+margin-bottom:6px
+}
+.routine-list{
+display:grid;
+gap:14px;
+max-width:850px;
+margin:0 auto
+}
+.routine-item{
+display:flex;
+align-items:flex-start;
+gap:18px;
+padding:18px 20px;
+background:#fff;
+border:1px solid #e4ebe7;
+border-radius:12px
+}
+.routine-number{
+flex:0 0 42px;
+height:42px;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:50%;
+background:rgba(8,120,63,.1);
+color:#08783f;
+font-weight:800
+}
+.routine-item p{
+margin:8px 0 0
+}
+.parent-actions{
+display:flex;
+flex-wrap:wrap;
+gap:14px;
+margin-top:20px
+}
+@media(max-width:700px){
+.boarding-actions,
+.parent-actions{
+flex-direction:column
+}
+.boarding-actions .btn,
+.parent-actions .btn{
+width:100%
+}
+.routine-item{
+gap:12px
+}
+}
+</style>
+</head>
 
-</head><body><!-- =========================================
-     TOP BAR
-========================================= --><div class="top-bar"><div class="container top-bar-inner">
+<body>
 
-    <div class="top-location">
-        📍 Old Butabika Road, Kampala, Uganda
-    </div>
+<!-- TOP BAR -->
+<div class="top-bar">
+<div class="container top-bar-inner">
 
-    <div class="top-contact">
-
-        <a href="tel:+256789825517">
-            📞 +256 789 825 517
-        </a>
-
-        <span class="separator">|</span>
-
-        <span>
-            Mon–Fri: 8:00 AM–5:00 PM
-        </span>
-
-        <span class="separator">|</span>
-
-        <span>
-            Sat: 8:00 AM–2:00 PM
-        </span>
-
-    </div>
-
+<div class="top-location">
+📍 Old Butabika Road, Kampala, Uganda
 </div>
 
-</div><!-- =========================================
-     HEADER
-========================================= --><header class="header" id="header"><div class="container nav-container">
+<div class="top-contact">
+<a href="tel:+256789825517">
+📞 +256 789 825 517
+</a>
 
+<span class="separator">|</span>
 
-    <!-- BRAND -->
+<span>
+Mon–Fri: 8:00 AM–5:00 PM
+</span>
 
-    <a
-        href="../index.html"
-        class="brand"
-    >
+<span class="separator">|</span>
 
-        <div class="logo-container">
-
-            <img
-                src="../images/logo.jpg"
-                alt="Kenbridge Christian School Logo"
-                class="school-logo"
-            >
-
-        </div>
-
-        <div class="brand-name">
-
-            <strong>
-                KENBRIDGE
-            </strong>
-
-            <span>
-                CHRISTIAN SCHOOL
-            </span>
-
-        </div>
-
-    </a>
-
-
-
-    <!-- DESKTOP NAVIGATION -->
-
-    <nav class="desktop-nav">
-
-        <a href="../index.html">
-            Home
-        </a>
-
-        <a href="about.html">
-            About
-        </a>
-
-        <a href="academics.html">
-            Academics
-        </a>
-
-        <a href="admissions.html">
-            Admissions
-        </a>
-
-        <a href="fees.html">
-            Fees
-        </a>
-
-        <a href="articles.html">
-            Articles
-        </a>
-
-        <a href="contact.html">
-            Contact
-        </a>
-
-
-        <div class="more-menu">
-
-            <button
-                class="more-button"
-                type="button"
-            >
-                More <span>⌄</span>
-            </button>
-
-            <div class="dropdown">
-
-                <a
-                    href="boarding.html"
-                    class="active"
-                >
-                    Boarding
-                </a>
-
-                <a href="gallery.html">
-                    Gallery
-                </a>
-
-                <a href="management.html">
-                    Management
-                </a>
-
-                <a href="announcements.html">
-                    Announcements
-                </a>
-
-                <a href="projects.html">
-                    Projects
-                </a>
-
-                <a href="sports.html">
-                    Sports
-                </a>
-
-                <a href="facilities.html">
-                    Facilities
-                </a>
-
-                <a href="careers.html">
-                    Careers
-                </a>
-
-                <a href="feedback.html">
-                    Feedback
-                </a>
-
-            </div>
-
-        </div>
-
-
-        <a
-            href="admissions.html"
-            class="apply-button"
-        >
-            Apply Online
-        </a>
-
-    </nav>
-
-
-
-    <!-- MOBILE MENU BUTTON -->
-
-    <button
-        class="mobile-menu-button"
-        id="mobileMenuButton"
-        aria-label="Open navigation"
-        aria-expanded="false"
-    >
-
-        <span></span>
-        <span></span>
-        <span></span>
-
-    </button>
-
+<span>
+Sat: 8:00 AM–2:00 PM
+</span>
 </div>
 
+</div>
+</div>
 
+<!-- HEADER -->
+<header class="header" id="header">
 
-<!-- MOBILE NAVIGATION -->
+<div class="container nav-container">
 
-<nav
-    class="mobile-nav"
-    id="mobileNav"
->
+<a href="../index.html"
+class="brand"
+aria-label="Kenbridge Christian School home">
 
-    <a href="../index.html">
-        Home
-    </a>
+<div class="logo-container">
+<img src="../images/logo.jpg"
+alt="Kenbridge Christian School Logo"
+class="school-logo">
+</div>
 
-    <a href="about.html">
-        About
-    </a>
+<div class="brand-name">
+<strong>KENBRIDGE</strong>
+<span>CHRISTIAN SCHOOL</span>
+</div>
 
-    <a href="academics.html">
-        Academics
-    </a>
+</a>
 
-    <a href="admissions.html">
-        Admissions
-    </a>
+<!-- DESKTOP NAVIGATION -->
+<nav class="desktop-nav" aria-label="Main navigation">
 
-    <a href="fees.html">
-        Fees
-    </a>
+<a href="../index.html">Home</a>
+<a href="about.html">About</a>
+<a href="academics.html">Academics</a>
+<a href="admissions.html">Admissions</a>
+<a href="fees.html">Fees</a>
+<a href="articles.html">Articles</a>
+<a href="contact.html">Contact</a>
 
-    <a href="boarding.html">
-        Boarding
-    </a>
+<div class="more-menu">
 
-    <a href="articles.html">
-        Articles
-    </a>
+<button class="more-button"
+type="button"
+aria-haspopup="true"
+aria-expanded="false">
+More <span>⌄</span>
+</button>
 
-    <a href="gallery.html">
-        Gallery
-    </a>
+<div class="dropdown">
 
-    <a href="announcements.html">
-        Announcements
-    </a>
+<a href="boarding.html"
+class="active">
+Boarding
+</a>
 
-    <a href="projects.html">
-        Projects
-    </a>
+<a href="gallery.html">
+Gallery
+</a>
 
-    <a href="sports.html">
-        Sports
-    </a>
+<a href="management.html">
+Management
+</a>
 
-    <a href="facilities.html">
-        Facilities
-    </a>
+<a href="announcements.html">
+Announcements
+</a>
 
-    <a href="management.html">
-        Management
-    </a>
+<a href="projects.html">
+Projects
+</a>
 
-    <a href="careers.html">
-        Careers
-    </a>
+<a href="reports.html">
+Reports
+</a>
 
-    <a href="feedback.html">
-        Feedback
-    </a>
+<a href="sports.html">
+Sports
+</a>
 
-    <a href="contact.html">
-        Contact
-    </a>
+<a href="facilities.html">
+Facilities
+</a>
 
-    <a
-        href="admissions.html"
-        class="mobile-apply"
-    >
-        Apply Online
-    </a>
+<a href="careers.html">
+Careers
+</a>
+
+<a href="feedback.html">
+Feedback
+</a>
+
+</div>
+</div>
+
+<a href="submissions.html"
+class="apply-button">
+Apply Online
+</a>
 
 </nav>
 
-</header><!-- =========================================
-     PAGE HERO
-========================================= --><section class="hero"><div class="container hero-content">
+<!-- MOBILE MENU -->
+<button class="mobile-menu-button"
+id="mobileMenuButton"
+type="button"
+aria-label="Open navigation"
+aria-expanded="false"
+aria-controls="mobileNav">
 
-    <span class="hero-label">
-        BOARDING LIFE
-    </span>
+<span></span>
+<span></span>
+<span></span>
 
-    <h1>
-        A home away from
-        <span>
-            home.
-        </span>
-    </h1>
-
-    <p>
-        A supportive residential environment
-        where learners can study, grow, build
-        friendships and develop independence.
-    </p>
+</button>
 
 </div>
 
-</section><!-- =========================================
-     BOARDING INTRO
-========================================= --><section class="section welcome"><div class="container welcome-grid">
+<!-- MOBILE NAVIGATION -->
+<nav class="mobile-nav"
+id="mobileNav"
+aria-label="Mobile navigation">
 
+<a href="../index.html">Home</a>
+<a href="about.html">About</a>
+<a href="academics.html">Academics</a>
+<a href="admissions.html">Admissions</a>
+<a href="fees.html">Fees</a>
+<a href="boarding.html">Boarding</a>
+<a href="articles.html">Articles</a>
+<a href="gallery.html">Gallery</a>
+<a href="announcements.html">Announcements</a>
+<a href="projects.html">Projects</a>
+<a href="reports.html">Reports</a>
+<a href="sports.html">Sports</a>
+<a href="facilities.html">Facilities</a>
+<a href="management.html">Management</a>
+<a href="careers.html">Careers</a>
+<a href="feedback.html">Feedback</a>
+<a href="contact.html">Contact</a>
 
-    <div class="welcome-image">
+<a href="submissions.html"
+class="mobile-apply">
+Apply Online
+</a>
 
-        <img
-            src="../images/boarding.jpg"
-            alt="Kenbridge Christian School boarding"
-        >
+</nav>
 
-        <div class="image-badge">
+</header>
 
-            <strong>
-                BOARDING
-            </strong>
+<main>
 
-            <span>
-                CARE • DISCIPLINE • COMMUNITY
-            </span>
+<!-- HERO -->
+<section class="hero">
 
-        </div>
+<div class="container hero-content">
 
-    </div>
+<span class="hero-label">
+BOARDING LIFE
+</span>
 
+<h1>
+A home away from
+<span>
+home.
+</span>
+</h1>
 
+<p>
+A supportive residential environment
+where learners can study, grow, build
+friendships and develop independence.
+</p>
 
-    <div class="welcome-content">
+<div class="boarding-actions">
 
-        <span class="section-label">
-            RESIDENTIAL LIFE
-        </span>
+<a href="contact.html"
+class="btn btn-primary">
+Ask About Boarding
+</a>
 
-        <h2>
-            Helping learners
-            <span>
-                grow together.
-            </span>
-        </h2>
-
-        <p>
-            Boarding can provide learners with an
-            environment where they can balance
-            academic work, personal development,
-            recreation and community life.
-        </p>
-
-        <p>
-            At Kenbridge Christian School, residential
-            life is intended to complement the school's
-            academic and Christian values.
-        </p>
-
-        <p>
-            Learners are encouraged to develop
-            responsibility, respect, discipline and
-            positive relationships with fellow
-            members of the school community.
-        </p>
-
-    </div>
+<a href="admissions.html"
+class="btn btn-secondary">
+Admissions
+</a>
 
 </div>
 
-</section><!-- =========================================
-     BOARDING FEATURES
-========================================= --><section class="section why-section"><div class="container">
+</div>
 
-    <div class="section-heading">
+</section>
 
-        <span class="section-label">
-            RESIDENTIAL EXPERIENCE
-        </span>
+<!-- INTRO -->
+<section class="section welcome">
 
-        <h2>
-            Life at Boarding
-        </h2>
+<div class="container welcome-grid">
 
-        <p>
-            A balanced environment designed to
-            support learners beyond the classroom.
-        </p>
+<div class="welcome-image">
 
-    </div>
+<img src="../images/boarding.jpg"
+alt="Kenbridge Christian School boarding"
+loading="lazy">
 
+<div class="image-badge">
 
+<strong>
+BOARDING
+</strong>
 
-    <div class="feature-grid">
-
-
-        <!-- STUDY -->
-
-        <article class="feature-card">
-
-            <div class="feature-icon">
-                📚
-            </div>
-
-            <h3>
-                Study Time
-            </h3>
-
-            <p>
-                Learners can have dedicated time
-                for revision, homework and academic
-                preparation.
-            </p>
-
-        </article>
-
-
-
-        <!-- DISCIPLINE -->
-
-        <article class="feature-card">
-
-            <div class="feature-icon">
-                🧭
-            </div>
-
-            <h3>
-                Discipline
-            </h3>
-
-            <p>
-                Structured routines help learners
-                develop responsibility, good habits
-                and time-management skills.
-            </p>
-
-        </article>
-
-
-
-        <!-- COMMUNITY -->
-
-        <article class="feature-card">
-
-            <div class="feature-icon">
-                🤝
-            </div>
-
-            <h3>
-                Community
-            </h3>
-
-            <p>
-                Learners develop friendships and
-                learn how to cooperate, respect
-                and support one another.
-            </p>
-
-        </article>
-
-
-
-        <!-- SPIRITUAL -->
-
-        <article class="feature-card">
-
-            <div class="feature-icon">
-                ✝️
-            </div>
-
-            <h3>
-                Christian Values
-            </h3>
-
-            <p>
-                Residential life supports the
-                school's emphasis on Christian
-                values and character development.
-            </p>
-
-        </article>
-
-
-
-        <!-- RECREATION -->
-
-        <article class="feature-card">
-
-            <div class="feature-icon">
-                ⚽
-            </div>
-
-            <h3>
-                Recreation
-            </h3>
-
-            <p>
-                Learners need time to relax,
-                participate in activities and
-                develop their interests.
-            </p>
-
-        </article>
-
-
-
-        <!-- CARE -->
-
-        <article class="feature-card">
-
-            <div class="feature-icon">
-                ❤️
-            </div>
-
-            <h3>
-                Care & Support
-            </h3>
-
-            <p>
-                A positive residential environment
-                should provide appropriate guidance,
-                supervision and support.
-            </p>
-
-        </article>
-
-    </div>
+<span>
+CARE • DISCIPLINE • COMMUNITY
+</span>
 
 </div>
 
-</section><!-- =========================================
-     DAILY ROUTINE
-========================================= --><section class="section"><div class="container">
+</div>
 
-    <div class="section-heading">
+<div class="welcome-content">
 
-        <span class="section-label">
-            DAILY LIFE
-        </span>
+<span class="section-label">
+RESIDENTIAL LIFE
+</span>
 
-        <h2>
-            A Balanced Routine
-        </h2>
+<h2>
+Helping learners
+<span>
+grow together.
+</span>
+</h2>
 
-        <p>
-            A structured routine can help learners
-            balance academics, personal care,
-            recreation and rest.
-        </p>
+<p>
+Boarding can provide learners with an
+environment where they can balance
+academic work, personal development,
+recreation and community life.
+</p>
 
-    </div>
+<p>
+At Kenbridge Christian School, residential
+life is intended to complement the school's
+academic and Christian values.
+</p>
 
+<p>
+Learners are encouraged to develop
+responsibility, respect, discipline and
+positive relationships with fellow
+members of the school community.
+</p>
 
+<div class="boarding-highlight">
 
-    <div class="requirements-list">
+<strong>
+Care, discipline and community
+</strong>
 
-
-        <div class="requirement-item">
-
-            <span>
-                01
-            </span>
-
-            <p>
-                Morning preparation and personal care
-            </p>
-
-        </div>
-
-
-        <div class="requirement-item">
-
-            <span>
-                02
-            </span>
-
-            <p>
-                School lessons and academic activities
-            </p>
-
-        </div>
-
-
-        <div class="requirement-item">
-
-            <span>
-                03
-            </span>
-
-            <p>
-                Meals and appropriate break periods
-            </p>
-
-        </div>
-
-
-        <div class="requirement-item">
-
-            <span>
-                04
-            </span>
-
-            <p>
-                Sports, recreation and co-curricular
-                activities
-            </p>
-
-        </div>
-
-
-        <div class="requirement-item">
-
-            <span>
-                05
-            </span>
-
-            <p>
-                Evening preparation, revision and
-                study time
-            </p>
-
-        </div>
-
-
-        <div class="requirement-item">
-
-            <span>
-                06
-            </span>
-
-            <p>
-                Rest and preparation for the next day
-            </p>
-
-        </div>
-
-    </div>
+<span>
+Residential life is intended to support
+the learner's wider educational and
+personal development.
+</span>
 
 </div>
 
-</section><!-- =========================================
-     PARENT INFORMATION
-========================================= --><section class="notice-section"><div class="container">
-
-    <div class="notice-box">
-
-        <div class="notice-icon">
-            ℹ️
-        </div>
-
-        <div>
-
-            <h3>
-                Boarding Information
-            </h3>
-
-            <p>
-                Boarding availability, age requirements,
-                accommodation arrangements, visiting
-                times, boarding fees and required items
-                should be confirmed directly with the
-                school.
-            </p>
-
-            <p>
-                Official school information will be
-                added to this page when supplied by
-                Kenbridge Christian School.
-            </p>
-
-        </div>
-
-    </div>
+</div>
 
 </div>
 
-</section><!-- =========================================
-     GALLERY PREVIEW
-========================================= --><section class="school-life"><div class="container">
+</section>
 
-    <div class="section-heading light">
+<!-- BOARDING FEATURES -->
+<section class="section why-section">
 
-        <span class="section-label">
-            SCHOOL LIFE
-        </span>
+<div class="container">
 
-        <h2>
-            See Kenbridge in action.
-        </h2>
+<div class="section-heading">
 
-        <p>
-            Explore photographs and moments from
-            school life.
-        </p>
+<span class="section-label">
+RESIDENTIAL EXPERIENCE
+</span>
 
-    </div>
+<h2>
+Life at Boarding
+</h2>
 
-
-
-    <div class="life-grid">
-
-
-        <a
-            href="gallery.html"
-            class="life-card"
-        >
-
-            <img
-                src="../images/boarding.jpg"
-                alt="Kenbridge boarding life"
-            >
-
-            <div>
-
-                <h3>
-                    Boarding
-                </h3>
-
-                <span>
-                    View Gallery →
-                </span>
-
-            </div>
-
-        </a>
-
-
-
-        <a
-            href="sports.html"
-            class="life-card"
-        >
-
-            <img
-                src="../images/sports.jpg"
-                alt="Kenbridge sports"
-            >
-
-            <div>
-
-                <h3>
-                    Sports
-                </h3>
-
-                <span>
-                    Explore →
-                </span>
-
-            </div>
-
-        </a>
-
-
-
-        <a
-            href="facilities.html"
-            class="life-card"
-        >
-
-            <img
-                src="../images/school.jpg"
-                alt="Kenbridge facilities"
-            >
-
-            <div>
-
-                <h3>
-                    Facilities
-                </h3>
-
-                <span>
-                    Explore →
-                </span>
-
-            </div>
-
-        </a>
-
-    </div>
+<p>
+A balanced environment designed to
+support learners beyond the classroom.
+</p>
 
 </div>
 
-</section><!-- =========================================
-     CTA
-========================================= --><section class="admissions-cta"><div class="container cta-inner">
+<div class="feature-grid">
 
-    <div>
+<article class="feature-card">
 
-        <span class="section-label">
-            WANT TO KNOW MORE?
-        </span>
+<div class="feature-icon">
+📚
+</div>
 
-        <h2>
-            Ask about boarding.
-        </h2>
+<h3>
+Study Time
+</h3>
 
-        <p>
-            Contact the school for current boarding
-            availability, requirements and fees.
-        </p>
+<p>
+Learners can have dedicated time
+for revision, homework and academic
+preparation.
+</p>
 
-    </div>
+</article>
 
+<article class="feature-card">
 
-    <a
-        href="contact.html"
-        class="btn btn-primary"
-    >
-        Contact Us
-    </a>
+<div class="feature-icon">
+🧭
+</div>
+
+<h3>
+Discipline
+</h3>
+
+<p>
+Structured routines help learners
+develop responsibility, good habits
+and time-management skills.
+</p>
+
+</article>
+
+<article class="feature-card">
+
+<div class="feature-icon">
+🤝
+</div>
+
+<h3>
+Community
+</h3>
+
+<p>
+Learners develop friendships and
+learn how to cooperate, respect
+and support one another.
+</p>
+
+</article>
+
+<article class="feature-card">
+
+<div class="feature-icon">
+✝️
+</div>
+
+<h3>
+Christian Values
+</h3>
+
+<p>
+Residential life supports the
+school's emphasis on Christian
+values and character development.
+</p>
+
+</article>
+
+<article class="feature-card">
+
+<div class="feature-icon">
+⚽
+</div>
+
+<h3>
+Recreation
+</h3>
+
+<p>
+Learners need time to relax,
+participate in activities and
+develop their interests.
+</p>
+
+</article>
+
+<article class="feature-card">
+
+<div class="feature-icon">
+❤️
+</div>
+
+<h3>
+Care &amp; Support
+</h3>
+
+<p>
+A positive residential environment
+should provide appropriate guidance,
+supervision and support.
+</p>
+
+</article>
 
 </div>
 
-</section><!-- =========================================
-     FOOTER
-========================================= --><footer class="footer"><div class="container footer-grid">
+</div>
 
+</section>
 
-    <div class="footer-about">
+<!-- DAILY ROUTINE -->
+<section class="section">
 
-        <img
-            src="../images/logo.png"
-            alt="Kenbridge Christian School Logo"
-            class="footer-logo"
-        >
+<div class="container">
 
-        <h3>
-            Kenbridge Christian School
-        </h3>
+<div class="section-heading">
 
-        <p>
-            Head and Not Tails.
-            Deuteronomy 28:13
-        </p>
+<span class="section-label">
+DAILY LIFE
+</span>
 
-    </div>
+<h2>
+A Balanced Routine
+</h2>
 
-
-
-    <div class="footer-column">
-
-        <h4>
-            Explore
-        </h4>
-
-        <a href="about.html">
-            About
-        </a>
-
-        <a href="academics.html">
-            Academics
-        </a>
-
-        <a href="admissions.html">
-            Admissions
-        </a>
-
-        <a href="fees.html">
-            Fees
-        </a>
-
-        <a href="gallery.html">
-            Gallery
-        </a>
-
-    </div>
-
-
-
-    <div class="footer-column">
-
-        <h4>
-            School Life
-        </h4>
-
-        <a href="sports.html">
-            Sports
-        </a>
-
-        <a href="projects.html">
-            Projects
-        </a>
-
-        <a href="facilities.html">
-            Facilities
-        </a>
-
-        <a href="boarding.html">
-            Boarding
-        </a>
-
-        <a href="articles.html">
-            Articles
-        </a>
-
-    </div>
-
-
-
-    <div class="footer-column">
-
-        <h4>
-            Contact
-        </h4>
-
-        <p>
-            Old Butabika Road,
-            Kampala, Uganda
-        </p>
-
-        <p>
-            P.O. Box 520093,
-            Luzira
-        </p>
-
-        <a href="tel:+256789825517">
-            +256 789 825 517
-        </a>
-
-    </div>
+<p>
+A structured routine can help learners
+balance academics, personal care,
+recreation and rest.
+</p>
 
 </div>
 
+<div class="routine-list">
 
+<div class="routine-item">
 
-<div class="footer-bottom">
+<div class="routine-number">
+01
+</div>
 
-    <div class="container">
+<div>
+<strong>
+Morning preparation and personal care
+</strong>
 
-        <span>
-            © 2026 Kenbridge Christian School.
-            All Rights Reserved.
-             Made with ❤️ by Zakmolanitech Solutions 
-        </span>
-
-        <span>
-        Our Motto; Heads and Not Tails
-        </span>
-
-    </div>
+<p>
+Time for personal preparation before
+the school day begins.
+</p>
+</div>
 
 </div>
+
+<div class="routine-item">
+
+<div class="routine-number">
+02
+</div>
+
+<div>
+<strong>
+School lessons and academic activities
+</strong>
+
+<p>
+Learners attend lessons and participate
+in the normal academic programme.
+</p>
+</div>
+
+</div>
+
+<div class="routine-item">
+
+<div class="routine-number">
+03
+</div>
+
+<div>
+<strong>
+Meals and appropriate break periods
+</strong>
+
+<p>
+Regular meal and rest periods form
+part of a balanced daily routine.
+</p>
+</div>
+
+</div>
+
+<div class="routine-item">
+
+<div class="routine-number">
+04
+</div>
+
+<div>
+<strong>
+Sports, recreation and co-curricular activities
+</strong>
+
+<p>
+Time can be provided for recreation,
+sports and other school activities.
+</p>
+</div>
+
+</div>
+
+<div class="routine-item">
+
+<div class="routine-number">
+05
+</div>
+
+<div>
+<strong>
+Evening preparation, revision and study time
+</strong>
+
+<p>
+Learners can use appropriate study
+periods for homework and revision.
+</p>
+</div>
+
+</div>
+
+<div class="routine-item">
+
+<div class="routine-number">
+06
+</div>
+
+<div>
+<strong>
+Rest and preparation for the next day
+</strong>
+
+<p>
+Adequate rest supports a healthy
+and balanced school routine.
+</p>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- PARENT INFORMATION -->
+<section class="notice-section">
+
+<div class="container">
+
+<div class="notice-box">
+
+<div class="notice-icon">
+ℹ️
+</div>
+
+<div>
+
+<h3>
+Boarding Information
+</h3>
+
+<p>
+Boarding availability, age requirements,
+accommodation arrangements, visiting
+times, boarding fees and required items
+should be confirmed directly with the
+school.
+</p>
+
+<p>
+Official school information will be
+added to this page when supplied by
+Kenbridge Christian School.
+</p>
+
+<div class="parent-actions">
+
+<a href="contact.html"
+class="btn btn-primary">
+Contact School
+</a>
+
+<a href="fees.html"
+class="btn btn-secondary">
+View Fees
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- SCHOOL LIFE -->
+<section class="school-life">
+
+<div class="container">
+
+<div class="section-heading light">
+
+<span class="section-label">
+SCHOOL LIFE
+</span>
+
+<h2>
+See Kenbridge in action.
+</h2>
+
+<p>
+Explore photographs and moments from
+school life.
+</p>
+
+</div>
+
+<div class="life-grid">
+
+<a href="gallery.html"
+class="life-card">
+
+<img src="../images/boarding.jpg"
+alt="Kenbridge boarding life"
+loading="lazy">
+
+<div>
+
+<h3>
+Boarding
+</h3>
+
+<span>
+View Gallery →
+</span>
+
+</div>
+
+</a>
+
+<a href="sports.html"
+class="life-card">
+
+<img src="../images/sports.jpg"
+alt="Kenbridge sports"
+loading="lazy">
+
+<div>
+
+<h3>
+Sports
+</h3>
+
+<span>
+Explore →
+</span>
+
+</div>
+
+</a>
+
+<a href="facilities.html"
+class="life-card">
+
+<img src="../images/school.jpg"
+alt="Kenbridge facilities"
+loading="lazy">
+
+<div>
+
+<h3>
+Facilities
+</h3>
+
+<span>
+Explore →
+</span>
+
+</div>
+
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- CTA -->
+<section class="admissions-cta">
+
+<div class="container cta-inner">
+
+<div>
+
+<span class="section-label">
+WANT TO KNOW MORE?
+</span>
+
+<h2>
+Ask about boarding.
+</h2>
+
+<p>
+Contact the school for current boarding
+availability, requirements and fees.
+</p>
+
+</div>
+
+<div class="boarding-actions">
+
+<a href="contact.html"
+class="btn btn-primary">
+Contact Us
+</a>
+
+<a href="submissions.html"
+class="btn btn-secondary">
+Apply Online
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+<!-- UNIFIED FOOTER -->
+<footer class="footer">
+
+<div class="container footer-grid">
+
+<!-- SCHOOL -->
+<div class="footer-about">
+
+<img src="../images/logo.png"
+alt="Kenbridge Christian School Logo"
+class="footer-logo"
+loading="lazy">
+
+<h3>
+Kenbridge Christian School
+</h3>
+
+<p>
+Head and Not Tails.<br>
+Deuteronomy 28:13
+</p>
+
+</div>
+
+<!-- EXPLORE -->
+<div class="footer-column">
+
+<h4>
+Explore
+</h4>
+
+<a href="../index.html">
+Home
+</a>
+
+<a href="about.html">
+About
+</a>
+
+<a href="academics.html">
+Academics
+</a>
+
+<a href="admissions.html">
+Admissions
+</a>
+
+<a href="fees.html">
+Fees
+</a>
+
+<a href="gallery.html">
+Gallery
+</a>
+
+</div>
+
+<!-- SCHOOL LIFE -->
+<div class="footer-column">
+
+<h4>
+School Life
+</h4>
+
+<a href="boarding.html">
+Boarding
+</a>
+
+<a href="sports.html">
+Sports
+</a>
+
+<a href="projects.html">
+Projects
+</a>
+
+<a href="reports.html">
+Reports
+</a>
+
+<a href="facilities.html">
+Facilities
+</a>
+
+<a href="articles.html">
+Articles
+</a>
+
+<a href="announcements.html">
+Announcements
+</a>
+
+</div>
+
+<!-- SCHOOL & SUPPORT -->
+<div class="footer-column">
+
+<h4>
+School &amp; Support
+</h4>
+
+<a href="management.html">
+Management
+</a>
+
+<a href="careers.html">
+Careers
+</a>
+
+<a href="feedback.html">
+Feedback
+</a>
+
+<a href="submissions.html">
+Online Application
+</a>
+
+<a href="contact.html">
+Contact
+</a>
 
 <a href="privacy.html">
-    Privacy Policy
+Privacy Policy
 </a>
 
 <a href="terms.html">
-    Terms & Conditions
+Terms &amp; Conditions
 </a>
 
-</footer><script src="../js/script.js"></script></body>
-  </html>
+</div>
+
+<!-- CONTACT -->
+<div class="footer-column">
+
+<h4>
+Contact
+</h4>
+
+<p>
+Old Butabika Road,<br>
+Kampala, Uganda
+</p>
+
+<p>
+P.O. Box 520093,<br>
+Luzira
+</p>
+
+<a href="tel:+256789825517">
++256 789 825 517
+</a>
+
+<a href="contact.html">
+Send an Enquiry
+</a>
+
+</div>
+
+</div>
+
+<!-- FOOTER BOTTOM -->
+<div class="footer-bottom">
+
+<div class="container">
+
+<span>
+© 2026 Kenbridge Christian School.
+All Rights Reserved.
+Made with ❤️ by Zakmolanitech Solutions
+</span>
+
+<span>
+Our Motto: Heads and Not Tails
+</span>
+
+</div>
+
+</div>
+
+</footer>
+
+<!-- GLOBAL JAVASCRIPT -->
+<script src="../js/script.js"></script>
+<script src="../js/components.js"></script>
+
+</body>
+</html>
+```
+
