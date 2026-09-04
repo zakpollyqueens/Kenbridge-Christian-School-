@@ -1,156 +1,424 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Reports & Submissions | Kenbridge Christian School</title>
-  <link rel="stylesheet" href="/css/style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Submissions | Kenbridge Christian School</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+:root{--g:#08783f;--gd:#055a2f;--gl:#eaf7ef;--o:#f28c28;--b:#e6f0ea;--t:#26352d;--m:#6b7280}
+.sub-wrap{max-width:1180px;margin:auto;padding:45px 20px}
+.hero-mini{background:linear-gradient(135deg,var(--gd),var(--g));color:#fff;border-radius:18px;padding:42px 30px;margin-bottom:28px}
+.hero-mini .label{font-size:.78rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;opacity:.85}
+.hero-mini h1{margin:8px 0 12px;font-size:clamp(1.8rem,4vw,2.7rem)}
+.hero-mini p{max-width:780px;margin:0;line-height:1.7;opacity:.95}
+.panel{background:#fff;border:1px solid var(--b);border-radius:14px;padding:24px;margin-bottom:24px;box-shadow:0 8px 25px rgba(0,0,0,.04)}
+.panel h2{margin:0 0 7px;color:var(--gd)}
+.panel>p{color:var(--m);line-height:1.6}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field.full{grid-column:1/-1}
+.field label{font-weight:700;color:var(--t)}
+.field input,.field select,.field textarea{width:100%;box-sizing:border-box;border:1px solid #d8e5dc;border-radius:9px;padding:11px 12px;font:inherit;background:#fff;color:var(--t)}
+.field textarea{resize:vertical;min-height:130px}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid rgba(8,120,63,.16);border-color:var(--g)}
+.form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.help{font-size:.88rem;color:var(--m);margin-top:10px;line-height:1.5}
+.status{display:none;padding:11px 13px;border-radius:8px;margin-top:15px;font-size:.92rem}
+.status.show{display:block}
+.status.ok{background:#eaf7ef;color:#055a2f}
+.status.err{background:#fff1f1;color:#a12626}
+.status.info{background:#eef6ff;color:#245a8d}
+.item{border:1px solid var(--b);border-radius:11px;padding:16px;margin:12px 0;background:#fff}
+.item h3{margin:0 0 7px;color:var(--gd);font-size:1.05rem}
+.meta{color:var(--m);font-size:.9rem;line-height:1.6}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.empty{padding:20px;border:1px dashed #cbded1;border-radius:10px;color:var(--m);background:#fafdfb;text-align:center}
+.note{background:var(--gl);border-left:4px solid var(--g);padding:13px 15px;border-radius:8px;color:#34533f;line-height:1.55;margin-top:15px}
+@media(max-width:700px){.sub-wrap{padding:30px 15px}.hero-mini{padding:30px 20px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.panel{padding:18px}}
+</style>
 </head>
 <body>
-  <div class="container">
-    <div class="section-heading">
-      <span class="section-label">REPORTS</span>
-      <h2>Teacher Submissions & Secretariat Tasks</h2>
-      <p>Teachers can create class reports (weekly, monthly, termly). Secretariat/Finance staff receive tasks to approve, print and publish reports.</p>
+
+<header class="site-header">
+  <div class="top-bar">
+    <div class="container top-bar-inner">
+      <div>Kenbridge Christian School</div>
+      <div>Excellence • Character • Service</div>
     </div>
-
-    <!-- Teacher submission form -->
-    <section style="margin-bottom:20px;padding:18px;border:1px solid #e6f0ea;border-radius:10px;background:#fff">
-      <h3>Teacher: Create / Submit a Class Report</h3>
-      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
-        <label style="display:flex;flex-direction:column;gap:6px">
-          Class Name
-          <input type="text" id="t_class" placeholder="e.g. Grade 3A">
-        </label>
-        <label style="display:flex;flex-direction:column;gap:6px">
-          Period Type
-          <select id="t_period">
-            <option value="WEEK">Weekly</option>
-            <option value="MONTH">Monthly</option>
-            <option value="TERM">Termly</option>
-          </select>
-        </label>
-        <label style="display:flex;flex-direction:column;gap:6px">
-          Start Date
-          <input type="date" id="t_start">
-        </label>
-        <label style="display:flex;flex-direction:column;gap:6px">
-          End Date
-          <input type="date" id="t_end">
-        </label>
-        <label style="display:flex;flex-direction:column;gap:6px;width:100%">
-          Title (optional)
-          <input type="text" id="t_title" placeholder="Term 1 - Class Report">
-        </label>
-
-        <label style="display:flex;flex-direction:column;gap:6px;width:100%">
-          CSV (first row headers: student_name, mark1, mark2, ...)
-          <textarea id="t_csv" rows="6" placeholder="Paste CSV content here (or leave empty and the teacher will add rows)"></textarea>
-        </label>
-
-        <div style="display:flex;gap:8px;align-items:center">
-          <button id="t_submit" class="btn btn-primary">Submit Report</button>
+  </div>
+  <nav class="main-nav">
+    <div class="container nav-inner">
+      <a class="brand" href="../index.html">
+        <img src="../images/logo.jpg" alt="Kenbridge Christian School">
+        <span>Kenbridge Christian School</span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">☰</button>
+      <div class="nav-links" id="navLinks">
+        <a href="../index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="academics.html">Academics</a>
+        <a href="admissions.html">Admissions</a>
+        <a href="boarding.html">Boarding</a>
+        <a href="sports.html">Sports</a>
+        <div class="nav-more">
+          <button type="button" class="more-toggle">More ▾</button>
+          <div class="more-menu">
+            <a href="announcements.html">Announcements</a>
+            <a href="articles.html">Articles</a>
+            <a href="careers.html">Careers</a>
+            <a href="contact.html">Contact</a>
+            <a href="feedback.html">Feedback</a>
+            <a href="facilities.html">Facilities</a>
+            <a href="fees.html">Fees</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="management.html">Management</a>
+            <a href="projects.html">Projects</a>
+            <a href="reports.html">Reports</a>
+            <a class="active" href="submissions.html">Submissions</a>
+          </div>
         </div>
+        <a class="apply-btn" href="submissions.html">Apply Online</a>
       </div>
-      <small style="display:block;margin-top:8px;color:#6b7280">After submission the report will be sent to the Secretariat/Finance in charge for printing/publishing.</small>
-    </section>
+    </div>
+  </nav>
+</header>
 
-    <!-- Secretariat tasks -->
-    <section style="margin-bottom:20px">
-      <h3>Tasks (Secretariat / Finance)</h3>
-      <div id="tasksList">Loading tasks...</div>
-    </section>
-
-    <!-- Submissions list for current user -->
-    <section>
-      <h3>Your Submissions</h3>
-      <div id="mySubs">Loading...</div>
-    </section>
-
+<main>
+<section class="sub-wrap">
+  <div class="hero-mini">
+    <div class="label">School Reports & Submissions</div>
+    <h1>Teacher Submissions & Secretariat Tasks</h1>
+    <p>Teachers can create and submit class reports for weekly, monthly or termly periods. Secretariat and Finance staff can review assigned tasks, approve reports and publish completed submissions.</p>
   </div>
 
+  <section class="panel">
+    <h2>Teacher: Create / Submit a Class Report</h2>
+    <p>Complete the report information below and submit it for Secretariat/Finance processing.</p>
+
+    <div class="form-grid">
+      <div class="field">
+        <label for="t_class">Class Name</label>
+        <input type="text" id="t_class" placeholder="e.g. Grade 3A">
+      </div>
+
+      <div class="field">
+        <label for="t_period">Period Type</label>
+        <select id="t_period">
+          <option value="WEEK">Weekly</option>
+          <option value="MONTH">Monthly</option>
+          <option value="TERM">Termly</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="t_start">Start Date</label>
+        <input type="date" id="t_start">
+      </div>
+
+      <div class="field">
+        <label for="t_end">End Date</label>
+        <input type="date" id="t_end">
+      </div>
+
+      <div class="field full">
+        <label for="t_title">Title <span style="font-weight:400;color:#6b7280">(optional)</span></label>
+        <input type="text" id="t_title" placeholder="Term 1 - Class Report">
+      </div>
+
+      <div class="field full">
+        <label for="t_csv">CSV Data</label>
+        <textarea id="t_csv" placeholder="First row headers: student_name, mark1, mark2, ..."></textarea>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button id="t_submit" class="btn btn-primary" type="button">Submit Report</button>
+      <button id="clearForm" class="btn btn-outline" type="button">Clear Form</button>
+    </div>
+
+    <div class="note">
+      After submission, the report becomes available to the Secretariat/Finance workflow for review, assignment, printing and publishing.
+    </div>
+
+    <div id="submitStatus" class="status"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Secretariat / Finance Tasks</h2>
+    <p>Review reports awaiting processing and use the available actions according to your staff permissions.</p>
+    <div id="tasksList"><div class="empty">Loading tasks...</div></div>
+  </section>
+
+  <section class="panel">
+    <h2>Your Submissions</h2>
+    <p>Reports submitted through this account are displayed below.</p>
+    <div id="mySubs"><div class="empty">Loading submissions...</div></div>
+  </section>
+</section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <img src="../images/logo.png" alt="Kenbridge Christian School" style="max-width:170px;height:auto">
+      <p>Kenbridge Christian School is committed to quality education, Christian character, discipline and service.</p>
+    </div>
+    <div>
+      <h3>Quick Links</h3>
+      <a href="../index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="academics.html">Academics</a>
+      <a href="admissions.html">Admissions</a>
+      <a href="reports.html">Reports</a>
+      <a href="submissions.html">Submissions</a>
+    </div>
+    <div>
+      <h3>School</h3>
+      <a href="management.html">Management</a>
+      <a href="facilities.html">Facilities</a>
+      <a href="boarding.html">Boarding</a>
+      <a href="sports.html">Sports</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div>
+      <h3>Information</h3>
+      <a href="fees.html">Fees</a>
+      <a href="careers.html">Careers</a>
+      <a href="feedback.html">Feedback</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms & Conditions</a>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© <span id="year"></span> Kenbridge Christian School. All rights reserved.</span>
+    <span>Built for learning, character and service.</span>
+  </div>
+</footer>
+
 <script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const token=()=>localStorage.getItem('kenbridge_admin_token')||'';
+
+  function esc(v){
+    return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  }
+
+  function showStatus(msg,type='info'){
+    const el=$('submitStatus');
+    el.className='status show '+type;
+    el.textContent=msg;
+  }
+
+  async function jsonFetch(url,opts={}){
+    const headers=Object.assign({},opts.headers||{},{
+      'Authorization':'Bearer '+token()
+    });
+    const r=await fetch(url,Object.assign({},opts,{headers}));
+    let data={};
+    try{data=await r.json()}catch(e){}
+    if(!r.ok)throw new Error(data.message||data.error||'Request failed');
+    return data;
+  }
+
   async function fetchTasks(){
+    const box=$('tasksList');
+    box.innerHTML='<div class="empty">Loading tasks...</div>';
     try{
-      const r = await fetch('/api/submissions', { headers: { 'Authorization': 'Bearer ' + (localStorage.getItem('kenbridge_admin_token')||'') } });
-      const data = await r.json();
-      if(!data.success){ document.getElementById('tasksList').innerText='Unable to load tasks'; return }
-      // If tasks present
-      if(data.tasks && data.tasks.length){
-        document.getElementById('tasksList').innerHTML = data.tasks.map(t=>`<div style="padding:12px;border:1px solid #eef6f0;border-radius:8px;margin-bottom:10px;background:#fff"><strong>${t.title||'Submission'}</strong><div style="color:#6b7280">Class: ${t.class_name||'-'} | Period: ${t.period_type} | Status: ${t.status}</div><div style="margin-top:8px"><button class='btn btn-primary' onclick="viewSubmission('${t.submission_id}')">View</button> <button class='btn btn-outline' onclick="assign('${t.submission_id}')">Assign</button> <button class='btn btn-primary' onclick="approve('${t.submission_id}')">Approve & Publish</button></div></div>`).join('');
-      } else if(data.submissions){
-        document.getElementById('tasksList').innerHTML = '<div class="article-empty">No tasks found.</div>';
-      } else {
-        document.getElementById('tasksList').innerText='No tasks found.';
+      const data=await jsonFetch('/api/submissions');
+      const tasks=data.tasks||[];
+      if(!tasks.length){
+        box.innerHTML='<div class="empty">No tasks found.</div>';
+        return;
       }
-    } catch(err){ console.error(err); document.getElementById('tasksList').innerText='Failed to load tasks'; }
+      box.innerHTML=tasks.map(t=>`
+        <div class="item">
+          <h3>${esc(t.title||'Submission')}</h3>
+          <div class="meta">
+            <strong>Class:</strong> ${esc(t.class_name||'-')}<br>
+            <strong>Period:</strong> ${esc(t.period_type||'-')}<br>
+            <strong>Status:</strong> ${esc(t.status||'-')}
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary" type="button" onclick="viewSubmission('${esc(t.submission_id||t.id||'')}')">View</button>
+            <button class="btn btn-outline" type="button" onclick="assignSubmission('${esc(t.submission_id||t.id||'')}')">Assign</button>
+            <button class="btn btn-primary" type="button" onclick="approveSubmission('${esc(t.submission_id||t.id||'')}')">Approve & Publish</button>
+          </div>
+        </div>
+      `).join('');
+    }catch(err){
+      console.error(err);
+      box.innerHTML='<div class="empty">Unable to load tasks. Please check your staff/admin authentication and try again.</div>';
+    }
   }
 
   async function fetchMySubs(){
+    const box=$('mySubs');
+    box.innerHTML='<div class="empty">Loading submissions...</div>';
     try{
-      const r = await fetch('/api/submissions', { headers: { 'Authorization': 'Bearer ' + (localStorage.getItem('kenbridge_admin_token')||'') } });
-      const data = await r.json();
-      if(!data.success){ document.getElementById('mySubs').innerText='Unable to load'; return }
-      if(data.submissions){
-        document.getElementById('mySubs').innerHTML = data.submissions.map(s=>`<div style="padding:12px;border:1px solid #eef6f0;border-radius:8px;margin-bottom:10px;background:#fff"><strong>${s.title||'Report'}</strong><div style="color:#6b7280">Class: ${s.class_name||'-'} | ${s.period_type} | Status: ${s.status}</div><div style="margin-top:8px"><a class="btn btn-primary" href="/api/submissions/${s.id}" target="_blank">View</a></div></div>`).join('');
-      } else document.getElementById('mySubs').innerText='No submissions yet.';
-    } catch(err){ console.error(err); document.getElementById('mySubs').innerText='Failed to load'; }
+      const data=await jsonFetch('/api/submissions');
+      const subs=data.submissions||[];
+      if(!subs.length){
+        box.innerHTML='<div class="empty">No submissions yet.</div>';
+        return;
+      }
+      box.innerHTML=subs.map(s=>`
+        <div class="item">
+          <h3>${esc(s.title||'Report')}</h3>
+          <div class="meta">
+            <strong>Class:</strong> ${esc(s.class_name||'-')}<br>
+            <strong>Period:</strong> ${esc(s.period_type||'-')}<br>
+            <strong>Status:</strong> ${esc(s.status||'-')}
+          </div>
+          <div class="actions">
+            <a class="btn btn-primary" href="/api/submissions/${encodeURIComponent(s.id)}" target="_blank" rel="noopener">View</a>
+          </div>
+        </div>
+      `).join('');
+    }catch(err){
+      console.error(err);
+      box.innerHTML='<div class="empty">Unable to load submissions. Please check your authentication and try again.</div>';
+    }
   }
 
   async function submitReport(){
-    const class_name = document.getElementById('t_class').value.trim();
-    const period_type = document.getElementById('t_period').value;
-    const start = document.getElementById('t_start').value;
-    const end = document.getElementById('t_end').value;
-    const title = document.getElementById('t_title').value.trim();
-    const csv = document.getElementById('t_csv').value.trim();
-    const token = localStorage.getItem('kenbridge_admin_token') || '';
-    if(!start || !end){ alert('Start and end dates required'); return }
+    const class_name=$('t_class').value.trim();
+    const period_type=$('t_period').value;
+    const start=$('t_start').value;
+    const end=$('t_end').value;
+    const title=$('t_title').value.trim();
+    const csv=$('t_csv').value.trim();
+
+    if(!class_name){
+      showStatus('Please enter the class name.','err');
+      $('t_class').focus();
+      return;
+    }
+    if(!start||!end){
+      showStatus('Start and end dates are required.','err');
+      return;
+    }
+    if(end<start){
+      showStatus('End date cannot be earlier than the start date.','err');
+      return;
+    }
+    if(!token()){
+      showStatus('No staff/admin session token was found. Sign in through the appropriate school staff/admin system first.','err');
+      return;
+    }
+
+    const btn=$('t_submit');
+    btn.disabled=true;
+    btn.textContent='Submitting...';
+    showStatus('Submitting report...','info');
+
     try{
-      const resp = await fetch('/api/submissions', {
+      await jsonFetch('/api/submissions',{
         method:'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-        body: JSON.stringify({ title, class_name, period_type, period_start: start, period_end: end, csv })
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          title,
+          class_name,
+          period_type,
+          period_start:start,
+          period_end:end,
+          csv
+        })
       });
-      const data = await resp.json();
-      if(!resp.ok) throw new Error(data?.message || 'Failed');
-      alert('Submitted successfully. Task created.');
-      fetchTasks(); fetchMySubs();
-    } catch(err){ console.error(err); alert('Error: ' + (err?.message || err)); }
+
+      showStatus('Report submitted successfully. A Secretariat/Finance task has been created.','ok');
+      $('t_title').value='';
+      $('t_csv').value='';
+      await Promise.all([fetchTasks(),fetchMySubs()]);
+    }catch(err){
+      console.error(err);
+      showStatus('Error: '+(err.message||'Failed to submit report.'),'err');
+    }finally{
+      btn.disabled=false;
+      btn.textContent='Submit Report';
+    }
   }
 
-  function viewSubmission(id){
-    window.open('/api/submissions/' + id, '_blank');
-  }
+  window.viewSubmission=function(id){
+    if(!id)return;
+    window.open('/api/submissions/'+encodeURIComponent(id),'_blank','noopener');
+  };
 
-  async function assign(submissionId){
-    const assigned = prompt('Enter user id to assign to (staff id):');
-    if(!assigned) return;
+  window.assignSubmission=async function(id){
+    if(!id)return;
+    const assigned=prompt('Enter the staff user ID to assign this task to:');
+    if(!assigned)return;
+
     try{
-      const token = localStorage.getItem('kenbridge_admin_token')||'';
-      const resp = await fetch('/api/submissions/' + submissionId + '/assign', { method:'POST', headers:{ 'Content-Type':'application/json','Authorization':'Bearer ' + token }, body: JSON.stringify({ assigned_to: assigned }) });
-      const data = await resp.json();
-      if(!resp.ok) throw new Error(data?.message||'Failed');
-      alert('Assigned.');
+      await jsonFetch('/api/submissions/'+encodeURIComponent(id)+'/assign',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({assigned_to:assigned.trim()})
+      });
+      alert('Task assigned successfully.');
       fetchTasks();
-    } catch(err){ console.error(err); alert('Error: ' + (err?.message||err)); }
-  }
+    }catch(err){
+      console.error(err);
+      alert('Error: '+(err.message||'Assignment failed.'));
+    }
+  };
 
-  async function approve(submissionId){
-    if(!confirm('Approve and publish this submission?')) return;
+  window.approveSubmission=async function(id){
+    if(!id)return;
+    if(!confirm('Approve and publish this submission?'))return;
+
     try{
-      const token = localStorage.getItem('kenbridge_admin_token')||'';
-      const resp = await fetch('/api/submissions/' + submissionId + '/approve', { method:'POST', headers:{ 'Authorization':'Bearer ' + token } });
-      const data = await resp.json();
-      if(!resp.ok) throw new Error(data?.message||'Failed');
-      alert('Approved and published.');
-      fetchTasks(); fetchMySubs();
-    } catch(err){ console.error(err); alert('Error: ' + (err?.message||err)); }
+      await jsonFetch('/api/submissions/'+encodeURIComponent(id)+'/approve',{
+        method:'POST'
+      });
+      alert('Submission approved and published.');
+      await Promise.all([fetchTasks(),fetchMySubs()]);
+    }catch(err){
+      console.error(err);
+      alert('Error: '+(err.message||'Approval failed.'));
+    }
+  };
+
+  $('t_submit').addEventListener('click',submitReport);
+
+  $('clearForm').addEventListener('click',function(){
+    $('t_class').value='';
+    $('t_period').value='WEEK';
+    $('t_start').value='';
+    $('t_end').value='';
+    $('t_title').value='';
+    $('t_csv').value='';
+    $('submitStatus').className='status';
+  });
+
+  const toggle=$('menuToggle');
+  const nav=$('navLinks');
+  if(toggle&&nav){
+    toggle.addEventListener('click',function(){
+      const open=nav.classList.toggle('open');
+      toggle.setAttribute('aria-expanded',open?'true':'false');
+    });
   }
 
-  document.getElementById('t_submit').addEventListener('click', submitReport);
+  document.querySelectorAll('.more-toggle').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      btn.parentElement.classList.toggle('open');
+    });
+  });
 
-  document.addEventListener('DOMContentLoaded', ()=>{ fetchTasks(); fetchMySubs(); });
+  document.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-more.open').forEach(x=>x.classList.remove('open'));
+  });
+
+  $('year').textContent=new Date().getFullYear();
+
+  fetchTasks();
+  fetchMySubs();
+})();
 </script>
+<script src="/js/script.js"></script>
 </body>
 </html>
