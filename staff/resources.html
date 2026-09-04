@@ -4,400 +4,583 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Resources | Kenbridge Staff Portal</title>
-<meta name="description" content="Kenbridge Christian School staff educational resource centre.">
-<meta name="theme-color" content="#08783f">
+<title>Staff Resources | Kenbridge Christian School</title>
 <link rel="stylesheet" href="../css/style.css">
-<script src="../js/portal-auth.js"></script>
-<script src="../js/portal-api.js"></script>
 <style>
-.staff-page{min-height:100vh;background:#f4f8f5}
-.staff-header{background:#08783f;color:#fff;padding:18px 0}
-.staff-header-inner{width:min(1150px,92%);margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
-.staff-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}
-.staff-brand img{width:48px;height:48px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}
-.staff-brand strong{display:block;font-size:17px}
-.staff-brand span{display:block;font-size:12px;opacity:.85;margin-top:3px}
-.staff-logout{padding:10px 15px;border:1px solid rgba(255,255,255,.5);border-radius:8px;color:#fff;text-decoration:none;font-size:13px;font-weight:700}
-.staff-logout:hover{background:rgba(255,255,255,.12)}
-.staff-container{width:min(1100px,92%);margin:auto;padding:40px 0 60px}
-.staff-heading{margin-bottom:25px}
-.staff-heading small{display:block;color:#08783f;font-size:12px;font-weight:800;letter-spacing:1.5px;margin-bottom:7px}
-.staff-heading h1{margin:0 0 7px;color:#173a2c;font-size:clamp(28px,4vw,40px)}
-.staff-heading p{margin:0;color:#68776f;line-height:1.6}
-.staff-nav{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:25px}
-.staff-nav a{padding:10px 14px;border:1px solid #dce5e0;border-radius:8px;background:#fff;color:#315244;text-decoration:none;font-size:13px;font-weight:700}
-.staff-nav a:hover,.staff-nav a.active{background:#08783f;border-color:#08783f;color:#fff}
-.resource-card{background:#fff;border:1px solid #e1e8e4;border-radius:14px;padding:25px;box-shadow:0 8px 25px rgba(0,0,0,.05);margin-bottom:22px}
-.resource-card h2{margin:0 0 7px;color:#173a2c}
-.resource-card>p{margin:0 0 20px;color:#718079;line-height:1.6}
-.resource-toolbar{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px;margin-bottom:18px}
-.resource-input,.resource-select{width:100%;box-sizing:border-box;padding:12px 13px;border:1px solid #d6e0da;border-radius:8px;font:inherit;background:#fff;outline:none}
-.resource-input:focus,.resource-select:focus{border-color:#08783f;box-shadow:0 0 0 3px rgba(8,120,63,.1)}
-.resource-list{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.resource-item{padding:19px;border:1px solid #e1e8e4;border-radius:12px;background:#f9fcfa}
-.resource-icon{font-size:28px;margin-bottom:8px}
-.resource-item h3{margin:0 0 7px;color:#173a2c;font-size:17px}
-.resource-item p{margin:4px 0;color:#68776f;font-size:13px;line-height:1.5}
-.resource-meta{font-size:11px!important;color:#7b8982!important}
-.resource-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}
-.resource-btn{display:inline-block;padding:8px 11px;border:0;border-radius:7px;background:#08783f;color:#fff;text-decoration:none;font-size:12px;font-weight:700;cursor:pointer}
-.resource-btn.secondary{background:#e8f2ec;color:#08783f}
-.resource-btn.danger{background:#b3261e;color:#fff}
-.resource-empty,.resource-loading,.resource-error{padding:22px;border-radius:10px;text-align:center;color:#68776f;background:#f8fbf9;border:1px dashed #d5e0da}
-.resource-error{color:#9b2c2c;background:#fff7f7;border-color:#edcaca}
-.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
-.upload-grid .full{grid-column:1/-1}
-.upload-label{display:block;font-size:12px;font-weight:800;color:#315244;margin-bottom:6px}
-.upload-file{width:100%;box-sizing:border-box;padding:10px;border:1px dashed #b9c9c0;border-radius:8px;background:#f9fcfa}
-.upload-submit{margin-top:15px;padding:12px 18px;border:0;border-radius:8px;background:#08783f;color:#fff;font-weight:800;cursor:pointer}
-.upload-submit:disabled{opacity:.55;cursor:not-allowed}
-.upload-status{margin-top:12px;font-size:13px;line-height:1.5}
-.resource-notice{padding:17px;border-radius:10px;background:#fffdf4;border:1px solid #eee4bd;color:#6d623b;font-size:13px;line-height:1.7}
-@media(max-width:850px){.resource-list{grid-template-columns:repeat(2,1fr)}.resource-toolbar{grid-template-columns:1fr 1fr}}
-@media(max-width:650px){
-.staff-header-inner{align-items:flex-start}
-.staff-brand img{width:42px;height:42px}
-.staff-brand strong{font-size:14px}
-.staff-brand span{font-size:10px}
-.staff-logout{padding:8px 11px;font-size:12px}
-.staff-container{padding-top:30px}
-.resource-card{padding:20px 16px}
-.resource-list,.upload-grid,.resource-toolbar{grid-template-columns:1fr}
-.upload-grid .full{grid-column:auto}
-}
+:root{--r:#2563eb;--g:#16a34a;--d:#0f172a;--m:#64748b;--b:#e2e8f0;--bg:#f8fafc}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--d);font-family:Arial,sans-serif}
+.resource-wrap{max-width:1250px;margin:auto;padding:20px}
+.resource-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:20px;flex-wrap:wrap}
+.resource-head h1{margin:0;font-size:28px}
+.resource-head p{margin:5px 0 0;color:var(--m)}
+.resource-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:0;border-radius:8px;padding:10px 15px;cursor:pointer;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn-primary{background:var(--r);color:#fff}
+.btn-success{background:var(--g);color:#fff}
+.btn-danger{background:#dc2626;color:#fff}
+.btn-light{background:#fff;color:var(--d);border:1px solid var(--b)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.resource-panel{background:#fff;border:1px solid var(--b);border-radius:14px;padding:20px;margin-bottom:20px;box-shadow:0 2px 8px #00000008}
+.panel-title{font-size:18px;font-weight:700;margin:0 0 15px}
+.filters{display:grid;grid-template-columns:2fr repeat(5,1fr);gap:10px}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;font:inherit}
+textarea{resize:vertical;min-height:85px}
+.upload-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.form-group label{display:block;font-weight:700;margin-bottom:6px;font-size:14px}
+.form-group.full{grid-column:1/-1}
+.file-box{border:2px dashed #cbd5e1;border-radius:10px;padding:16px;background:#f8fafc}
+.file-box input{border:0;padding:0;background:transparent}
+.form-note{font-size:12px;color:var(--m);margin-top:6px}
+.status{display:none;margin:12px 0;padding:11px 13px;border-radius:8px;font-size:14px}
+.status.show{display:block}
+.status.ok{background:#dcfce7;color:#166534}
+.status.err{background:#fee2e2;color:#991b1b}
+.status.info{background:#dbeafe;color:#1e40af}
+.resource-count{color:var(--m);font-size:14px;margin-bottom:12px}
+.resources-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.resource-card{background:#fff;border:1px solid var(--b);border-radius:12px;padding:16px;box-shadow:0 2px 7px #00000008;display:flex;flex-direction:column;min-width:0}
+.resource-icon{width:45px;height:45px;border-radius:10px;background:#eff6ff;color:var(--r);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:12px}
+.resource-title{font-size:17px;font-weight:700;margin-bottom:7px;word-break:break-word}
+.resource-desc{font-size:13px;color:var(--m);line-height:1.5;margin-bottom:12px;min-height:20px}
+.resource-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.badge{font-size:11px;font-weight:700;padding:5px 7px;border-radius:20px;background:#f1f5f9;color:#334155}
+.badge.blue{background:#dbeafe;color:#1d4ed8}
+.badge.green{background:#dcfce7;color:#166534}
+.resource-file{font-size:12px;color:#475569;word-break:break-all;margin-bottom:13px}
+.resource-footer{margin-top:auto;display:flex;gap:7px;flex-wrap:wrap}
+.resource-footer .btn{font-size:12px;padding:8px 10px}
+.empty{text-align:center;padding:45px 15px;color:var(--m);background:#fff;border:1px dashed #cbd5e1;border-radius:12px}
+.loading{text-align:center;padding:35px;color:var(--m)}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:9999;padding:20px;overflow:auto}
+.modal.show{display:flex;align-items:center;justify-content:center}
+.modal-box{width:min(650px,100%);background:#fff;border-radius:14px;padding:22px;box-shadow:0 10px 40px #0005}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-head h2{margin:0;font-size:20px}
+.close{border:0;background:#f1f5f9;border-radius:50%;width:35px;height:35px;cursor:pointer;font-size:20px}
+@media(max-width:1050px){.filters{grid-template-columns:repeat(3,1fr)}.resources-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.filters,.upload-grid{grid-template-columns:1fr}.resources-grid{grid-template-columns:1fr}.resource-wrap{padding:13px}.resource-head h1{font-size:23px}}
 </style>
 </head>
 <body>
-<div class="staff-page">
-<header class="staff-header">
-<div class="staff-header-inner">
-<a href="staff-dashboard.html" class="staff-brand">
-<img src="../images/logo.png" alt="Kenbridge Christian School Logo">
-<div><strong>Kenbridge Christian School</strong><span>Staff Portal</span></div>
-</a>
-<a href="login.html" class="staff-logout" id="logoutButton">Log Out</a>
+
+<header class="site-header">
+<div class="container">
+<div class="header-content">
+<a href="staff-dashboard.html" class="logo">Kenbridge Christian School</a>
+<button class="mobile-menu-toggle" type="button" aria-label="Menu">☰</button>
+</div>
 </div>
 </header>
 
-<main class="staff-container">
-<div class="staff-heading">
-<small>STAFF PORTAL</small>
-<h1>Educational Resources</h1>
-<p>Share, view and download teaching resources, examinations, tests and assessment materials.</p>
-</div>
-
 <nav class="staff-nav">
+<div class="container">
 <a href="staff-dashboard.html">Dashboard</a>
 <a href="students.html">Students</a>
 <a href="attendance.html">Attendance</a>
-<a href="announcements.html">Announcements</a>
-<a href="articles.html">Articles</a>
 <a href="reports.html">Reports</a>
-<a href="files.html">Files</a>
-<a href="calendar.html">Calendar</a>
-<a href="messages.html">Messages</a>
-<a href="tasks.html">Tasks</a>
-<a href="leave.html">Leave</a>
 <a href="payroll.html">Payroll</a>
-<a href="training.html">Training</a>
 <a href="resources.html" class="active">Resources</a>
-<a href="profile.html">My Profile</a>
+<a href="training.html">Training</a>
+<a href="notifications.html">Notifications</a>
+<a href="profile.html">Profile</a>
+<a href="settings.html">Settings</a>
+</div>
 </nav>
 
-<section class="resource-card">
-<h2>Upload Educational Resource</h2>
-<p>Upload examinations, tests, notes, assessments, schemes of work and other useful teaching materials.</p>
+<main class="resource-wrap">
 
-<form id="uploadForm">
-<div class="upload-grid">
-
+<section class="resource-head">
 <div>
-<label class="upload-label" for="title">Resource Title *</label>
-<input class="resource-input" id="title" name="title" required placeholder="e.g. Primary 6 Mathematics Test">
+<h1>Staff Resources</h1>
+<p>Access and share educational materials, examinations, tests and teaching resources.</p>
 </div>
-
-<div>
-<label class="upload-label" for="category">Category *</label>
-<select class="resource-select" id="category" name="category" required>
-<option value="">Select category</option>
-<option>Exams</option>
-<option>Tests</option>
-<option>Assessments</option>
-<option>Notes</option>
-<option>Lesson Plans</option>
-<option>Schemes of Work</option>
-<option>Teaching Materials</option>
-<option>School Documents</option>
-<option>Christian Education</option>
-<option>Other</option>
-</select>
+<div class="resource-actions">
+<button class="btn btn-primary" type="button" onclick="openUpload()">＋ Upload Resource</button>
+<button class="btn btn-light" type="button" onclick="loadResources()">↻ Refresh</button>
 </div>
-
-<div>
-<label class="upload-label" for="subject">Subject</label>
-<input class="resource-input" id="subject" name="subject" placeholder="e.g. Mathematics">
-</div>
-
-<div>
-<label class="upload-label" for="class_level">Class / Level</label>
-<input class="resource-input" id="class_level" name="class_level" placeholder="e.g. Primary 6">
-</div>
-
-<div>
-<label class="upload-label" for="academic_year">Academic Year</label>
-<input class="resource-input" id="academic_year" name="academic_year" placeholder="e.g. 2026">
-</div>
-
-<div>
-<label class="upload-label" for="term">Term</label>
-<select class="resource-select" id="term" name="term">
-<option value="">Select term</option>
-<option>Term 1</option>
-<option>Term 2</option>
-<option>Term 3</option>
-</select>
-</div>
-
-<div class="full">
-<label class="upload-label" for="description">Description</label>
-<textarea class="resource-input" id="description" name="description" rows="3" placeholder="Brief description of the resource"></textarea>
-</div>
-
-<div class="full">
-<label class="upload-label" for="file">File *</label>
-<input class="upload-file" type="file" id="file" name="file" required accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv">
-</div>
-
-</div>
-
-<button class="upload-submit" id="uploadButton" type="submit">⬆ Upload Resource</button>
-<div class="upload-status" id="uploadStatus"></div>
-</form>
 </section>
 
-<section class="resource-card">
-<h2>Resource Library</h2>
-<p>Search and filter resources shared by staff.</p>
+<div id="status" class="status"></div>
 
-<div class="resource-toolbar">
-<input class="resource-input" id="resourceSearch" placeholder="🔎 Search resources...">
-<select class="resource-select" id="categoryFilter">
+<section class="resource-panel">
+<h2 class="panel-title">Find Educational Resources</h2>
+<div class="filters">
+<input id="search" type="search" placeholder="Search resources..." oninput="debouncedLoad()">
+
+<select id="category" onchange="loadResources()">
 <option value="">All Categories</option>
-<option>Exams</option>
-<option>Tests</option>
-<option>Assessments</option>
-<option>Notes</option>
-<option>Lesson Plans</option>
-<option>Schemes of Work</option>
-<option>Teaching Materials</option>
-<option>School Documents</option>
-<option>Christian Education</option>
+<option>EXAMS</option>
+<option>TESTS</option>
+<option>LESSON PLANS</option>
+<option>NOTES</option>
+<option>ASSIGNMENTS</option>
+<option>SCHEMES OF WORK</option>
+<option>PAST PAPERS</option>
+<option>CHRISTIAN EDUCATION</option>
+<option>TEACHING AIDS</option>
+<option>POLICIES</option>
+<option>FORMS</option>
+<option>OTHER</option>
+</select>
+
+<select id="subject" onchange="loadResources()">
+<option value="">All Subjects</option>
+<option>Mathematics</option>
+<option>English</option>
+<option>Science</option>
+<option>Social Studies</option>
+<option>Religious Education</option>
+<option>Christian Religious Education</option>
+<option>ICT</option>
+<option>Agriculture</option>
+<option>Literacy</option>
 <option>Other</option>
 </select>
-<select class="resource-select" id="subjectFilter">
-<option value="">All Subjects</option>
-</select>
-<select class="resource-select" id="classFilter">
-<option value="">All Classes</option>
-</select>
-</div>
 
-<div class="resource-list" id="resourceList">
-<div class="resource-loading">Loading resources...</div>
+<select id="class_level" onchange="loadResources()">
+<option value="">All Classes</option>
+<option>P1</option><option>P2</option><option>P3</option>
+<option>P4</option><option>P5</option><option>P6</option>
+<option>P7</option><option>ALL</option>
+</select>
+
+<select id="academic_year" onchange="loadResources()">
+<option value="">All Years</option>
+<option>2026</option>
+<option>2025</option>
+<option>2024</option>
+<option>2023</option>
+</select>
+
+<select id="term" onchange="loadResources()">
+<option value="">All Terms</option>
+<option>TERM 1</option>
+<option>TERM 2</option>
+<option>TERM 3</option>
+</select>
 </div>
 </section>
 
-<section class="resource-card">
-<h2>Resource Guidelines</h2>
-<div class="resource-notice">
-<strong>Staff resource centre:</strong> Please upload educational materials that are appropriate for school use. Avoid duplicate files where possible and use clear titles, subjects and class levels so other staff can find resources easily.
+<section>
+<div id="count" class="resource-count">Loading resources...</div>
+<div id="resources" class="resources-grid">
+<div class="loading">Loading staff resources...</div>
 </div>
 </section>
 
 </main>
+
+<div id="uploadModal" class="modal" role="dialog" aria-modal="true">
+<div class="modal-box">
+<div class="modal-head">
+<h2>Upload Educational Resource</h2>
+<button class="close" type="button" onclick="closeUpload()">×</button>
 </div>
+
+<form id="uploadForm">
+
+<div class="upload-grid">
+
+<div class="form-group full">
+<label for="title">Resource Title *</label>
+<input id="title" name="title" required placeholder="e.g. P7 Mathematics Mid-Term Examination">
+</div>
+
+<div class="form-group">
+<label for="uploadCategory">Category *</label>
+<select id="uploadCategory" name="category" required>
+<option value="">Select category</option>
+<option>EXAMS</option>
+<option>TESTS</option>
+<option>LESSON PLANS</option>
+<option>NOTES</option>
+<option>ASSIGNMENTS</option>
+<option>SCHEMES OF WORK</option>
+<option>PAST PAPERS</option>
+<option>CHRISTIAN EDUCATION</option>
+<option>TEACHING AIDS</option>
+<option>POLICIES</option>
+<option>FORMS</option>
+<option>OTHER</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="uploadSubject">Subject</label>
+<select id="uploadSubject" name="subject">
+<option value="">Select subject</option>
+<option>Mathematics</option>
+<option>English</option>
+<option>Science</option>
+<option>Social Studies</option>
+<option>Religious Education</option>
+<option>Christian Religious Education</option>
+<option>ICT</option>
+<option>Agriculture</option>
+<option>Literacy</option>
+<option>Other</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="uploadClass">Class Level *</label>
+<select id="uploadClass" name="class_level" required>
+<option value="">Select class</option>
+<option>P1</option><option>P2</option><option>P3</option>
+<option>P4</option><option>P5</option><option>P6</option>
+<option>P7</option><option>ALL</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="uploadYear">Academic Year</label>
+<input id="uploadYear" name="academic_year" placeholder="e.g. 2026">
+</div>
+
+<div class="form-group">
+<label for="uploadTerm">Term</label>
+<select id="uploadTerm" name="term">
+<option value="">Select term</option>
+<option>TERM 1</option>
+<option>TERM 2</option>
+<option>TERM 3</option>
+</select>
+</div>
+
+<div class="form-group full">
+<label for="description">Description</label>
+<textarea id="description" name="description" placeholder="Briefly describe this resource..."></textarea>
+</div>
+
+<div class="form-group full">
+<label for="file">Resource File *</label>
+<div class="file-box">
+<input id="file" name="file" type="file" required
+accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.zip,.jpg,.jpeg,.png">
+<div class="form-note">Maximum file size: 25 MB.</div>
+</div>
+</div>
+
+<div class="form-group full">
+<button id="uploadBtn" class="btn btn-success" type="submit">Upload Resource</button>
+</div>
+
+</div>
+</form>
+</div>
+</div>
+
+<script src="../js/portal-auth.js"></script>
+<script src="../js/portal-api.js"></script>
 
 <script>
 "use strict";
 
-let resources=[];
+const API=window.KENBRIDGE_API;
+let searchTimer=null;
 
-const $=id=>document.getElementById(id);
-
-function esc(v){
- return String(v??"").replace(/[&<>"']/g,c=>({
-  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
- }[c]));
+function showStatus(message,type="info"){
+  const el=document.getElementById("status");
+  el.textContent=message;
+  el.className="status show "+type;
+  clearTimeout(showStatus.timer);
+  showStatus.timer=setTimeout(()=>{
+    el.className="status";
+  },5000);
 }
 
-function icon(category){
- const x=String(category||"").toLowerCase();
- if(x.includes("exam"))return"📝";
- if(x.includes("test"))return"✏️";
- if(x.includes("assessment"))return"📊";
- if(x.includes("note"))return"📚";
- if(x.includes("lesson"))return"📖";
- if(x.includes("scheme"))return"🗂️";
- if(x.includes("christian"))return"✝️";
- return"📄";
+function openUpload(){
+  document.getElementById("uploadModal").classList.add("show");
 }
 
-function normalize(data){
- const list=Array.isArray(data)?data:
-   Array.isArray(data.resources)?data.resources:
-   Array.isArray(data.documents)?data.documents:[];
- return list.map(x=>({
-  id:x.id,
-  title:x.title||x.file_name||x.name||"Untitled Resource",
-  description:x.description||"",
-  category:x.category||"Other",
-  subject:x.subject||"",
-  class_level:x.class_level||x.className||x.class||"",
-  academic_year:x.academic_year||"",
-  term:x.term||"",
-  file_name:x.file_name||x.name||"",
-  file_url:x.file_url||x.url||x.download_url||x.path||"",
-  uploaded_by:x.uploaded_by_name||x.uploader_name||x.uploaded_by||"",
-  created_at:x.created_at||x.uploaded_at||""
- }));
+function closeUpload(){
+  document.getElementById("uploadModal").classList.remove("show");
+}
+
+document.getElementById("uploadModal").addEventListener("click",e=>{
+  if(e.target.id==="uploadModal")closeUpload();
+});
+
+function escapeHtml(value){
+  return String(value??"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function formatSize(bytes){
+  const n=Number(bytes||0);
+  if(!n)return "";
+  if(n<1024)return n+" B";
+  if(n<1024*1024)return (n/1024).toFixed(1)+" KB";
+  if(n<1024*1024*1024)return (n/1024/1024).toFixed(1)+" MB";
+  return (n/1024/1024/1024).toFixed(1)+" GB";
+}
+
+function formatDate(value){
+  if(!value)return "";
+  const d=new Date(value);
+  if(Number.isNaN(d.getTime()))return "";
+  return d.toLocaleDateString(undefined,{
+    year:"numeric",
+    month:"short",
+    day:"numeric"
+  });
+}
+
+function fileIcon(type,name){
+  const n=String(name||"").toLowerCase();
+  if(type==="application/pdf"||n.endsWith(".pdf"))return "📕";
+  if(n.match(/\.(doc|docx)$/))return "📘";
+  if(n.match(/\.(xls|xlsx|csv)$/))return "📊";
+  if(n.match(/\.(ppt|pptx)$/))return "📙";
+  if(n.match(/\.(jpg|jpeg|png|gif)$/))return "🖼️";
+  if(n.endsWith(".zip"))return "🗜️";
+  return "📄";
+}
+
+function buildQuery(){
+  const params=new URLSearchParams();
+
+  const search=document.getElementById("search").value.trim();
+  const category=document.getElementById("category").value;
+  const subject=document.getElementById("subject").value;
+  const classLevel=document.getElementById("class_level").value;
+  const year=document.getElementById("academic_year").value;
+  const term=document.getElementById("term").value;
+
+  if(search)params.set("search",search);
+  if(category)params.set("category",category);
+  if(subject)params.set("subject",subject);
+  if(classLevel)params.set("class_level",classLevel);
+  if(year)params.set("academic_year",year);
+  if(term)params.set("term",term);
+
+  const query=params.toString();
+  return query?"/api/resources?"+query:"/api/resources";
+}
+
+function debouncedLoad(){
+  clearTimeout(searchTimer);
+  searchTimer=setTimeout(loadResources,350);
 }
 
 async function loadResources(){
- const list=$("resourceList");
- list.innerHTML='<div class="resource-loading">Loading resources...</div>';
+  const container=document.getElementById("resources");
+  const count=document.getElementById("count");
 
- try{
-  const data=await KENBRIDGE_API.request("/api/resources");
-  resources=normalize(data);
-  populateFilters();
-  renderResources();
- }catch(err){
-  console.error("RESOURCE LOAD ERROR:",err);
-  list.innerHTML='<div class="resource-error">Unable to load the resource library. Please try again.</div>';
- }
+  container.innerHTML='<div class="loading">Loading resources...</div>';
+  count.textContent="Loading resources...";
+
+  try{
+    if(!API||typeof API.request!=="function"){
+      throw new Error("Portal API is unavailable.");
+    }
+
+    const data=await API.request(buildQuery());
+    const resources=Array.isArray(data?.resources)
+      ?data.resources
+      :[];
+
+    count.textContent=
+      resources.length+
+      (resources.length===1?" resource":" resources")+
+      " found";
+
+    if(!resources.length){
+      container.innerHTML=`
+        <div class="empty" style="grid-column:1/-1">
+          <div style="font-size:35px">📚</div>
+          <h3>No resources found</h3>
+          <p>Try changing your search or filters, or upload a new educational resource.</p>
+          <button class="btn btn-primary" type="button" onclick="openUpload()">＋ Upload Resource</button>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML=resources.map(renderResource).join("");
+
+  }catch(error){
+    console.error(error);
+    count.textContent="Unable to load resources";
+    container.innerHTML=`
+      <div class="empty" style="grid-column:1/-1">
+        <div style="font-size:35px">⚠️</div>
+        <h3>Resources could not be loaded</h3>
+        <p>${escapeHtml(error.message||"Please try again.")}</p>
+        <button class="btn btn-light" type="button" onclick="loadResources()">Try Again</button>
+      </div>`;
+  }
 }
 
-function populateFilters(){
- const subjects=[...new Set(resources.map(x=>x.subject).filter(Boolean))].sort();
- const classes=[...new Set(resources.map(x=>x.class_level).filter(Boolean))].sort();
+function renderResource(r){
+  const title=escapeHtml(r.title||r.file_name||"Untitled Resource");
+  const desc=escapeHtml(r.description||"No description provided.");
+  const category=escapeHtml(r.category||"OTHER");
+  const subject=escapeHtml(r.subject||"General");
+  const cls=escapeHtml(r.class_level||"ALL");
+  const year=escapeHtml(r.academic_year||"");
+  const term=escapeHtml(r.term||"");
+  const file=escapeHtml(r.file_name||"Resource file");
+  const uploader=escapeHtml(r.uploader_name||"Staff");
+  const date=formatDate(r.created_at);
+  const size=formatSize(r.file_size);
+  const icon=fileIcon(r.file_type,r.file_name);
 
- $("subjectFilter").innerHTML='<option value="">All Subjects</option>'+
- subjects.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("");
+  const viewUrl=r.file_url
+    ?escapeHtml(r.file_url)
+    :"";
 
- $("classFilter").innerHTML='<option value="">All Classes</option>'+
- classes.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("");
-}
+  const viewButton=viewUrl
+    ?`<a class="btn btn-primary" href="${viewUrl}" target="_blank" rel="noopener">View</a>
+       <a class="btn btn-light" href="${viewUrl}" download>Download</a>`
+    :`<button class="btn btn-light" disabled>File unavailable</button>`;
 
-function renderResources(){
- const term=$("resourceSearch").value.toLowerCase().trim();
- const category=$("categoryFilter").value;
- const subject=$("subjectFilter").value;
- const cls=$("classFilter").value;
+  const deleteButton=r.can_delete
+    ?`<button class="btn btn-danger" type="button" onclick="deleteResource('${escapeHtml(r.id)}')">Delete</button>`
+    :"";
 
- const filtered=resources.filter(x=>{
-  const text=[x.title,x.description,x.category,x.subject,x.class_level,x.academic_year,x.term,x.file_name].join(" ").toLowerCase();
-  return (!term||text.includes(term)) &&
-         (!category||x.category===category) &&
-         (!subject||x.subject===subject) &&
-         (!cls||x.class_level===cls);
- });
+  return `
+    <article class="resource-card">
+      <div class="resource-icon">${icon}</div>
+      <div class="resource-title">${title}</div>
+      <div class="resource-desc">${desc}</div>
 
- if(!filtered.length){
-  $("resourceList").innerHTML='<div class="resource-empty">No matching resources found.</div>';
-  return;
- }
+      <div class="resource-meta">
+        <span class="badge blue">${category}</span>
+        <span class="badge">${subject}</span>
+        <span class="badge green">${cls}</span>
+        ${year?`<span class="badge">${year}</span>`:""}
+        ${term?`<span class="badge">${term}</span>`:""}
+      </div>
 
- $("resourceList").innerHTML=filtered.map(x=>{
-  const date=x.created_at?new Date(x.created_at).toLocaleDateString():"";
-  const url=x.file_url||"";
+      <div class="resource-file">
+        📎 ${file}${size?" · "+escapeHtml(size):""}
+      </div>
 
-  return `<article class="resource-item">
-   <div class="resource-icon">${icon(x.category)}</div>
-   <h3>${esc(x.title)}</h3>
-   <p>${esc(x.description||"Educational resource")}</p>
-   <p class="resource-meta"><strong>${esc(x.category)}</strong>${x.subject?" • "+esc(x.subject):""}${x.class_level?" • "+esc(x.class_level):""}</p>
-   <p class="resource-meta">${x.term?esc(x.term)+" • ":""}${x.academic_year?esc(x.academic_year)+" • ":""}${esc(date)}</p>
-   <p class="resource-meta">${esc(x.file_name)}</p>
-   <div class="resource-actions">
-    ${url?`<a class="resource-btn" href="${esc(url)}" target="_blank" rel="noopener">👁 View</a>
-    <a class="resource-btn secondary" href="${esc(url)}" download>⬇ Download</a>`:""}
-    ${x.id?`<button class="resource-btn danger" onclick="deleteResource('${esc(x.id)}')">🗑 Delete</button>`:""}
-   </div>
-  </article>`;
- }).join("");
+      <div style="font-size:12px;color:#64748b;margin-bottom:12px">
+        Uploaded by ${uploader}${date?" · "+escapeHtml(date):""}
+      </div>
+
+      <div class="resource-footer">
+        ${viewButton}
+        ${deleteButton}
+      </div>
+    </article>`;
 }
 
 async function deleteResource(id){
- if(!confirm("Delete this resource? This action cannot be undone."))return;
+  if(!id)return;
 
- try{
-  await KENBRIDGE_API.request("/api/resources/"+encodeURIComponent(id),{method:"DELETE"});
-  resources=resources.filter(x=>String(x.id)!==String(id));
-  populateFilters();
-  renderResources();
- }catch(err){
-  console.error(err);
-  alert("Unable to delete this resource.");
- }
-}
-
-$("uploadForm").addEventListener("submit",async e=>{
- e.preventDefault();
-
- const file=$("file").files[0];
- if(!file)return;
-
- const button=$("uploadButton");
- const status=$("uploadStatus");
-
- button.disabled=true;
- status.textContent="Uploading resource...";
-
- try{
-  const token=KENBRIDGE_API.getToken();
-  const fd=new FormData();
-
-  ["title","description","category","subject","class_level","academic_year","term"]
-   .forEach(id=>fd.append(id,$(id).value||""));
-
-  fd.append("file",file);
-
-  const response=await fetch(KENBRIDGE_API.API_BASE+"/api/resources/upload",{
-   method:"POST",
-   headers:token?{Authorization:"Bearer "+token}:{},
-   body:fd
-  });
-
-  let data={};
-  try{data=await response.json()}catch(_){}
-
-  if(!response.ok){
-   throw new Error(data.message||"Upload failed.");
+  if(!confirm("Delete this resource? The stored file will also be removed.")){
+    return;
   }
 
-  status.textContent="Resource uploaded successfully.";
-  $("uploadForm").reset();
-  await loadResources();
+  try{
+    showStatus("Deleting resource...","info");
 
- }catch(err){
-  console.error("RESOURCE UPLOAD ERROR:",err);
-  status.textContent=err.message||"Unable to upload resource.";
- }finally{
-  button.disabled=false;
- }
+    await API.request("/api/resources/"+encodeURIComponent(id),{
+      method:"DELETE"
+    });
+
+    showStatus("Resource deleted successfully.","ok");
+    await loadResources();
+
+  }catch(error){
+    console.error(error);
+    showStatus(
+      error.message||"Unable to delete resource.",
+      "err"
+    );
+  }
+}
+
+document.getElementById("uploadForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+
+  const button=document.getElementById("uploadBtn");
+  const form=e.currentTarget;
+  const file=document.getElementById("file").files[0];
+
+  if(!file){
+    showStatus("Please select a file.","err");
+    return;
+  }
+
+  if(file.size>25*1024*1024){
+    showStatus("The selected file is larger than 25 MB.","err");
+    return;
+  }
+
+  const formData=new FormData(form);
+
+  button.disabled=true;
+  button.textContent="Uploading...";
+
+  try{
+    const token=
+      API.getToken?.()||
+      localStorage.getItem("kenbridgeAccessToken")||
+      sessionStorage.getItem("kenbridgeAccessToken");
+
+    const headers={};
+
+    if(token){
+      headers.Authorization="Bearer "+token;
+    }
+
+    const response=await fetch(
+      (API.API_BASE||"https://kenbridge-christian-school.onrender.com")+
+      "/api/resources/upload",
+      {
+        method:"POST",
+        headers,
+        body:formData
+      }
+    );
+
+    let data={};
+    try{
+      data=await response.json();
+    }catch(_){}
+
+    if(!response.ok){
+      throw new Error(
+        data.message||
+        "Resource upload failed."
+      );
+    }
+
+    form.reset();
+    closeUpload();
+
+    showStatus(
+      data.message||"Educational resource uploaded successfully.",
+      "ok"
+    );
+
+    await loadResources();
+
+  }catch(error){
+    console.error(error);
+    showStatus(
+      error.message||"Unable to upload resource.",
+      "err"
+    );
+  }finally{
+    button.disabled=false;
+    button.textContent="Upload Resource";
+  }
 });
 
-["resourceSearch","categoryFilter","subjectFilter","classFilter"]
- .forEach(id=>$(id).addEventListener("input",renderResources));
-
-$("logoutButton").addEventListener("click",()=>{
- sessionStorage.removeItem("kenbridgeStaffLoggedIn");
- sessionStorage.removeItem("kenbridgeUserRole");
+document.addEventListener("DOMContentLoaded",()=>{
+  loadResources();
 });
-
-document.addEventListener("DOMContentLoaded",loadResources);
 </script>
+
 </body>
 </html>
 ```
