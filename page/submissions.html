@@ -1,424 +1,2105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Submissions | Kenbridge Christian School</title>
-<link rel="stylesheet" href="/css/style.css">
-<style>
-:root{--g:#08783f;--gd:#055a2f;--gl:#eaf7ef;--o:#f28c28;--b:#e6f0ea;--t:#26352d;--m:#6b7280}
-.sub-wrap{max-width:1180px;margin:auto;padding:45px 20px}
-.hero-mini{background:linear-gradient(135deg,var(--gd),var(--g));color:#fff;border-radius:18px;padding:42px 30px;margin-bottom:28px}
-.hero-mini .label{font-size:.78rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;opacity:.85}
-.hero-mini h1{margin:8px 0 12px;font-size:clamp(1.8rem,4vw,2.7rem)}
-.hero-mini p{max-width:780px;margin:0;line-height:1.7;opacity:.95}
-.panel{background:#fff;border:1px solid var(--b);border-radius:14px;padding:24px;margin-bottom:24px;box-shadow:0 8px 25px rgba(0,0,0,.04)}
-.panel h2{margin:0 0 7px;color:var(--gd)}
-.panel>p{color:var(--m);line-height:1.6}
-.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-.field{display:flex;flex-direction:column;gap:7px}
-.field.full{grid-column:1/-1}
-.field label{font-weight:700;color:var(--t)}
-.field input,.field select,.field textarea{width:100%;box-sizing:border-box;border:1px solid #d8e5dc;border-radius:9px;padding:11px 12px;font:inherit;background:#fff;color:var(--t)}
-.field textarea{resize:vertical;min-height:130px}
-.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid rgba(8,120,63,.16);border-color:var(--g)}
-.form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
-.help{font-size:.88rem;color:var(--m);margin-top:10px;line-height:1.5}
-.status{display:none;padding:11px 13px;border-radius:8px;margin-top:15px;font-size:.92rem}
-.status.show{display:block}
-.status.ok{background:#eaf7ef;color:#055a2f}
-.status.err{background:#fff1f1;color:#a12626}
-.status.info{background:#eef6ff;color:#245a8d}
-.item{border:1px solid var(--b);border-radius:11px;padding:16px;margin:12px 0;background:#fff}
-.item h3{margin:0 0 7px;color:var(--gd);font-size:1.05rem}
-.meta{color:var(--m);font-size:.9rem;line-height:1.6}
-.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.empty{padding:20px;border:1px dashed #cbded1;border-radius:10px;color:var(--m);background:#fafdfb;text-align:center}
-.note{background:var(--gl);border-left:4px solid var(--g);padding:13px 15px;border-radius:8px;color:#34533f;line-height:1.55;margin-top:15px}
-@media(max-width:700px){.sub-wrap{padding:30px 15px}.hero-mini{padding:30px 20px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.panel{padding:18px}}
-</style>
-</head>
-<body>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<header class="site-header">
-  <div class="top-bar">
-    <div class="container top-bar-inner">
-      <div>Kenbridge Christian School</div>
-      <div>Excellence • Character • Service</div>
+    <title>Reports & Submissions | Kenbridge Christian School</title>
+
+    <meta
+        name="description"
+        content="Kenbridge Christian School teacher reports and submissions portal."
+    >
+
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        /* =========================================================
+           SUBMISSIONS PORTAL
+           ========================================================= */
+
+        .submission-page {
+            background:
+                linear-gradient(
+                    180deg,
+                    #f5faf7 0%,
+                    #ffffff 35%,
+                    #f7faf8 100%
+                );
+            min-height: 100vh;
+        }
+
+        .submission-hero {
+            padding: 90px 20px 70px;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(3,59,32,.97),
+                    rgba(8,120,63,.93)
+                );
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submission-hero::before {
+            content: "";
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,.12);
+            top: -210px;
+            right: -100px;
+        }
+
+        .submission-hero::after {
+            content: "";
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,.08);
+            bottom: -150px;
+            left: -70px;
+        }
+
+        .submission-hero-inner {
+            width: min(1150px, 100%);
+            margin: auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .submission-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 30px;
+            background: rgba(255,255,255,.12);
+            border: 1px solid rgba(255,255,255,.18);
+            font-size: .8rem;
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .submission-hero h1 {
+            font-size: clamp(2.1rem, 5vw, 3.7rem);
+            line-height: 1.05;
+            margin: 0 0 18px;
+            font-weight: 900;
+        }
+
+        .submission-hero p {
+            max-width: 720px;
+            margin: 0;
+            color: rgba(255,255,255,.88);
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        .submission-content {
+            width: min(1150px, 100%);
+            margin: -35px auto 0;
+            padding: 0 20px 80px;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* =========================================================
+           PORTAL STATUS
+           ========================================================= */
+
+        .portal-status {
+            background: #fff;
+            border: 1px solid #dce9e1;
+            border-radius: 18px;
+            padding: 18px 22px;
+            margin-bottom: 25px;
+            box-shadow: 0 12px 35px rgba(3,59,32,.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .portal-status-left {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .portal-status-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: #eaf7ef;
+            color: #08783f;
+            font-weight: 900;
+        }
+
+        .portal-status strong {
+            display: block;
+            color: #033b20;
+            margin-bottom: 3px;
+        }
+
+        .portal-status small {
+            color: #66756d;
+        }
+
+        .portal-badge {
+            padding: 7px 12px;
+            border-radius: 30px;
+            background: #eaf7ef;
+            color: #08783f;
+            font-size: .78rem;
+            font-weight: 800;
+        }
+
+        /* =========================================================
+           MAIN GRID
+           ========================================================= */
+
+        .submission-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.45fr) minmax(300px, .8fr);
+            gap: 25px;
+            align-items: start;
+        }
+
+        .submission-card {
+            background: #fff;
+            border: 1px solid #dfeae4;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 12px 35px rgba(3,59,32,.07);
+            margin-bottom: 25px;
+        }
+
+        .submission-card-header {
+            padding: 22px 25px;
+            border-bottom: 1px solid #e8efeb;
+            background: linear-gradient(
+                180deg,
+                #ffffff,
+                #f9fcfa
+            );
+        }
+
+        .submission-card-header h2,
+        .submission-card-header h3 {
+            margin: 0 0 6px;
+            color: #033b20;
+        }
+
+        .submission-card-header p {
+            margin: 0;
+            color: #6a776f;
+            font-size: .92rem;
+            line-height: 1.6;
+        }
+
+        .submission-card-body {
+            padding: 25px;
+        }
+
+        /* =========================================================
+           FORM
+           ========================================================= */
+
+        .submission-form {
+            display: grid;
+            gap: 18px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            color: #174c31;
+            font-size: .86rem;
+            font-weight: 800;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ccdcd3;
+            border-radius: 11px;
+            background: #fff;
+            color: #193b29;
+            padding: 12px 13px;
+            font: inherit;
+            outline: none;
+            transition:
+                border-color .2s ease,
+                box-shadow .2s ease,
+                background .2s ease;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #08783f;
+            box-shadow: 0 0 0 4px rgba(8,120,63,.09);
+            background: #fcfffd;
+        }
+
+        .form-help {
+            color: #7a857e;
+            font-size: .76rem;
+            line-height: 1.5;
+        }
+
+        .submission-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 3px;
+        }
+
+        .submission-btn {
+            border: 0;
+            border-radius: 11px;
+            padding: 12px 18px;
+            font: inherit;
+            font-weight: 800;
+            cursor: pointer;
+            transition:
+                transform .2s ease,
+                box-shadow .2s ease,
+                opacity .2s ease;
+        }
+
+        .submission-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .submission-btn.primary {
+            background: #08783f;
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(8,120,63,.2);
+        }
+
+        .submission-btn.secondary {
+            background: #eef5f1;
+            color: #155331;
+        }
+
+        .submission-btn.danger {
+            background: #fff0ef;
+            color: #a63229;
+        }
+
+        .submission-btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .submission-status {
+            min-height: 20px;
+            padding: 0;
+            font-size: .86rem;
+            font-weight: 700;
+        }
+
+        .submission-status.success {
+            color: #08783f;
+        }
+
+        .submission-status.error {
+            color: #b33a31;
+        }
+
+        /* =========================================================
+           TASKS
+           ========================================================= */
+
+        .task-list,
+        .submission-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .task-item,
+        .submission-item {
+            border: 1px solid #e1ebe5;
+            border-radius: 14px;
+            padding: 16px;
+            background: #fbfdfc;
+            transition:
+                border-color .2s ease,
+                transform .2s ease,
+                box-shadow .2s ease;
+        }
+
+        .task-item:hover,
+        .submission-item:hover {
+            border-color: #bcd9c8;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 22px rgba(3,59,32,.06);
+        }
+
+        .item-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .item-title {
+            color: #033b20;
+            font-weight: 900;
+            line-height: 1.35;
+        }
+
+        .item-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 7px;
+        }
+
+        .meta-chip {
+            display: inline-flex;
+            padding: 5px 9px;
+            border-radius: 20px;
+            background: #eaf7ef;
+            color: #24613e;
+            font-size: .72rem;
+            font-weight: 700;
+        }
+
+        .item-date {
+            color: #7a857e;
+            font-size: .75rem;
+            white-space: nowrap;
+        }
+
+        .item-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 13px;
+        }
+
+        .item-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #cfe0d5;
+            background: #fff;
+            color: #155331;
+            border-radius: 8px;
+            padding: 7px 11px;
+            font-size: .75rem;
+            font-weight: 800;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .item-action:hover {
+            background: #eaf7ef;
+        }
+
+        .item-action.approve {
+            background: #08783f;
+            border-color: #08783f;
+            color: #fff;
+        }
+
+        .item-action.assign {
+            background: #fff7eb;
+            border-color: #f4d4a6;
+            color: #8a5310;
+        }
+
+        /* =========================================================
+           EMPTY / LOADING
+           ========================================================= */
+
+        .portal-message {
+            padding: 25px 15px;
+            text-align: center;
+            color: #718078;
+            border: 1px dashed #d5e2da;
+            border-radius: 13px;
+            background: #fbfdfc;
+            line-height: 1.6;
+        }
+
+        .portal-message strong {
+            display: block;
+            color: #315a42;
+            margin-bottom: 5px;
+        }
+
+        .loader {
+            width: 25px;
+            height: 25px;
+            border: 3px solid #dcece3;
+            border-top-color: #08783f;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            animation: submissionSpin .8s linear infinite;
+        }
+
+        @keyframes submissionSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =========================================================
+           INFORMATION PANEL
+           ========================================================= */
+
+        .info-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .info-row {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 13px;
+            border-radius: 12px;
+            background: #f5faf7;
+        }
+
+        .info-number {
+            width: 28px;
+            height: 28px;
+            flex: 0 0 28px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            background: #08783f;
+            color: #fff;
+            font-size: .75rem;
+            font-weight: 900;
+        }
+
+        .info-row strong {
+            display: block;
+            color: #174c31;
+            margin-bottom: 3px;
+            font-size: .86rem;
+        }
+
+        .info-row span {
+            color: #6f7c74;
+            font-size: .78rem;
+            line-height: 1.5;
+        }
+
+        /* =========================================================
+           TOKEN NOTICE
+           ========================================================= */
+
+        .security-note {
+            padding: 16px;
+            border-radius: 13px;
+            background: #fff9ee;
+            border: 1px solid #f2dfb9;
+            color: #79551c;
+            font-size: .8rem;
+            line-height: 1.65;
+        }
+
+        .security-note strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* =========================================================
+           RESPONSIVE
+           ========================================================= */
+
+        @media (max-width: 900px) {
+            .submission-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .submission-hero {
+                padding: 70px 20px 65px;
+            }
+
+            .submission-content {
+                margin-top: -25px;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .submission-hero {
+                padding: 55px 16px 55px;
+            }
+
+            .submission-content {
+                padding: 0 12px 55px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .submission-card-body {
+                padding: 18px;
+            }
+
+            .submission-card-header {
+                padding: 18px;
+            }
+
+            .portal-status {
+                padding: 15px;
+            }
+
+            .item-top {
+                flex-direction: column;
+                gap: 7px;
+            }
+
+            .item-date {
+                white-space: normal;
+            }
+
+            .submission-actions {
+                flex-direction: column;
+            }
+
+            .submission-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body class="submission-page">
+
+    <!-- =========================================================
+         HEADER
+         ========================================================= -->
+
+    <div class="top-bar">
+        <div class="top-bar-container">
+            <span>Kenbridge Christian School</span>
+            <span>Education • Character • Excellence</span>
+        </div>
     </div>
-  </div>
-  <nav class="main-nav">
-    <div class="container nav-inner">
-      <a class="brand" href="../index.html">
-        <img src="../images/logo.jpg" alt="Kenbridge Christian School">
-        <span>Kenbridge Christian School</span>
-      </a>
-      <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">☰</button>
-      <div class="nav-links" id="navLinks">
-        <a href="../index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="academics.html">Academics</a>
-        <a href="admissions.html">Admissions</a>
-        <a href="boarding.html">Boarding</a>
-        <a href="sports.html">Sports</a>
-        <div class="nav-more">
-          <button type="button" class="more-toggle">More ▾</button>
-          <div class="more-menu">
-            <a href="announcements.html">Announcements</a>
-            <a href="articles.html">Articles</a>
-            <a href="careers.html">Careers</a>
-            <a href="contact.html">Contact</a>
-            <a href="feedback.html">Feedback</a>
-            <a href="facilities.html">Facilities</a>
+
+    <header class="header" id="header">
+        <div class="header-container">
+
+            <a href="../index.html" class="logo-link">
+                <img
+                    src="../images/logo.jpg"
+                    alt="Kenbridge Christian School"
+                    class="logo"
+                >
+            </a>
+
+            <nav class="desktop-nav" aria-label="Main navigation">
+
+                <a href="../index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="academics.html">Academics</a>
+                <a href="admissions.html">Admissions</a>
+                <a href="fees.html">Fees</a>
+                <a href="articles.html">Articles</a>
+                <a href="contact.html">Contact</a>
+
+                <div class="more-menu">
+                    <button
+                        class="more-button"
+                        type="button"
+                        aria-expanded="false"
+                    >
+                        More
+                    </button>
+
+                    <div class="dropdown">
+                        <a href="announcements.html">Announcements</a>
+                        <a href="boarding.html">Boarding</a>
+                        <a href="careers.html">Careers</a>
+                        <a href="facilities.html">Facilities</a>
+                        <a href="gallery.html">Gallery</a>
+                        <a href="management.html">Management</a>
+                        <a href="projects.html">Projects</a>
+                        <a href="reports.html">Reports</a>
+                        <a href="sports.html">Sports</a>
+                        <a
+                            href="submissions.html"
+                            class="active"
+                        >
+                            Submissions
+                        </a>
+                    </div>
+                </div>
+
+                <a
+                    href="submissions.html"
+                    class="apply-button"
+                >
+                    Apply Online
+                </a>
+            </nav>
+
+            <button
+                class="mobile-menu-button"
+                id="mobileMenuButton"
+                type="button"
+                aria-label="Open navigation"
+                aria-expanded="false"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+        </div>
+
+        <nav
+            class="mobile-nav"
+            id="mobileNav"
+            aria-label="Mobile navigation"
+        >
+            <a href="../index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="academics.html">Academics</a>
+            <a href="admissions.html">Admissions</a>
             <a href="fees.html">Fees</a>
+            <a href="articles.html">Articles</a>
+            <a href="announcements.html">Announcements</a>
+            <a href="boarding.html">Boarding</a>
+            <a href="careers.html">Careers</a>
+            <a href="facilities.html">Facilities</a>
             <a href="gallery.html">Gallery</a>
             <a href="management.html">Management</a>
             <a href="projects.html">Projects</a>
             <a href="reports.html">Reports</a>
-            <a class="active" href="submissions.html">Submissions</a>
-          </div>
+            <a href="sports.html">Sports</a>
+            <a
+                href="submissions.html"
+                class="active"
+            >
+                Submissions
+            </a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </header>
+
+
+    <!-- =========================================================
+         HERO
+         ========================================================= -->
+
+    <section class="submission-hero">
+        <div class="submission-hero-inner">
+
+            <div class="submission-kicker">
+                Teacher Portal
+            </div>
+
+            <h1>Reports &amp; Submissions</h1>
+
+            <p>
+                Submit academic reports, view assigned tasks,
+                track your submissions and manage reporting
+                activities through the Kenbridge Christian School
+                staff portal.
+            </p>
+
         </div>
-        <a class="apply-btn" href="submissions.html">Apply Online</a>
-      </div>
-    </div>
-  </nav>
-</header>
+    </section>
 
-<main>
-<section class="sub-wrap">
-  <div class="hero-mini">
-    <div class="label">School Reports & Submissions</div>
-    <h1>Teacher Submissions & Secretariat Tasks</h1>
-    <p>Teachers can create and submit class reports for weekly, monthly or termly periods. Secretariat and Finance staff can review assigned tasks, approve reports and publish completed submissions.</p>
-  </div>
 
-  <section class="panel">
-    <h2>Teacher: Create / Submit a Class Report</h2>
-    <p>Complete the report information below and submit it for Secretariat/Finance processing.</p>
+    <!-- =========================================================
+         CONTENT
+         ========================================================= -->
 
-    <div class="form-grid">
-      <div class="field">
-        <label for="t_class">Class Name</label>
-        <input type="text" id="t_class" placeholder="e.g. Grade 3A">
-      </div>
+    <main class="submission-content">
 
-      <div class="field">
-        <label for="t_period">Period Type</label>
-        <select id="t_period">
-          <option value="WEEK">Weekly</option>
-          <option value="MONTH">Monthly</option>
-          <option value="TERM">Termly</option>
-        </select>
-      </div>
+        <!-- STATUS -->
+        <section class="portal-status">
 
-      <div class="field">
-        <label for="t_start">Start Date</label>
-        <input type="date" id="t_start">
-      </div>
+            <div class="portal-status-left">
 
-      <div class="field">
-        <label for="t_end">End Date</label>
-        <input type="date" id="t_end">
-      </div>
+                <div class="portal-status-icon">
+                    ✓
+                </div>
 
-      <div class="field full">
-        <label for="t_title">Title <span style="font-weight:400;color:#6b7280">(optional)</span></label>
-        <input type="text" id="t_title" placeholder="Term 1 - Class Report">
-      </div>
+                <div>
+                    <strong>Staff Submission Portal</strong>
+                    <small>
+                        Connected to the Kenbridge reporting system.
+                    </small>
+                </div>
 
-      <div class="field full">
-        <label for="t_csv">CSV Data</label>
-        <textarea id="t_csv" placeholder="First row headers: student_name, mark1, mark2, ..."></textarea>
-      </div>
-    </div>
+            </div>
 
-    <div class="form-actions">
-      <button id="t_submit" class="btn btn-primary" type="button">Submit Report</button>
-      <button id="clearForm" class="btn btn-outline" type="button">Clear Form</button>
-    </div>
+            <span class="portal-badge">
+                SECURE PORTAL
+            </span>
 
-    <div class="note">
-      After submission, the report becomes available to the Secretariat/Finance workflow for review, assignment, printing and publishing.
-    </div>
+        </section>
 
-    <div id="submitStatus" class="status"></div>
-  </section>
 
-  <section class="panel">
-    <h2>Secretariat / Finance Tasks</h2>
-    <p>Review reports awaiting processing and use the available actions according to your staff permissions.</p>
-    <div id="tasksList"><div class="empty">Loading tasks...</div></div>
-  </section>
+        <div class="submission-grid">
 
-  <section class="panel">
-    <h2>Your Submissions</h2>
-    <p>Reports submitted through this account are displayed below.</p>
-    <div id="mySubs"><div class="empty">Loading submissions...</div></div>
-  </section>
-</section>
-</main>
+            <!-- =================================================
+                 LEFT COLUMN
+                 ================================================= -->
 
-<footer class="site-footer">
-  <div class="container footer-grid">
-    <div>
-      <img src="../images/logo.png" alt="Kenbridge Christian School" style="max-width:170px;height:auto">
-      <p>Kenbridge Christian School is committed to quality education, Christian character, discipline and service.</p>
-    </div>
-    <div>
-      <h3>Quick Links</h3>
-      <a href="../index.html">Home</a>
-      <a href="about.html">About Us</a>
-      <a href="academics.html">Academics</a>
-      <a href="admissions.html">Admissions</a>
-      <a href="reports.html">Reports</a>
-      <a href="submissions.html">Submissions</a>
-    </div>
-    <div>
-      <h3>School</h3>
-      <a href="management.html">Management</a>
-      <a href="facilities.html">Facilities</a>
-      <a href="boarding.html">Boarding</a>
-      <a href="sports.html">Sports</a>
-      <a href="gallery.html">Gallery</a>
-      <a href="contact.html">Contact</a>
-    </div>
-    <div>
-      <h3>Information</h3>
-      <a href="fees.html">Fees</a>
-      <a href="careers.html">Careers</a>
-      <a href="feedback.html">Feedback</a>
-      <a href="privacy.html">Privacy Policy</a>
-      <a href="terms.html">Terms & Conditions</a>
-    </div>
-  </div>
-  <div class="container footer-bottom">
-    <span>© <span id="year"></span> Kenbridge Christian School. All rights reserved.</span>
-    <span>Built for learning, character and service.</span>
-  </div>
-</footer>
+            <div>
 
-<script>
-(function(){
-  const $=id=>document.getElementById(id);
-  const token=()=>localStorage.getItem('kenbridge_admin_token')||'';
+                <!-- SUBMIT REPORT -->
+                <section class="submission-card">
 
-  function esc(v){
-    return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-  }
+                    <div class="submission-card-header">
+                        <h2>Submit a Report</h2>
+                        <p>
+                            Complete the required information and
+                            submit your report through the existing
+                            school reporting system.
+                        </p>
+                    </div>
 
-  function showStatus(msg,type='info'){
-    const el=$('submitStatus');
-    el.className='status show '+type;
-    el.textContent=msg;
-  }
+                    <div class="submission-card-body">
 
-  async function jsonFetch(url,opts={}){
-    const headers=Object.assign({},opts.headers||{},{
-      'Authorization':'Bearer '+token()
-    });
-    const r=await fetch(url,Object.assign({},opts,{headers}));
-    let data={};
-    try{data=await r.json()}catch(e){}
-    if(!r.ok)throw new Error(data.message||data.error||'Request failed');
-    return data;
-  }
+                        <form
+                            class="submission-form"
+                            id="teacherSubmissionForm"
+                        >
 
-  async function fetchTasks(){
-    const box=$('tasksList');
-    box.innerHTML='<div class="empty">Loading tasks...</div>';
-    try{
-      const data=await jsonFetch('/api/submissions');
-      const tasks=data.tasks||[];
-      if(!tasks.length){
-        box.innerHTML='<div class="empty">No tasks found.</div>';
-        return;
-      }
-      box.innerHTML=tasks.map(t=>`
-        <div class="item">
-          <h3>${esc(t.title||'Submission')}</h3>
-          <div class="meta">
-            <strong>Class:</strong> ${esc(t.class_name||'-')}<br>
-            <strong>Period:</strong> ${esc(t.period_type||'-')}<br>
-            <strong>Status:</strong> ${esc(t.status||'-')}
-          </div>
-          <div class="actions">
-            <button class="btn btn-primary" type="button" onclick="viewSubmission('${esc(t.submission_id||t.id||'')}')">View</button>
-            <button class="btn btn-outline" type="button" onclick="assignSubmission('${esc(t.submission_id||t.id||'')}')">Assign</button>
-            <button class="btn btn-primary" type="button" onclick="approveSubmission('${esc(t.submission_id||t.id||'')}')">Approve & Publish</button>
-          </div>
+                            <div class="form-row">
+
+                                <div class="form-group">
+                                    <label for="t_class">
+                                        Class
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="t_class"
+                                        name="class"
+                                        placeholder="e.g. P.5"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="t_period">
+                                        Reporting Period
+                                    </label>
+
+                                    <select
+                                        id="t_period"
+                                        name="period"
+                                        required
+                                    >
+                                        <option value="">
+                                            Select period
+                                        </option>
+                                        <option value="WEEK">
+                                            Weekly
+                                        </option>
+                                        <option value="MONTH">
+                                            Monthly
+                                        </option>
+                                        <option value="TERM">
+                                            Termly
+                                        </option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-row">
+
+                                <div class="form-group">
+                                    <label for="t_start">
+                                        Period Start
+                                    </label>
+
+                                    <input
+                                        type="date"
+                                        id="t_start"
+                                        name="start"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="t_end">
+                                        Period End
+                                    </label>
+
+                                    <input
+                                        type="date"
+                                        id="t_end"
+                                        name="end"
+                                        required
+                                    >
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group full">
+                                <label for="t_title">
+                                    Report Title
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="t_title"
+                                    name="title"
+                                    placeholder="Enter report title"
+                                    required
+                                >
+                            </div>
+
+
+                            <div class="form-group full">
+                                <label for="t_csv">
+                                    Report Data / CSV
+                                </label>
+
+                                <textarea
+                                    id="t_csv"
+                                    name="csv"
+                                    placeholder="Paste your CSV report data here..."
+                                    required
+                                ></textarea>
+
+                                <span class="form-help">
+                                    Paste the report data in the
+                                    required CSV format supplied by
+                                    the school.
+                                </span>
+                            </div>
+
+
+                            <div
+                                class="submission-status"
+                                id="submissionStatus"
+                                aria-live="polite"
+                            ></div>
+
+
+                            <div class="submission-actions">
+
+                                <button
+                                    type="submit"
+                                    class="submission-btn primary"
+                                    id="t_submit"
+                                >
+                                    Submit Report
+                                </button>
+
+                                <button
+                                    type="reset"
+                                    class="submission-btn secondary"
+                                    id="clearSubmission"
+                                >
+                                    Clear Form
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </section>
+
+
+                <!-- TASKS -->
+                <section class="submission-card">
+
+                    <div class="submission-card-header">
+                        <h2>Assigned Tasks</h2>
+                        <p>
+                            Reporting tasks currently available
+                            to you.
+                        </p>
+                    </div>
+
+                    <div class="submission-card-body">
+
+                        <div
+                            class="task-list"
+                            id="tasksList"
+                        >
+                            <div class="portal-message">
+                                <div class="loader"></div>
+                                <strong>
+                                    Loading tasks...
+                                </strong>
+                                Please wait.
+                            </div>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- MY SUBMISSIONS -->
+                <section class="submission-card">
+
+                    <div class="submission-card-header">
+                        <h2>My Submissions</h2>
+                        <p>
+                            Review reports you have submitted
+                            through the portal.
+                        </p>
+                    </div>
+
+                    <div class="submission-card-body">
+
+                        <div
+                            class="submission-list"
+                            id="mySubs"
+                        >
+                            <div class="portal-message">
+                                <div class="loader"></div>
+                                <strong>
+                                    Loading submissions...
+                                </strong>
+                                Please wait.
+                            </div>
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+
+            <!-- =================================================
+                 RIGHT COLUMN
+                 ================================================= -->
+
+            <aside>
+
+                <!-- HOW IT WORKS -->
+                <section class="submission-card">
+
+                    <div class="submission-card-header">
+                        <h3>How It Works</h3>
+                        <p>
+                            Follow these steps when submitting
+                            your report.
+                        </p>
+                    </div>
+
+                    <div class="submission-card-body">
+
+                        <div class="info-list">
+
+                            <div class="info-row">
+                                <div class="info-number">1</div>
+                                <div>
+                                    <strong>
+                                        Select your class
+                                    </strong>
+                                    <span>
+                                        Enter the class associated
+                                        with the report.
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="info-row">
+                                <div class="info-number">2</div>
+                                <div>
+                                    <strong>
+                                        Select the period
+                                    </strong>
+                                    <span>
+                                        Choose weekly, monthly or
+                                        termly reporting.
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="info-row">
+                                <div class="info-number">3</div>
+                                <div>
+                                    <strong>
+                                        Enter report details
+                                    </strong>
+                                    <span>
+                                        Provide the dates, title
+                                        and report data.
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="info-row">
+                                <div class="info-number">4</div>
+                                <div>
+                                    <strong>
+                                        Submit
+                                    </strong>
+                                    <span>
+                                        Send the report to the
+                                        school reporting system.
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="info-row">
+                                <div class="info-number">5</div>
+                                <div>
+                                    <strong>
+                                        Track progress
+                                    </strong>
+                                    <span>
+                                        Monitor your submissions
+                                        from the My Submissions
+                                        section.
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- SECURITY -->
+                <section class="submission-card">
+
+                    <div class="submission-card-header">
+                        <h3>Portal Security</h3>
+                        <p>
+                            Your staff access is handled through
+                            the existing authentication system.
+                        </p>
+                    </div>
+
+                    <div class="submission-card-body">
+
+                        <div class="security-note">
+                            <strong>
+                                🔐 Keep your account secure
+                            </strong>
+
+                            Do not share your staff login,
+                            authentication token or other private
+                            account information with another person.
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- QUICK LINKS -->
+                <section class="submission-card">
+
+                    <div class="submission-card-header">
+                        <h3>Quick Access</h3>
+                        <p>
+                            Other useful school reporting pages.
+                        </p>
+                    </div>
+
+                    <div class="submission-card-body">
+
+                        <div class="submission-actions">
+
+                            <a
+                                href="reports.html"
+                                class="submission-btn secondary"
+                                style="text-decoration:none;text-align:center;"
+                            >
+                                Achievement Reports
+                            </a>
+
+                            <a
+                                href="contact.html"
+                                class="submission-btn secondary"
+                                style="text-decoration:none;text-align:center;"
+                            >
+                                Contact School
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </aside>
+
         </div>
-      `).join('');
-    }catch(err){
-      console.error(err);
-      box.innerHTML='<div class="empty">Unable to load tasks. Please check your staff/admin authentication and try again.</div>';
-    }
-  }
 
-  async function fetchMySubs(){
-    const box=$('mySubs');
-    box.innerHTML='<div class="empty">Loading submissions...</div>';
-    try{
-      const data=await jsonFetch('/api/submissions');
-      const subs=data.submissions||[];
-      if(!subs.length){
-        box.innerHTML='<div class="empty">No submissions yet.</div>';
-        return;
-      }
-      box.innerHTML=subs.map(s=>`
-        <div class="item">
-          <h3>${esc(s.title||'Report')}</h3>
-          <div class="meta">
-            <strong>Class:</strong> ${esc(s.class_name||'-')}<br>
-            <strong>Period:</strong> ${esc(s.period_type||'-')}<br>
-            <strong>Status:</strong> ${esc(s.status||'-')}
-          </div>
-          <div class="actions">
-            <a class="btn btn-primary" href="/api/submissions/${encodeURIComponent(s.id)}" target="_blank" rel="noopener">View</a>
-          </div>
+    </main>
+
+
+    <!-- =========================================================
+         FOOTER
+         ========================================================= -->
+
+    <footer class="site-footer">
+
+        <div class="footer-main">
+
+            <div class="footer-container">
+
+                <div class="footer-brand">
+
+                    <img
+                        src="../images/logo.png"
+                        alt="Kenbridge Christian School"
+                    >
+
+                    <p>
+                        Kenbridge Christian School is committed
+                        to quality education, Christian character
+                        and the development of responsible,
+                        confident learners.
+                    </p>
+
+                </div>
+
+
+                <div class="footer-column">
+                    <h3>School</h3>
+
+                    <a href="about.html">About Us</a>
+                    <a href="academics.html">Academics</a>
+                    <a href="admissions.html">Admissions</a>
+                    <a href="fees.html">Fees</a>
+                    <a href="gallery.html">Gallery</a>
+                </div>
+
+
+                <div class="footer-column">
+                    <h3>Information</h3>
+
+                    <a href="announcements.html">
+                        Announcements
+                    </a>
+
+                    <a href="articles.html">
+                        Articles
+                    </a>
+
+                    <a href="projects.html">
+                        Projects
+                    </a>
+
+                    <a href="sports.html">
+                        Sports
+                    </a>
+
+                    <a href="reports.html">
+                        Reports
+                    </a>
+
+                    <a href="submissions.html">
+                        Submissions
+                    </a>
+                </div>
+
+
+                <div class="footer-column">
+                    <h3>Support</h3>
+
+                    <a href="contact.html">
+                        Contact Us
+                    </a>
+
+                    <a href="feedback.html">
+                        Feedback
+                    </a>
+
+                    <a href="careers.html">
+                        Careers
+                    </a>
+
+                    <a href="privacy.html">
+                        Privacy Policy
+                    </a>
+
+                    <a href="terms.html">
+                        Terms &amp; Conditions
+                    </a>
+                </div>
+
+            </div>
+
         </div>
-      `).join('');
-    }catch(err){
-      console.error(err);
-      box.innerHTML='<div class="empty">Unable to load submissions. Please check your authentication and try again.</div>';
-    }
-  }
 
-  async function submitReport(){
-    const class_name=$('t_class').value.trim();
-    const period_type=$('t_period').value;
-    const start=$('t_start').value;
-    const end=$('t_end').value;
-    const title=$('t_title').value.trim();
-    const csv=$('t_csv').value.trim();
 
-    if(!class_name){
-      showStatus('Please enter the class name.','err');
-      $('t_class').focus();
-      return;
-    }
-    if(!start||!end){
-      showStatus('Start and end dates are required.','err');
-      return;
-    }
-    if(end<start){
-      showStatus('End date cannot be earlier than the start date.','err');
-      return;
-    }
-    if(!token()){
-      showStatus('No staff/admin session token was found. Sign in through the appropriate school staff/admin system first.','err');
-      return;
-    }
+        <div class="footer-bottom">
 
-    const btn=$('t_submit');
-    btn.disabled=true;
-    btn.textContent='Submitting...';
-    showStatus('Submitting report...','info');
+            <div class="footer-container">
 
-    try{
-      await jsonFetch('/api/submissions',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({
-          title,
-          class_name,
-          period_type,
-          period_start:start,
-          period_end:end,
-          csv
-        })
-      });
+                <span>
+                    © <span data-current-year></span>
+                    Kenbridge Christian School.
+                    All rights reserved.
+                </span>
 
-      showStatus('Report submitted successfully. A Secretariat/Finance task has been created.','ok');
-      $('t_title').value='';
-      $('t_csv').value='';
-      await Promise.all([fetchTasks(),fetchMySubs()]);
-    }catch(err){
-      console.error(err);
-      showStatus('Error: '+(err.message||'Failed to submit report.'),'err');
-    }finally{
-      btn.disabled=false;
-      btn.textContent='Submit Report';
-    }
-  }
+                <span>
+                    Education • Character • Excellence
+                </span>
 
-  window.viewSubmission=function(id){
-    if(!id)return;
-    window.open('/api/submissions/'+encodeURIComponent(id),'_blank','noopener');
-  };
+            </div>
 
-  window.assignSubmission=async function(id){
-    if(!id)return;
-    const assigned=prompt('Enter the staff user ID to assign this task to:');
-    if(!assigned)return;
+        </div>
 
-    try{
-      await jsonFetch('/api/submissions/'+encodeURIComponent(id)+'/assign',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({assigned_to:assigned.trim()})
-      });
-      alert('Task assigned successfully.');
-      fetchTasks();
-    }catch(err){
-      console.error(err);
-      alert('Error: '+(err.message||'Assignment failed.'));
-    }
-  };
+    </footer>
 
-  window.approveSubmission=async function(id){
-    if(!id)return;
-    if(!confirm('Approve and publish this submission?'))return;
 
-    try{
-      await jsonFetch('/api/submissions/'+encodeURIComponent(id)+'/approve',{
-        method:'POST'
-      });
-      alert('Submission approved and published.');
-      await Promise.all([fetchTasks(),fetchMySubs()]);
-    }catch(err){
-      console.error(err);
-      alert('Error: '+(err.message||'Approval failed.'));
-    }
-  };
+    <!-- =========================================================
+         JAVASCRIPT
+         ========================================================= -->
 
-  $('t_submit').addEventListener('click',submitReport);
+    <script src="../js/script.js"></script>
 
-  $('clearForm').addEventListener('click',function(){
-    $('t_class').value='';
-    $('t_period').value='WEEK';
-    $('t_start').value='';
-    $('t_end').value='';
-    $('t_title').value='';
-    $('t_csv').value='';
-    $('submitStatus').className='status';
-  });
+    <script>
+        /* =====================================================
+           SUBMISSION PORTAL LOGIC
+           Existing API endpoints preserved.
+           ===================================================== */
 
-  const toggle=$('menuToggle');
-  const nav=$('navLinks');
-  if(toggle&&nav){
-    toggle.addEventListener('click',function(){
-      const open=nav.classList.toggle('open');
-      toggle.setAttribute('aria-expanded',open?'true':'false');
-    });
-  }
+        (() => {
+            "use strict";
 
-  document.querySelectorAll('.more-toggle').forEach(btn=>{
-    btn.addEventListener('click',e=>{
-      e.stopPropagation();
-      btn.parentElement.classList.toggle('open');
-    });
-  });
+            const API_BASE = "";
 
-  document.addEventListener('click',()=>{
-    document.querySelectorAll('.nav-more.open').forEach(x=>x.classList.remove('open'));
-  });
+            const $ = (id) =>
+                document.getElementById(id);
 
-  $('year').textContent=new Date().getFullYear();
+            const escapeHTML = (value) => {
+                const div = document.createElement("div");
+                div.textContent =
+                    value === null ||
+                    value === undefined
+                        ? ""
+                        : String(value);
+                return div.innerHTML;
+            };
 
-  fetchTasks();
-  fetchMySubs();
-})();
-</script>
-<script src="/js/script.js"></script>
+            const token = () =>
+                localStorage.getItem(
+                    "kenbridge_admin_token"
+                ) || "";
+
+            const status = $("submissionStatus");
+
+            function showStatus(message, type = "") {
+                if (!status) return;
+
+                status.textContent = message;
+                status.className =
+                    "submission-status " + type;
+            }
+
+            function setLoading(container, text) {
+                if (!container) return;
+
+                container.innerHTML = `
+                    <div class="portal-message">
+                        <div class="loader"></div>
+                        <strong>${escapeHTML(text)}</strong>
+                        Please wait.
+                    </div>
+                `;
+            }
+
+            function setEmpty(container, title, message) {
+                if (!container) return;
+
+                container.innerHTML = `
+                    <div class="portal-message">
+                        <strong>${escapeHTML(title)}</strong>
+                        ${escapeHTML(message)}
+                    </div>
+                `;
+            }
+
+            async function apiFetch(url, options = {}) {
+                const headers = {
+                    ...(options.headers || {})
+                };
+
+                const currentToken = token();
+
+                if (currentToken) {
+                    headers.Authorization =
+                        "Bearer " + currentToken;
+                }
+
+                if (
+                    options.body &&
+                    !headers["Content-Type"]
+                ) {
+                    headers["Content-Type"] =
+                        "application/json";
+                }
+
+                const response =
+                    await fetch(
+                        API_BASE + url,
+                        {
+                            ...options,
+                            headers
+                        }
+                    );
+
+                let data = null;
+
+                try {
+                    data = await response.json();
+                } catch (_) {
+                    data = null;
+                }
+
+                if (!response.ok) {
+                    throw new Error(
+                        data?.message ||
+                        data?.error ||
+                        `Request failed (${response.status})`
+                    );
+                }
+
+                return data;
+            }
+
+            /* =================================================
+               TASKS
+               ================================================= */
+
+            async function fetchTasks() {
+                const container =
+                    $("tasksList");
+
+                if (!container) return;
+
+                setLoading(
+                    container,
+                    "Loading assigned tasks..."
+                );
+
+                try {
+                    const data =
+                        await apiFetch(
+                            "/api/submissions"
+                        );
+
+                    const tasks =
+                        Array.isArray(data)
+                            ? data
+                            : Array.isArray(data?.tasks)
+                                ? data.tasks
+                                : [];
+
+                    if (!tasks.length) {
+                        setEmpty(
+                            container,
+                            "No assigned tasks",
+                            "There are currently no submission tasks available."
+                        );
+                        return;
+                    }
+
+                    container.innerHTML =
+                        tasks.map(
+                            (task) => `
+                                <article class="task-item">
+
+                                    <div class="item-top">
+
+                                        <div>
+                                            <div class="item-title">
+                                                ${escapeHTML(
+                                                    task.title ||
+                                                    task.name ||
+                                                    "Submission Task"
+                                                )}
+                                            </div>
+
+                                            <div class="item-meta">
+
+                                                ${
+                                                    task.class_name
+                                                        ? `
+                                                            <span class="meta-chip">
+                                                                Class:
+                                                                ${escapeHTML(
+                                                                    task.class_name
+                                                                )}
+                                                            </span>
+                                                          `
+                                                        : ""
+                                                }
+
+                                                ${
+                                                    task.period_type
+                                                        ? `
+                                                            <span class="meta-chip">
+                                                                ${escapeHTML(
+                                                                    task.period_type
+                                                                )}
+                                                            </span>
+                                                          `
+                                                        : ""
+                                                }
+
+                                            </div>
+                                        </div>
+
+                                        ${
+                                            task.created_at
+                                                ? `
+                                                    <span class="item-date">
+                                                        ${escapeHTML(
+                                                            new Date(
+                                                                task.created_at
+                                                            ).toLocaleDateString()
+                                                        )}
+                                                    </span>
+                                                  `
+                                                : ""
+                                        }
+
+                                    </div>
+
+                                    <div class="item-actions">
+
+                                        ${
+                                            task.id
+                                                ? `
+                                                    <button
+                                                        type="button"
+                                                        class="item-action"
+                                                        onclick="viewSubmission('${escapeHTML(
+                                                            task.id
+                                                        )}')"
+                                                    >
+                                                        View
+                                                    </button>
+                                                  `
+                                                : ""
+                                        }
+
+                                    </div>
+
+                                </article>
+                            `
+                        ).join("");
+
+                } catch (error) {
+                    console.error(
+                        "Tasks error:",
+                        error
+                    );
+
+                    setEmpty(
+                        container,
+                        "Unable to load tasks",
+                        error.message ||
+                        "Please try again."
+                    );
+                }
+            }
+
+            /* =================================================
+               MY SUBMISSIONS
+               ================================================= */
+
+            async function fetchMySubs() {
+                const container =
+                    $("mySubs");
+
+                if (!container) return;
+
+                setLoading(
+                    container,
+                    "Loading your submissions..."
+                );
+
+                try {
+                    const data =
+                        await apiFetch(
+                            "/api/submissions"
+                        );
+
+                    const submissions =
+                        Array.isArray(data)
+                            ? data
+                            : Array.isArray(
+                                data?.submissions
+                            )
+                                ? data.submissions
+                                : [];
+
+                    if (!submissions.length) {
+                        setEmpty(
+                            container,
+                            "No submissions yet",
+                            "Your submitted reports will appear here."
+                        );
+                        return;
+                    }
+
+                    container.innerHTML =
+                        submissions.map(
+                            (item) => {
+
+                                const approved =
+                                    item.approved === true ||
+                                    item.status ===
+                                        "APPROVED";
+
+                                const statusText =
+                                    item.status ||
+                                    (
+                                        approved
+                                            ? "APPROVED"
+                                            : "SUBMITTED"
+                                    );
+
+                                return `
+                                    <article class="submission-item">
+
+                                        <div class="item-top">
+
+                                            <div>
+                                                <div class="item-title">
+                                                    ${escapeHTML(
+                                                        item.title ||
+                                                        "Untitled Report"
+                                                    )}
+                                                </div>
+
+                                                <div class="item-meta">
+
+                                                    ${
+                                                        item.class_name
+                                                            ? `
+                                                                <span class="meta-chip">
+                                                                    ${escapeHTML(
+                                                                        item.class_name
+                                                                    )}
+                                                                </span>
+                                                              `
+                                                            : ""
+                                                    }
+
+                                                    <span class="meta-chip">
+                                                        ${escapeHTML(
+                                                            statusText
+                                                        )}
+                                                    </span>
+
+                                                    ${
+                                                        item.period_type
+                                                            ? `
+                                                                <span class="meta-chip">
+                                                                    ${escapeHTML(
+                                                                        item.period_type
+                                                                    )}
+                                                                </span>
+                                                              `
+                                                            : ""
+                                                    }
+
+                                                </div>
+                                            </div>
+
+                                            ${
+                                                item.created_at
+                                                    ? `
+                                                        <span class="item-date">
+                                                            ${escapeHTML(
+                                                                new Date(
+                                                                    item.created_at
+                                                                ).toLocaleDateString()
+                                                            )}
+                                                        </span>
+                                                      `
+                                                    : ""
+                                            }
+
+                                        </div>
+
+                                        <div class="item-actions">
+
+                                            ${
+                                                item.id
+                                                    ? `
+                                                        <button
+                                                            type="button"
+                                                            class="item-action"
+                                                            onclick="viewSubmission('${escapeHTML(
+                                                                item.id
+                                                            )}')"
+                                                        >
+                                                            View Report
+                                                        </button>
+                                                      `
+                                                    : ""
+                                            }
+
+                                            ${
+                                                !approved &&
+                                                item.id
+                                                    ? `
+                                                        <button
+                                                            type="button"
+                                                            class="item-action approve"
+                                                            onclick="approve('${escapeHTML(
+                                                                item.id
+                                                            )}')"
+                                                        >
+                                                            Approve
+                                                        </button>
+                                                      `
+                                                    : ""
+                                            }
+
+                                            ${
+                                                item.id
+                                                    ? `
+                                                        <button
+                                                            type="button"
+                                                            class="item-action assign"
+                                                            onclick="assign('${escapeHTML(
+                                                                item.id
+                                                            )}')"
+                                                        >
+                                                            Assign
+                                                        </button>
+                                                      `
+                                                    : ""
+                                            }
+
+                                        </div>
+
+                                    </article>
+                                `;
+                            }
+                        ).join("");
+
+                } catch (error) {
+                    console.error(
+                        "Submissions error:",
+                        error
+                    );
+
+                    setEmpty(
+                        container,
+                        "Unable to load submissions",
+                        error.message ||
+                        "Please try again."
+                    );
+                }
+            }
+
+            /* =================================================
+               SUBMIT REPORT
+               ================================================= */
+
+            async function submitReport(event) {
+                if (event) {
+                    event.preventDefault();
+                }
+
+                const button =
+                    $("t_submit");
+
+                const className =
+                    $("t_class")?.value.trim();
+
+                const periodType =
+                    $("t_period")?.value;
+
+                const startDate =
+                    $("t_start")?.value;
+
+                const endDate =
+                    $("t_end")?.value;
+
+                const title =
+                    $("t_title")?.value.trim();
+
+                const csv =
+                    $("t_csv")?.value.trim();
+
+                if (
+                    !className ||
+                    !periodType ||
+                    !startDate ||
+                    !endDate ||
+                    !title ||
+                    !csv
+                ) {
+                    showStatus(
+                        "Please complete all required fields.",
+                        "error"
+                    );
+                    return;
+                }
+
+                if (
+                    new Date(startDate) >
+                    new Date(endDate)
+                ) {
+                    showStatus(
+                        "The period start date cannot be after the end date.",
+                        "error"
+                    );
+                    return;
+                }
+
+                if (button) {
+                    button.disabled = true;
+                    button.textContent =
+                        "Submitting...";
+                }
+
+                showStatus(
+                    "Submitting report..."
+                );
+
+                try {
+                    await apiFetch(
+                        "/api/submissions",
+                        {
+                            method: "POST",
+                            body: JSON.stringify({
+                                title,
+                                class_name:
+                                    className,
+                                period_type:
+                                    periodType,
+                                period_start:
+                                    startDate,
+                                period_end:
+                                    endDate,
+                                csv
+                            })
+                        }
+                    );
+
+                    showStatus(
+                        "Report submitted successfully.",
+                        "success"
+                    );
+
+                    $("teacherSubmissionForm")
+                        ?.reset();
+
+                    await fetchMySubs();
+
+                } catch (error) {
+                    console.error(
+                        "Submit error:",
+                        error
+                    );
+
+                    showStatus(
+                        error.message ||
+                        "Unable to submit the report.",
+                        "error"
+                    );
+
+                } finally {
+                    if (button) {
+                        button.disabled = false;
+                        button.textContent =
+                            "Submit Report";
+                    }
+                }
+            }
+
+            /* =================================================
+               VIEW SUBMISSION
+               ================================================= */
+
+            window.viewSubmission =
+                async function (id) {
+                    if (!id) return;
+
+                    try {
+                        const response =
+                            await fetch(
+                                `/api/submissions/${encodeURIComponent(
+                                    id
+                                )}`,
+                                {
+                                    headers:
+                                        token()
+                                            ? {
+                                                Authorization:
+                                                    "Bearer " +
+                                                    token()
+                                            }
+                                            : {}
+                                }
+                            );
+
+                        if (!response.ok) {
+                            throw new Error(
+                                "Unable to open submission."
+                            );
+                        }
+
+                        const contentType =
+                            response.headers.get(
+                                "content-type"
+                            ) || "";
+
+                        if (
+                            contentType.includes(
+                                "application/json"
+                            )
+                        ) {
+                            const data =
+                                await response.json();
+
+                            const text =
+                                JSON.stringify(
+                                    data,
+                                    null,
+                                    2
+                                );
+
+                            const blob =
+                                new Blob(
+                                    [text],
+                                    {
+                                        type:
+                                            "application/json"
+                                    }
+                                );
+
+                            const url =
+                                URL.createObjectURL(
+                                    blob
+                                );
+
+                            window.open(
+                                url,
+                                "_blank"
+                            );
+
+                            setTimeout(
+                                () =>
+                                    URL.revokeObjectURL(
+                                        url
+                                    ),
+                                10000
+                            );
+
+                        } else {
+                            const blob =
+                                await response.blob();
+
+                            const url =
+                                URL.createObjectURL(
+                                    blob
+                                );
+
+                            window.open(
+                                url,
+                                "_blank"
+                            );
+
+                            setTimeout(
+                                () =>
+                                    URL.revokeObjectURL(
+                                        url
+                                    ),
+                                10000
+                            );
+                        }
+
+                    } catch (error) {
+                        console.error(
+                            "View submission error:",
+                            error
+                        );
+
+                        alert(
+                            error.message ||
+                            "Unable to open submission."
+                        );
+                    }
+                };
+
+            /* =================================================
+               ASSIGN
+               ================================================= */
+
+            window.assign =
+                async function (submissionId) {
+                    if (!submissionId) return;
+
+                    const assignedTo =
+                        window.prompt(
+                            "Enter the user ID to assign this submission to:"
+                        );
+
+                    if (!assignedTo) {
+                        return;
+                    }
+
+                    try {
+                        await apiFetch(
+                            `/api/submissions/${encodeURIComponent(
+                                submissionId
+                            )}/assign`,
+                            {
+                                method: "POST",
+                                body: JSON.stringify({
+                                    assigned_to:
+                                        assignedTo
+                                })
+                            }
+                        );
+
+                        alert(
+                            "Submission assigned successfully."
+                        );
+
+                        await fetchMySubs();
+
+                    } catch (error) {
+                        console.error(
+                            "Assign error:",
+                            error
+                        );
+
+                        alert(
+                            error.message ||
+                            "Unable to assign submission."
+                        );
+                    }
+                };
+
+            /* =================================================
+               APPROVE
+               ================================================= */
+
+            window.approve =
+                async function (submissionId) {
+                    if (!submissionId) return;
+
+                    const confirmed =
+                        window.confirm(
+                            "Are you sure you want to approve this submission?"
+                        );
+
+                    if (!confirmed) return;
+
+                    try {
+                        await apiFetch(
+                            `/api/submissions/${encodeURIComponent(
+                                submissionId
+                            )}/approve`,
+                            {
+                                method: "POST"
+                            }
+                        );
+
+                        alert(
+                            "Submission approved successfully."
+                        );
+
+                        await fetchMySubs();
+
+                    } catch (error) {
+                        console.error(
+                            "Approve error:",
+                            error
+                        );
+
+                        alert(
+                            error.message ||
+                            "Unable to approve submission."
+                        );
+                    }
+                };
+
+            /* =================================================
+               FORM SETUP
+               ================================================= */
+
+            const form =
+                $("teacherSubmissionForm");
+
+            if (form) {
+                form.addEventListener(
+                    "submit",
+                    submitReport
+                );
+            }
+
+            const clearButton =
+                $("clearSubmission");
+
+            if (clearButton) {
+                clearButton.addEventListener(
+                    "click",
+                    () => {
+                        showStatus("");
+                    }
+                );
+            }
+
+            /* =================================================
+               LOAD PORTAL DATA
+               ================================================= */
+
+            fetchTasks();
+            fetchMySubs();
+
+        })();
+    </script>
+
 </body>
 </html>
