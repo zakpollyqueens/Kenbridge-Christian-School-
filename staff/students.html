@@ -5,16 +5,16 @@
 <div class="group"><label>First Name</label><input id="first_name" required></div>
 <div class="group"><label>Last Name</label><input id="last_name" required></div><div class="group"><label>Gender</label><select id="gender"><option value="">Select</option><option>Male</option><option>Female</option></select></div><div class="group"><label>Date of Birth</label><input id="date_of_birth" type="date"></div><div class="group"><label>Class</label><select id="class_name" required>
 <option value="">Select Class</option>
-<option value="BABY">Baby Class</option>
-<option value="MIDDLE">Middle Class</option>
-<option value="TOP">Top Class</option>
-<option value="P1">P1</option>
-<option value="P2">P2</option>
-<option value="P3">P3</option>
-<option value="P4">P4</option>
-<option value="P5">P5</option>
-<option value="P6">P6</option>
-<option value="P7">P7</option>
+<option value="BABY">KG 1</option>
+<option value="MIDDLE">KG 2</option>
+<option value="TOP">KG 3</option>
+<option value="P1">YEAR 1</option>
+<option value="P2">YEAR 2</option>
+<option value="P3">YEAR 3</option>
+<option value="P4">YEAR 4</option>
+<option value="P5">YEAR 5</option>
+<option value="P6">YEAR 6</option>
+<option value="P7">YEAR 7</option>
 </select></div><div class="group"><label>Stream</label><input id="stream" placeholder="e.g. A"></div>
 <div class="group"><label>Parent/Guardian Name</label><input id="parent_name"></div>
 <div class="group"><label>Parent/Guardian Phone</label><input id="parent_phone" type="tel"></div><div class="group"><label>Status</label><select id="status"><option value="ACTIVE">Active</option><option value="INACTIVE">Inactive</option></select></div></div><div class="formactions"><button id="save" class="save" type="submit">Save Student</button><button id="cancel" class="cancel" type="button">Cancel</button></div></form></div></div><script>
@@ -25,7 +25,7 @@ const token=()=>["kenbridgeAccessToken","access_token","kenbridge_access_token",
 
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 
-const classLabel=v=>({BABY:"Baby Class",MIDDLE:"Middle Class",TOP:"Top Class",P1:"P1",P2:"P2",P3:"P3",P4:"P4",P5:"P5",P6:"P6",P7:"P7"}[String(v||"").toUpperCase()]||v||"—");
+const classLabel=v=>({BABY:"KG 1",MIDDLE:"KG 2",TOP:"KG 3",P1:"YEAR 1",P2:"YEAR 2",P3:"YEAR 3",P4:"YEAR 4",P5:"YEAR 5",P6:"YEAR 6",P7:"YEAR 7"}[String(v||"").toUpperCase()]||v||"—");
 
 function show(t,type){message.textContent=t;message.className="message "+type;message.style.display="block"}
 function hide(){message.style.display="none"}
