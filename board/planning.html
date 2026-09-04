@@ -6,7 +6,7 @@
 <title>School Planning | Kenbridge Christian School</title>
 <link rel="stylesheet" href="../css/style.css">
 <style>
-:root{--p:#123c63;--s:#1f6f8b;--bg:#f4f7fb;--card:#fff;--text:#17212b;--muted:#64748b;--border:#e2e8f0;--danger:#b42318;--success:#067647;--warn:#b54708}
+:root{--p:#123c63;--s:#1f6f8b;--bg:#f4f7fb;--card:#fff;--text:#17212b;--muted:#64748b;--border:#e2e8f0;--danger:#b42318;--success:#067647}
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
 .sidebar{position:fixed;top:0;left:0;bottom:0;width:260px;background:var(--p);color:#fff;display:flex;flex-direction:column;z-index:1000}
@@ -38,7 +38,6 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 .primary{background:var(--p);color:#fff}
 .secondary{background:#eef5f8;color:var(--s)}
 .danger{background:#fef3f2;color:var(--danger)}
-.success{background:#ecfdf3;color:var(--success)}
 .notice{display:none;padding:12px 14px;border-radius:8px;margin-bottom:16px;font-size:13px;line-height:1.5}
 .notice.show{display:block}
 .notice.error{background:#fef3f2;color:var(--danger)}
@@ -58,6 +57,23 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 .info strong{display:block;color:var(--p);font-size:22px}
 .info span{font-size:12px;color:var(--muted)}
 .section-title{margin:0;color:var(--p);font-size:18px}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:2000}
+.modal.show{display:flex}
+.modal-box{background:#fff;width:min(100%,650px);max-height:90vh;overflow:auto;border-radius:14px;padding:24px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-head h3{margin:0;color:var(--p)}
+.close{border:0;background:#f1f5f9;border-radius:7px;padding:8px 11px;cursor:pointer}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.full{grid-column:1/-1}
+.group label{display:block;font-size:12px;font-weight:bold;margin-bottom:6px}
+.group input,.group textarea,.group select{width:100%;padding:10px 11px;border:1px solid var(--border);border-radius:8px;font:inherit;outline:none}
+.group textarea{min-height:110px;resize:vertical}
+.filebox{padding:13px;border:1px dashed #b8c5d3;border-radius:9px;background:#f8fafc}
+.file-note{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5}
+.current-file{display:none;margin-top:8px;padding:9px;background:#eef5f8;border-radius:7px;color:var(--s);font-size:11px;word-break:break-all}
+.progress{display:none;margin-top:12px;height:8px;background:#e8edf3;border-radius:20px;overflow:hidden}
+.progress.show{display:block}
+.progress div{width:0;height:100%;background:var(--s);transition:.25s}
 @media(max-width:1000px){.plans{grid-template-columns:1fr}.info-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:900px){
 .sidebar{transform:translateX(-100%);transition:.25s}
@@ -71,6 +87,8 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 .user>div:not(.avatar){display:none}
 .heading{flex-direction:column;align-items:flex-start}
 .info-grid{grid-template-columns:1fr}
+.form-grid{grid-template-columns:1fr}
+.full{grid-column:auto}
 }
 </style>
 </head>
@@ -123,6 +141,7 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 </div>
 
 <div class="user">
+
 <div id="avatar" class="avatar">B</div>
 
 <div>
@@ -142,6 +161,10 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 <h2>School Planning</h2>
 <p>Review strategic plans, development priorities and planning records.</p>
 </div>
+
+<button id="addButton" class="btn primary" style="display:none">
+＋ Add Plan
+</button>
 
 </div>
 
@@ -187,10 +210,15 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 <div class="card">
 
 <div style="margin-bottom:18px">
-<h3 class="section-title">Strategic & Development Plans</h3>
+
+<h3 class="section-title">
+Strategic & Development Plans
+</h3>
+
 <p style="margin:6px 0 0;color:var(--muted);font-size:13px">
 Board-approved planning records and school development documents.
 </p>
+
 </div>
 
 <div id="plans" class="plans">
@@ -201,7 +229,9 @@ Board-approved planning records and school development documents.
 
 <div class="card">
 
-<h3 class="section-title">Planning Priorities</h3>
+<h3 class="section-title">
+Planning Priorities
+</h3>
 
 <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:16px">
 
@@ -241,6 +271,124 @@ Review long-term priorities, resources and sustainable school development.
 
 </main>
 
+<div id="modal" class="modal">
+
+<div class="modal-box">
+
+<div class="modal-head">
+
+<h3 id="modalTitle">Add School Plan</h3>
+
+<button id="closeModal" class="close">✕</button>
+
+</div>
+
+<div id="formNotice" class="notice"></div>
+
+<form id="planForm">
+
+<div class="form-grid">
+
+<div class="group full">
+
+<label for="title">Plan Title *</label>
+
+<input
+id="title"
+required
+placeholder="e.g. School Strategic Development Plan 2026"
+>
+
+</div>
+
+<div class="group">
+
+<label for="planYear">Planning Year</label>
+
+<input
+id="planYear"
+type="number"
+min="2000"
+max="2100"
+placeholder="2026"
+>
+
+</div>
+
+<div class="group">
+
+<label for="documentType">Document Type</label>
+
+<select id="documentType">
+
+<option value="plan">School Plan</option>
+<option value="planning">Planning Record</option>
+<option value="strategic_plan">Strategic Plan</option>
+<option value="development_plan">Development Plan</option>
+
+</select>
+
+</div>
+
+<div class="group full">
+
+<label for="description">Description</label>
+
+<textarea
+id="description"
+placeholder="Brief description of the planning document"
+></textarea>
+
+</div>
+
+<div class="group full">
+
+<label for="planFile">Planning Document</label>
+
+<div class="filebox">
+
+<input id="planFile" type="file">
+
+<div class="file-note">
+Maximum 25 MB. Supported: PDF, Word, Excel, PowerPoint, TXT, JPG, PNG and WEBP.
+</div>
+
+<div id="currentFile" class="current-file"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="progress" class="progress">
+<div></div>
+</div>
+
+<div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px">
+
+<button
+type="button"
+id="cancelModal"
+class="btn secondary">
+Cancel
+</button>
+
+<button
+type="submit"
+id="saveButton"
+class="btn primary">
+Upload & Save
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
 <script src="../js/board-auth.js"></script>
 
 <script>
@@ -249,31 +397,56 @@ Review long-term priorities, resources and sustainable school development.
 "use strict";
 
 let plans=[];
+let editingId=null;
+let currentEditing=null;
+let currentUser=null;
 
 const $=id=>document.getElementById(id);
 
 function esc(v){
+
 return String(v??"")
 .replace(/&/g,"&amp;")
 .replace(/</g,"&lt;")
 .replace(/>/g,"&gt;")
 .replace(/"/g,"&quot;")
 .replace(/'/g,"&#039;");
+
 }
 
-function msg(text,type="error"){
-$("notice").textContent=text;
-$("notice").className=`notice show ${type}`;
+function msg(text,type="error",target="notice"){
+
+$(target).textContent=text;
+$(target).className=`notice show ${type}`;
+
+}
+
+function hideMsg(target="notice"){
+
+$(target).className="notice";
+
+}
+
+function isAdmin(){
+
+return String(currentUser?.role||"").toUpperCase()==="ADMIN";
+
 }
 
 function dateText(v){
+
 if(!v)return"";
+
 const d=new Date(v);
-return Number.isNaN(d.getTime())?String(v):d.toLocaleDateString(undefined,{
+
+return Number.isNaN(d.getTime())?
+String(v):
+d.toLocaleDateString(undefined,{
 year:"numeric",
 month:"short",
 day:"numeric"
 });
+
 }
 
 function extractYear(item){
@@ -281,7 +454,6 @@ function extractYear(item){
 const values=[
 item.created_at,
 item.updated_at,
-item.appointment_date,
 item.meeting_date
 ];
 
@@ -289,7 +461,8 @@ for(const value of values){
 
 if(value){
 
-const match=String(value).match(/\b(20\d{2})\b/);
+const match=
+String(value).match(/\b(20\d{2})\b/);
 
 if(match)return match[1];
 
@@ -297,9 +470,11 @@ if(match)return match[1];
 
 }
 
-const text=`${item.title||""} ${item.description||""}`;
+const text=
+`${item.title||""} ${item.description||""}`;
 
-const match=text.match(/\b(20\d{2})\b/);
+const match=
+text.match(/\b(20\d{2})\b/);
 
 return match?match[1]:"";
 
@@ -310,17 +485,25 @@ function populateYears(){
 const select=$("yearFilter");
 const current=select.value;
 
-const years=[...new Set(
+const years=[
+...new Set(
 plans.map(extractYear).filter(Boolean)
-)].sort((a,b)=>Number(b)-Number(a));
+)
+].sort((a,b)=>Number(b)-Number(a));
 
-select.innerHTML=`<option value="">All Years</option>`;
+select.innerHTML=
+`<option value="">All Years</option>`;
 
 years.forEach(year=>{
-const option=document.createElement("option");
+
+const option=
+document.createElement("option");
+
 option.value=year;
 option.textContent=year;
+
 select.appendChild(option);
+
 });
 
 select.value=current;
@@ -329,10 +512,24 @@ $("yearCount").textContent=years.length;
 
 }
 
+function storageUrl(path){
+
+if(!path)return"";
+
+const base=
+window.KENBRIDGE_API_BASE||"";
+
+return`${base}/api/board-upload/download?path=${encodeURIComponent(path)}`;
+
+}
+
 function render(){
 
-const q=$("search").value.trim().toLowerCase();
-const year=$("yearFilter").value;
+const q=
+$("search").value.trim().toLowerCase();
+
+const year=
+$("yearFilter").value;
 
 const list=plans.filter(item=>{
 
@@ -341,11 +538,14 @@ item.title,
 item.description,
 item.document_type,
 item.file_url,
+item.storage_path,
 extractYear(item)
 ].join(" ").toLowerCase();
 
-return(!q||haystack.includes(q))&&
-(!year||extractYear(item)===year);
+return(
+(!q||haystack.includes(q))&&
+(!year||extractYear(item)===year)
+);
 
 });
 
@@ -360,7 +560,7 @@ const d=new Date(item.created_at);
 
 if(Number.isNaN(d.getTime()))return false;
 
-return(Date.now()-d.getTime())<=31536000000;
+return Date.now()-d.getTime()<=31536000000;
 
 }).length;
 
@@ -381,7 +581,13 @@ box.innerHTML=list.map(item=>{
 
 const year=extractYear(item);
 
-return `
+const openUrl=
+item.storage_path?
+storageUrl(item.storage_path):
+item.file_url||"";
+
+return`
+
 <article class="plan">
 
 <div class="plan-head">
@@ -400,7 +606,9 @@ ${esc(item.title||"School Planning Document")}
 
 ${item.description?
 `<div class="plan-desc">${esc(item.description)}</div>`:
-`<div class="plan-desc">School planning and development record.</div>`}
+`<div class="plan-desc">
+School planning and development record.
+</div>`}
 
 <div class="meta">
 
@@ -410,26 +618,70 @@ ${item.created_at?
 ${item.updated_at?
 `<div><strong>Updated:</strong> ${esc(dateText(item.updated_at))}</div>`:""}
 
+${item.storage_path?
+`<div><strong>Storage:</strong> School Documents</div>`:""}
+
 </div>
 
 <div class="actions">
 
-${item.file_url?
-`<a class="btn primary" href="${esc(item.file_url)}" target="_blank" rel="noopener">
+${openUrl?
+`<a
+class="btn primary"
+href="${esc(openUrl)}"
+target="_blank"
+rel="noopener noreferrer">
 📄 Open Plan
-</a>`:""}
+</a>`:
+`<span class="btn secondary" style="opacity:.7">
+File Unavailable
+</span>`}
 
 ${item.meeting_id?
-`<a class="btn secondary" href="meeting-details.html?id=${encodeURIComponent(item.meeting_id)}">
+`<a
+class="btn secondary"
+href="meeting-details.html?id=${encodeURIComponent(item.meeting_id)}">
 View Meeting
 </a>`:""}
+
+${isAdmin()?
+`<button
+class="btn secondary edit"
+data-id="${esc(item.id)}">
+Edit
+</button>
+
+<button
+class="btn danger delete"
+data-id="${esc(item.id)}">
+Delete
+</button>`:""}
 
 </div>
 
 </article>
+
 `;
 
 }).join("");
+
+document.querySelectorAll(".edit").forEach(button=>{
+
+button.addEventListener(
+"click",
+()=>openEdit(button.dataset.id)
+);
+
+});
+
+document.querySelectorAll(".delete").forEach(button=>{
+
+button.addEventListener(
+"click",
+()=>deletePlan(button.dataset.id)
+);
+
+});
 
 }
 
@@ -443,18 +695,21 @@ Loading planning documents...
 try{
 
 const data=
-await KenbridgeBoardAuth.request("/api/board/documents");
+await KenbridgeBoardAuth.request(
+"/api/board/documents"
+);
 
 const all=
-Array.isArray(data?.documents)
-?data.documents
-:Array.isArray(data)
-?data
-:[];
+Array.isArray(data?.documents)?
+data.documents:
+Array.isArray(data)?
+data:
+[];
 
 plans=all.filter(item=>{
 
-const type=String(item.document_type||"").toLowerCase();
+const type=
+String(item.document_type||"").toLowerCase();
 
 return[
 "plan",
@@ -477,7 +732,461 @@ $("plans").innerHTML=
 Unable to load planning documents.
 </div>`;
 
-msg(error.message||"Unable to load planning documents.");
+msg(
+error.message||
+"Unable to load planning documents."
+);
+
+}
+
+}
+
+function resetForm(){
+
+editingId=null;
+currentEditing=null;
+
+$("modalTitle").textContent=
+"Add School Plan";
+
+$("planForm").reset();
+
+$("documentType").value="plan";
+
+$("saveButton").textContent=
+"Upload & Save";
+
+$("planFile").required=true;
+
+$("currentFile").style.display="none";
+$("currentFile").textContent="";
+
+$("progress").classList.remove("show");
+$("progress").firstElementChild.style.width="0";
+
+hideMsg("formNotice");
+
+}
+
+function openAdd(){
+
+resetForm();
+
+$("modal").classList.add("show");
+
+}
+
+function openEdit(id){
+
+const item=plans.find(
+x=>String(x.id)===String(id)
+);
+
+if(!item)return;
+
+editingId=item.id;
+currentEditing=item;
+
+$("modalTitle").textContent=
+"Edit School Plan";
+
+$("title").value=
+item.title||"";
+
+$("description").value=
+item.description||"";
+
+const allowedTypes=[
+"plan",
+"planning",
+"strategic_plan",
+"development_plan"
+];
+
+const type=
+String(item.document_type||"plan");
+
+$("documentType").value=
+allowedTypes.includes(type)?
+type:
+"plan";
+
+$("planYear").value=
+extractYear(item)||"";
+
+$("planFile").value="";
+$("planFile").required=false;
+
+if(item.storage_path){
+
+$("currentFile").textContent=
+"Current stored file: "+
+item.storage_path;
+
+$("currentFile").style.display="block";
+
+}else if(item.file_url){
+
+$("currentFile").textContent=
+"Current file: existing document URL";
+
+$("currentFile").style.display="block";
+
+}
+
+$("saveButton").textContent=
+"Update Plan";
+
+hideMsg("formNotice");
+
+$("modal").classList.add("show");
+
+}
+
+function closeModal(){
+
+$("modal").classList.remove("show");
+
+resetForm();
+
+}
+
+async function uploadFile(file){
+
+const base=
+window.KENBRIDGE_API_BASE||"";
+
+const response=await fetch(
+`${base}/api/board-upload/upload`,
+{
+method:"POST",
+headers:{
+...KenbridgeBoardAuth.authHeaders(),
+"Content-Type":"application/octet-stream",
+"X-File-Name":file.name,
+"X-File-Type":
+file.type||"application/octet-stream",
+"X-Folder":"board/planning"
+},
+body:file
+}
+);
+
+let data=null;
+
+try{
+
+data=await response.json();
+
+}catch{}
+
+if(!response.ok||!data?.success){
+
+throw new Error(
+data?.message||
+"Unable to upload planning document."
+);
+
+}
+
+return data.file;
+
+}
+
+async function savePlan(event){
+
+event.preventDefault();
+
+hideMsg("formNotice");
+
+if(!isAdmin()){
+
+msg(
+"Only administrators can add or edit planning documents.",
+"error",
+"formNotice"
+);
+
+return;
+
+}
+
+const title=
+$("title").value.trim();
+
+const file=
+$("planFile").files[0];
+
+if(!title){
+
+msg(
+"Plan title is required.",
+"error",
+"formNotice"
+);
+
+return;
+
+}
+
+if(!editingId&&!file){
+
+msg(
+"Please select the planning document.",
+"error",
+"formNotice"
+);
+
+return;
+
+}
+
+if(file&&file.size>25*1024*1024){
+
+msg(
+"The maximum file size is 25 MB.",
+"error",
+"formNotice"
+);
+
+return;
+
+}
+
+const button=$("saveButton");
+
+button.disabled=true;
+
+button.textContent=
+editingId?
+"Updating...":
+"Uploading...";
+
+$("progress").classList.add("show");
+$("progress").firstElementChild.style.width="15%";
+
+try{
+
+let storagePath=
+currentEditing?.storage_path||null;
+
+let fileUrl=
+currentEditing?.file_url||null;
+
+if(file){
+
+const uploaded=
+await uploadFile(file);
+
+storagePath=
+uploaded.storage_path;
+
+fileUrl=null;
+
+$("progress").firstElementChild.style.width="65%";
+
+}else{
+
+$("progress").firstElementChild.style.width="65%";
+
+}
+
+const year=
+$("planYear").value.trim();
+
+const description=
+$("description").value.trim();
+
+const finalDescription=
+year?
+`${description}${description?"\n\n":""}Planning Year: ${year}`:
+description;
+
+const payload={
+title:title,
+description:finalDescription||null,
+document_type:$("documentType").value,
+file_url:fileUrl,
+storage_path:storagePath,
+meeting_id:null,
+is_confidential:false
+};
+
+if(editingId){
+
+await KenbridgeBoardAuth.request(
+`/api/board/documents/${encodeURIComponent(editingId)}`,
+{
+method:"PUT",
+body:JSON.stringify(payload)
+}
+);
+
+}else{
+
+if(!storagePath&&!fileUrl){
+
+throw new Error(
+"A planning document file is required."
+);
+
+}
+
+await KenbridgeBoardAuth.request(
+"/api/board/documents",
+{
+method:"POST",
+body:JSON.stringify(payload)
+}
+);
+
+}
+
+$("progress").firstElementChild.style.width="100%";
+
+const oldStorage=
+currentEditing?.storage_path||null;
+
+if(
+editingId&&
+file&&
+oldStorage&&
+oldStorage!==storagePath
+){
+
+try{
+
+await KenbridgeBoardAuth.request(
+"/api/board-upload/delete",
+{
+method:"DELETE",
+body:JSON.stringify({
+storage_path:oldStorage
+})
+}
+);
+
+}catch(storageError){
+
+console.warn(
+"Old planning file could not be removed:",
+storageError
+);
+
+}
+
+}
+
+closeModal();
+
+msg(
+editingId?
+"Planning document updated successfully.":
+"Planning document uploaded and saved successfully.",
+"success"
+);
+
+await load();
+
+}catch(error){
+
+console.error(error);
+
+msg(
+error.message||
+"Unable to save planning document.",
+"error",
+"formNotice"
+);
+
+}finally{
+
+button.disabled=false;
+
+if(document.querySelector(".modal.show")){
+
+button.textContent=
+editingId?
+"Update Plan":
+"Upload & Save";
+
+}
+
+}
+
+}
+
+async function deletePlan(id){
+
+if(!isAdmin())return;
+
+const item=plans.find(
+x=>String(x.id)===String(id)
+);
+
+if(!item)return;
+
+if(!confirm(
+"Delete this planning document and its stored file?"
+))return;
+
+try{
+
+await KenbridgeBoardAuth.request(
+`/api/board/documents/${encodeURIComponent(id)}`,
+{
+method:"DELETE"
+}
+);
+
+if(item.storage_path){
+
+try{
+
+await KenbridgeBoardAuth.request(
+"/api/board-upload/delete",
+{
+method:"DELETE",
+body:JSON.stringify({
+storage_path:item.storage_path
+})
+}
+);
+
+}catch(storageError){
+
+console.warn(
+"Database record deleted but stored file could not be removed:",
+storageError
+);
+
+msg(
+"Planning record deleted, but the stored file could not be removed."
+);
+
+await load();
+
+return;
+
+}
+
+}
+
+msg(
+"Planning document and stored file deleted successfully.",
+"success"
+);
+
+await load();
+
+}catch(error){
+
+console.error(error);
+
+msg(
+error.message||
+"Unable to delete planning document."
+);
 
 }
 
@@ -485,22 +1194,28 @@ msg(error.message||"Unable to load planning documents.");
 
 async function init(){
 
-const user=
+currentUser=
 await KenbridgeBoardAuth.requireBoard({
 redirect:true,
 loginPath:"login.html"
 });
 
-if(!user)return;
+if(!currentUser)return;
 
-const role=String(user.role||"").toUpperCase();
+const role=
+String(currentUser.role||"").toUpperCase();
 
-const name=user.full_name||user.email||"Board Member";
+const name=
+currentUser.full_name||
+currentUser.email||
+"Board Member";
 
 $("uname").textContent=name;
 
 $("urole").textContent=
-role==="ADMIN"?"Administrator":"Board Member";
+role==="ADMIN"?
+"Administrator":
+"Board Member";
 
 $("avatar").textContent=
 name.split(/\s+/)
@@ -508,6 +1223,13 @@ name.split(/\s+/)
 .slice(0,2)
 .map(x=>x[0].toUpperCase())
 .join("")||"B";
+
+if(isAdmin()){
+
+$("addButton").style.display=
+"inline-block";
+
+}
 
 await load();
 
@@ -533,13 +1255,57 @@ loginPath:"login.html"
 }
 );
 
-$("refresh").addEventListener("click",load);
-$("search").addEventListener("input",render);
-$("yearFilter").addEventListener("change",render);
+$("refresh").addEventListener(
+"click",
+load
+);
+
+$("search").addEventListener(
+"input",
+render
+);
+
+$("yearFilter").addEventListener(
+"change",
+render
+);
+
+$("addButton").addEventListener(
+"click",
+openAdd
+);
+
+$("closeModal").addEventListener(
+"click",
+closeModal
+);
+
+$("cancelModal").addEventListener(
+"click",
+closeModal
+);
+
+$("planForm").addEventListener(
+"submit",
+savePlan
+);
+
+$("modal").addEventListener(
+"click",
+e=>{
+if(e.target===$("modal"))closeModal();
+}
+);
 
 init().catch(error=>{
+
 console.error(error);
-msg(error.message||"Unable to initialize School Planning.");
+
+msg(
+error.message||
+"Unable to initialize School Planning."
+);
+
 });
 
 })();
