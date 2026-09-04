@@ -1,1 +1,12 @@
-Updated server routes registration to include submissions route
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+// Include your submission routes here...
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
