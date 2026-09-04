@@ -62,7 +62,12 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 .group label{display:block;font-size:12px;font-weight:bold;margin-bottom:6px}
 .group input,.group textarea,.group select{width:100%;padding:10px 11px;border:1px solid var(--border);border-radius:8px;font:inherit;outline:none}
 .group textarea{min-height:100px;resize:vertical}
-.file-note{font-size:11px;color:var(--muted);margin-top:6px}
+.filebox{padding:13px;border:1px dashed #b8c5d3;border-radius:9px;background:#f8fafc}
+.file-note{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5}
+.progress{display:none;margin-top:12px;height:8px;background:#e8edf3;border-radius:20px;overflow:hidden}
+.progress.show{display:block}
+.progress div{width:0;height:100%;background:var(--s);transition:.25s}
+.current-file{display:none;margin-top:8px;padding:9px;background:#eef5f8;border-radius:7px;color:var(--s);font-size:11px;word-break:break-all}
 @media(max-width:1000px){.minutes{grid-template-columns:1fr}}
 @media(max-width:900px){
 .sidebar{transform:translateX(-100%);transition:.25s}
@@ -134,7 +139,7 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 <p>Access official minutes and records of Board meetings.</p>
 </div>
 
-<button id="addButton" class="btn primary">
+<button id="addButton" class="btn primary" style="display:none">
 ＋ Add Minutes
 </button>
 </div>
@@ -150,9 +155,7 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 <option value="">All Meetings</option>
 </select>
 
-<button id="refresh" class="btn secondary">
-↻ Refresh
-</button>
+<button id="refresh" class="btn secondary">↻ Refresh</button>
 
 </div>
 </div>
@@ -206,16 +209,25 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 </div>
 
 <div class="group full">
-<label for="fileUrl">Minutes File URL</label>
-<input id="fileUrl" type="url" placeholder="Paste the secure document URL">
-<div class="file-note">Use the approved school document/storage URL for the minutes file.</div>
+<label for="minutesFile">Minutes File</label>
+<div class="filebox">
+<input id="minutesFile" type="file">
+<div class="file-note">
+Maximum 25 MB. Supported: PDF, Word, Excel, PowerPoint, TXT, JPG, PNG and WEBP.
+</div>
+<div id="currentFile" class="current-file"></div>
+</div>
 </div>
 
+</div>
+
+<div id="progress" class="progress">
+<div></div>
 </div>
 
 <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px">
 <button type="button" id="cancelModal" class="btn secondary">Cancel</button>
-<button type="submit" id="saveButton" class="btn primary">Save Minutes</button>
+<button type="submit" id="saveButton" class="btn primary">Upload & Save</button>
 </div>
 
 </form>
@@ -233,6 +245,8 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text
 let meetings=[];
 let minutes=[];
 let editingId=null;
+let currentEditing=null;
+let currentUser=null;
 
 const $=id=>document.getElementById(id);
 
@@ -267,27 +281,43 @@ day:"numeric"
 
 function populateMeetingSelect(){
 
-const selects=[$("meetingId"),$("meetingFilter")];
+const filter=$("meetingFilter");
+const form=$("meetingId");
+const filterValue=filter.value;
+const formValue=form.value;
 
-selects.forEach(s=>{
-const current=s.value;
-
-if(s===$("meetingId")){
-s.innerHTML=`<option value="">Select meeting</option>`;
-}else{
-s.innerHTML=`<option value="">All Meetings</option>`;
-}
+filter.innerHTML=`<option value="">All Meetings</option>`;
+form.innerHTML=`<option value="">Select meeting</option>`;
 
 meetings.forEach(m=>{
-const o=document.createElement("option");
-o.value=m.id;
-o.textContent=`${m.title||"Board Meeting"} — ${dateText(m.meeting_date)}`;
-s.appendChild(o);
+
+const text=
+`${m.title||"Board Meeting"} — ${dateText(m.meeting_date)}`;
+
+const a=document.createElement("option");
+a.value=m.id;
+a.textContent=text;
+filter.appendChild(a);
+
+const b=document.createElement("option");
+b.value=m.id;
+b.textContent=text;
+form.appendChild(b);
+
 });
 
-s.value=current;
+filter.value=filterValue;
+form.value=formValue;
 
-});
+}
+
+function storageUrl(path){
+
+if(!path)return"";
+
+const base=window.KENBRIDGE_API_BASE||"";
+
+return `${base}/api/board-upload/download?path=${encodeURIComponent(path)}`;
 
 }
 
@@ -296,31 +326,36 @@ function render(){
 const q=$("search").value.trim().toLowerCase();
 const meetingFilter=$("meetingFilter").value;
 
-let list=minutes.filter(m=>{
+const list=minutes.filter(m=>{
 
 const hay=[
 m.title,
 m.description,
 m.document_type,
-m.file_url
+m.file_url,
+m.storage_path,
+m.meeting_title
 ].join(" ").toLowerCase();
 
-const searchOk=!q||hay.includes(q);
-
-const meetingOk=
-!meetingFilter||
-String(m.meeting_id)===String(meetingFilter);
-
-return searchOk&&meetingOk;
+return(
+(!q||hay.includes(q))&&
+(!meetingFilter||
+String(m.meeting_id)===String(meetingFilter))
+);
 
 });
 
 const box=$("minutes");
 
 if(!list.length){
+
 box.innerHTML=
-`<div class="empty" style="grid-column:1/-1">No meeting minutes found.</div>`;
+`<div class="empty" style="grid-column:1/-1">
+No meeting minutes found.
+</div>`;
+
 return;
+
 }
 
 box.innerHTML=list.map(m=>{
@@ -329,7 +364,10 @@ const meeting=meetings.find(
 x=>String(x.id)===String(m.meeting_id)
 );
 
-const title=m.title||"Board Meeting Minutes";
+const openUrl=
+m.storage_path?
+storageUrl(m.storage_path):
+m.file_url||"";
 
 return `
 <article class="minute">
@@ -337,16 +375,20 @@ return `
 <div class="minute-top">
 
 <div>
+
 <div class="minute-title">
-${esc(title)}
+${esc(m.title||"Board Meeting Minutes")}
 </div>
 
 <div class="meta">
+
 ${meeting?
 esc(meeting.title||"Board Meeting"):
-"Meeting record"}
+esc(m.meeting_title||"Meeting record")}
+
 ${meeting?.meeting_date?
 `<br>${esc(dateText(meeting.meeting_date))}`:""}
+
 </div>
 
 </div>
@@ -358,20 +400,37 @@ ${meeting?.meeting_date?
 ${m.description?
 `<div class="description">${esc(m.description)}</div>`:""}
 
+${m.storage_path?
+`<div class="meta">
+<strong>Stored:</strong> School Documents
+</div>`:""}
+
 <div class="actions">
 
-${m.file_url?
-`<a class="btn primary" href="${esc(m.file_url)}" target="_blank" rel="noopener">
+${openUrl?
+`<a class="btn primary"
+href="${esc(openUrl)}"
+target="_blank"
+rel="noopener noreferrer">
 📄 Open Minutes
+</a>`:
+`<span class="btn secondary" style="opacity:.7">
+File Unavailable
+</span>`}
+
+${m.meeting_id?
+`<a class="btn secondary"
+href="meeting-details.html?id=${encodeURIComponent(m.meeting_id)}">
+View Meeting
 </a>`:""}
 
-<button class="btn secondary edit" data-id="${esc(m.id)}">
+${isAdmin()?
+`<button class="btn secondary edit" data-id="${esc(m.id)}">
 Edit
 </button>
-
 <button class="btn danger delete" data-id="${esc(m.id)}">
 Delete
-</button>
+</button>`:""}
 
 </div>
 
@@ -390,6 +449,12 @@ b.addEventListener("click",()=>deleteMinutes(b.dataset.id));
 
 }
 
+function isAdmin(){
+
+return String(currentUser?.role||"").toUpperCase()==="ADMIN";
+
+}
+
 async function loadMeetings(){
 
 try{
@@ -398,11 +463,11 @@ const data=
 await KenbridgeBoardAuth.request("/api/board/meetings");
 
 meetings=
-Array.isArray(data?.meetings)
-?data.meetings
-:Array.isArray(data)
-?data
-:[];
+Array.isArray(data?.meetings)?
+data.meetings:
+Array.isArray(data)?
+data:
+[];
 
 populateMeetingSelect();
 
@@ -410,7 +475,9 @@ populateMeetingSelect();
 
 console.error(error);
 
-msg(error.message||"Unable to load meetings.");
+msg(
+error.message||"Unable to load meetings."
+);
 
 }
 
@@ -419,7 +486,9 @@ msg(error.message||"Unable to load meetings.");
 async function loadMinutes(){
 
 $("minutes").innerHTML=
-`<div class="loading" style="grid-column:1/-1">Loading minutes...</div>`;
+`<div class="loading" style="grid-column:1/-1">
+Loading minutes...
+</div>`;
 
 try{
 
@@ -427,11 +496,11 @@ const data=
 await KenbridgeBoardAuth.request("/api/board/documents");
 
 const all=
-Array.isArray(data?.documents)
-?data.documents
-:Array.isArray(data)
-?data
-:[];
+Array.isArray(data?.documents)?
+data.documents:
+Array.isArray(data)?
+data:
+[];
 
 minutes=all.filter(
 x=>String(x.document_type||"").toLowerCase()==="minutes"
@@ -444,9 +513,13 @@ render();
 console.error(error);
 
 $("minutes").innerHTML=
-`<div class="empty" style="grid-column:1/-1">Unable to load minutes.</div>`;
+`<div class="empty" style="grid-column:1/-1">
+Unable to load minutes.
+</div>`;
 
-msg(error.message||"Unable to load minutes.");
+msg(
+error.message||"Unable to load minutes."
+);
 
 }
 
@@ -455,10 +528,18 @@ msg(error.message||"Unable to load minutes.");
 function resetForm(){
 
 editingId=null;
+currentEditing=null;
 
 $("modalTitle").textContent="Add Meeting Minutes";
 $("minutesForm").reset();
-$("saveButton").textContent="Save Minutes";
+$("saveButton").textContent="Upload & Save";
+$("minutesFile").required=true;
+
+$("currentFile").style.display="none";
+$("currentFile").textContent="";
+
+$("progress").classList.remove("show");
+$("progress").firstElementChild.style.width="0";
 
 hideMsg("formNotice");
 
@@ -481,17 +562,46 @@ x=>String(x.id)===String(id)
 if(!m)return;
 
 editingId=m.id;
+currentEditing=m;
 
 $("modalTitle").textContent="Edit Meeting Minutes";
 
 $("meetingId").value=m.meeting_id||"";
 $("title").value=m.title||"";
 $("description").value=m.description||"";
-$("fileUrl").value=m.file_url||"";
+
+const meeting=meetings.find(
+x=>String(x.id)===String(m.meeting_id)
+);
+
 $("meetingDate").value=
 m.meeting_date||
-meetings.find(x=>String(x.id)===String(m.meeting_id))?.meeting_date||
+meeting?.meeting_date||
 "";
+
+$("minutesFile").value="";
+$("minutesFile").required=false;
+
+if(m.storage_path){
+
+$("currentFile").textContent=
+"Current stored file: "+
+m.storage_path;
+
+$("currentFile").style.display="block";
+
+}else if(m.file_url){
+
+$("currentFile").textContent=
+"Current file: existing document URL";
+
+$("currentFile").style.display="block";
+
+}else{
+
+$("currentFile").style.display="none";
+
+}
 
 $("saveButton").textContent="Update Minutes";
 
@@ -504,7 +614,45 @@ $("modal").classList.add("show");
 function closeModal(){
 
 $("modal").classList.remove("show");
-editingId=null;
+resetForm();
+
+}
+
+async function uploadFile(file){
+
+const base=window.KENBRIDGE_API_BASE||"";
+
+const response=await fetch(
+`${base}/api/board-upload/upload`,
+{
+method:"POST",
+headers:{
+...KenbridgeBoardAuth.authHeaders(),
+"Content-Type":"application/octet-stream",
+"X-File-Name":file.name,
+"X-File-Type":file.type||"application/octet-stream",
+"X-Folder":"board/minutes"
+},
+body:file
+}
+);
+
+let data=null;
+
+try{
+data=await response.json();
+}catch{}
+
+if(!response.ok||!data?.success){
+
+throw new Error(
+data?.message||
+"Unable to upload minutes file."
+);
+
+}
+
+return data.file;
 
 }
 
@@ -514,31 +662,113 @@ event.preventDefault();
 
 hideMsg("formNotice");
 
+if(!isAdmin()){
+
+msg(
+"Only administrators can add or edit meeting minutes.",
+"error",
+"formNotice"
+);
+
+return;
+
+}
+
 const meetingId=$("meetingId").value;
 const title=$("title").value.trim();
+const file=$("minutesFile").files[0];
 
 if(!meetingId){
-msg("Please select the meeting.","error","formNotice");
+
+msg(
+"Please select the meeting.",
+"error",
+"formNotice"
+);
+
 return;
+
 }
 
 if(!title){
-msg("Minutes title is required.","error","formNotice");
+
+msg(
+"Minutes title is required.",
+"error",
+"formNotice"
+);
+
 return;
+
+}
+
+if(!editingId&&!file){
+
+msg(
+"Please select the minutes file.",
+"error",
+"formNotice"
+);
+
+return;
+
+}
+
+if(file&&file.size>25*1024*1024){
+
+msg(
+"The maximum file size is 25 MB.",
+"error",
+"formNotice"
+);
+
+return;
+
+}
+
+const button=$("saveButton");
+
+button.disabled=true;
+button.textContent=
+editingId?"Updating...":"Uploading...";
+
+$("progress").classList.add("show");
+$("progress").firstElementChild.style.width="15%";
+
+try{
+
+let storagePath=
+currentEditing?.storage_path||
+null;
+
+let fileUrl=
+currentEditing?.file_url||
+null;
+
+if(file){
+
+const uploaded=await uploadFile(file);
+
+storagePath=uploaded.storage_path;
+fileUrl=null;
+
+$("progress").firstElementChild.style.width="65%";
+
+}else{
+
+$("progress").firstElementChild.style.width="65%";
+
 }
 
 const payload={
 title:title,
 description:$("description").value.trim()||null,
 document_type:"minutes",
-file_url:$("fileUrl").value.trim()||null,
-meeting_id:meetingId
+file_url:fileUrl,
+storage_path:storagePath,
+meeting_id:meetingId,
+is_confidential:false
 };
-
-$("saveButton").disabled=true;
-$("saveButton").textContent="Saving...";
-
-try{
 
 if(editingId){
 
@@ -550,9 +780,15 @@ body:JSON.stringify(payload)
 }
 );
 
-msg("Meeting minutes updated successfully.","success");
-
 }else{
+
+if(!storagePath&&!fileUrl){
+
+throw new Error(
+"A stored minutes file is required."
+);
+
+}
 
 await KenbridgeBoardAuth.request(
 "/api/board/documents",
@@ -562,11 +798,52 @@ body:JSON.stringify(payload)
 }
 );
 
-msg("Meeting minutes saved successfully.","success");
+}
+
+$("progress").firstElementChild.style.width="100%";
+
+const oldStorage=
+currentEditing?.storage_path||
+null;
+
+if(
+editingId&&
+file&&
+oldStorage&&
+oldStorage!==storagePath
+){
+
+try{
+
+await KenbridgeBoardAuth.request(
+"/api/board-upload/delete",
+{
+method:"DELETE",
+body:JSON.stringify({
+storage_path:oldStorage
+})
+}
+);
+
+}catch(storageError){
+
+console.warn(
+"Old minutes file could not be removed:",
+storageError
+);
+
+}
 
 }
 
 closeModal();
+
+msg(
+editingId?
+"Meeting minutes updated successfully.":
+"Meeting minutes uploaded and saved successfully.",
+"success"
+);
 
 await loadMinutes();
 
@@ -582,9 +859,14 @@ error.message||"Unable to save meeting minutes.",
 
 }finally{
 
-$("saveButton").disabled=false;
-$("saveButton").textContent=
-editingId?"Update Minutes":"Save Minutes";
+button.disabled=false;
+
+if(document.querySelector(".modal.show")){
+button.textContent=
+editingId?
+"Update Minutes":
+"Upload & Save";
+}
 
 }
 
@@ -592,7 +874,17 @@ editingId?"Update Minutes":"Save Minutes";
 
 async function deleteMinutes(id){
 
-if(!confirm("Delete these meeting minutes?"))return;
+if(!isAdmin())return;
+
+const m=minutes.find(
+x=>String(x.id)===String(id)
+);
+
+if(!m)return;
+
+if(!confirm(
+"Delete these meeting minutes and their stored file?"
+))return;
 
 try{
 
@@ -603,7 +895,44 @@ method:"DELETE"
 }
 );
 
-msg("Meeting minutes deleted successfully.","success");
+if(m.storage_path){
+
+try{
+
+await KenbridgeBoardAuth.request(
+"/api/board-upload/delete",
+{
+method:"DELETE",
+body:JSON.stringify({
+storage_path:m.storage_path
+})
+}
+);
+
+}catch(storageError){
+
+console.warn(
+"Database record deleted but stored file could not be removed:",
+storageError
+);
+
+msg(
+"Minutes record deleted, but the stored file could not be removed.",
+"error"
+);
+
+await loadMinutes();
+
+return;
+
+}
+
+}
+
+msg(
+"Meeting minutes and stored file deleted successfully.",
+"success"
+);
 
 await loadMinutes();
 
@@ -611,7 +940,9 @@ await loadMinutes();
 
 console.error(error);
 
-msg(error.message||"Unable to delete meeting minutes.");
+msg(
+error.message||"Unable to delete meeting minutes."
+);
 
 }
 
@@ -619,28 +950,38 @@ msg(error.message||"Unable to delete meeting minutes.");
 
 async function init(){
 
-const user=
+currentUser=
 await KenbridgeBoardAuth.requireBoard({
 redirect:true,
 loginPath:"login.html"
 });
 
-if(!user)return;
+if(!currentUser)return;
 
-const role=String(user.role||"").toUpperCase();
+const role=
+String(currentUser.role||"").toUpperCase();
 
-const name=user.full_name||user.email||"Board Member";
+const name=
+currentUser.full_name||
+currentUser.email||
+"Board Member";
 
 $("uname").textContent=name;
 
 $("urole").textContent=
-role==="ADMIN"?"Administrator":"Board Member";
+role==="ADMIN"?
+"Administrator":
+"Board Member";
 
 $("avatar").textContent=
-name.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0].toUpperCase()).join("")||"B";
+name.split(/\s+/)
+.filter(Boolean)
+.slice(0,2)
+.map(x=>x[0].toUpperCase())
+.join("")||"B";
 
-if(role!=="ADMIN"){
-$("addButton").style.display="none";
+if(isAdmin()){
+$("addButton").style.display="inline-block";
 }
 
 await loadMeetings();
@@ -668,37 +1009,70 @@ loginPath:"login.html"
 }
 );
 
-$("refresh").addEventListener("click",async()=>{
+$("refresh").addEventListener(
+"click",
+async()=>{
 await loadMeetings();
 await loadMinutes();
-});
+}
+);
 
-$("search").addEventListener("input",render);
-$("meetingFilter").addEventListener("change",render);
+$("search").addEventListener(
+"input",
+render
+);
 
-$("addButton").addEventListener("click",openAdd);
-$("closeModal").addEventListener("click",closeModal);
-$("cancelModal").addEventListener("click",closeModal);
-$("minutesForm").addEventListener("submit",saveMinutes);
+$("meetingFilter").addEventListener(
+"change",
+render
+);
 
-$("modal").addEventListener("click",e=>{
+$("addButton").addEventListener(
+"click",
+openAdd
+);
+
+$("closeModal").addEventListener(
+"click",
+closeModal
+);
+
+$("cancelModal").addEventListener(
+"click",
+closeModal
+);
+
+$("minutesForm").addEventListener(
+"submit",
+saveMinutes
+);
+
+$("modal").addEventListener(
+"click",
+e=>{
 if(e.target===$("modal"))closeModal();
-});
+}
+);
 
-$("meetingId").addEventListener("change",()=>{
+$("meetingId").addEventListener(
+"change",
+()=>{
 const m=meetings.find(
 x=>String(x.id)===String($("meetingId").value)
 );
 
-if(m?.meeting_date&&!$("meetingDate").value){
+if(m?.meeting_date){
 $("meetingDate").value=m.meeting_date;
 }
-
-});
+}
+);
 
 init().catch(error=>{
 console.error(error);
-msg(error.message||"Unable to initialize Minutes.");
+msg(
+error.message||
+"Unable to initialize Minutes."
+);
 });
 
 })();
