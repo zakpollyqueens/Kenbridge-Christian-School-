@@ -1009,7 +1009,7 @@ router.delete("/agenda/:id",async(req,res)=>{
  }
 });
 
-/* DOCUMENTS */
+/* DOCUMENTS - BOARD READ */
 router.get("/documents",async(req,res)=>{
  const user=await requireBoard(req,res);
  if(!user)return;
@@ -1018,9 +1018,12 @@ router.get("/documents",async(req,res)=>{
   const{rows}=await pool.query(
    `SELECT
       bd.*,
-      u.full_name AS uploader_name
+      u.full_name AS uploader_name,
+      m.title AS meeting_title,
+      m.meeting_date
     FROM board_documents bd
     LEFT JOIN users u ON u.id=bd.uploaded_by
+    LEFT JOIN board_meetings m ON m.id=bd.meeting_id
     ORDER BY bd.created_at DESC`
   );
 
@@ -1033,6 +1036,219 @@ router.get("/documents",async(req,res)=>{
   return res.status(500).json({
    success:false,
    message:"Unable to retrieve Board documents."
+  });
+ }
+});
+
+/* CREATE BOARD DOCUMENT - ADMIN */
+router.post("/documents",async(req,res)=>{
+ const admin=await requireAdmin(req,res);
+ if(!admin)return;
+
+ try{
+  const{
+   title,
+   description,
+   document_type,
+   file_url,
+   storage_path,
+   meeting_id,
+   is_confidential
+  }=req.body||{};
+
+  if(!title){
+   return res.status(400).json({
+    success:false,
+    message:"Document title is required."
+   });
+  }
+
+  const type=String(document_type||"document").toLowerCase();
+
+  if(!["agenda","minutes","policy","plan","report","resolution","document","other"].includes(type)){
+   return res.status(400).json({
+    success:false,
+    message:"Invalid document type."
+   });
+  }
+
+  if(!file_url&&!storage_path){
+   return res.status(400).json({
+    success:false,
+    message:"A file URL or storage path is required."
+   });
+  }
+
+  const confidential=
+   is_confidential===true||
+   String(is_confidential).toLowerCase()==="true";
+
+  const{rows}=await pool.query(
+   `INSERT INTO board_documents(
+     title,description,document_type,file_url,storage_path,
+     meeting_id,uploaded_by,is_confidential,created_at
+    )
+    VALUES($1,$2,$3,$4,$5,$6,$7,$8,NOW())
+    RETURNING *`,
+   [
+    String(title).trim(),
+    description?String(description).trim():null,
+    type,
+    file_url?String(file_url).trim():null,
+    storage_path?String(storage_path).trim():null,
+    meeting_id||null,
+    admin.id,
+    confidential
+   ]
+  );
+
+  return res.status(201).json({
+   success:true,
+   message:"Board document created successfully.",
+   document:rows[0]
+  });
+ }catch(error){
+  console.error("CREATE BOARD DOCUMENT ERROR:",error.message);
+
+  if(error.code==="23503"){
+   return res.status(400).json({
+    success:false,
+    message:"The selected meeting or account could not be found."
+   });
+  }
+
+  return res.status(500).json({
+   success:false,
+   message:"Unable to create Board document."
+  });
+ }
+});
+
+/* UPDATE BOARD DOCUMENT - ADMIN */
+router.put("/documents/:id",async(req,res)=>{
+ const admin=await requireAdmin(req,res);
+ if(!admin)return;
+
+ try{
+  const{
+   title,
+   description,
+   document_type,
+   file_url,
+   storage_path,
+   meeting_id,
+   is_confidential
+  }=req.body||{};
+
+  if(!title){
+   return res.status(400).json({
+    success:false,
+    message:"Document title is required."
+   });
+  }
+
+  const type=String(document_type||"document").toLowerCase();
+
+  if(!["agenda","minutes","policy","plan","report","resolution","document","other"].includes(type)){
+   return res.status(400).json({
+    success:false,
+    message:"Invalid document type."
+   });
+  }
+
+  if(!file_url&&!storage_path){
+   return res.status(400).json({
+    success:false,
+    message:"A file URL or storage path is required."
+   });
+  }
+
+  const confidential=
+   is_confidential===true||
+   String(is_confidential).toLowerCase()==="true";
+
+  const{rows}=await pool.query(
+   `UPDATE board_documents
+    SET title=$1,
+        description=$2,
+        document_type=$3,
+        file_url=$4,
+        storage_path=$5,
+        meeting_id=$6,
+        is_confidential=$7
+    WHERE id=$8
+    RETURNING *`,
+   [
+    String(title).trim(),
+    description?String(description).trim():null,
+    type,
+    file_url?String(file_url).trim():null,
+    storage_path?String(storage_path).trim():null,
+    meeting_id||null,
+    confidential,
+    req.params.id
+   ]
+  );
+
+  if(!rows[0]){
+   return res.status(404).json({
+    success:false,
+    message:"Board document was not found."
+   });
+  }
+
+  return res.status(200).json({
+   success:true,
+   message:"Board document updated successfully.",
+   document:rows[0]
+  });
+ }catch(error){
+  console.error("UPDATE BOARD DOCUMENT ERROR:",error.message);
+
+  if(error.code==="23503"){
+   return res.status(400).json({
+    success:false,
+    message:"The selected meeting could not be found."
+   });
+  }
+
+  return res.status(500).json({
+   success:false,
+   message:"Unable to update Board document."
+  });
+ }
+});
+
+/* DELETE BOARD DOCUMENT - ADMIN */
+router.delete("/documents/:id",async(req,res)=>{
+ const admin=await requireAdmin(req,res);
+ if(!admin)return;
+
+ try{
+  const{rows}=await pool.query(
+   `DELETE FROM board_documents
+    WHERE id=$1
+    RETURNING id,title`,
+   [req.params.id]
+  );
+
+  if(!rows[0]){
+   return res.status(404).json({
+    success:false,
+    message:"Board document was not found."
+   });
+  }
+
+  return res.status(200).json({
+   success:true,
+   message:"Board document deleted successfully.",
+   document:rows[0]
+  });
+ }catch(error){
+  console.error("DELETE BOARD DOCUMENT ERROR:",error.message);
+  return res.status(500).json({
+   success:false,
+   message:"Unable to delete Board document."
   });
  }
 });
