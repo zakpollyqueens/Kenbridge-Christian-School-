@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>
+Board of Governors Login | Kenbridge Christian School
+</title>
+
+<link rel="stylesheet" href="../css/style.css">
+
+<style>
+
+:root{
+ --primary:#123c63;
+ --secondary:#1f6f8b;
+ --accent:#d4a017;
+ --light:#f5f7fa;
+ --dark:#17212b;
+ --danger:#b42318;
+}
+
+*{
+ box-sizing:border-box;
+}
+
+body{
+ margin:0;
+ min-height:100vh;
+ font-family:Arial,sans-serif;
+ background:linear-gradient(
+  135deg,
+  #123c63,
+  #1f6f8b
+ );
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+}
+
+.login-card{
+ width:min(100%,460px);
+ background:#fff;
+ border-radius:18px;
+ padding:36px;
+ box-shadow:
+  0 20px 60px
+  rgba(0,0,0,.25);
+}
+
+.logo-area{
+ text-align:center;
+ margin-bottom:28px;
+}
+
+.logo-area h1{
+ margin:0;
+ color:var(--primary);
+ font-size:24px;
+}
+
+.logo-area p{
+ margin:8px 0 0;
+ color:#64748b;
+ line-height:1.5;
+}
+
+.board-badge{
+ display:inline-block;
+ margin-bottom:15px;
+ padding:8px 15px;
+ border-radius:50px;
+ background:#eef5f8;
+ color:var(--secondary);
+ font-size:13px;
+ font-weight:700;
+ letter-spacing:.4px;
+}
+
+.form-group{
+ margin-bottom:18px;
+}
+
+label{
+ display:block;
+ margin-bottom:7px;
+ font-size:14px;
+ font-weight:700;
+ color:var(--dark);
+}
+
+input{
+ width:100%;
+ padding:13px 14px;
+ border:1px solid #d7dee7;
+ border-radius:9px;
+ outline:none;
+ font-size:15px;
+}
+
+input:focus{
+ border-color:var(--secondary);
+ box-shadow:
+  0 0 0 3px
+  rgba(31,111,139,.12);
+}
+
+.password-wrap{
+ position:relative;
+}
+
+.password-wrap input{
+ padding-right:50px;
+}
+
+.toggle-password{
+ position:absolute;
+ right:10px;
+ top:50%;
+ transform:translateY(-50%);
+ border:0;
+ background:transparent;
+ cursor:pointer;
+ color:#64748b;
+ font-size:13px;
+}
+
+.login-btn{
+ width:100%;
+ border:0;
+ border-radius:9px;
+ padding:14px;
+ background:var(--primary);
+ color:#fff;
+ font-size:15px;
+ font-weight:700;
+ cursor:pointer;
+ transition:.2s;
+}
+
+.login-btn:hover{
+ background:#0d2f4d;
+}
+
+.login-btn:disabled{
+ opacity:.65;
+ cursor:not-allowed;
+}
+
+.message{
+ display:none;
+ margin-bottom:18px;
+ padding:12px 14px;
+ border-radius:8px;
+ font-size:14px;
+ line-height:1.45;
+}
+
+.message.error{
+ display:block;
+ background:#fef3f2;
+ color:var(--danger);
+ border:1px solid #fecdca;
+}
+
+.message.success{
+ display:block;
+ background:#ecfdf3;
+ color:#067647;
+ border:1px solid #abefc6;
+}
+
+.footer{
+ margin-top:24px;
+ text-align:center;
+ color:#64748b;
+ font-size:12px;
+ line-height:1.6;
+}
+
+.footer a{
+ color:var(--secondary);
+ text-decoration:none;
+ font-weight:700;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="login-card">
+
+ <div class="logo-area">
+
+  <div class="board-badge">
+   KENBRIDGE GOVERNANCE PORTAL
+  </div>
+
+  <h1>
+   Board of Governors
+  </h1>
+
+  <p>
+   Secure access for authorized members
+   of the Kenbridge Christian School
+   Board of Governors.
+  </p>
+
+ </div>
+
+ <div
+  id="message"
+  class="message"
+ ></div>
+
+ <form id="loginForm">
+
+  <div class="form-group">
+
+   <label for="email">
+    Email Address
+   </label>
+
+<input
+id="email"
+type="email"
+autocomplete="email"
+placeholder="Enter your email address"
+required
+
+>
+
+  </div>
+
+  <div class="form-group">
+
+   <label for="password">
+    Password
+   </label>
+
+   <div class="password-wrap">
+
+```
+<input
+ id="password"
+ type="password"
+ autocomplete="current-password"
+ placeholder="Enter your password"
+ required
+>
+
+<button
+ id="togglePassword"
+ class="toggle-password"
+ type="button"
+>
+ Show
+</button>
+```
+
+   </div>
+
+  </div>
+
+<button
+id="loginButton"
+class="login-btn"
+type="submit"
+
+>
+
+Sign In to Board Portal </button>
+
+ </form>
+
+ <div class="footer">
+
+This portal is restricted to authorized
+Board members and school administrators.
+
+<br><br>
+
+  <a href="../index.html">
+   Return to School Website
+  </a>
+
+ </div>
+
+</div>
+
+<script src="../js/board-auth.js"></script>
+
+<script>
+
+(function(){
+
+ const form=
+  document.getElementById("loginForm");
+
+ const email=
+  document.getElementById("email");
+
+ const password=
+  document.getElementById("password");
+
+ const button=
+  document.getElementById("loginButton");
+
+ const message=
+  document.getElementById("message");
+
+ const toggle=
+  document.getElementById("togglePassword");
+
+
+ function showMessage(
+  text,
+  type="error"
+ ){
+
+  message.textContent=text;
+
+  message.className=
+   `message ${type}`;
+ }
+
+
+ function clearMessage(){
+
+  message.textContent="";
+
+  message.className=
+   "message";
+ }
+
+
+ toggle.addEventListener(
+  "click",
+  function(){
+
+   const showing=
+    password.type==="text";
+
+   password.type=
+    showing
+     ?"password"
+     :"text";
+
+   toggle.textContent=
+    showing
+     ?"Show"
+     :"Hide";
+
+  }
+ );
+
+
+ form.addEventListener(
+  "submit",
+  async function(event){
+
+   event.preventDefault();
+
+   clearMessage();
+
+   const userEmail=
+    email.value.trim();
+
+   const userPassword=
+    password.value;
+
+
+   if(
+    !userEmail||
+    !userPassword
+   ){
+
+    showMessage(
+     "Please enter your email address and password."
+    );
+
+    return;
+
+   }
+
+
+   button.disabled=true;
+
+   button.textContent=
+    "Signing in...";
+
+
+   try{
+
+    const user=
+     await KenbridgeBoardAuth.login(
+      userEmail,
+      userPassword
+     );
+
+
+    showMessage(
+     `Welcome, ${
+      user.full_name||
+      "Board Member"
+     }. Redirecting...`,
+     "success"
+    );
+
+
+    setTimeout(
+     function(){
+
+      window.location.replace(
+       "board-dashboard.html"
+      );
+
+     },
+     500
+    );
+
+
+   }catch(error){
+
+    KenbridgeBoardAuth.clearSession();
+
+
+    showMessage(
+     error.message||
+     "Unable to sign in."
+    );
+
+
+    button.disabled=false;
+
+    button.textContent=
+     "Sign In to Board Portal";
+
+   }
+
+  }
+ );
+
+
+ KenbridgeBoardAuth.requireBoard({
+  redirect:false
+ })
+ .then(function(user){
+
+  if(user){
+
+   window.location.replace(
+    "board-dashboard.html"
+   );
+
+  }
+
+ })
+ .catch(function(){});
+
+
+})();
+
+</script>
+
+</body>
+</html>
