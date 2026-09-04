@@ -1,212 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Feedback | Kenbridge Christian School</title>
+<meta name="description" content="Share your feedback, suggestions, compliments or concerns with Kenbridge Christian School.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Feedback | Kenbridge Christian School</title>
-
-    <meta
-        name="description"
-        content="Share your feedback, suggestions, compliments or concerns with Kenbridge Christian School."
-    >
-
-    <meta name="theme-color" content="#08783f">
-
-    <link
-        rel="stylesheet"
-        href="../css/style.css"
-    >
+<style>
+.feedback-intro{
+    max-width:760px;
+    margin:0 auto;
+}
+.feedback-form-shell{
+    max-width:900px;
+    margin:0 auto;
+}
+.feedback-note{
+    display:flex;
+    align-items:flex-start;
+    gap:18px;
+    padding:25px;
+    margin-bottom:25px;
+    background:#fff;
+    border:1px solid #dfe8e3;
+    border-radius:16px;
+}
+.feedback-note .feature-icon{
+    flex-shrink:0;
+}
+.feedback-note h3{
+    margin:0 0 7px;
+}
+.feedback-note p{
+    margin:0;
+    color:#68756f;
+}
+.feedback-card{
+    transition:transform .25s ease,box-shadow .25s ease;
+}
+.feedback-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+}
+.direct-help-box{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:25px;
+    padding:30px;
+    border-radius:16px;
+    background:rgba(255,255,255,.98);
+}
+.direct-help-content{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+.direct-help-content .feature-icon{
+    flex-shrink:0;
+}
+.direct-help-content h3{
+    margin:0 0 5px;
+}
+.direct-help-content p{
+    margin:0;
+}
+@media(max-width:760px){
+    .direct-help-box{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+    .direct-help-content{
+        width:100%;
+    }
+}
+@media(max-width:500px){
+    .feedback-note,
+    .direct-help-box{
+        padding:22px 18px;
+    }
+}
+</style>
 </head>
 
 <body>
 
-<!-- =========================================
-     TOP BAR
-========================================= -->
-
+<!-- TOP BAR -->
 <div class="top-bar">
-    <div class="container top-bar-inner">
+<div class="container top-bar-inner">
 
-        <div class="top-location">
-            📍 Old Butabika Road, Kampala, Uganda
-        </div>
-
-        <div class="top-contact">
-            <a href="tel:+256789825517">
-                📞 +256 789 825 517
-            </a>
-
-            <span class="separator">|</span>
-
-            <span>
-                Mon–Fri: 8:00 AM–5:00 PM
-            </span>
-
-            <span class="separator">|</span>
-
-            <span>
-                Sat: 8:00 AM–2:00 PM
-            </span>
-        </div>
-
+    <div class="top-location">
+        📍 Old Butabika Road, Kampala, Uganda
     </div>
-</div>
 
+    <div class="top-contact">
 
-<!-- =========================================
-     HEADER / NAVIGATION
-========================================= -->
-
-<header class="header" id="header">
-
-    <div class="container nav-container">
-
-        <a href="../index.html" class="brand">
-
-            <div class="logo-container">
-                <img
-                    src="../images/logo.jpg"
-                    alt="Kenbridge Christian School Logo"
-                    class="school-logo"
-                >
-            </div>
-
-            <div class="brand-name">
-                <strong>KENBRIDGE</strong>
-                <span>CHRISTIAN SCHOOL</span>
-            </div>
-
+        <a href="tel:+256789825517">
+            📞 +256 789 825 517
         </a>
 
+        <span class="separator">|</span>
 
-        <!-- DESKTOP NAVIGATION -->
+        <span>
+            Mon–Fri: 8:00 AM–5:00 PM
+        </span>
 
-        <nav class="desktop-nav">
+        <span class="separator">|</span>
 
-            <a href="../index.html">
-                Home
-            </a>
-
-            <a href="about.html">
-                About
-            </a>
-
-            <a href="academics.html">
-                Academics
-            </a>
-
-            <a href="admissions.html">
-                Admissions
-            </a>
-
-            <a href="fees.html">
-                Fees
-            </a>
-
-            <a href="articles.html">
-                Articles
-            </a>
-
-            <a href="contact.html">
-                Contact
-            </a>
-
-
-            <div class="more-menu">
-
-                <button
-                    class="more-button"
-                    type="button"
-                    aria-haspopup="true"
-                >
-                    More <span>⌄</span>
-                </button>
-
-                <div class="dropdown">
-
-                    <a href="boarding.html">
-                        Boarding
-                    </a>
-
-                    <a href="gallery.html">
-                        Gallery
-                    </a>
-
-                    <a href="management.html">
-                        Management
-                    </a>
-
-                    <a href="announcements.html">
-                        Announcements
-                    </a>
-
-                    <a href="projects.html">
-                        Projects
-                    </a>
-
-                    <a href="sports.html">
-                        Sports
-                    </a>
-
-                    <a href="facilities.html">
-                        Facilities
-                    </a>
-
-                    <a href="careers.html">
-                        Careers
-                    </a>
-
-                    <a
-                        href="feedback.html"
-                        class="active"
-                    >
-                        Feedback
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <a
-                href="admissions.html"
-                class="apply-button"
-            >
-                Apply Online
-            </a>
-
-        </nav>
-
-
-        <!-- MOBILE MENU BUTTON -->
-
-        <button
-            class="mobile-menu-button"
-            id="mobileMenuButton"
-            type="button"
-            aria-label="Open navigation"
-            aria-expanded="false"
-            aria-controls="mobileNav"
-        >
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
+        <span>
+            Sat: 8:00 AM–2:00 PM
+        </span>
 
     </div>
 
+</div>
+</div>
 
-    <!-- MOBILE NAVIGATION -->
+<!-- HEADER -->
+<header class="header" id="header">
 
-    <nav
-        class="mobile-nav"
-        id="mobileNav"
-    >
+<div class="container nav-container">
+
+    <a href="../index.html" class="brand">
+
+        <div class="logo-container">
+
+            <img
+                src="../images/logo.jpg"
+                alt="Kenbridge Christian School Logo"
+                class="school-logo">
+
+        </div>
+
+        <div class="brand-name">
+
+            <strong>KENBRIDGE</strong>
+
+            <span>CHRISTIAN SCHOOL</span>
+
+        </div>
+
+    </a>
+
+    <nav class="desktop-nav">
 
         <a href="../index.html">
             Home
@@ -228,622 +166,712 @@
             Fees
         </a>
 
-        <a href="boarding.html">
-            Boarding
-        </a>
-
         <a href="articles.html">
             Articles
-        </a>
-
-        <a href="gallery.html">
-            Gallery
-        </a>
-
-        <a href="management.html">
-            Management
-        </a>
-
-        <a href="announcements.html">
-            Announcements
-        </a>
-
-        <a href="projects.html">
-            Projects
-        </a>
-
-        <a href="sports.html">
-            Sports
-        </a>
-
-        <a href="facilities.html">
-            Facilities
-        </a>
-
-        <a href="careers.html">
-            Careers
-        </a>
-
-        <a
-            href="feedback.html"
-            class="active"
-        >
-            Feedback
         </a>
 
         <a href="contact.html">
             Contact
         </a>
 
+        <div class="more-menu">
+
+            <button
+                class="more-button"
+                type="button"
+                aria-haspopup="true">
+
+                More <span>⌄</span>
+
+            </button>
+
+            <div class="dropdown">
+
+                <a href="boarding.html">
+                    Boarding
+                </a>
+
+                <a href="gallery.html">
+                    Gallery
+                </a>
+
+                <a href="management.html">
+                    Management
+                </a>
+
+                <a href="announcements.html">
+                    Announcements
+                </a>
+
+                <a href="projects.html">
+                    Projects
+                </a>
+
+                <a href="reports.html">
+                    Reports
+                </a>
+
+                <a href="sports.html">
+                    Sports
+                </a>
+
+                <a href="facilities.html">
+                    Facilities
+                </a>
+
+                <a href="careers.html">
+                    Careers
+                </a>
+
+                <a href="feedback.html" class="active">
+                    Feedback
+                </a>
+
+            </div>
+
+        </div>
+
         <a
-            href="admissions.html"
-            class="mobile-apply"
-        >
+            href="submissions.html"
+            class="apply-button">
+
             Apply Online
+
         </a>
 
     </nav>
 
+    <button
+        class="mobile-menu-button"
+        id="mobileMenuButton"
+        type="button"
+        aria-label="Open navigation"
+        aria-expanded="false"
+        aria-controls="mobileNav">
+
+        <span></span>
+        <span></span>
+        <span></span>
+
+    </button>
+
+</div>
+
+<!-- MOBILE NAVIGATION -->
+<nav class="mobile-nav" id="mobileNav">
+
+    <a href="../index.html">
+        Home
+    </a>
+
+    <a href="about.html">
+        About
+    </a>
+
+    <a href="academics.html">
+        Academics
+    </a>
+
+    <a href="admissions.html">
+        Admissions
+    </a>
+
+    <a href="fees.html">
+        Fees
+    </a>
+
+    <a href="boarding.html">
+        Boarding
+    </a>
+
+    <a href="articles.html">
+        Articles
+    </a>
+
+    <a href="gallery.html">
+        Gallery
+    </a>
+
+    <a href="announcements.html">
+        Announcements
+    </a>
+
+    <a href="projects.html">
+        Projects
+    </a>
+
+    <a href="reports.html">
+        Reports
+    </a>
+
+    <a href="sports.html">
+        Sports
+    </a>
+
+    <a href="facilities.html">
+        Facilities
+    </a>
+
+    <a href="management.html">
+        Management
+    </a>
+
+    <a href="careers.html">
+        Careers
+    </a>
+
+    <a href="feedback.html" class="active">
+        Feedback
+    </a>
+
+    <a href="contact.html">
+        Contact
+    </a>
+
+    <a
+        href="submissions.html"
+        class="mobile-apply">
+
+        Apply Online
+
+    </a>
+
+</nav>
+
 </header>
 
-
-<!-- =========================================
-     HERO
-========================================= -->
-
+<!-- HERO -->
 <section class="hero">
 
-    <div class="container hero-content">
+<div class="container hero-content">
 
-        <span class="hero-label">
-            YOUR VOICE MATTERS
+    <span class="hero-label">
+        YOUR VOICE MATTERS
+    </span>
+
+    <h1>
+        Share your
+        <span>feedback.</span>
+    </h1>
+
+    <p>
+        Your ideas and experiences help us improve
+        the Kenbridge Christian School community.
+    </p>
+
+</div>
+
+</section>
+
+<!-- INTRODUCTION -->
+<section class="section welcome">
+
+<div class="container welcome-grid">
+
+    <div class="welcome-image">
+
+        <img
+            src="../images/school.jpg"
+            alt="Kenbridge Christian School">
+
+    </div>
+
+    <div class="welcome-content feedback-intro">
+
+        <span class="section-label">
+            WE LISTEN
         </span>
 
-        <h1>
-            Share your <span>feedback.</span>
-        </h1>
+        <h2>
+            Help us build a
+            <span>better school.</span>
+        </h2>
 
         <p>
-            Your ideas and experiences help us improve.
+            We value feedback from parents, guardians,
+            learners, staff, alumni and visitors.
+        </p>
+
+        <p>
+            Share a suggestion, compliment, concern or
+            idea to help improve the school experience.
+        </p>
+
+        <a
+            href="#feedbackForm"
+            class="btn btn-primary">
+
+            Give Feedback
+
+        </a>
+
+    </div>
+
+</div>
+
+</section>
+
+<!-- FEEDBACK FORM -->
+<section class="section why-section">
+
+<div class="container feedback-form-shell">
+
+    <div class="section-heading">
+
+        <span class="section-label">
+            FEEDBACK FORM
+        </span>
+
+        <h2>
+            Tell us what you think.
+        </h2>
+
+        <p>
+            Complete the form below to send your
+            feedback to Kenbridge Christian School.
         </p>
 
     </div>
 
-</section>
+    <div class="feedback-note">
 
-
-<!-- =========================================
-     WELCOME / INTRODUCTION
-========================================= -->
-
-<section class="section welcome">
-
-    <div class="container welcome-grid">
-
-        <div class="welcome-image">
-
-            <img
-                src="../images/school.jpg"
-                alt="Kenbridge Christian School"
-            >
-
+        <div class="feature-icon">
+            💬
         </div>
 
+        <div>
 
-        <div class="welcome-content">
-
-            <span class="section-label">
-                WE LISTEN
-            </span>
-
-            <h2>
-                Help us build a <span>better school.</span>
-            </h2>
+            <h3>
+                Your feedback matters.
+            </h3>
 
             <p>
-                We value feedback from parents, guardians,
-                learners, staff, alumni and visitors.
-            </p>
-
-            <p>
-                Share a suggestion, compliment, concern or
-                idea to help improve the school experience.
+                Please provide clear and respectful
+                information so the school can understand
+                and respond appropriately.
             </p>
 
         </div>
 
     </div>
 
-</section>
+    <div class="contact-form-wrapper">
 
+        <form
+            class="contact-form"
+            id="feedbackForm"
+            action="#"
+            method="POST">
 
-<!-- =========================================
-     FEEDBACK FORM
-========================================= -->
+            <div class="form-group">
 
-<section class="section why-section">
+                <label for="name">
+                    Full Name
+                </label>
 
-    <div class="container">
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter your full name"
+                    autocomplete="name"
+                    required>
 
-        <div class="section-heading">
+            </div>
 
-            <span class="section-label">
-                FEEDBACK FORM
-            </span>
+            <div class="form-group">
 
-            <h2>
-                Tell us what you think.
-            </h2>
+                <label for="email">
+                    Email Address
+                </label>
 
-            <p>
-                Complete the form below to send your feedback.
-            </p>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email address"
+                    autocomplete="email"
+                    required>
 
-        </div>
+            </div>
 
+            <div class="form-group">
 
-        <div class="contact-form-wrapper">
+                <label for="phone">
+                    Phone Number
+                </label>
 
-            <form
-                class="contact-form"
-                id="feedbackForm"
-                action="#"
-                method="POST"
-            >
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="Enter your phone number"
+                    autocomplete="tel">
 
-                <!-- FULL NAME -->
+            </div>
 
-                <div class="form-group">
+            <div class="form-group">
 
-                    <label for="name">
-                        Full Name
-                    </label>
+                <label for="relationship">
+                    I am a
+                </label>
 
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        placeholder="Enter your full name"
-                        autocomplete="name"
-                        required
-                    >
+                <select
+                    id="relationship"
+                    name="relationship"
+                    required>
 
-                </div>
+                    <option value="">
+                        Select one
+                    </option>
 
+                    <option value="parent">
+                        Parent / Guardian
+                    </option>
 
-                <!-- EMAIL -->
+                    <option value="learner">
+                        Learner
+                    </option>
 
-                <div class="form-group">
+                    <option value="staff">
+                        Staff Member
+                    </option>
 
-                    <label for="email">
-                        Email Address
-                    </label>
+                    <option value="alumni">
+                        Alumni
+                    </option>
 
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="Enter your email address"
-                        autocomplete="email"
-                        required
-                    >
+                    <option value="visitor">
+                        Visitor
+                    </option>
 
-                </div>
+                    <option value="other">
+                        Other
+                    </option>
 
+                </select>
 
-                <!-- PHONE -->
+            </div>
 
-                <div class="form-group">
+            <div class="form-group">
 
-                    <label for="phone">
-                        Phone Number
-                    </label>
+                <label for="feedbackType">
+                    Feedback Type
+                </label>
 
-                    <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        placeholder="Enter your phone number"
-                        autocomplete="tel"
-                    >
+                <select
+                    id="feedbackType"
+                    name="feedbackType"
+                    required>
 
-                </div>
+                    <option value="">
+                        Select feedback type
+                    </option>
 
+                    <option value="compliment">
+                        Compliment
+                    </option>
 
-                <!-- RELATIONSHIP -->
+                    <option value="suggestion">
+                        Suggestion
+                    </option>
 
-                <div class="form-group">
+                    <option value="concern">
+                        Concern
+                    </option>
 
-                    <label for="relationship">
-                        I am a
-                    </label>
+                    <option value="complaint">
+                        Complaint
+                    </option>
 
-                    <select
-                        id="relationship"
-                        name="relationship"
-                        required
-                    >
+                    <option value="general">
+                        General Feedback
+                    </option>
 
-                        <option value="">
-                            Select one
-                        </option>
+                </select>
 
-                        <option value="parent">
-                            Parent / Guardian
-                        </option>
+            </div>
 
-                        <option value="learner">
-                            Learner
-                        </option>
+            <div class="form-group">
 
-                        <option value="staff">
-                            Staff Member
-                        </option>
+                <label for="subject">
+                    Subject
+                </label>
 
-                        <option value="alumni">
-                            Alumni
-                        </option>
+                <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    placeholder="What is your feedback about?"
+                    required>
 
-                        <option value="visitor">
-                            Visitor
-                        </option>
+            </div>
 
-                        <option value="other">
-                            Other
-                        </option>
+            <div class="form-group">
 
-                    </select>
+                <label for="message">
+                    Your Feedback
+                </label>
 
-                </div>
+                <textarea
+                    id="message"
+                    name="message"
+                    rows="7"
+                    placeholder="Write your feedback here..."
+                    required></textarea>
 
+            </div>
 
-                <!-- FEEDBACK TYPE -->
+            <div class="form-checkbox">
 
-                <div class="form-group">
+                <input
+                    type="checkbox"
+                    id="consent"
+                    name="consent"
+                    required>
 
-                    <label for="feedbackType">
-                        Feedback Type
-                    </label>
+                <label for="consent">
+                    I understand the school may use this
+                    information to respond to my feedback.
+                </label>
 
-                    <select
-                        id="feedbackType"
-                        name="feedbackType"
-                        required
-                    >
+            </div>
 
-                        <option value="">
-                            Select feedback type
-                        </option>
+            <button
+                type="submit"
+                class="btn btn-primary">
 
-                        <option value="compliment">
-                            Compliment
-                        </option>
+                Submit Feedback
 
-                        <option value="suggestion">
-                            Suggestion
-                        </option>
+            </button>
 
-                        <option value="concern">
-                            Concern
-                        </option>
+            <div
+                id="feedbackStatus"
+                class="form-status"
+                aria-live="polite">
+            </div>
 
-                        <option value="complaint">
-                            Complaint
-                        </option>
-
-                        <option value="general">
-                            General Feedback
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <!-- SUBJECT -->
-
-                <div class="form-group">
-
-                    <label for="subject">
-                        Subject
-                    </label>
-
-                    <input
-                        type="text"
-                        id="subject"
-                        name="subject"
-                        placeholder="What is your feedback about?"
-                        required
-                    >
-
-                </div>
-
-
-                <!-- FEEDBACK MESSAGE -->
-
-                <div class="form-group">
-
-                    <label for="message">
-                        Your Feedback
-                    </label>
-
-                    <textarea
-                        id="message"
-                        name="message"
-                        rows="7"
-                        placeholder="Write your feedback here..."
-                        required
-                    ></textarea>
-
-                </div>
-
-
-                <!-- CONSENT -->
-
-                <div class="form-checkbox">
-
-                    <input
-                        type="checkbox"
-                        id="consent"
-                        name="consent"
-                        required
-                    >
-
-                    <label for="consent">
-                        I understand the school may use this
-                        information to respond.
-                    </label>
-
-                </div>
-
-
-                <!-- SUBMIT -->
-
-                <button
-                    type="submit"
-                    class="btn btn-primary"
-                >
-                    Submit Feedback
-                </button>
-
-
-                <!-- STATUS MESSAGE -->
-
-                <div
-                    id="feedbackStatus"
-                    class="form-status"
-                    aria-live="polite"
-                ></div>
-
-            </form>
-
-        </div>
+        </form>
 
     </div>
 
+</div>
+
 </section>
 
-
-<!-- =========================================
-     FEEDBACK CATEGORIES
-========================================= -->
-
+<!-- FEEDBACK CATEGORIES -->
 <section class="section">
 
-    <div class="container">
+<div class="container">
 
-        <div class="section-heading">
+    <div class="section-heading">
 
-            <span class="section-label">
-                WHAT CAN YOU TELL US?
-            </span>
+        <span class="section-label">
+            WHAT CAN YOU TELL US?
+        </span>
 
-            <h2>
-                Your feedback can cover anything.
-            </h2>
+        <h2>
+            Your feedback can cover anything.
+        </h2>
 
-        </div>
-
-
-        <div class="feature-grid">
-
-            <article class="feature-card">
-
-                <div class="feature-icon">
-                    📚
-                </div>
-
-                <h3>
-                    Academics
-                </h3>
-
-                <p>
-                    Share thoughts about teaching,
-                    learning and support.
-                </p>
-
-            </article>
-
-
-            <article class="feature-card">
-
-                <div class="feature-icon">
-                    🏫
-                </div>
-
-                <h3>
-                    School Facilities
-                </h3>
-
-                <p>
-                    Tell us about classrooms, facilities
-                    and the environment.
-                </p>
-
-            </article>
-
-
-            <article class="feature-card">
-
-                <div class="feature-icon">
-                    👨‍👩‍👧
-                </div>
-
-                <h3>
-                    School Community
-                </h3>
-
-                <p>
-                    Share ideas about communication
-                    and school life.
-                </p>
-
-            </article>
-
-
-            <article class="feature-card">
-
-                <div class="feature-icon">
-                    💡
-                </div>
-
-                <h3>
-                    Suggestions
-                </h3>
-
-                <p>
-                    Tell us how we can improve the
-                    school experience.
-                </p>
-
-            </article>
-
-        </div>
+        <p>
+            Tell us about the areas that matter
+            to you and the school community.
+        </p>
 
     </div>
 
-</section>
+    <div class="feature-grid">
 
+        <article class="feature-card feedback-card">
 
-<!-- =========================================
-     DIRECT HELP
-========================================= -->
+            <div class="feature-icon">
+                📚
+            </div>
 
-<section class="school-life">
-
-    <div class="container">
-
-        <div class="section-heading light">
-
-            <span class="section-label">
-                NEED DIRECT HELP?
-            </span>
-
-            <h2>
-                Talk to the school.
-            </h2>
+            <h3>
+                Academics
+            </h3>
 
             <p>
-                For urgent matters, please contact
-                Kenbridge Christian School.
+                Share thoughts about teaching,
+                learning and learner support.
             </p>
 
-        </div>
+        </article>
 
+        <article class="feature-card feedback-card">
 
-        <div class="updates-box">
+            <div class="feature-icon">
+                🏫
+            </div>
+
+            <h3>
+                School Facilities
+            </h3>
+
+            <p>
+                Tell us about classrooms, facilities
+                and the school environment.
+            </p>
+
+        </article>
+
+        <article class="feature-card feedback-card">
+
+            <div class="feature-icon">
+                👨‍👩‍👧
+            </div>
+
+            <h3>
+                School Community
+            </h3>
+
+            <p>
+                Share ideas about communication,
+                relationships and school life.
+            </p>
+
+        </article>
+
+        <article class="feature-card feedback-card">
+
+            <div class="feature-icon">
+                💡
+            </div>
+
+            <h3>
+                Suggestions
+            </h3>
+
+            <p>
+                Tell us how we can improve the
+                school experience.
+            </p>
+
+        </article>
+
+    </div>
+
+</div>
+
+</section>
+
+<!-- DIRECT HELP -->
+<section class="school-life">
+
+<div class="container">
+
+    <div class="section-heading light">
+
+        <span class="section-label">
+            NEED DIRECT HELP?
+        </span>
+
+        <h2>
+            Talk to the school.
+        </h2>
+
+        <p>
+            For matters that need direct attention,
+            contact Kenbridge Christian School.
+        </p>
+
+    </div>
+
+    <div class="direct-help-box">
+
+        <div class="direct-help-content">
+
+            <div class="feature-icon">
+                📞
+            </div>
 
             <div>
-
-                <div class="feature-icon">
-                    📞
-                </div>
 
                 <h3>
                     +256 789 825 517
                 </h3>
 
                 <p>
-                    Old Butabika Road, Kampala, Uganda
+                    Old Butabika Road,
+                    Kampala, Uganda
                 </p>
 
             </div>
 
-
-            <a
-                href="contact.html"
-                class="btn btn-primary"
-            >
-                Contact Us
-            </a>
-
         </div>
-
-    </div>
-
-</section>
-
-
-<!-- =========================================
-     FINAL CTA
-========================================= -->
-
-<section class="admissions-cta">
-
-    <div class="container cta-inner">
-
-        <div>
-
-            <span class="section-label">
-                KENBRIDGE CHRISTIAN SCHOOL
-            </span>
-
-            <h2>
-                Together, we can make a difference.
-            </h2>
-
-            <p>
-                Thank you for sharing your thoughts with us.
-            </p>
-
-        </div>
-
 
         <a
             href="contact.html"
-            class="btn btn-primary"
-        >
-            Contact School
+            class="btn btn-primary">
+
+            Contact Us
+
         </a>
 
     </div>
 
-</section>
- <!-- =========================================
-     FOOTER
-========================================= --><footer class="footer"><div class="container footer-grid">
+</div>
 
+</section>
+
+<!-- FINAL CTA -->
+<section class="admissions-cta">
+
+<div class="container cta-inner">
+
+    <div>
+
+        <span class="section-label">
+            KENBRIDGE CHRISTIAN SCHOOL
+        </span>
+
+        <h2>
+            Together, we can make a difference.
+        </h2>
+
+        <p>
+            Thank you for helping us improve
+            our school community.
+        </p>
+
+    </div>
+
+    <a
+        href="contact.html"
+        class="btn btn-primary">
+
+        Contact School
+
+    </a>
+
+</div>
+
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+
+<div class="container footer-grid">
 
     <div class="footer-about">
 
         <img
             src="../images/logo.png"
             alt="Kenbridge Christian School Logo"
-            class="footer-logo"
-        >
+            class="footer-logo">
 
         <h3>
             Kenbridge Christian School
         </h3>
 
         <p>
-            Head and Not Tails.
+            Head and Not Tails.<br>
             Deuteronomy 28:13
         </p>
 
     </div>
-
-
 
     <div class="footer-column">
 
@@ -871,9 +899,11 @@
             Gallery
         </a>
 
+        <a href="announcements.html">
+            Announcements
+        </a>
+
     </div>
-
-
 
     <div class="footer-column">
 
@@ -887,6 +917,10 @@
 
         <a href="projects.html">
             Projects
+        </a>
+
+        <a href="reports.html">
+            Reports
         </a>
 
         <a href="facilities.html">
@@ -903,7 +937,33 @@
 
     </div>
 
+    <div class="footer-column">
 
+        <h4>
+            School & Support
+        </h4>
+
+        <a href="management.html">
+            Management
+        </a>
+
+        <a href="careers.html">
+            Careers
+        </a>
+
+        <a href="feedback.html">
+            Feedback
+        </a>
+
+        <a href="contact.html">
+            Contact
+        </a>
+
+        <a href="submissions.html">
+            Online Submission
+        </a>
+
+    </div>
 
     <div class="footer-column">
 
@@ -912,12 +972,12 @@
         </h4>
 
         <p>
-            Old Butabika Road,
+            Old Butabika Road,<br>
             Kampala, Uganda
         </p>
 
         <p>
-            P.O. Box 520093,
+            P.O. Box 520093,<br>
             Luzira
         </p>
 
@@ -925,11 +985,13 @@
             +256 789 825 517
         </a>
 
+        <a href="mailto:info@kenbridgechristianschool.com">
+            info@kenbridgechristianschool.com
+        </a>
+
     </div>
 
 </div>
-
-
 
 <div class="footer-bottom">
 
@@ -938,29 +1000,33 @@
         <span>
             © 2026 Kenbridge Christian School.
             All Rights Reserved.
-             Made with ❤️ by Zakmolanitech Solutions 
+            Made with ❤️ by Zakmolanitech Solutions
         </span>
 
         <span>
-        Our Motto; Heads and Not Tails
+            Our Motto; Heads and Not Tails
         </span>
 
     </div>
 
 </div>
 
-<a href="privacy.html">
-    Privacy Policy
-</a>
+<div class="footer-legal">
 
-<a href="terms.html">
-    Terms & Conditions
-</a>
+    <a href="privacy.html">
+        Privacy Policy
+    </a>
 
-<div id="site-footer"></div>
+    <a href="terms.html">
+        Terms & Conditions
+    </a>
 
+</div>
+
+</footer>
+
+<!-- GLOBAL JAVASCRIPT -->
 <script src="../js/script.js"></script>
-<script src="../js/components.js"></script>
 
 </body>
-  </html>
+</html>
