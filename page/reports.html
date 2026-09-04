@@ -1,106 +1,1042 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Reports | Kenbridge Christian School</title>
-  <link rel="stylesheet" href="/css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reports | Kenbridge Christian School</title>
+<meta name="description" content="View achievement and competency reports from Kenbridge Christian School.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
+
+<style>
+.reports-intro{
+max-width:850px;
+margin:0 auto 35px;
+text-align:center
+}
+
+.report-generator{
+background:#fff;
+border:1px solid #e6f0ea;
+border-radius:16px;
+padding:28px;
+box-shadow:0 8px 25px rgba(0,0,0,.06);
+margin-bottom:35px
+}
+
+.report-generator h3{
+margin:0 0 8px
+}
+
+.report-generator>p{
+margin:0 0 22px;
+color:#6b7280;
+line-height:1.6
+}
+
+.report-form{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:18px
+}
+
+.report-field{
+display:flex;
+flex-direction:column;
+gap:7px
+}
+
+.report-field label{
+font-weight:700;
+font-size:.9rem
+}
+
+.report-field input{
+width:100%;
+padding:12px 13px;
+border:1px solid #d9e5dd;
+border-radius:8px;
+font:inherit;
+background:#fff;
+box-sizing:border-box
+}
+
+.report-field input:focus{
+outline:none;
+border-color:#08783f;
+box-shadow:0 0 0 3px rgba(8,120,63,.1)
+}
+
+.report-actions{
+display:flex;
+align-items:center;
+gap:10px;
+flex-wrap:wrap;
+grid-column:1/-1
+}
+
+.report-actions .btn{
+border:0;
+cursor:pointer
+}
+
+.report-note{
+margin-top:15px;
+padding:13px 15px;
+border-radius:8px;
+background:#f7faf8;
+color:#66736b;
+font-size:.86rem;
+line-height:1.6
+}
+
+.report-status{
+display:none;
+margin-top:15px;
+padding:12px 15px;
+border-radius:8px;
+background:#fff8ef;
+color:#6b4a20
+}
+
+.reports-list{
+display:grid;
+gap:16px
+}
+
+.report-card{
+background:#fff;
+border:1px solid #e6f0ea;
+border-radius:14px;
+padding:22px;
+box-shadow:0 7px 20px rgba(0,0,0,.05);
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:20px
+}
+
+.report-card h3{
+margin:0 0 8px
+}
+
+.report-period{
+margin:0 0 6px;
+color:#08783f;
+font-weight:700
+}
+
+.report-generated{
+margin:0;
+color:#6b7280;
+font-size:.9rem
+}
+
+.report-actions-view{
+flex-shrink:0
+}
+
+.report-empty,
+.report-error,
+.report-loading{
+padding:28px;
+background:#fff;
+border:1px solid #e6f0ea;
+border-radius:14px;
+text-align:center;
+color:#66736b
+}
+
+.report-error{
+color:#8b3d32;
+background:#fff8f7
+}
+
+.footer-policy{
+display:flex;
+gap:18px;
+flex-wrap:wrap
+}
+
+@media(max-width:850px){
+.report-form{
+grid-template-columns:repeat(2,1fr)
+}
+.report-actions{
+grid-column:1/-1
+}
+}
+
+@media(max-width:600px){
+.report-form{
+grid-template-columns:1fr
+}
+.report-actions{
+grid-column:auto
+}
+.report-card{
+flex-direction:column;
+align-items:flex-start
+}
+.report-actions-view{
+width:100%
+}
+.report-actions-view .btn{
+width:100%;
+text-align:center;
+box-sizing:border-box
+}
+.report-generator{
+padding:20px
+}
+}
+</style>
 </head>
+
 <body>
-  <div class="container">
-    <div class="section-heading">
-      <span class="section-label">REPORTS</span>
-      <h2>Achievement Reports</h2>
-      <p>View generated competency achievement reports. Administrators can also generate reports for date ranges below.</p>
-    </div>
 
-    <div class="report-generator" style="margin-bottom:24px;padding:18px;border:1px solid #e6f0ea;border-radius:8px;background:#fff">
-      <h3 style="margin-bottom:12px">Generate a report (admin)</h3>
-      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
-        <label style="display:flex;flex-direction:column;gap:6px">
-          Start Date
-          <input type="date" id="startDate">
-        </label>
-        <label style="display:flex;flex-direction:column;gap:6px">
-          End Date
-          <input type="date" id="endDate">
-        </label>
-        <label style="display:flex;flex-direction:column;gap:6px">
-          Title
-          <input type="text" id="reportTitle" placeholder="Optional title">
-        </label>
-        <label style="display:flex;flex-direction:column;gap:6px">
-          Admin Token
-          <input type="text" id="adminToken" placeholder="Paste admin JWT here (kept in localStorage)">
-        </label>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button id="generateBtn" class="btn btn-primary">Generate</button>
-          <button id="saveTokenBtn" class="btn btn-outline">Save Token</button>
-        </div>
-      </div>
-      <small style="display:block;margin-top:8px;color:#6b7280">Note: The admin token must belong to an ADMIN user (Supabase JWT). For automated generation use server-side cron.</small>
-    </div>
+<!-- TOP BAR -->
+<div class="top-bar">
+<div class="container top-bar-inner">
 
-    <div id="reportsList">Loading reports...</div>
-  </div>
+<div class="top-location">
+📍 Old Butabika Road, Kampala, Uganda
+</div>
 
-  <script>
-    function renderReports(list){
-      if(!list.length) { document.getElementById('reportsList').innerHTML='<div class="article-empty">No reports available yet.</div>'; return }
-      document.getElementById('reportsList').innerHTML = list.map(r=>`<div class="article-card" style="padding:12px;border:1px solid #e6f0ea;border-radius:8px;margin-bottom:12px;background:#fff"><h3 style="margin:0 0 6px">${r.title||'Report'}</h3><p style="margin:0 0 6px">${r.period_type} — ${r.period_start} to ${r.period_end}</p><p style="margin:0 0 10px;color:#6b7280">Generated: ${new Date(r.generated_at).toLocaleString()}</p><p><a href="/api/reports/${r.id}" target="_blank" class="btn btn-primary">View</a></p></div>`).join('');
-    }
+<div class="top-contact">
+<a href="tel:+256789825517">📞 +256 789 825 517</a>
+<span class="separator">|</span>
+<span>Mon–Fri: 8:00 AM–5:00 PM</span>
+<span class="separator">|</span>
+<span>Sat: 8:00 AM–2:00 PM</span>
+</div>
 
-    async function fetchReports(){
-      try{
-        const r=await fetch('/api/reports');
-        const data=await r.json();
-        if(!data.success) { document.getElementById('reportsList').innerText='Unable to load reports'; return }
-        renderReports(data.reports);
-      }catch(err){ console.error(err); document.getElementById('reportsList').innerText='Failed to load reports'; }
-    }
+</div>
+</div>
 
-    document.addEventListener('DOMContentLoaded',()=>{
-      fetchReports();
+<!-- HEADER -->
+<header class="header" id="header">
 
-      // Load admin token from localStorage if present
-      const saved = localStorage.getItem('kenbridge_admin_token');
-      if(saved) document.getElementById('adminToken').value = saved;
+<div class="container nav-container">
 
-      document.getElementById('saveTokenBtn').addEventListener('click',()=>{
-        const t = document.getElementById('adminToken').value.trim();
-        if(!t) { alert('Enter a token to save'); return }
-        localStorage.setItem('kenbridge_admin_token', t);
-        alert('Admin token saved to localStorage. Use with caution.');
-      });
+<a href="../index.html" class="brand">
 
-      document.getElementById('generateBtn').addEventListener('click', async ()=>{
-        const startDate = document.getElementById('startDate').value;
-        const endDate = document.getElementById('endDate').value;
-        const title = document.getElementById('reportTitle').value.trim();
-        const token = document.getElementById('adminToken').value.trim();
-        if(!startDate || !endDate) { alert('Start and End dates are required'); return }
-        if(!token) { alert('Admin token is required to generate report'); return }
-        if(!confirm('Generate report for ' + startDate + ' to ' + endDate + '?')) return;
+<div class="logo-container">
+<img
+src="../images/logo.jpg"
+alt="Kenbridge Christian School Logo"
+class="school-logo">
+</div>
 
-        try{
-          const resp = await fetch('/api/reports/generate', {
-            method:'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + token
-            },
-            body: JSON.stringify({ periodType: 'CUSTOM', startDate, endDate, title })
-          });
-          const data = await resp.json();
-          if(!resp.ok) throw new Error(data?.message || 'Failed');
-          alert('Report generated: ' + data.reportId);
-          fetchReports();
-        }catch(err){
-          console.error(err);
-          alert('Error generating report: ' + (err?.message || err));
-        }
-      });
-    });
-  </script>
+<div class="brand-name">
+<strong>KENBRIDGE</strong>
+<span>CHRISTIAN SCHOOL</span>
+</div>
+
+</a>
+
+<nav class="desktop-nav">
+
+<a href="../index.html">Home</a>
+<a href="about.html">About</a>
+<a href="academics.html">Academics</a>
+<a href="admissions.html">Admissions</a>
+<a href="fees.html">Fees</a>
+<a href="articles.html">Articles</a>
+<a href="contact.html">Contact</a>
+
+<div class="more-menu">
+
+<button class="more-button" type="button">
+More <span>⌄</span>
+</button>
+
+<div class="dropdown">
+
+<a href="boarding.html">Boarding</a>
+<a href="gallery.html">Gallery</a>
+<a href="management.html">Management</a>
+<a href="announcements.html">Announcements</a>
+<a href="projects.html">Projects</a>
+<a href="reports.html" class="active">Reports</a>
+<a href="sports.html">Sports</a>
+<a href="facilities.html">Facilities</a>
+<a href="careers.html">Careers</a>
+<a href="feedback.html">Feedback</a>
+
+</div>
+</div>
+
+<a href="submissions.html" class="apply-button">
+Apply Online
+</a>
+
+</nav>
+
+<button
+class="mobile-menu-button"
+id="mobileMenuButton"
+type="button"
+aria-label="Open navigation"
+aria-expanded="false">
+
+<span></span>
+<span></span>
+<span></span>
+
+</button>
+
+</div>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav" id="mobileNav">
+
+<a href="../index.html">Home</a>
+<a href="about.html">About</a>
+<a href="academics.html">Academics</a>
+<a href="admissions.html">Admissions</a>
+<a href="fees.html">Fees</a>
+<a href="boarding.html">Boarding</a>
+<a href="articles.html">Articles</a>
+<a href="gallery.html">Gallery</a>
+<a href="announcements.html">Announcements</a>
+<a href="projects.html">Projects</a>
+<a href="reports.html" class="active">Reports</a>
+<a href="sports.html">Sports</a>
+<a href="facilities.html">Facilities</a>
+<a href="management.html">Management</a>
+<a href="careers.html">Careers</a>
+<a href="feedback.html">Feedback</a>
+<a href="contact.html">Contact</a>
+<a href="submissions.html" class="mobile-apply">Apply Online</a>
+
+</nav>
+
+</header>
+
+<!-- HERO -->
+<section class="hero">
+
+<div class="container hero-content">
+
+<span class="hero-label">
+SCHOOL REPORTS
+</span>
+
+<h1>
+Achievement
+<span>Reports.</span>
+</h1>
+
+<p>
+View generated competency achievement reports
+and access official school reporting information.
+</p>
+
+</div>
+
+</section>
+
+<!-- INTRO -->
+<section class="section">
+
+<div class="container">
+
+<div class="reports-intro">
+
+<span class="section-label">
+REPORTS &amp; ACHIEVEMENT
+</span>
+
+<h2>
+Track achievement and
+<span>progress.</span>
+</h2>
+
+<p>
+This section provides access to generated competency
+achievement reports. Authorized administrators can
+also generate reports for a selected date range.
+</p>
+
+</div>
+
+<!-- ADMIN GENERATOR -->
+<div class="report-generator">
+
+<h3>
+Generate a Report
+</h3>
+
+<p>
+Authorized administrators can generate a custom
+achievement report by selecting the reporting period.
+</p>
+
+<div class="report-form">
+
+<div class="report-field">
+
+<label for="startDate">
+Start Date
+</label>
+
+<input
+type="date"
+id="startDate">
+
+</div>
+
+<div class="report-field">
+
+<label for="endDate">
+End Date
+</label>
+
+<input
+type="date"
+id="endDate">
+
+</div>
+
+<div class="report-field">
+
+<label for="reportTitle">
+Report Title
+</label>
+
+<input
+type="text"
+id="reportTitle"
+placeholder="Optional title">
+
+</div>
+
+<div class="report-field">
+
+<label for="adminToken">
+Admin Token
+</label>
+
+<input
+type="password"
+id="adminToken"
+placeholder="Paste admin JWT">
+
+</div>
+
+<div class="report-actions">
+
+<button
+id="generateBtn"
+type="button"
+class="btn btn-primary">
+Generate Report
+</button>
+
+<button
+id="saveTokenBtn"
+type="button"
+class="btn btn-outline">
+Save for Session
+</button>
+
+<button
+id="clearTokenBtn"
+type="button"
+class="btn btn-outline">
+Clear Token
+</button>
+
+</div>
+
+</div>
+
+<div class="report-note">
+<strong>Administrator access:</strong>
+The token must belong to an authorized ADMIN user.
+For automated reporting, server-side scheduled generation
+should be used instead of exposing credentials in the page.
+</div>
+
+<div
+id="reportStatus"
+class="report-status"
+role="status"
+aria-live="polite">
+</div>
+
+</div>
+
+<!-- AVAILABLE REPORTS -->
+<div class="section-heading">
+
+<span class="section-label">
+AVAILABLE REPORTS
+</span>
+
+<h2>
+Achievement Reports
+</h2>
+
+<p>
+Select a generated report to view its details.
+</p>
+
+</div>
+
+<div
+id="reportsList"
+class="reports-list"
+aria-live="polite">
+
+<div class="report-loading">
+Loading reports...
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- INFORMATION CTA -->
+<section class="school-life">
+
+<div class="container">
+
+<div class="section-heading light">
+
+<span class="section-label">
+REPORTING &amp; LEARNING
+</span>
+
+<h2>
+Supporting learner progress.
+</h2>
+
+<p>
+Achievement reports help provide structured information
+about learner competency and progress.
+</p>
+
+</div>
+
+<div class="updates-box">
+
+<div>
+<div class="feature-icon">📊</div>
+
+<h3>
+School Achievement
+</h3>
+
+<p>
+Reports generated through the school system can
+be reviewed by authorized users.
+</p>
+
+</div>
+
+<a
+href="contact.html"
+class="btn btn-primary">
+Contact School
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- CTA -->
+<section class="admissions-cta">
+
+<div class="container cta-inner">
+
+<div>
+
+<span class="section-label">
+KENBRIDGE CHRISTIAN SCHOOL
+</span>
+
+<h2>
+Need assistance with reports?
+</h2>
+
+<p>
+Contact the school for official information
+about reporting and academic records.
+</p>
+
+</div>
+
+<a
+href="contact.html"
+class="btn btn-primary">
+Contact Us
+</a>
+
+</div>
+
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+
+<div class="container footer-grid">
+
+<div class="footer-about">
+
+<img
+src="../images/logo.png"
+alt="Kenbridge Christian School Logo"
+class="footer-logo">
+
+<h3>
+Kenbridge Christian School
+</h3>
+
+<p>
+Head and Not Tails.<br>
+Deuteronomy 28:13
+</p>
+
+</div>
+
+<div class="footer-column">
+
+<h4>
+Explore
+</h4>
+
+<a href="about.html">About</a>
+<a href="academics.html">Academics</a>
+<a href="admissions.html">Admissions</a>
+<a href="fees.html">Fees</a>
+<a href="gallery.html">Gallery</a>
+<a href="reports.html">Reports</a>
+
+</div>
+
+<div class="footer-column">
+
+<h4>
+School Life
+</h4>
+
+<a href="sports.html">Sports</a>
+<a href="projects.html">Projects</a>
+<a href="facilities.html">Facilities</a>
+<a href="boarding.html">Boarding</a>
+<a href="articles.html">Articles</a>
+<a href="announcements.html">Announcements</a>
+
+</div>
+
+<div class="footer-column">
+
+<h4>
+School &amp; Support
+</h4>
+
+<a href="management.html">Management</a>
+<a href="careers.html">Careers</a>
+<a href="feedback.html">Feedback</a>
+<a href="contact.html">Contact</a>
+<a href="submissions.html">Apply Online</a>
+
+</div>
+
+<div class="footer-column">
+
+<h4>
+Contact
+</h4>
+
+<p>
+Old Butabika Road,<br>
+Kampala, Uganda
+</p>
+
+<p>
+P.O. Box 520093,<br>
+Luzira
+</p>
+
+<a href="tel:+256789825517">
++256 789 825 517
+</a>
+
+</div>
+
+</div>
+
+<div class="footer-bottom">
+
+<div class="container">
+
+<span>
+© 2026 Kenbridge Christian School.
+All Rights Reserved.<br>
+Made with ❤️ by Zakmolanitech Solutions
+</span>
+
+<span class="footer-policy">
+
+<a href="privacy.html">
+Privacy Policy
+</a>
+
+<a href="terms.html">
+Terms &amp; Conditions
+</a>
+
+</span>
+
+</div>
+
+</div>
+
+</footer>
+
+<script src="../js/script.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+
+const reportsList=document.getElementById("reportsList");
+const startDate=document.getElementById("startDate");
+const endDate=document.getElementById("endDate");
+const reportTitle=document.getElementById("reportTitle");
+const adminToken=document.getElementById("adminToken");
+const generateBtn=document.getElementById("generateBtn");
+const saveTokenBtn=document.getElementById("saveTokenBtn");
+const clearTokenBtn=document.getElementById("clearTokenBtn");
+const reportStatus=document.getElementById("reportStatus");
+
+function escapeHTML(value){
+return String(value??"")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+}
+
+function showStatus(message){
+reportStatus.textContent=message;
+reportStatus.style.display="block";
+}
+
+function clearStatus(){
+reportStatus.textContent="";
+reportStatus.style.display="none";
+}
+
+function formatDate(value){
+if(!value)return"Not specified";
+
+const date=new Date(value);
+
+if(Number.isNaN(date.getTime())){
+return escapeHTML(value);
+}
+
+return date.toLocaleDateString(undefined,{
+year:"numeric",
+month:"long",
+day:"numeric"
+});
+}
+
+function formatDateTime(value){
+if(!value)return"Not specified";
+
+const date=new Date(value);
+
+if(Number.isNaN(date.getTime())){
+return escapeHTML(value);
+}
+
+return date.toLocaleString(undefined,{
+year:"numeric",
+month:"short",
+day:"numeric",
+hour:"numeric",
+minute:"2-digit"
+});
+}
+
+function renderReports(list){
+
+if(!Array.isArray(list)||!list.length){
+
+reportsList.innerHTML=
+'<div class="report-empty">'+
+'No reports are available yet.'+
+'</div>';
+
+return;
+}
+
+reportsList.innerHTML=list.map(report=>{
+
+const title=escapeHTML(report.title||"Achievement Report");
+
+const periodType=escapeHTML(
+report.period_type||"REPORT"
+);
+
+const start=escapeHTML(
+formatDate(report.period_start)
+);
+
+const end=escapeHTML(
+formatDate(report.period_end)
+);
+
+const generated=escapeHTML(
+formatDateTime(report.generated_at)
+);
+
+const id=encodeURIComponent(report.id||"");
+
+return `
+<article class="report-card">
+
+<div>
+
+<h3>${title}</h3>
+
+<p class="report-period">
+${periodType} — ${start} to ${end}
+</p>
+
+<p class="report-generated">
+Generated: ${generated}
+</p>
+
+</div>
+
+<div class="report-actions-view">
+
+<a
+href="/api/reports/${id}"
+target="_blank"
+rel="noopener noreferrer"
+class="btn btn-primary">
+View Report
+</a>
+
+</div>
+
+</article>
+`;
+
+}).join("");
+}
+
+async function fetchReports(){
+
+reportsList.innerHTML=
+'<div class="report-loading">Loading reports...</div>';
+
+try{
+
+const response=await fetch("/api/reports",{
+headers:{
+"Accept":"application/json"
+}
+});
+
+const data=await response.json().catch(()=>null);
+
+if(!response.ok||!data||!data.success){
+
+throw new Error(
+data?.message||
+"Unable to load reports."
+);
+
+}
+
+renderReports(data.reports||[]);
+
+}catch(error){
+
+console.error("Reports loading error:",error);
+
+reportsList.innerHTML=
+'<div class="report-error">'+
+'Unable to load reports at this time. Please try again later.'+
+'</div>';
+
+}
+
+}
+
+/* Restore token for current browser session only */
+const savedToken=sessionStorage.getItem(
+"kenbridge_admin_token"
+);
+
+if(savedToken){
+adminToken.value=savedToken;
+}
+
+/* Save token */
+saveTokenBtn.addEventListener("click",function(){
+
+const token=adminToken.value.trim();
+
+if(!token){
+
+showStatus("Enter an administrator token first.");
+
+return;
+}
+
+sessionStorage.setItem(
+"kenbridge_admin_token",
+token
+);
+
+showStatus(
+"Administrator token saved for this browser session."
+);
+
+});
+
+/* Clear token */
+clearTokenBtn.addEventListener("click",function(){
+
+sessionStorage.removeItem(
+"kenbridge_admin_token"
+);
+
+adminToken.value="";
+
+showStatus(
+"Administrator token cleared."
+);
+
+});
+
+/* Generate report */
+generateBtn.addEventListener("click",async function(){
+
+clearStatus();
+
+const start=startDate.value;
+const end=endDate.value;
+const title=reportTitle.value.trim();
+const token=adminToken.value.trim();
+
+if(!start||!end){
+
+showStatus(
+"Start Date and End Date are required."
+);
+
+return;
+}
+
+if(start>end){
+
+showStatus(
+"End Date cannot be earlier than Start Date."
+);
+
+return;
+}
+
+if(!token){
+
+showStatus(
+"An administrator token is required to generate a report."
+);
+
+return;
+}
+
+const confirmed=window.confirm(
+"Generate report for "+
+start+
+" to "+
+end+
+"?");
+
+if(!confirmed)return;
+
+generateBtn.disabled=true;
+generateBtn.textContent="Generating...";
+
+try{
+
+const response=await fetch(
+"/api/reports/generate",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+"Authorization":"Bearer "+token,
+"Accept":"application/json"
+},
+body:JSON.stringify({
+periodType:"CUSTOM",
+startDate:start,
+endDate:end,
+title:title
+})
+});
+
+const data=await response.json().catch(()=>null);
+
+if(!response.ok){
+
+throw new Error(
+data?.message||
+"Failed to generate report."
+);
+
+}
+
+showStatus(
+"Report generated successfully."
+);
+
+reportTitle.value="";
+
+await fetchReports();
+
+}catch(error){
+
+console.error(
+"Report generation error:",
+error
+);
+
+showStatus(
+"Error generating report: "+
+(error.message||"Please try again.")
+);
+
+}finally{
+
+generateBtn.disabled=false;
+generateBtn.textContent="Generate Report";
+
+}
+
+});
+
+/* Initial reports */
+fetchReports();
+
+});
+</script>
+
 </body>
 </html>
