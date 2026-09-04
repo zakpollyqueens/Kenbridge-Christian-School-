@@ -3,7 +3,21 @@
    COMPONENTS.JS
    ========================================================= */
 
-const SITE_ROOT = new URL("./", document.baseURI);
+(function () {
+"use strict";
+
+/* =========================================================
+   PROJECT ROOT
+   ========================================================= */
+
+const SCRIPT =
+    document.querySelector('script[src*="js/components.js"]');
+
+const SCRIPT_URL = SCRIPT
+    ? new URL(SCRIPT.getAttribute("src"), document.baseURI)
+    : new URL("js/components.js", document.baseURI);
+
+const PROJECT_ROOT = new URL("../", SCRIPT_URL);
 
 document.addEventListener("DOMContentLoaded", () => {
     loadFooter();
@@ -13,33 +27,71 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* =========================================================
+   PATH RESOLVER
+   ========================================================= */
+
+function resolveProjectPath(path) {
+    if (!path) return PROJECT_ROOT.href;
+
+    if (/^(https?:|mailto:|tel:|#|javascript:)/i.test(path)) {
+        return path;
+    }
+
+    return new URL(
+        path.replace(/^\/+/, ""),
+        PROJECT_ROOT
+    ).href;
+}
+
+/* =========================================================
    FOOTER
    ========================================================= */
 
 function loadFooter() {
     const container = document.getElementById("site-footer");
+
     if (!container) return;
 
-    const footerURL = new URL("components/footer.html", SITE_ROOT).href;
+    const footerURL =
+        resolveProjectPath("components/footer.html");
 
-    fetch(footerURL, { cache: "no-cache" })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Footer could not be loaded: ${response.status}`);
-            }
-            return response.text();
-        })
-        .then(html => {
-            container.innerHTML = html;
-            setupFooterLinks();
-            setupFooterAssets();
-            setupFooterYear();
-            setupDeveloperContact();
-            createMobileMenuFooter();
-        })
-        .catch(error => {
-            console.error("Kenbridge footer loading error:", error);
-        });
+    fetch(footerURL, {
+        cache: "no-cache"
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(
+                `Footer could not be loaded: ${response.status}`
+            );
+        }
+
+        return response.text();
+    })
+    .then(html => {
+        container.innerHTML = html;
+
+        setupFooterLinks();
+        setupFooterAssets();
+        setupFooterYear();
+        setupDeveloperContact();
+        createMobileMenuFooter();
+        setupMobileStaffLogin();
+    })
+    .catch(error => {
+        console.error(
+            "Kenbridge footer loading error:",
+            error
+        );
+
+        container.innerHTML = `
+            <div class="footer-load-error">
+                <p>Kenbridge Christian School</p>
+                <a href="${resolveProjectPath("page/contact.html")}">
+                    Contact Us
+                </a>
+            </div>
+        `;
+    });
 }
 
 /* =========================================================
@@ -47,22 +99,17 @@ function loadFooter() {
    ========================================================= */
 
 function setupFooterLinks() {
-    const links = document.querySelectorAll("#site-footer a[data-footer-link]");
+    const links = document.querySelectorAll(
+        "#site-footer a[data-footer-link]"
+    );
 
     links.forEach(link => {
         const target = link.dataset.footerLink;
-        link.href = target ? resolveProjectPath(target) : SITE_ROOT.href;
+
+        if (target) {
+            link.href = resolveProjectPath(target);
+        }
     });
-}
-
-function resolveProjectPath(path) {
-    if (!path) return SITE_ROOT.href;
-
-    if (/^(https?:|mailto:|tel:|#)/i.test(path)) {
-        return path;
-    }
-
-    return new URL(path.replace(/^\/+/, ""), SITE_ROOT).href;
 }
 
 /* =========================================================
@@ -70,30 +117,41 @@ function resolveProjectPath(path) {
    ========================================================= */
 
 function setupFooterAssets() {
-    const footer = document.getElementById("site-footer");
+    const footer =
+        document.getElementById("site-footer");
+
     if (!footer) return;
 
-    footer.querySelectorAll("[data-asset]").forEach(element => {
-        const path = element.dataset.asset;
-        if (!path) return;
+    footer.querySelectorAll("[data-asset]")
+        .forEach(element => {
+            const path = element.dataset.asset;
 
-        const assetURL = new URL(
-            path.replace(/^\/+/, ""),
-            SITE_ROOT
-        ).href;
+            if (!path) return;
 
-        if (element.tagName.toLowerCase() === "img") {
-            element.src = assetURL;
+            const assetURL =
+                resolveProjectPath(path);
 
-            element.addEventListener("error", () => {
-                element.classList.add("image-error");
-                console.warn(
-                    "Kenbridge image could not be loaded:",
-                    assetURL
+            if (
+                element.tagName.toLowerCase() === "img"
+            ) {
+                element.src = assetURL;
+
+                element.addEventListener(
+                    "error",
+                    () => {
+                        element.classList.add(
+                            "image-error"
+                        );
+
+                        console.warn(
+                            "Kenbridge image could not be loaded:",
+                            assetURL
+                        );
+                    },
+                    { once: true }
                 );
-            });
-        }
-    });
+            }
+        });
 }
 
 /* =========================================================
@@ -101,67 +159,134 @@ function setupFooterAssets() {
    ========================================================= */
 
 function setupFooterYear() {
-    const year = document.getElementById("footer-year");
+    const year =
+        document.getElementById("currentYear");
+
     if (year) {
-        year.textContent = new Date().getFullYear();
+        year.textContent =
+            new Date().getFullYear();
+    }
+
+    const oldYear =
+        document.getElementById("footer-year");
+
+    if (oldYear) {
+        oldYear.textContent =
+            new Date().getFullYear();
     }
 }
 
 /* =========================================================
-   DEVELOPER CONTACT MODAL
+   DEVELOPER CONTACT
    ========================================================= */
 
 function setupDeveloperContact() {
-    const openButton = document.getElementById("developerButton");
-    const modal = document.getElementById("developerContact");
-    const closeButton = document.getElementById("developerClose");
-    const overlay = document.getElementById("developerOverlay");
+    const openButton =
+        document.getElementById("developerButton");
 
-    if (!openButton || !modal || openButton.dataset.developerReady === "true") {
+    const contacts =
+        document.getElementById("developerContacts");
+
+    if (
+        !openButton ||
+        !contacts ||
+        openButton.dataset.developerReady === "true"
+    ) {
         return;
     }
 
     openButton.dataset.developerReady = "true";
 
-    function openModal() {
-        modal.classList.add("show");
-        modal.setAttribute("aria-hidden", "false");
-        document.body.classList.add("developer-modal-open");
-        closeButton?.focus();
+    openButton.setAttribute(
+        "aria-expanded",
+        "false"
+    );
+
+    contacts.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+    function openContacts() {
+        contacts.classList.add("show");
+
+        contacts.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+        openButton.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+        openButton.innerHTML =
+            "✕ Close Developer Contact";
     }
 
-    function closeModal() {
-        modal.classList.remove("show");
-        modal.setAttribute("aria-hidden", "true");
-        document.body.classList.remove("developer-modal-open");
+    function closeContacts() {
+        contacts.classList.remove("show");
+
+        contacts.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        openButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        openButton.innerHTML =
+            "👨‍💻 Meet the Developer";
     }
 
-    openButton.addEventListener("click", openModal);
-    closeButton?.addEventListener("click", closeModal);
-    overlay?.addEventListener("click", closeModal);
-
-    document.addEventListener("keydown", event => {
-        if (event.key === "Escape" && modal.classList.contains("show")) {
-            closeModal();
+    openButton.addEventListener(
+        "click",
+        () => {
+            if (contacts.classList.contains("show")) {
+                closeContacts();
+            } else {
+                openContacts();
+            }
         }
-    });
+    );
 
-    setupMobileDeveloperButton();
+    document.addEventListener(
+        "keydown",
+        event => {
+            if (
+                event.key === "Escape" &&
+                contacts.classList.contains("show")
+            ) {
+                closeContacts();
+            }
+        }
+    );
 }
 
 /* =========================================================
-   MOBILE / HAMBURGER FOOTER
+   MOBILE NAVIGATION FOOTER
    ========================================================= */
 
 function createMobileMenuFooter() {
-    const mobileNav = document.getElementById("mobileNav");
+    const mobileNav =
+        document.getElementById("mobileNav");
 
-    if (!mobileNav || mobileNav.querySelector(".mobile-menu-footer")) {
+    if (
+        !mobileNav ||
+        mobileNav.querySelector(
+            ".mobile-menu-footer"
+        )
+    ) {
         return;
     }
 
-    const footer = document.createElement("div");
-    footer.className = "mobile-menu-footer";
+    const footer =
+        document.createElement("div");
+
+    footer.className =
+        "mobile-menu-footer";
 
     const links = [
         ["About", "page/about.html"],
@@ -182,64 +307,117 @@ function createMobileMenuFooter() {
         </div>
 
         <div class="mobile-footer-contact">
+
             <div class="mobile-footer-info">
                 📍 Old Butabika Road,<br>
                 Kampala, Uganda
             </div>
+
             <a href="tel:+256789825517">
                 📞 +256 789 825 517
             </a>
+
             <div class="mobile-footer-info">
                 📮 P.O. Box 520093,<br>
                 Luzira, Kampala
             </div>
+
         </div>
 
         <div class="mobile-footer-links">
-            ${links.map(([label, path]) => `
-                <a href="${resolveProjectPath(path)}">${label}</a>
-            `).join("")}
+
+            ${links.map(
+                ([label, path]) => `
+                    <a href="${resolveProjectPath(path)}">
+                        ${label}
+                    </a>
+                `
+            ).join("")}
+
         </div>
 
         <div class="mobile-staff-login">
-            <span class="mobile-staff-login-label">STAFF PORTAL</span>
-            <a href="${resolveProjectPath("staff/login.html")}" class="mobile-staff-login-button">
+
+            <span class="mobile-staff-login-label">
+                STAFF PORTAL
+            </span>
+
+            <a
+                href="${resolveProjectPath("staff/login.html")}"
+                class="mobile-staff-login-button"
+            >
                 🔐 Staff Login
             </a>
+
         </div>
 
         <div class="mobile-developer-profile">
-            <img data-mobile-developer-image alt="Zakmolanitech Solutions">
+
+            <img
+                data-mobile-developer-image
+                alt="Zakmolanitech Solutions"
+            >
+
             <div>
-                <strong>Zakmolanitech Solutions</strong>
-                <span>Website Developer</span>
+                <strong>
+                    Zakmolanitech Solutions
+                </strong>
+
+                <span>
+                    Website Developer
+                </span>
             </div>
+
         </div>
 
-        <button type="button" class="mobile-developer-button" id="mobileDeveloperButton">
+        <button
+            type="button"
+            class="mobile-developer-button"
+            id="mobileDeveloperButton"
+            aria-expanded="false"
+        >
             👨‍💻 Meet the Developer
         </button>
 
         <div class="mobile-footer-copyright">
+
             © ${new Date().getFullYear()}
             Kenbridge Christian School.
+
             <br>
-            Website by
-            <a href="https://t.me/zakmolanitech" target="_blank" rel="noopener noreferrer">
+
+            Website designed and hosted by
+
+            <a
+                href="https://t.me/zakmolanitech"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
                 Zakmolanitech Solutions
             </a>
+
         </div>
     `;
 
     mobileNav.appendChild(footer);
 
-    const image = footer.querySelector("[data-mobile-developer-image]");
+    const image =
+        footer.querySelector(
+            "[data-mobile-developer-image]"
+        );
 
     if (image) {
-        image.src = new URL(
-            "images/Snapchat-1124656073.jpg",
-            SITE_ROOT
-        ).href;
+        image.src = resolveProjectPath(
+            "images/Snapchat-1124656073.jpg"
+        );
+
+        image.addEventListener(
+            "error",
+            () => {
+                image.classList.add("image-error");
+            },
+            { once: true }
+        );
     }
 
     setupMobileDeveloperButton();
@@ -250,13 +428,15 @@ function createMobileMenuFooter() {
    ========================================================= */
 
 function setupMobileStaffLogin() {
-    const button = document.querySelector(
-        ".mobile-staff-login-button"
-    );
+    const button =
+        document.querySelector(
+            ".mobile-staff-login-button"
+        );
 
     if (!button) return;
 
-    button.href = resolveProjectPath("staff/login.html");
+    button.href =
+        resolveProjectPath("staff/login.html");
 }
 
 /* =========================================================
@@ -264,20 +444,52 @@ function setupMobileStaffLogin() {
    ========================================================= */
 
 function setupMobileDeveloperButton() {
-    const button = document.getElementById("mobileDeveloperButton");
-    const modal = document.getElementById("developerContact");
+    const button =
+        document.getElementById(
+            "mobileDeveloperButton"
+        );
 
-    if (!button || !modal || button.dataset.developerReady === "true") {
+    const contacts =
+        document.getElementById(
+            "developerContacts"
+        );
+
+    if (
+        !button ||
+        !contacts ||
+        button.dataset.developerReady === "true"
+    ) {
         return;
     }
 
     button.dataset.developerReady = "true";
 
-    button.addEventListener("click", () => {
-        modal.classList.add("show");
-        modal.setAttribute("aria-hidden", "false");
-        document.body.classList.add("developer-modal-open");
-    });
+    button.addEventListener(
+        "click",
+        () => {
+            const isOpen =
+                contacts.classList.contains("show");
+
+            contacts.classList.toggle(
+                "show",
+                !isOpen
+            );
+
+            contacts.setAttribute(
+                "aria-hidden",
+                isOpen ? "true" : "false"
+            );
+
+            button.setAttribute(
+                "aria-expanded",
+                isOpen ? "false" : "true"
+            );
+
+            button.innerHTML = isOpen
+                ? "👨‍💻 Meet the Developer"
+                : "✕ Close Developer Contact";
+        }
+    );
 }
 
 /* =========================================================
@@ -285,30 +497,37 @@ function setupMobileDeveloperButton() {
    ========================================================= */
 
 function setupActiveNavigation() {
-    const currentPage =
+    const currentPath =
         window.location.pathname
-            .split("/")
-            .filter(Boolean)
-            .pop()
-            ?.toLowerCase() || "index.html";
+            .replace(/\/+$/, "")
+            .toLowerCase();
+
+    const currentPage =
+        currentPath.split("/").pop() ||
+        "index.html";
 
     document.querySelectorAll(
         ".desktop-nav a, .mobile-nav a"
     ).forEach(link => {
-        const href = link.getAttribute("href");
+
+        const href =
+            link.getAttribute("href");
 
         if (
             !href ||
             href === "#" ||
-            /^(https?:|tel:|mailto:)/i.test(href)
+            /^(https?:|tel:|mailto:|javascript:)/i.test(href)
         ) {
             return;
         }
 
-        const page =
+        const cleanHref =
             href
                 .split("#")[0]
-                .split("?")[0]
+                .split("?")[0];
+
+        const page =
+            cleanHref
                 .split("/")
                 .filter(Boolean)
                 .pop();
@@ -327,31 +546,62 @@ function setupActiveNavigation() {
    ========================================================= */
 
 function setupGalleryFilters() {
-    const filters = document.querySelectorAll(".gallery-filter");
-    const items = document.querySelectorAll(".gallery-item");
+    const filters =
+        document.querySelectorAll(
+            ".gallery-filter"
+        );
 
-    if (!filters.length || !items.length) {
+    const items =
+        document.querySelectorAll(
+            ".gallery-item"
+        );
+
+    if (
+        !filters.length ||
+        !items.length
+    ) {
         return;
     }
 
     filters.forEach(filter => {
-        filter.addEventListener("click", () => {
-            const category = filter.dataset.filter;
 
-            filters.forEach(item => {
-                item.classList.remove("active");
-            });
+        filter.addEventListener(
+            "click",
+            () => {
 
-            filter.classList.add("active");
+                const category =
+                    filter.dataset.filter ||
+                    "all";
 
-            items.forEach(item => {
-                item.classList.toggle(
-                    "hidden",
-                    category !== "all" &&
-                    item.dataset.category !== category
+                filters.forEach(item => {
+                    item.classList.remove(
+                        "active"
+                    );
+                });
+
+                filter.classList.add(
+                    "active"
                 );
-            });
-        });
+
+                items.forEach(item => {
+
+                    const hidden =
+                        category !== "all" &&
+                        item.dataset.category !==
+                        category;
+
+                    item.classList.toggle(
+                        "hidden",
+                        hidden
+                    );
+
+                    item.setAttribute(
+                        "aria-hidden",
+                        hidden ? "true" : "false"
+                    );
+                });
+            }
+        );
     });
 }
 
@@ -360,15 +610,49 @@ function setupGalleryFilters() {
    ========================================================= */
 
 function setupGalleryLightbox() {
-    const items = [...document.querySelectorAll(".gallery-item")];
-    const lightbox = document.getElementById("galleryLightbox");
-    const image = document.getElementById("lightboxImage");
-    const caption = document.getElementById("lightboxCaption");
-    const close = document.getElementById("lightboxClose");
-    const previous = document.getElementById("lightboxPrev");
-    const next = document.getElementById("lightboxNext");
 
-    if (!items.length || !lightbox || !image || !caption) {
+    const items = [
+        ...document.querySelectorAll(
+            ".gallery-item"
+        )
+    ];
+
+    const lightbox =
+        document.getElementById(
+            "galleryLightbox"
+        );
+
+    const image =
+        document.getElementById(
+            "lightboxImage"
+        );
+
+    const caption =
+        document.getElementById(
+            "lightboxCaption"
+        );
+
+    const close =
+        document.getElementById(
+            "lightboxClose"
+        );
+
+    const previous =
+        document.getElementById(
+            "lightboxPrev"
+        );
+
+    const next =
+        document.getElementById(
+            "lightboxNext"
+        );
+
+    if (
+        !items.length ||
+        !lightbox ||
+        !image ||
+        !caption
+    ) {
         return;
     }
 
@@ -376,106 +660,238 @@ function setupGalleryLightbox() {
 
     function visibleItems() {
         return items.filter(
-            item => !item.classList.contains("hidden")
+            item =>
+                !item.classList.contains(
+                    "hidden"
+                )
         );
     }
 
     function showImage(index) {
-        const visible = visibleItems();
 
-        if (!visible.length) return;
+        const visible =
+            visibleItems();
+
+        if (!visible.length) {
+            return;
+        }
 
         currentIndex =
             (index + visible.length) %
             visible.length;
 
-        const item = visible[currentIndex];
-        const itemImage = item.querySelector("img");
-        const title = item.querySelector("strong");
-        const description = item.querySelector("span");
+        const item =
+            visible[currentIndex];
 
-        if (!itemImage) return;
+        const itemImage =
+            item.querySelector("img");
+
+        const title =
+            item.querySelector("strong");
+
+        const description =
+            item.querySelector("span");
+
+        if (!itemImage) {
+            return;
+        }
 
         image.src = itemImage.src;
-        image.alt = itemImage.alt || "";
+
+        image.alt =
+            itemImage.alt || "";
+
         caption.innerHTML = "";
 
         if (title) {
-            const element = document.createElement("strong");
-            element.textContent = title.textContent;
-            caption.appendChild(element);
+
+            const titleElement =
+                document.createElement(
+                    "strong"
+                );
+
+            titleElement.textContent =
+                title.textContent;
+
+            caption.appendChild(
+                titleElement
+            );
         }
 
         if (description) {
+
             if (title) {
                 caption.appendChild(
-                    document.createElement("br")
+                    document.createElement(
+                        "br"
+                    )
                 );
             }
 
-            const element = document.createElement("span");
-            element.textContent = description.textContent;
-            caption.appendChild(element);
+            const descriptionElement =
+                document.createElement(
+                    "span"
+                );
+
+            descriptionElement.textContent =
+                description.textContent;
+
+            caption.appendChild(
+                descriptionElement
+            );
         }
     }
 
     function openLightbox(index) {
+
         showImage(index);
+
         lightbox.classList.add("show");
-        lightbox.setAttribute("aria-hidden", "false");
-        document.body.classList.add("lightbox-open");
+
+        lightbox.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+        document.body.classList.add(
+            "lightbox-open"
+        );
+
+        close?.focus();
     }
 
     function closeLightbox() {
-        lightbox.classList.remove("show");
-        lightbox.setAttribute("aria-hidden", "true");
-        document.body.classList.remove("lightbox-open");
+
+        lightbox.classList.remove(
+            "show"
+        );
+
+        lightbox.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        document.body.classList.remove(
+            "lightbox-open"
+        );
+
         image.removeAttribute("src");
     }
 
     items.forEach(item => {
-        item.addEventListener("click", () => {
-            const index = visibleItems().indexOf(item);
 
-            if (index !== -1) {
-                openLightbox(index);
+        item.setAttribute(
+            "tabindex",
+            "0"
+        );
+
+        item.addEventListener(
+            "click",
+            () => {
+
+                const index =
+                    visibleItems()
+                        .indexOf(item);
+
+                if (index !== -1) {
+                    openLightbox(index);
+                }
             }
-        });
+        );
+
+        item.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Enter" ||
+                    event.key === " "
+                ) {
+
+                    event.preventDefault();
+
+                    const index =
+                        visibleItems()
+                            .indexOf(item);
+
+                    if (index !== -1) {
+                        openLightbox(index);
+                    }
+                }
+            }
+        );
     });
 
-    close?.addEventListener("click", closeLightbox);
+    close?.addEventListener(
+        "click",
+        closeLightbox
+    );
 
-    previous?.addEventListener("click", event => {
-        event.stopPropagation();
-        showImage(currentIndex - 1);
-    });
+    previous?.addEventListener(
+        "click",
+        event => {
 
-    next?.addEventListener("click", event => {
-        event.stopPropagation();
-        showImage(currentIndex + 1);
-    });
+            event.stopPropagation();
 
-    lightbox.addEventListener("click", event => {
-        if (event.target === lightbox) {
-            closeLightbox();
+            showImage(
+                currentIndex - 1
+            );
         }
-    });
+    );
 
-    document.addEventListener("keydown", event => {
-        if (!lightbox.classList.contains("show")) {
-            return;
-        }
+    next?.addEventListener(
+        "click",
+        event => {
 
-        if (event.key === "Escape") {
-            closeLightbox();
-        }
+            event.stopPropagation();
 
-        if (event.key === "ArrowLeft") {
-            showImage(currentIndex - 1);
+            showImage(
+                currentIndex + 1
+            );
         }
+    );
 
-        if (event.key === "ArrowRight") {
-            showImage(currentIndex + 1);
+    lightbox.addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target === lightbox
+            ) {
+                closeLightbox();
+            }
         }
-    });
+    );
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                !lightbox.classList.contains(
+                    "show"
+                )
+            ) {
+                return;
+            }
+
+            if (event.key === "Escape") {
+                closeLightbox();
+            }
+
+            if (event.key === "ArrowLeft") {
+                showImage(
+                    currentIndex - 1
+                );
+            }
+
+            if (event.key === "ArrowRight") {
+                showImage(
+                    currentIndex + 1
+                );
+            }
+        }
+    );
 }
+
+})();
