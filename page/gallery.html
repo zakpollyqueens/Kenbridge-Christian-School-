@@ -1,155 +1,430 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Gallery | Kenbridge Christian School</title><meta name="description" content="Explore photos and moments from Kenbridge Christian School."><meta name="theme-color" content="#08783f"><link rel="stylesheet" href="../css/style.css"><style>.gallery-loading,.gallery-empty{grid-column:1/-1;text-align:center;padding:40px 20px;color:#68776f;font-size:15px}.gallery-empty{display:none}</style></head><body><div class="top-bar"><div class="container top-bar-inner"><div class="top-location">📍 Old Butabika Road, Kampala, Uganda</div><div class="top-contact"><a href="tel:+256789825517">📞 +256 789 825 517</a><span class="separator">|</span><span>Mon–Fri: 8:00 AM–5:00 PM</span><span class="separator">|</span><span>Sat: 8:00 AM–2:00 PM</span></div></div></div><header class="header" id="header"><div class="container nav-container"><a href="../index.html" class="brand"><div class="logo-container"><img src="../images/logo.jpg" alt="Kenbridge Christian School Logo" class="school-logo"></div><div class="brand-name"><strong>KENBRIDGE</strong><span>CHRISTIAN SCHOOL</span></div></a><nav class="desktop-nav"><a href="../index.html">Home</a><a href="about.html">About</a><a href="academics.html">Academics</a><a href="admissions.html">Admissions</a><a href="fees.html">Fees</a><a href="articles.html">Articles</a><a href="contact.html">Contact</a><div class="more-menu"><button class="more-button" type="button">More <span>⌄</span></button><div class="dropdown"><a href="boarding.html">Boarding</a><a href="gallery.html" class="active">Gallery</a><a href="management.html">Management</a><a href="announcements.html">Announcements</a><a href="projects.html">Projects</a><a href="sports.html">Sports</a><a href="facilities.html">Facilities</a><a href="careers.html">Careers</a><a href="feedback.html">Feedback</a></div></div><a href="admissions.html" class="apply-button">Apply Online</a></nav><button class="mobile-menu-button" id="mobileMenuButton" aria-label="Open navigation" aria-expanded="false"><span></span><span></span><span></span></button></div><nav class="mobile-nav" id="mobileNav"><a href="../index.html">Home</a><a href="about.html">About</a><a href="academics.html">Academics</a><a href="admissions.html">Admissions</a><a href="fees.html">Fees</a><a href="boarding.html">Boarding</a><a href="articles.html">Articles</a><a href="gallery.html" class="active">Gallery</a><a href="announcements.html">Announcements</a><a href="projects.html">Projects</a><a href="sports.html">Sports</a><a href="facilities.html">Facilities</a><a href="management.html">Management</a><a href="careers.html">Careers</a><a href="feedback.html">Feedback</a><a href="contact.html">Contact</a><a href="admissions.html" class="mobile-apply">Apply Online</a></nav></header><section class="hero"><div class="container hero-content"><span class="hero-label">SCHOOL GALLERY</span><h1>Moments that tell <span>our story.</span></h1><p>Explore life at Kenbridge Christian School through photographs of our learners, activities, facilities and community.</p></div></section><section class="section"><div class="container"><div class="section-heading"><span class="section-label">KENBRIDGE IN PICTURES</span><h2>Explore Our School</h2><p>A visual collection of school life, learning, sports, activities and special moments.</p></div><div class="gallery-filters" id="galleryFilters"><button class="gallery-filter active" data-filter="all" type="button">All</button><button class="gallery-filter" data-filter="school-life" type="button">School</button><button class="gallery-filter" data-filter="academics" type="button">Academics</button><button class="gallery-filter" data-filter="sports" type="button">Sports</button><button class="gallery-filter" data-filter="boarding" type="button">Boarding</button><button class="gallery-filter" data-filter="activities" type="button">Activities</button></div><div class="gallery-grid" id="galleryGrid"><div class="gallery-loading" id="galleryLoading">Loading gallery images...</div><div class="gallery-empty" id="galleryEmpty">No gallery images are available yet.</div></div></div></section><div class="gallery-lightbox" id="galleryLightbox" aria-hidden="true"><button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close image">×</button><button class="lightbox-prev" id="lightboxPrev" type="button" aria-label="Previous image">‹</button><div class="lightbox-content"><img src="" alt="" id="lightboxImage"><div class="lightbox-caption" id="lightboxCaption"></div></div><button class="lightbox-next" id="lightboxNext" type="button" aria-label="Next image">›</button></div><section class="school-life"><div class="container"><div class="section-heading light"><span class="section-label">SHARE THE MOMENTS</span><h2>More school memories are coming.</h2><p>Official photographs and school events are added to this gallery by the school administration.</p></div><div class="updates-box"><div><div class="feature-icon">📸</div><h3>Kenbridge Gallery</h3><p>Discover official photographs from school life, learning, sports, activities and special events.</p></div><a href="contact.html" class="btn btn-primary">Contact School</a></div></div></section><section class="admissions-cta"><div class="container cta-inner"><div><span class="section-label">DISCOVER KENBRIDGE</span><h2>Want to learn more?</h2><p>Explore our academics, admissions, facilities and school life.</p></div><a href="about.html" class="btn btn-primary">About Our School</a></div></section><div id="site-footer"></div><script>
-document.addEventListener("DOMContentLoaded",()=>{const API_BASE="https://kenbridge-christian-school.onrender.com",
-  grid=document.getElementById("galleryGrid"),filters=document.querySelectorAll(".gallery-filter"),loading=document.getElementById("galleryLoading")
-  ,empty=document.getElementById("galleryEmpty"),lightbox=document.getElementById("galleryLightbox"),lightboxImage=document
-  .getElementById("lightboxImage"),caption=document.getElementById("lightboxCaption"),
-  closeButton=document.getElementById("lightboxClose"),prevButton=document.getElementById("lightboxPrev"),
-  nextButton=document.getElementById("lightboxNext");let images=[],activeFilter="all",visibleImages=[],currentIndex=0;function escapeHTML(v){return 
-  String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}function normalizeCategory(v){return String(v||"school-life").
-  toLowerCase().trim().replace(/\s+/g,"-")}function matchesFilter(image){if(activeFilter==="all")return true;const category=normalizeCategory(image.category);
-                                                                         if(activeFilter==="school-life")return category==="school-life"||category==="school";if
-                                                                           (activeFilter==="activities")return category==="activities"||category==="events"||category==="christian-life"||category==="community";return category===activeFilter}function openLightbox(index){if(!visibleImages.length)return;currentIndex=(index+visibleImages.length)%visibleImages.length;const image=visibleImages[currentIndex];lightboxImage.src=image.image_url;lightboxImage.alt=image.title||"Kenbridge Christian School";caption.textContent=image.description||image.title||image.category||"";lightbox.classList.add("open");lightbox.setAttribute("aria-hidden","false")}function closeLightbox(){lightbox.classList.remove("open");lightbox.setAttribute("aria-hidden","true")}function renderGallery(){grid.querySelectorAll(".gallery-item").forEach(item=>item.remove());visibleImages=images.filter(matchesFilter);empty.style.display=visibleImages.length?"none":"block";visibleImages.forEach((image,index)=>{const item=document.createElement("figure");item.className="gallery-item";item.dataset.category=normalizeCategory(image.category);item.innerHTML=`<img src="${escapeHTML(image.image_url)}" alt="${escapeHTML(image.title||"Kenbridge Christian School")}" loading="lazy"><figcaption><strong>${escapeHTML(image.title||"Kenbridge Christian School")}</strong><span>${escapeHTML(image.description||image.category||"Kenbridge Christian School")}</span></figcaption>`;item.addEventListener("click",()=>openLightbox(index));grid.appendChild(item)})}async function loadGallery(){loading.style.display="block";empty.style.display="none";try{const response=await fetch(API_BASE+"/api/gallery");const result=await response.json();if(!response.ok||!result.success)throw new Error(result.message||"Unable to load gallery images.");images=Array.isArray(result.images)?result.images:[];renderGallery()}catch(error){console.error("PUBLIC GALLERY ERROR:",error);empty.textContent=error.message||"Unable to load gallery images.";empty.style.display="block"}finally{loading.style.display="none"}}filters.forEach(button=>button.addEventListener("click",()=>{filters.forEach(item=>item.classList.remove("active"));button.classList.add("active");activeFilter=button.dataset.filter||"all";renderGallery()}));closeButton.addEventListener("click",closeLightbox);prevButton.addEventListener("click",()=>openLightbox(currentIndex-1));nextButton.addEventListener("click",()=>openLightbox(currentIndex+1));lightbox.addEventListener("click",event=>{if(event.target===lightbox)closeLightbox()});document.addEventListener("keydown",event=>{if(!lightbox.classList.contains("open"))return;if(event.key==="Escape")closeLightbox();if(event.key==="ArrowLeft")openLightbox(currentIndex-1);if(event.key==="ArrowRight")openLightbox(currentIndex+1)});loadGallery()});
- <!-- =========================================
-     FOOTER
-========================================= --><footer class="footer"><div class="container footer-grid">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gallery | Kenbridge Christian School</title>
+<meta name="description" content="Explore photos and moments from Kenbridge Christian School.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.gallery-filters{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:0 0 35px}
+.gallery-filter{border:1px solid #08783f;background:#fff;color:#08783f;padding:10px 18px;border-radius:30px;font-weight:700;cursor:pointer;transition:.2s}
+.gallery-filter:hover,.gallery-filter.active{background:#08783f;color:#fff}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.gallery-item{position:relative;overflow:hidden;border-radius:14px;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.08);cursor:pointer;margin:0;min-height:250px}
+.gallery-item img{display:block;width:100%;height:280px;object-fit:cover;transition:transform .35s}
+.gallery-item:hover img{transform:scale(1.05)}
+.gallery-item figcaption{position:absolute;left:0;right:0;bottom:0;padding:18px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.85));display:flex;flex-direction:column;gap:4px}
+.gallery-item figcaption strong{font-size:1.05rem}
+.gallery-item figcaption span{font-size:.88rem;opacity:.9}
+.gallery-item.is-hidden{display:none}
+.gallery-lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;display:none;align-items:center;justify-content:center;padding:25px}
+.gallery-lightbox.open{display:flex}
+.lightbox-content{max-width:1000px;width:100%;text-align:center}
+.lightbox-content img{display:block;max-width:100%;max-height:78vh;width:auto;height:auto;margin:auto;border-radius:10px}
+.lightbox-caption{color:#fff;margin-top:14px;font-size:1rem}
+.lightbox-close,.lightbox-prev,.lightbox-next{position:absolute;border:0;background:rgba(255,255,255,.15);color:#fff;cursor:pointer;width:48px;height:48px;border-radius:50%;font-size:2rem;line-height:1}
+.lightbox-close{top:20px;right:20px}
+.lightbox-prev{left:20px;top:50%;transform:translateY(-50%)}
+.lightbox-next{right:20px;top:50%;transform:translateY(-50%)}
+.lightbox-close:hover,.lightbox-prev:hover,.lightbox-next:hover{background:rgba(255,255,255,.3)}
+.updates-box{display:flex;align-items:center;justify-content:space-between;gap:30px}
+.footer-policy{display:flex;gap:18px;flex-wrap:wrap}
+@media(max-width:900px){.gallery-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){
+.gallery-grid{grid-template-columns:1fr}
+.gallery-item img{height:250px}
+.gallery-filters{gap:7px}
+.gallery-filter{padding:8px 13px;font-size:.9rem}
+.updates-box{flex-direction:column;align-items:flex-start}
+.lightbox-prev{left:8px}.lightbox-next{right:8px}
+.lightbox-close{top:10px;right:10px}
+}
+</style>
+</head>
 
+<body>
 
-    <div class="footer-about">
-
-        <img
-            src="../images/logo.png"
-            alt="Kenbridge Christian School Logo"
-            class="footer-logo"
-        >
-
-        <h3>
-            Kenbridge Christian School
-        </h3>
-
-        <p>
-            Head and Not Tails.
-            Deuteronomy 28:13
-        </p>
-
-    </div>
-
-
-
-    <div class="footer-column">
-
-        <h4>
-            Explore
-        </h4>
-
-        <a href="about.html">
-            About
-        </a>
-
-        <a href="academics.html">
-            Academics
-        </a>
-
-        <a href="admissions.html">
-            Admissions
-        </a>
-
-        <a href="fees.html">
-            Fees
-        </a>
-
-        <a href="gallery.html">
-            Gallery
-        </a>
-
-    </div>
-
-
-
-    <div class="footer-column">
-
-        <h4>
-            School Life
-        </h4>
-
-        <a href="sports.html">
-            Sports
-        </a>
-
-        <a href="projects.html">
-            Projects
-        </a>
-
-        <a href="facilities.html">
-            Facilities
-        </a>
-
-        <a href="boarding.html">
-            Boarding
-        </a>
-
-        <a href="articles.html">
-            Articles
-        </a>
-
-    </div>
-
-
-
-    <div class="footer-column">
-
-        <h4>
-            Contact
-        </h4>
-
-        <p>
-            Old Butabika Road,
-            Kampala, Uganda
-        </p>
-
-        <p>
-            P.O. Box 520093,
-            Luzira
-        </p>
-
-        <a href="tel:+256789825517">
-            +256 789 825 517
-        </a>
-
-    </div>
-
+<!-- TOP BAR -->
+<div class="top-bar">
+<div class="container top-bar-inner">
+<div class="top-location">📍 Old Butabika Road, Kampala, Uganda</div>
+<div class="top-contact">
+<a href="tel:+256789825517">📞 +256 789 825 517</a>
+<span class="separator">|</span>
+<span>Mon–Fri: 8:00 AM–5:00 PM</span>
+<span class="separator">|</span>
+<span>Sat: 8:00 AM–2:00 PM</span>
+</div>
+</div>
 </div>
 
+<!-- HEADER -->
+<header class="header" id="header">
+<div class="container nav-container">
 
+<a href="../index.html" class="brand">
+<div class="logo-container">
+<img src="../images/logo.png" alt="Kenbridge Christian School Logo" class="school-logo">
+</div>
+<div class="brand-name">
+<strong>KENBRIDGE</strong>
+<span>CHRISTIAN SCHOOL</span>
+</div>
+</a>
+
+<nav class="desktop-nav">
+<a href="../index.html">Home</a>
+<a href="about.html">About</a>
+<a href="academics.html">Academics</a>
+<a href="admissions.html">Admissions</a>
+<a href="fees.html">Fees</a>
+<a href="articles.html">Articles</a>
+<a href="contact.html">Contact</a>
+
+<div class="more-menu">
+<button class="more-button" type="button">More <span>⌄</span></button>
+<div class="dropdown">
+<a href="boarding.html">Boarding</a>
+<a href="gallery.html" class="active">Gallery</a>
+<a href="management.html">Management</a>
+<a href="announcements.html">Announcements</a>
+<a href="projects.html">Projects</a>
+<a href="reports.html">Reports</a>
+<a href="sports.html">Sports</a>
+<a href="facilities.html">Facilities</a>
+<a href="careers.html">Careers</a>
+<a href="feedback.html">Feedback</a>
+</div>
+</div>
+
+<a href="submissions.html" class="apply-button">Apply Online</a>
+</nav>
+
+<button class="mobile-menu-button" id="mobileMenuButton" type="button" aria-label="Open navigation" aria-expanded="false">
+<span></span><span></span><span></span>
+</button>
+</div>
+
+<!-- MOBILE NAVIGATION -->
+<nav class="mobile-nav" id="mobileNav">
+<a href="../index.html">Home</a>
+<a href="about.html">About</a>
+<a href="academics.html">Academics</a>
+<a href="admissions.html">Admissions</a>
+<a href="fees.html">Fees</a>
+<a href="boarding.html">Boarding</a>
+<a href="articles.html">Articles</a>
+<a href="gallery.html" class="active">Gallery</a>
+<a href="announcements.html">Announcements</a>
+<a href="projects.html">Projects</a>
+<a href="reports.html">Reports</a>
+<a href="sports.html">Sports</a>
+<a href="facilities.html">Facilities</a>
+<a href="management.html">Management</a>
+<a href="careers.html">Careers</a>
+<a href="feedback.html">Feedback</a>
+<a href="contact.html">Contact</a>
+<a href="submissions.html" class="mobile-apply">Apply Online</a>
+</nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+<div class="container hero-content">
+<span class="hero-label">SCHOOL GALLERY</span>
+<h1>Moments that tell <span>our story.</span></h1>
+<p>Explore life at Kenbridge Christian School through photographs of our learners, activities, facilities and community.</p>
+</div>
+</section>
+
+<!-- GALLERY -->
+<section class="section">
+<div class="container">
+
+<div class="section-heading">
+<span class="section-label">KENBRIDGE IN PICTURES</span>
+<h2>Explore Our School</h2>
+<p>A visual collection of school life, learning, sports, activities and special moments.</p>
+</div>
+
+<div class="gallery-filters" id="galleryFilters">
+<button class="gallery-filter active" data-filter="all" type="button">All</button>
+<button class="gallery-filter" data-filter="school" type="button">School</button>
+<button class="gallery-filter" data-filter="academics" type="button">Academics</button>
+<button class="gallery-filter" data-filter="sports" type="button">Sports</button>
+<button class="gallery-filter" data-filter="boarding" type="button">Boarding</button>
+<button class="gallery-filter" data-filter="activities" type="button">Activities</button>
+</div>
+
+<div class="gallery-grid" id="galleryGrid">
+
+<figure class="gallery-item" data-category="school">
+<img src="../images/school.jpg" alt="Kenbridge Christian School" loading="lazy">
+<figcaption><strong>Our School</strong><span>Kenbridge Christian School</span></figcaption>
+</figure>
+
+<figure class="gallery-item" data-category="academics">
+<img src="../images/academics.jpg" alt="Academic learning at Kenbridge" loading="lazy">
+<figcaption><strong>Academics</strong><span>Learning &amp; discovery</span></figcaption>
+</figure>
+
+<figure class="gallery-item" data-category="sports">
+<img src="../images/sports.jpg" alt="Sports at Kenbridge" loading="lazy">
+<figcaption><strong>Sports</strong><span>Teamwork &amp; competition</span></figcaption>
+</figure>
+
+<figure class="gallery-item" data-category="boarding">
+<img src="../images/boarding.jpg" alt="Boarding life at Kenbridge" loading="lazy">
+<figcaption><strong>Boarding</strong><span>Residential life</span></figcaption>
+</figure>
+
+<figure class="gallery-item" data-category="activities">
+<img src="../images/activities.jpg" alt="School activities at Kenbridge" loading="lazy">
+<figcaption><strong>Activities</strong><span>Learning beyond the classroom</span></figcaption>
+</figure>
+
+<figure class="gallery-item" data-category="school">
+<img src="../images/school.jpg" alt="Kenbridge school community" loading="lazy">
+<figcaption><strong>School Community</strong><span>Growing together</span></figcaption>
+</figure>
+
+<figure class="gallery-item" data-category="academics">
+<img src="../images/academics.jpg" alt="Kenbridge classroom" loading="lazy">
+<figcaption><strong>Classroom Life</strong><span>Learning together</span></figcaption>
+</figure>
+
+<figure class="gallery-item" data-category="sports">
+<img src="../images/sports.jpg" alt="Kenbridge sports activities" loading="lazy">
+<figcaption><strong>Sports Activities</strong><span>Active minds and bodies</span></figcaption>
+</figure>
+
+<figure class="gallery-item" data-category="activities">
+<img src="../images/activities.jpg" alt="Kenbridge activities" loading="lazy">
+<figcaption><strong>School Activities</strong><span>Discovering talents</span></figcaption>
+</figure>
+
+<figure class="gallery-item" data-category="boarding">
+<img src="../images/boarding.jpg" alt="Kenbridge boarding community" loading="lazy">
+<figcaption><strong>Boarding Community</strong><span>Life away from home</span></figcaption>
+</figure>
+
+<figure class="gallery-item" data-category="school">
+<img src="../images/school.jpg" alt="Kenbridge school environment" loading="lazy">
+<figcaption><strong>School Environment</strong><span>A place to learn and grow</span></figcaption>
+</figure>
+
+<figure class="gallery-item" data-category="academics">
+<img src="../images/academics.jpg" alt="Kenbridge learning" loading="lazy">
+<figcaption><strong>Learning</strong><span>Building a strong future</span></figcaption>
+</figure>
+
+</div>
+</div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="gallery-lightbox" id="galleryLightbox" aria-hidden="true">
+<button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close image">×</button>
+<button class="lightbox-prev" id="lightboxPrev" type="button" aria-label="Previous image">‹</button>
+
+<div class="lightbox-content">
+<img src="" alt="" id="lightboxImage">
+<div class="lightbox-caption" id="lightboxCaption"></div>
+</div>
+
+<button class="lightbox-next" id="lightboxNext" type="button" aria-label="Next image">›</button>
+</div>
+
+<!-- GALLERY CTA -->
+<section class="school-life">
+<div class="container">
+
+<div class="section-heading light">
+<span class="section-label">SHARE THE MOMENTS</span>
+<h2>More school memories are coming.</h2>
+<p>Official photographs and school events can be added to this gallery as they become available.</p>
+</div>
+
+<div class="updates-box">
+<div>
+<div class="feature-icon">📸</div>
+<h3>Kenbridge Gallery</h3>
+<p>The gallery will grow with real photographs from the school, learners and school activities.</p>
+</div>
+<a href="contact.html" class="btn btn-primary">Contact School</a>
+</div>
+
+</div>
+</section>
+
+<!-- CTA -->
+<section class="admissions-cta">
+<div class="container cta-inner">
+<div>
+<span class="section-label">DISCOVER KENBRIDGE</span>
+<h2>Want to learn more?</h2>
+<p>Explore our academics, admissions, facilities and school life.</p>
+</div>
+<a href="about.html" class="btn btn-primary">About Our School</a>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+<div class="container footer-grid">
+
+<div class="footer-about">
+<img src="../images/logo.png" alt="Kenbridge Christian School Logo" class="footer-logo">
+<h3>Kenbridge Christian School</h3>
+<p>Head and Not Tails.<br>Deuteronomy 28:13</p>
+</div>
+
+<div class="footer-column">
+<h4>Explore</h4>
+<a href="about.html">About</a>
+<a href="academics.html">Academics</a>
+<a href="admissions.html">Admissions</a>
+<a href="fees.html">Fees</a>
+<a href="gallery.html">Gallery</a>
+<a href="reports.html">Reports</a>
+</div>
+
+<div class="footer-column">
+<h4>School Life</h4>
+<a href="sports.html">Sports</a>
+<a href="projects.html">Projects</a>
+<a href="facilities.html">Facilities</a>
+<a href="boarding.html">Boarding</a>
+<a href="articles.html">Articles</a>
+<a href="announcements.html">Announcements</a>
+</div>
+
+<div class="footer-column">
+<h4>School &amp; Support</h4>
+<a href="management.html">Management</a>
+<a href="careers.html">Careers</a>
+<a href="feedback.html">Feedback</a>
+<a href="contact.html">Contact</a>
+<a href="submissions.html">Apply Online</a>
+</div>
+
+<div class="footer-column">
+<h4>Contact</h4>
+<p>Old Butabika Road,<br>Kampala, Uganda</p>
+<p>P.O. Box 520093,<br>Luzira</p>
+<a href="tel:+256789825517">+256 789 825 517</a>
+</div>
+
+</div>
 
 <div class="footer-bottom">
-
-    <div class="container">
-
-        <span>
-            © 2026 Kenbridge Christian School.
-            All Rights Reserved.
-             Made with ❤️ by Zakmolanitech Solutions 
-        </span>
-
-        <span>
-        Our Motto; Heads and Not Tails
-        </span>
-
-    </div>
-
+<div class="container">
+<span>© 2026 Kenbridge Christian School. All Rights Reserved.<br>Made with ❤️ by Zakmolanitech Solutions</span>
+<span class="footer-policy">
+<a href="privacy.html">Privacy Policy</a>
+<a href="terms.html">Terms &amp; Conditions</a>
+</span>
 </div>
-
-<a href="privacy.html">
-    Privacy Policy
-</a>
-
-<a href="terms.html">
-    Terms & Conditions
-</a>
-
-<div id="site-footer"></div>
+</div>
+</footer>
 
 <script src="../js/script.js"></script>
-<script src="../js/components.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+
+const filters=document.querySelectorAll(".gallery-filter");
+const items=[...document.querySelectorAll(".gallery-item")];
+
+filters.forEach(btn=>{
+btn.addEventListener("click",()=>{
+filters.forEach(b=>b.classList.remove("active"));
+btn.classList.add("active");
+const filter=btn.dataset.filter;
+
+items.forEach(item=>{
+item.classList.toggle("is-hidden",filter!=="all"&&item.dataset.category!==filter);
+});
+});
+});
+
+const lightbox=document.getElementById("galleryLightbox");
+const image=document.getElementById("lightboxImage");
+const caption=document.getElementById("lightboxCaption");
+const close=document.getElementById("lightboxClose");
+const prev=document.getElementById("lightboxPrev");
+const next=document.getElementById("lightboxNext");
+
+let visibleItems=[];
+let current=0;
+
+function refreshVisible(){
+visibleItems=items.filter(item=>!item.classList.contains("is-hidden"));
+}
+
+function openLightbox(index){
+refreshVisible();
+if(!visibleItems.length)return;
+current=(index+visibleItems.length)%visibleItems.length;
+const item=visibleItems[current];
+const img=item.querySelector("img");
+const title=item.querySelector("strong");
+const text=item.querySelector("span");
+
+image.src=img.src;
+image.alt=img.alt;
+caption.textContent=title.textContent+" — "+text.textContent;
+lightbox.classList.add("open");
+lightbox.setAttribute("aria-hidden","false");
+document.body.style.overflow="hidden";
+}
+
+function closeLightbox(){
+lightbox.classList.remove("open");
+lightbox.setAttribute("aria-hidden","true");
+image.src="";
+document.body.style.overflow="";
+}
+
+function move(step){
+refreshVisible();
+if(!visibleItems.length)return;
+current=(current+step+visibleItems.length)%visibleItems.length;
+const item=visibleItems[current];
+const img=item.querySelector("img");
+const title=item.querySelector("strong");
+const text=item.querySelector("span");
+image.src=img.src;
+image.alt=img.alt;
+caption.textContent=title.textContent+" — "+text.textContent;
+}
+
+items.forEach(item=>{
+item.addEventListener("click",()=>{
+refreshVisible();
+openLightbox(visibleItems.indexOf(item));
+});
+});
+
+close.addEventListener("click",closeLightbox);
+prev.addEventListener("click",()=>move(-1));
+next.addEventListener("click",()=>move(1));
+
+lightbox.addEventListener("click",e=>{
+if(e.target===lightbox)closeLightbox();
+});
+
+document.addEventListener("keydown",e=>{
+if(!lightbox.classList.contains("open"))return;
+if(e.key==="Escape")closeLightbox();
+if(e.key==="ArrowLeft")move(-1);
+if(e.key==="ArrowRight")move(1);
+});
+
+});
+</script>
+
 </body>
 </html>
