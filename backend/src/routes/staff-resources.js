@@ -1,3 +1,4 @@
+```js
 const express=require("express");
 const multer=require("multer");
 const crypto=require("crypto");
@@ -14,12 +15,20 @@ const upload=multer({
 
 async function auth(req){
   const h=req.headers.authorization;
+
   if(!h?.startsWith("Bearer "))
-    throw Object.assign(new Error("Authentication required."),{status:401});
+    throw Object.assign(
+      new Error("Authentication required."),
+      {status:401}
+    );
 
   const {data,error}=await supabase.auth.getUser(h.slice(7));
+
   if(error||!data?.user)
-    throw Object.assign(new Error("Invalid or expired session."),{status:401});
+    throw Object.assign(
+      new Error("Invalid or expired session."),
+      {status:401}
+    );
 
   const {rows}=await pool.query(
     `SELECT id,full_name,email,role,is_active
@@ -32,10 +41,16 @@ async function auth(req){
   const user=rows[0];
 
   if(!user)
-    throw Object.assign(new Error("User profile not found."),{status:403});
+    throw Object.assign(
+      new Error("User profile not found."),
+      {status:403}
+    );
 
   if(user.is_active===false)
-    throw Object.assign(new Error("Your account is inactive."),{status:403});
+    throw Object.assign(
+      new Error("Your account is inactive."),
+      {status:403}
+    );
 
   return user;
 }
@@ -51,7 +66,10 @@ async function staff(user){
   );
 
   if(!rows[0])
-    throw Object.assign(new Error("Staff profile not found."),{status:403});
+    throw Object.assign(
+      new Error("Staff profile not found."),
+      {status:403}
+    );
 
   return rows[0];
 }
@@ -61,12 +79,22 @@ const text=v=>String(v??"").trim();
 
 function category(v){
   const allowed=[
-    "EXAMS","TESTS","LESSON PLANS","NOTES","ASSIGNMENTS",
-    "SCHEMES OF WORK","PAST PAPERS","CHRISTIAN EDUCATION",
-    "TEACHING AIDS","POLICIES","FORMS","OTHER"
+    "EXAMS",
+    "TESTS",
+    "LESSON PLANS",
+    "NOTES",
+    "ASSIGNMENTS",
+    "SCHEMES OF WORK",
+    "PAST PAPERS",
+    "CHRISTIAN EDUCATION",
+    "TEACHING AIDS",
+    "POLICIES",
+    "FORMS",
+    "OTHER"
   ];
 
   const x=text(v).toUpperCase();
+
   return allowed.includes(x)?x:"OTHER";
 }
 
@@ -103,6 +131,7 @@ router.get("/",async(req,res)=>{
     const filters=[
       ["search",v=>{
         values.push(`%${text(v)}%`);
+
         const n=values.length;
 
         where.push(`(
@@ -112,30 +141,51 @@ router.get("/",async(req,res)=>{
           LOWER(COALESCE(r.subject,'')) LIKE LOWER($${n})
         )`);
       }],
+
       ["category",v=>{
         values.push(text(v).toUpperCase());
-        where.push(`UPPER(COALESCE(r.category,''))=$${values.length}`);
+
+        where.push(
+          `UPPER(COALESCE(r.category,''))=$${values.length}`
+        );
       }],
+
       ["subject",v=>{
         values.push(text(v));
-        where.push(`LOWER(COALESCE(r.subject,''))=LOWER($${values.length})`);
+
+        where.push(
+          `LOWER(COALESCE(r.subject,''))=LOWER($${values.length})`
+        );
       }],
+
       ["class_level",v=>{
         values.push(text(v).toUpperCase());
-        where.push(`UPPER(COALESCE(r.class_level,''))=$${values.length}`);
+
+        where.push(
+          `UPPER(COALESCE(r.class_level,''))=$${values.length}`
+        );
       }],
+
       ["academic_year",v=>{
         values.push(text(v));
-        where.push(`COALESCE(r.academic_year,'')=$${values.length}`);
+
+        where.push(
+          `COALESCE(r.academic_year,'')=$${values.length}`
+        );
       }],
+
       ["term",v=>{
         values.push(text(v).toUpperCase());
-        where.push(`UPPER(COALESCE(r.term,''))=$${values.length}`);
+
+        where.push(
+          `UPPER(COALESCE(r.term,''))=$${values.length}`
+        );
       }]
     ];
 
     filters.forEach(([key,fn])=>{
-      if(text(req.query[key]))fn(req.query[key]);
+      if(text(req.query[key]))
+        fn(req.query[key]);
     });
 
     const sqlWhere=where.length
@@ -144,11 +194,26 @@ router.get("/",async(req,res)=>{
 
     const {rows}=await pool.query(
       `SELECT
-        r.id,r.title,r.description,r.category,r.subject,r.class_level,
-        r.academic_year,r.term,r.file_name,r.file_path,r.file_type,
-        r.file_size,r.uploaded_by,r.created_at,r.updated_at,
+        r.id,
+        r.title,
+        r.description,
+        r.category,
+        r.subject,
+        r.class_level,
+        r.academic_year,
+        r.term,
+        r.file_name,
+        r.file_path,
+        r.file_type,
+        r.file_size,
+        r.uploaded_by,
+        r.created_at,
+        r.updated_at,
         COALESCE(
-          NULLIF(TRIM(CONCAT_WS(' ',s.first_name,s.last_name)),''),
+          NULLIF(
+            TRIM(CONCAT_WS(' ',s.first_name,s.last_name)),
+            ''
+          ),
           u.full_name,
           'Staff'
         ) AS uploader_name
@@ -196,7 +261,10 @@ router.get("/:id",async(req,res)=>{
       `SELECT
         r.*,
         COALESCE(
-          NULLIF(TRIM(CONCAT_WS(' ',s.first_name,s.last_name)),''),
+          NULLIF(
+            TRIM(CONCAT_WS(' ',s.first_name,s.last_name)),
+            ''
+          ),
           u.full_name,
           'Staff'
         ) AS uploader_name
@@ -216,7 +284,10 @@ router.get("/:id",async(req,res)=>{
         message:"Resource not found."
       });
 
-    if(!admin(user)&&String(r.uploaded_by)!==String(st.id))
+    if(
+      !admin(user)&&
+      String(r.uploaded_by)!==String(st.id)
+    )
       return res.status(403).json({
         success:false,
         message:"You do not have access to this resource."
@@ -240,109 +311,136 @@ router.get("/:id",async(req,res)=>{
 });
 
 /* UPLOAD */
-router.post("/upload",upload.single("file"),async(req,res)=>{
-  let path=null;
+router.post(
+  "/upload",
+  upload.single("file"),
+  async(req,res)=>{
+    let path=null;
 
-  try{
-    const user=await auth(req);
-    const st=await staff(user);
+    try{
+      const user=await auth(req);
+      const st=await staff(user);
 
-    if(!req.file)
-      return res.status(400).json({
-        success:false,
-        message:"Please select a file."
-      });
+      if(!req.file)
+        return res.status(400).json({
+          success:false,
+          message:"Please select a file."
+        });
 
-    const title=text(req.body.title);
-    const classLevel=text(req.body.class_level).toUpperCase();
+      const title=text(req.body.title);
+      const classLevel=
+        text(req.body.class_level).toUpperCase();
 
-    if(!title)
-      return res.status(400).json({
-        success:false,
-        message:"Resource title is required."
-      });
+      if(!title)
+        return res.status(400).json({
+          success:false,
+          message:"Resource title is required."
+        });
 
-    if(!classLevel)
-      return res.status(400).json({
-        success:false,
-        message:"Class level is required."
-      });
+      if(!classLevel)
+        return res.status(400).json({
+          success:false,
+          message:"Class level is required."
+        });
 
-    const original=safe(req.file.originalname);
+      const original=safe(req.file.originalname);
 
-    const ext=original.includes(".")
-      ?original.split(".").pop().toLowerCase()
-      :"file";
+      const ext=original.includes(".")
+        ?original.split(".").pop().toLowerCase()
+        :"file";
 
-    const cat=category(req.body.category);
+      const cat=category(req.body.category);
 
-    path=
-      `resources/${cat.toLowerCase().replace(/\s+/g,"-")}/`+
-      `${classLevel.replace(/[^\w-]+/g,"-")}/`+
-      `${st.id}/${Date.now()}-${crypto.randomUUID()}.${ext}`;
+      path=
+        `resources/${cat.toLowerCase().replace(/\s+/g,"-")}/`+
+        `${classLevel.replace(/[^\w-]+/g,"-")}/`+
+        `${st.id}/`+
+        `${Date.now()}-${crypto.randomUUID()}.${ext}`;
 
-    const {error:storeError}=await supabase.storage
-      .from(BUCKET)
-      .upload(path,req.file.buffer,{
-        contentType:req.file.mimetype,
-        upsert:false
-      });
+      const {error:storeError}=await supabase.storage
+        .from(BUCKET)
+        .upload(
+          path,
+          req.file.buffer,
+          {
+            contentType:req.file.mimetype,
+            upsert:false
+          }
+        );
 
-    if(storeError)
-      throw new Error(
-        "Storage upload failed: "+storeError.message
+      if(storeError)
+        throw new Error(
+          "Storage upload failed: "+
+          storeError.message
+        );
+
+      const {rows}=await pool.query(
+        `INSERT INTO staff_resources
+        (
+          title,
+          description,
+          category,
+          subject,
+          class_level,
+          academic_year,
+          term,
+          file_name,
+          file_path,
+          file_type,
+          file_size,
+          uploaded_by
+        )
+        VALUES(
+          $1,$2,$3,$4,$5,$6,
+          $7,$8,$9,$10,$11,$12
+        )
+        RETURNING *`,
+        [
+          title,
+          text(req.body.description)||null,
+          cat,
+          text(req.body.subject)||null,
+          classLevel,
+          text(req.body.academic_year)||null,
+          text(req.body.term).toUpperCase()||null,
+          req.file.originalname,
+          path,
+          req.file.mimetype||null,
+          req.file.size||null,
+          st.id
+        ]
       );
 
-    const {rows}=await pool.query(
-      `INSERT INTO staff_resources
-       (
-         title,description,category,subject,class_level,
-         academic_year,term,file_name,file_path,file_type,
-         file_size,uploaded_by
-       )
-       VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
-       RETURNING *`,
-      [
-        title,
-        text(req.body.description)||null,
-        cat,
-        text(req.body.subject)||null,
-        classLevel,
-        text(req.body.academic_year)||null,
-        text(req.body.term).toUpperCase()||null,
-        req.file.originalname,
-        path,
-        req.file.mimetype||null,
-        req.file.size||null,
-        st.id
-      ]
-    );
+      res.status(201).json({
+        success:true,
+        message:"Educational resource uploaded successfully.",
+        resource:rows[0]
+      });
 
-    res.status(201).json({
-      success:true,
-      message:"Educational resource uploaded successfully.",
-      resource:rows[0]
-    });
+    }catch(e){
+      console.error("RESOURCE UPLOAD:",e);
 
-  }catch(e){
-    console.error("RESOURCE UPLOAD:",e);
-
-    if(path){
-      try{
-        await supabase.storage
-          .from(BUCKET)
-          .remove([path]);
-      }catch(x){
-        console.error("STORAGE ROLLBACK:",x.message);
+      if(path){
+        try{
+          await supabase.storage
+            .from(BUCKET)
+            .remove([path]);
+        }catch(x){
+          console.error(
+            "STORAGE ROLLBACK:",
+            x.message
+          );
+        }
       }
-    }
 
-    res.status(e.status||500).json({
-      success:false,
-      message:e.message||"Unable to upload resource."
-    });
+      res.status(e.status||500).json({
+        success:false,
+        message:e.message||
+          "Unable to upload resource."
+      });
+    }
   }
-});
+);
 
 /* DELETE */
 router.delete("/:id",async(req,res)=>{
@@ -366,7 +464,10 @@ router.delete("/:id",async(req,res)=>{
         message:"Resource not found."
       });
 
-    if(!admin(user)&&String(r.uploaded_by)!==String(st.id))
+    if(
+      !admin(user)&&
+      String(r.uploaded_by)!==String(st.id)
+    )
       return res.status(403).json({
         success:false,
         message:"You can only delete resources you uploaded."
@@ -379,7 +480,8 @@ router.delete("/:id",async(req,res)=>{
 
       if(error)
         throw new Error(
-          "Storage deletion failed: "+error.message
+          "Storage deletion failed: "+
+          error.message
         );
     }
 
@@ -398,7 +500,8 @@ router.delete("/:id",async(req,res)=>{
 
     res.status(e.status||500).json({
       success:false,
-      message:e.message||"Unable to delete resource."
+      message:e.message||
+        "Unable to delete resource."
     });
   }
 });
