@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Admin Dashboard | Kenbridge Christian School</title>
+<meta name="description" content="Kenbridge Christian School Administration Portal.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../../css/style.css">
+<script src="../../js/portal-auth.js"></script>
+</head>
+<body>
+<div class="admin-page">
+<header class="admin-topbar">
+<div class="admin-topbar-inner">
+<a href="admin-dashboard.html" class="admin-brand">
+<img src="../../images/logo.png" alt="Kenbridge Christian School Logo">
+<div><strong>Kenbridge Christian School</strong><span>Administration Portal</span></div>
+</a>
+<div class="admin-actions">
+<button type="button" class="admin-oversight" id="oversightButton">👁️ Oversight ▼</button>
+<a href="../login.html" class="admin-logout" id="logoutButton">Log Out</a>
+<button type="button" class="admin-menu-button" id="adminMenuButton"><span></span><span></span><span></span></button>
+</div>
+</div>
+<nav class="oversight-menu" id="oversightMenu">
+<div class="oversight-menu-title">STAFF PORTAL OVERSIGHT <span class="oversight-role">ADMIN</span></div>
+<div class="oversight-section">Main Portal</div>
+<a href="../staff-dashboard.html">🏠 Staff Dashboard</a>
+<a href="../students.html">👨‍🎓 Students</a>
+<a href="../attendance.html">📋 Attendance</a>
+<a href="../announcements.html">📢 Announcements</a>
+<a href="../articles.html">📰 Articles</a>
+<a href="../reports.html">📊 Reports</a>
+<a href="../files.html">📁 Files</a>
+<a href="../uploads.html">📤 Upload Documents</a>
+<a href="../calendar.html">📅 Calendar</a>
+<a href="../messages.html">💬 Messages</a>
+<a href="../tasks.html">✅ Tasks</a>
+<a href="../leave.html">📝 Leave Requests</a>
+<a href="../payroll.html">💰 Payroll</a>
+<div class="oversight-section">Professional Development</div>
+<a href="../training.html">🎓 Training &amp; Development</a>
+<a href="../resources.html">🧰 Staff Resources</a>
+<div class="oversight-section">Account &amp; Communication</div>
+<a href="../notifications.html">🔔 Notifications</a>
+<a href="../profile.html">👤 My Profile</a>
+<a href="../settings.html">⚙️ Settings</a>
+</nav>
+<nav class="admin-menu" id="adminMenu">
+<div class="admin-menu-title">ADMIN PORTAL MENU</div>
+<a href="admin-dashboard.html">🏠 Dashboard</a>
+<a href="staff-accounts.html">👥 Staff Accounts</a>
+<a href="tasks.html">📋 Task Management</a>
+<a href="add-staff.html">➕ Add Staff</a>
+<a href="gallery-management.html">🖼️ Gallery Management</a>
+<a href="../uploads.html">📤 Upload Documents</a>
+<a href="edit-staff.html">✏️ Edit Staff</a>
+<a href="pending-content.html">📝 Pending Content</a>
+<a href="admin-profile.html">👤 My Profile</a>
+<a href="settings.html">⚙️ Settings</a>
+<a href="../login.html" id="menuLogout">🚪 Log Out</a>
+</nav>
+</header>
+
+<main class="admin-container">
+<div class="dashboard-message" id="dashboardMessage"></div>
+<section class="admin-welcome">
+<small>ADMINISTRATION PORTAL</small>
+<h1>Admin Dashboard</h1>
+<p>Manage staff, content, accounts and administration from one place.</p>
+<div class="admin-user" id="adminUser">Loading administrator...</div>
+</section>
+
+<section class="admin-stats">
+<div class="admin-stat"><strong id="staffCount">0</strong><span>Staff Accounts</span></div>
+<div class="admin-stat"><strong id="pendingCount">0</strong><span>Pending Content</span></div>
+<div class="admin-stat"><strong id="announcementCount">0</strong><span>Announcements</span></div>
+<div class="admin-stat"><strong id="articleCount">0</strong><span>Articles</span></div>
+</section>
+
+<h2 class="admin-title">Administration</h2>
+<section class="admin-grid">
+<a href="staff-accounts.html" class="admin-card"><div class="admin-icon">👥</div><h3>Staff Accounts</h3><p>Manage staff accounts and access.</p><span class="admin-badge">Manage</span></a>
+<a href="tasks.html" class="admin-card"><div class="admin-icon">📋</div><h3>Task Management</h3><p>Create and monitor staff tasks.</p><span class="admin-badge">Manage</span></a>
+<a href="add-staff.html" class="admin-card"><div class="admin-icon">➕</div><h3>Add Staff</h3><p>Create a staff account.</p><span class="admin-badge">Add Staff</span></a>
+<a href="gallery-management.html" class="admin-card"><div class="admin-icon">🖼️</div><h3>Gallery Management</h3><p>Manage school photographs.</p><span class="admin-badge">Manage</span></a>
+<a href="pending-content.html" class="admin-card"><div class="admin-icon">📝</div><h3>Pending Content</h3><p>Review content awaiting approval.</p><span class="admin-badge">Review</span></a>
+<a href="admin-profile.html" class="admin-card"><div class="admin-icon">👤</div><h3>My Profile</h3><p>View administrator information.</p><span class="admin-badge">Profile</span></a>
+<a href="settings.html" class="admin-card"><div class="admin-icon">⚙️</div><h3>Settings</h3><p>Manage portal settings.</p><span class="admin-badge">Settings</span></a>
+<a href="../uploads.html" class="admin-card"><div class="admin-icon">📤</div><h3>Upload Documents</h3><p>Manage school documents.</p><span class="admin-badge">Uploads</span></a>
+<a href="payroll.html" class="admin-card"><div class="admin-icon">💰</div><h3>Payroll Management</h3><p>Manage staff payroll.</p><span class="admin-badge">Payroll</span></a>
+</section>
+
+<section class="admin-panel">
+<h2>Quick Administration</h2>
+<p>Access common administration tools.</p>
+<div class="admin-links">
+<a href="staff-accounts.html">Staff Accounts</a>
+<a href="add-staff.html">Add Staff</a>
+<a href="gallery-management.html">Gallery</a>
+<a href="pending-content.html">Pending Content</a>
+<a href="admin-profile.html">Profile</a>
+<a href="payroll.html">Payroll</a>
+</div>
+</section>
+
+<div class="admin-security"><strong>Secure Portal:</strong> Administrator access and permissions are verified before protected data is displayed.</div>
+</main>
+
+<a href="../../board/login.html" class="board-access-button" aria-label="Open Board of Governors Login">
+<span class="board-access-icon">🏛️</span>
+<span class="board-access-text"><strong>Board of Governors</strong><small>Secure Access</small></span>
+</a>
+
+<footer class="portal-footer">
+<p>© <span id="portalFooterYear"></span> Kenbridge Christian School. All Rights Reserved.</p>
+<p>Designed by <strong>Zakmolanitech Solutions</strong></p>
+</footer>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+const API_BASE="https://kenbridge-christian-school.onrender.com",
+menuButton=document.getElementById("adminMenuButton"),
+menu=document.getElementById("adminMenu"),
+oversightButton=document.getElementById("oversightButton"),
+oversightMenu=document.getElementById("oversightMenu"),
+message=document.getElementById("dashboardMessage"),
+staffCount=document.getElementById("staffCount"),
+pendingCount=document.getElementById("pendingCount"),
+announcementCount=document.getElementById("announcementCount"),
+articleCount=document.getElementById("articleCount"),
+adminUser=document.getElementById("adminUser");
+
+const token=()=>localStorage.getItem("kenbridgeAccessToken")||localStorage.getItem("access_token")||localStorage.getItem("token")||sessionStorage.getItem("kenbridgeAccessToken")||sessionStorage.getItem("access_token")||sessionStorage.getItem("token");
+
+function logout(){localStorage.clear();sessionStorage.clear();location.replace("../login.html")}
+function toggle(el){el.classList.toggle("show")}
+menuButton.onclick=()=>{oversightMenu.classList.remove("show");toggle(menu)}
+oversightButton.onclick=()=>{menu.classList.remove("show");toggle(oversightMenu)}
+document.addEventListener("click",e=>{
+if(!menu.contains(e.target)&&e.target!==menuButton)menu.classList.remove("show");
+if(!oversightMenu.contains(e.target)&&e.target!==oversightButton)oversightMenu.classList.remove("show")
+});
+document.querySelectorAll("#logoutButton,#menuLogout").forEach(el=>el.onclick=e=>{e.preventDefault();logout()});
+
+async function fetchData(path,t){
+const r=await fetch(API_BASE+path,{headers:{Authorization:"Bearer "+t}});
+const d=await r.json();
+if(!r.ok||!d.success)throw Error(d.message||"Unable to load dashboard data.");
+return d
+}
+
+async function start(){
+try{
+const t=token();
+if(!t)return logout();
+const me=await fetchData("/api/auth/me",t),user=me.user;
+if(String(user.role).toUpperCase()!=="ADMIN")return logout();
+adminUser.textContent="Welcome, "+(user.full_name||user.username||"Administrator")+".";
+
+const [staff,announcements,articles]=await Promise.all([
+fetchData("/api/auth/staff",t),
+fetchData("/api/content/announcements",t),
+fetchData("/api/content/articles",t)
+]);
+const s=staff.staff||[],a=announcements.announcements||[],r=articles.articles||[];
+staffCount.textContent=s.length;
+announcementCount.textContent=a.length;
+articleCount.textContent=r.length;
+pendingCount.textContent=a.filter(x=>x.is_published===false).length+r.filter(x=>x.is_published===false).length;
+}catch(e){
+message.textContent=e.message;
+message.style.display="block";
+}
+}
+document.getElementById("portalFooterYear").textContent=new Date().getFullYear();
+start();
+});
+</script>
+</body>
+  </html>
