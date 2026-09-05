@@ -43,6 +43,109 @@ function isAdmin(user){
 function isBoard(user){
  return String(user.role||"").toUpperCase()==="BOARD";
 }
+/* BOARD PASSWORD-ONLY LOGIN */
+
+router.post("/login",async(req,res)=>{
+  try{
+    const password=String(req.body?.password||"");
+
+    if(!password){
+      return res.status(400).json({
+        success:false,
+        message:"Please enter the Board password."
+      });
+    }
+
+    const email=String(
+      process.env.BOARD_PORTAL_EMAIL||""
+    ).trim().toLowerCase();
+
+    if(!email||!process.env.BOARD_PORTAL_PASSWORD){
+      console.error(
+        "BOARD PORTAL AUTH ENVIRONMENT VARIABLES ARE NOT CONFIGURED."
+      );
+
+      return res.status(503).json({
+        success:false,
+        message:"Board portal authentication is not configured."
+      });
+    }
+
+    const{data,error}=await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if(error||!data?.user||!data?.session){
+      return res.status(401).json({
+        success:false,
+        message:"Incorrect Board password or access denied."
+      });
+    }
+
+    const{rows}=await pool.query(
+      `SELECT
+        id,
+        full_name,
+        username,
+        email,
+        role,
+        position,
+        department,
+        phone,
+        is_active
+       FROM users
+       WHERE id=$1
+       LIMIT 1`,
+      [data.user.id]
+    );
+
+    const user=rows[0];
+
+    if(!user){
+      return res.status(403).json({
+        success:false,
+        message:"Board portal account is not configured correctly."
+      });
+    }
+
+    const role=String(user.role||"").toUpperCase();
+
+    if(!user.is_active){
+      return res.status(403).json({
+        success:false,
+        message:"Board portal account is inactive."
+      });
+    }
+
+    if(role!=="BOARD"&&role!=="ADMIN"){
+      return res.status(403).json({
+        success:false,
+        message:"This account does not have Board access."
+      });
+    }
+
+    return res.status(200).json({
+      success:true,
+      message:"Board login successful.",
+      user,
+      access_token:data.session.access_token,
+      refresh_token:data.session.refresh_token,
+      expires_at:data.session.expires_at
+    });
+
+  }catch(error){
+    console.error(
+      "BOARD PASSWORD LOGIN ERROR:",
+      error.message
+    );
+
+    return res.status(500).json({
+      success:false,
+      message:"Unable to complete Board login."
+    });
+  }
+});
 /* BOARD PORTAL LOGIN */
 
 router.post("/login",async(req,res)=>{
