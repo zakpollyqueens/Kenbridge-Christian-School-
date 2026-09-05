@@ -394,7 +394,7 @@ router.get("/me",async(req,res)=>{
       message:"Unable to load Board profile."
     });
   }
-});
+})
 
 /* BOARD MEMBERS - ADMIN/BOARD READ */
 
