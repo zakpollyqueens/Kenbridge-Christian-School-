@@ -638,58 +638,88 @@
      EXPOSE PUBLIC API
      ======================================================= */
 
-  window.KenbridgeBoardAuth={
 
-    API_BASE,
+async function request(endpoint, options={}){
 
-    BOARD_TOKEN_KEY,
-
-    BOARD_USER_KEY,
-
-    STAFF_TOKEN_KEY,
-
-    getStaffToken,
-
-    getBoardToken,
-
-    getStoredBoardUser,
-
-    saveBoardSession,
-
-    clearBoardSession,
-
-    verifyStaffAdmin,
-
-    login,
-
-    getCurrentUser,
-
-    requireBoard,
-
-    logout,
-
-apiFetch,
-
-request: async function(endpoint, options={}){
-  const response = await apiFetch(endpoint, options);
+  const response =
+    await apiFetch(endpoint, options);
 
   let data = null;
 
   try{
-    data = await response.json();
+
+    data =
+      await response.json();
+
   }catch(error){
+
     data = null;
   }
 
   if(!response.ok){
+
     throw new Error(
       data?.message ||
       data?.error ||
-      Request failed with status ${response.status}`
+      `Request failed with status ${response.status}`
     );
+
   }
 
   return data;
 }
-  };
 
+
+function authHeaders(){
+
+  const token =
+    getBoardToken();
+
+  return token
+    ? {
+        "Authorization":
+          `Bearer ${token}`
+      }
+    : {};
+}
+
+
+window.KenbridgeBoardAuth = {
+
+  API_BASE,
+
+  BOARD_TOKEN_KEY,
+
+  BOARD_USER_KEY,
+
+  STAFF_TOKEN_KEY,
+
+  getStaffToken,
+
+  getBoardToken,
+
+  getStoredBoardUser,
+
+  saveBoardSession,
+
+  clearBoardSession,
+
+  verifyStaffAdmin,
+
+  login,
+
+  getCurrentUser,
+
+  requireBoard,
+
+  logout,
+
+  apiFetch,
+
+  request,
+
+  authHeaders
+
+};
+
+})();
