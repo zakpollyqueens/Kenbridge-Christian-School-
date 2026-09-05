@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Board of Governors | Kenbridge Christian School</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+:root{--primary:#123c63;--secondary:#1f6f8b;--light:#f5f7fa;--dark:#17212b;--danger:#b42318}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:Arial,sans-serif;background:linear-gradient(135deg,#123c63,#1f6f8b);display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card{width:min(100%,460px);background:#fff;border-radius:18px;padding:36px;box-shadow:0 20px 60px #0004}
+.logo-area{text-align:center;margin-bottom:28px}
+.board-badge{display:inline-block;margin-bottom:15px;padding:8px 15px;border-radius:50px;background:#eef5f8;color:var(--secondary);font-size:13px;font-weight:700}
+.logo-area h1{margin:0;color:var(--primary);font-size:26px}
+.logo-area p{margin:8px 0 0;color:#64748b;line-height:1.5}
+.form-group{margin-bottom:18px}
+label{display:block;margin-bottom:7px;font-size:14px;font-weight:700;color:var(--dark)}
+.password-wrap{position:relative}
+.password-wrap input{width:100%;padding:14px 52px 14px 14px;border:1px solid #d7dee7;border-radius:9px;outline:none;font-size:15px}
+.password-wrap input:focus{border-color:var(--secondary);box-shadow:0 0 0 3px #1f6f8b1f}
+.toggle-password{position:absolute;right:10px;top:50%;transform:translateY(-50%);border:0;background:transparent;cursor:pointer;color:#64748b;font-weight:700}
+.login-btn{width:100%;border:0;border-radius:9px;padding:14px;background:var(--primary);color:#fff;font-weight:700;cursor:pointer}
+.login-btn:hover{background:#0d2f4d}
+.login-btn:disabled{opacity:.65;cursor:not-allowed}
+.message{display:none;margin-bottom:18px;padding:12px 14px;border-radius:8px;font-size:14px}
+.message.error,.message.success{display:block}
+.message.error{background:#fef3f2;color:var(--danger);border:1px solid #fecdca}
+.message.success{background:#ecfdf3;color:#067647;border:1px solid #abefc6}
+.footer{margin-top:24px;text-align:center;color:#64748b;font-size:12px;line-height:1.6}
+.footer a{color:var(--secondary);text-decoration:none;font-weight:700}
+.security-note{margin:0 0 18px;padding:11px 13px;border-radius:8px;background:#f5f8fb;color:#536273;font-size:12px;text-align:center}
+@media(max-width:500px){.login-card{padding:28px 20px}.logo-area h1{font-size:23px}}
+</style>
+</head>
+<body>
+<div class="login-card">
+<div class="logo-area">
+<div class="board-badge">KENBRIDGE GOVERNANCE PORTAL</div>
+<h1>Board of Governors</h1>
+<p>Secure access for authorized members of the Kenbridge Christian School Board.</p>
+</div>
+
+<div class="security-note">🔐 Enter the Board password to continue.</div>
+<div id="message" class="message"></div>
+
+<form id="loginForm">
+<div class="form-group">
+<label for="password">Board Password</label>
+<div class="password-wrap">
+<input id="password" type="password" autocomplete="current-password" placeholder="Enter Board password" required>
+<button id="togglePassword" class="toggle-password" type="button">Show</button>
+</div>
+</div>
+<button id="loginButton" class="login-btn" type="submit">Enter Board Portal</button>
+</form>
+
+<div class="footer">
+Restricted to authorized Board members and administrators.
+<br><br>
+<a href="../index.html">Return to School Website</a>
+</div>
+</div>
+
+<script src="../js/board-auth.js"></script>
+<script>
+(function(){
+"use strict";
+const form=document.getElementById("loginForm"),password=document.getElementById("password"),button=document.getElementById("loginButton"),message=document.getElementById("message"),toggle=document.getElementById("togglePassword");
+
+function showMessage(text,type="error"){message.textContent=text;message.className=`message ${type}`}
+function clearMessage(){message.textContent="";message.className="message"}
+
+toggle.onclick=()=>{const showing=password.type==="text";password.type=showing?"password":"text";toggle.textContent=showing?"Show":"Hide"};
+
+form.onsubmit=async event=>{
+event.preventDefault();clearMessage();
+if(!password.value)return showMessage("Please enter the Board password.");
+button.disabled=true;button.textContent="Checking...";
+try{
+const user=await KenbridgeBoardAuth.login(password.value);
+showMessage(`Welcome, ${user?.full_name||"Board Member"}. Redirecting...`,"success");
+setTimeout(()=>window.location.replace("board-dashboard.html"),500);
+}catch(error){
+KenbridgeBoardAuth.clearSession();
+showMessage(error.message||"Incorrect Board password or access denied.");
+button.disabled=false;button.textContent="Enter Board Portal";
+}
+};
+
+KenbridgeBoardAuth.requireBoard({redirect:false}).then(user=>{
+if(user)window.location.replace("board-dashboard.html");
+}).catch(()=>{});
+})();
+</script>
+</body>
+</html>
