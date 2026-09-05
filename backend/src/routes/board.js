@@ -1,6 +1,223 @@
 const express=require("express");
 const supabase=require("../supabase");
 const pool=require("../db");
+
+const router=express.Router();
+
+/* GET AUTHENTICATED KENBRIDGE USER */
+async function getUser(req){
+ const authorization=req.headers.authorization;
+
+ if(!authorization?.startsWith("Bearer ")){
+  const e=new Error("Authorization token is required.");
+  e.status=401;
+  throw e;
+ }
+
+ const token=authorization.replace("Bearer ","").trim();
+
+ if(!token){
+  const e=new Error("Authorization token is required.");
+  e.status=401;
+  throw e;
+ }
+
+ const{data,error}=await supabase.auth.getUser(token);
+
+ if(error||!data?.user){
+  const e=new Error("Invalid or expired session.");
+  e.status=401;
+  throw e;
+ }
+
+ const{rows}=await pool.query(
+  `SELECT
+    id,
+    full_name,
+    username,
+    email,
+    role,
+    position,
+    department,
+    phone,
+    is_active
+   FROM users
+   WHERE id=$1
+   LIMIT 1`,
+  [data.user.id]
+ );
+
+ const user=rows[0];
+
+ if(!user){
+  const e=new Error("Your Kenbridge profile was not found.");
+  e.status=403;
+  throw e;
+ }
+
+ if(!user.is_active){
+  const e=new Error("Your account is inactive.");
+  e.status=403;
+  throw e;
+ }
+
+ return user;
+}
+
+/* ROLE HELPERS */
+function isAdmin(user){
+ return String(user?.role||"").toUpperCase()==="ADMIN";
+}
+
+function isBoard(user){
+ return String(user?.role||"").toUpperCase()==="BOARD";
+}
+
+/* BOARD PORTAL LOGIN - PASSWORD ONLY */
+router.post("/login",async(req,res)=>{
+ try{
+  const password=String(req.body?.password||"");
+
+  if(!password){
+   return res.status(400).json({
+    success:false,
+    message:"Board password is required."
+   });
+  }
+
+  const portalPassword=process.env.BOARD_PORTAL_PASSWORD;
+  const portalEmail=process.env.BOARD_PORTAL_EMAIL;
+  const portalAuthPassword=process.env.BOARD_PORTAL_AUTH_PASSWORD;
+
+  if(!portalPassword||!portalEmail||!portalAuthPassword){
+   console.error(
+    "BOARD PORTAL AUTH ENVIRONMENT VARIABLES ARE NOT CONFIGURED."
+   );
+
+   return res.status(500).json({
+    success:false,
+    message:"Board portal authentication is not configured."
+   });
+  }
+
+  if(password!==portalPassword){
+   return res.status(401).json({
+    success:false,
+    message:"Incorrect Board password."
+   });
+  }
+
+  const{data,error}=await supabase.auth.signInWithPassword({
+   email:portalEmail,
+   password:portalAuthPassword
+  });
+
+  if(error||!data?.user||!data?.session?.access_token){
+   console.error(
+    "BOARD PORTAL SUPABASE LOGIN ERROR:",
+    error?.message||"No valid Supabase session returned."
+   );
+
+   return res.status(500).json({
+    success:false,
+    message:"Unable to establish Board portal session."
+   });
+  }
+
+  const{rows}=await pool.query(
+   `SELECT
+     id,
+     full_name,
+     username,
+     email,
+     role,
+     position,
+     department,
+     phone,
+     is_active
+    FROM users
+    WHERE id=$1
+    LIMIT 1`,
+   [data.user.id]
+  );
+
+  const user=rows[0];
+
+  if(!user){
+   return res.status(403).json({
+    success:false,
+    message:"Board portal account was not found in the Kenbridge system."
+   });
+  }
+
+  if(!user.is_active){
+   return res.status(403).json({
+    success:false,
+    message:"Board portal account is inactive."
+   });
+  }
+
+  if(!isAdmin(user)&&!isBoard(user)){
+   return res.status(403).json({
+    success:false,
+    message:"This account does not have Board of Governors access."
+   });
+  }
+
+  return res.status(200).json({
+   success:true,
+   message:"Board login successful.",
+   access_token:data.session.access_token,
+   user
+  });
+
+ }catch(error){
+  console.error(
+   "BOARD PORTAL LOGIN ERROR:",
+   error.message
+  );
+
+  return res.status(500).json({
+   success:false,
+   message:"Unable to complete Board login."
+  });
+ }
+});
+
+/* BOARD SESSION */
+router.get("/session",async(req,res)=>{
+ try{
+  const user=await getUser(req);
+
+  if(!isAdmin(user)&&!isBoard(user)){
+   return res.status(403).json({
+    success:false,
+    message:"This account does not have Board of Governors access."
+   });
+  }
+
+  return res.status(200).json({
+   success:true,
+   user
+  });
+ }catch(error){
+  return res.status(error.status||500).json({
+   success:false,
+   message:error.message||"Unable to verify Board session."
+  });
+ }
+});
+
+/* BOARD LOGOUT */
+router.post("/logout",async(req,res)=>{
+ return res.status(200).json({
+  success:true,
+  message:"Board session ended."
+ });
+});
+const express=require("express");
+const supabase=require("../supabase");
+const pool=require("../db");
 const router=express.Router();
 
 async function getUser(req){
