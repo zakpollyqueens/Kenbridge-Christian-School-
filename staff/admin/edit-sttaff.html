@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Kenbridge Christian School— EDIT-STAFF </title>
+<style>
+*{box-sizing:border-box}html,body{width:100%;min-width:0;margin:0;overflow-x:hidden}body{font-family:Algerian,sans-serif;background:#f4f7f9;color:#1f2937}header{background:#0b5d3b;color:#fff;padding:18px 22px}header h1{margin:0;font-size:22px;line-height:1.35;overflow-wrap:anywhere}main{width:100%;max-width:900px;margin:25px auto;padding:0 16px}.card{width:100%;min-width:0;background:#fff;border-radius:12px;padding:24px;box-shadow:0 3px 14px #0001}h2{margin:0 0 20px;color:#0b5d3b;font-size:21px;line-height:1.35}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.grid>div{min-width:0}.full{grid-column:1/-1}label{display:block;font-weight:700;margin-bottom:6px;line-height:1.35}input,select,textarea{display:block;width:100%;max-width:100%;min-width:0;padding:11px;border:1px solid #ccd5d9;border-radius:7px;font-size:14px;font-family:inherit;background:#fff;color:#1f2937}input:focus,select:focus,textarea:focus{outline:2px solid #0b5d3b33;border-color:#0b5d3b}textarea{min-height:90px;resize:vertical}.classes-box{width:100%;min-width:0;border:1px solid #ccd5d9;border-radius:8px;padding:12px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;background:#fafafa}.class-item{display:flex;align-items:center;gap:8px;min-width:0;margin:0;padding:9px;border-radius:6px;background:#fff;cursor:pointer;overflow:hidden}.class-item input{width:18px;min-width:18px;height:18px;margin:0;flex:0 0 auto}.class-item span{min-width:0;overflow-wrap:anywhere;word-break:break-word}.class-help{font-size:12px;color:#68747c;margin:7px 0 0;line-height:1.5}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}button{min-height:44px;border:0;border-radius:7px;padding:11px 18px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer}button:disabled{opacity:.65;cursor:not-allowed}.save{background:#0b5d3b;color:#fff}.cancel{background:#e5e7eb;color:#1f2937}.msg{width:100%;margin-top:15px;padding:11px;border-radius:7px;line-height:1.5;overflow-wrap:anywhere;word-break:break-word}.msg.success{display:block;background:#dcfce7;color:#166534}.msg.error{display:block;background:#fee2e2;color:#991b1b}.msg.info{display:block;background:#e0f2fe;color:#075985}.loading{text-align:center;padding:30px;line-height:1.5}.hidden{display:none!important}
+@media(max-width:760px){header{padding:16px}header h1{font-size:19px}main{margin:18px auto;padding:0 12px}.card{padding:20px;border-radius:10px}.grid{grid-template-columns:1fr;gap:14px}.full{grid-column:auto}.classes-box{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){header{padding:14px 12px}header h1{font-size:17px}main{margin:12px auto;padding:0 8px}.card{padding:16px;border-radius:9px}h2{font-size:19px;margin-bottom:17px}.grid{gap:13px}input,select,textarea{font-size:16px;padding:12px}.classes-box{grid-template-columns:1fr;padding:9px}.class-item{padding:10px}.actions{flex-direction:column;gap:9px}.actions button{width:100%}.msg{font-size:14px}.loading{padding:24px 10px}}
+@media(max-width:360px){header h1{font-size:16px}main{padding:0 6px}.card{padding:13px}h2{font-size:18px}.classes-box{padding:7px}.class-item{padding:9px}}
+</style>
+</head>
+<body><header><h1>Kenbridge Christian School — Edit Staff</h1></header><main><div class="card">
+<h2>Edit Staff Account</h2>
+<div id="loading" class="loading">Loading staff account...</div>
+<div id="message" class="msg hidden"></div><form id="staffForm" class="hidden" novalidate>
+<div class="grid"><div><label for="full_name">Full Name</label><input id="full_name" type="text" required autocomplete="name"></div>
+<div><label for="username">Username</label><input id="username" type="text" required autocomplete="username"></div><div><label for="position">Position</label>
+<select id="position" required>
+<option value="">Select position</option>
+<option value="Teacher">Teacher</option>
+<option value="Administrator">Administrator</option>
+<option value="Head Teacher">Head Teacher</option>
+<option value="Deputy Head Teacher">Deputy Head Teacher</option>
+<option value="Secretary">Secretary</option>
+<option value="Bursar">Bursar</option>
+<option value="Librarian">Librarian</option>
+<option value="ICT Officer">ICT Officer</option>
+<option value="Other">Other</option>
+</select></div><div><label for="department">Department</label><input id="department" type="text" required></div>
+<div><label for="email">Email</label><input id="email" type="email" required autocomplete="email"></div>
+<div><label for="phone">Phone</label><input id="phone" type="tel" autocomplete="tel"></div><div><label for="status">Account Status</label>
+<select id="status"><option value="true">Active</option><option value="false">Inactive</option></select>
+</div><div class="full" id="classesGroup">
+<label>Assigned Classes</label>
+<div class="classes-box" id="classesBox"></div>
+<p class="class-help">Select the classes this staff member is authorised to access. Administrators do not require class restrictions.</p>
+</div><div class="full"><label for="notes">Notes</label><textarea id="notes"></textarea></div></div><div class="actions">
+<button type="submit" class="save" id="saveBtn">Save Changes</button>
+<button type="button" class="cancel" id="cancelBtn">Cancel</button>
+</div>
+</form>
+</div></main><script>
+document.addEventListener("DOMContentLoaded",function(){
+
+const API_BASE="https://kenbridge-christian-school.onrender.com";
+const params=new URLSearchParams(window.location.search);
+const staffId=params.get("id");
+
+const CLASS_LIST=[
+["BABY","KG 1"],["MIDDLE","KG 2"],["TOP","KG 3"],
+["P1","YEAR 1"],["P2","YEAR 2"],["P3","YEAR 3"],
+["P4","YEAR 4"],["P5","YEAR 5"],["P6","YEAR 6"],["P7","YEAR 7"]
+];
+
+const $=id=>document.getElementById(id);
+
+function getToken(){
+return(
+localStorage.getItem("kenbridgeAccessToken")||
+localStorage.getItem("kenbridge_access_token")||
+localStorage.getItem("access_token")||
+localStorage.getItem("accessToken")||
+sessionStorage.getItem("kenbridgeAccessToken")||
+sessionStorage.getItem("kenbridge_access_token")||
+sessionStorage.getItem("access_token")||
+sessionStorage.getItem("accessToken")||
+""
+).trim();
+}
+
+function requestHeaders(){
+const token=getToken();
+return{
+"Content-Type":"application/json",
+"Accept":"application/json",
+"Authorization":"Bearer "+token
+};
+}
+
+function normalizeClasses(value){
+if(!Array.isArray(value))return[];
+return value.map(item=>{
+if(item&&typeof item==="object"){
+return String(item.class_name||item.name||item.class||"").trim().toUpperCase();
+}
+return String(item||"").trim().toUpperCase();
+}).filter(Boolean);
+}
+
+function renderClasses(selected){
+const chosen=normalizeClasses(selected);
+$("classesBox").innerHTML=CLASS_LIST.map(item=>{
+const value=item[0],label=item[1];
+return `<label class="class-item"><input type="checkbox" value="${value}"${chosen.includes(value)?" checked":""}><span>${label}</span></label>`;
+}).join("");
+}
+
+function getSelectedClasses(){
+return Array.from(document.querySelectorAll("#classesBox input[type='checkbox']:checked")).map(input=>input.value);
+}
+
+function isAdministrator(){
+return $("position").value.trim().toLowerCase()==="administrator";
+}
+
+function updateClassVisibility(){
+$("classesGroup").classList.toggle("hidden",isAdministrator());
+}
+
+function showMessage(text,type){
+const box=$("message");
+box.textContent=text||"";
+box.className="msg "+(type||"info");
+}
+
+function hideMessage(){
+$("message").className="msg hidden";
+$("message").textContent="";
+}
+
+function showForm(){
+$("loading").classList.add("hidden");
+$("staffForm").classList.remove("hidden");
+}
+
+function showLoading(text){
+$("loading").textContent=text||"Loading staff account...";
+$("loading").classList.remove("hidden");
+}
+
+function hideLoading(){
+$("loading").classList.add("hidden");
+}
+
+async function parseResponse(response){
+const text=await response.text();
+let data={};
+
+if(text){
+try{data=JSON.parse(text);}
+catch(error){
+throw new Error("Server returned an invalid response. HTTP "+response.status+".");
+}
+}
+
+if(!response.ok){
+throw new Error(data.message||"Request failed with HTTP "+response.status+".");
+}
+
+return data;
+}
+
+async function loadStaff(){
+
+hideMessage();
+
+if(!staffId){
+hideLoading();
+showMessage("No staff account ID was provided. Return to Staff Accounts and select Edit again.","error");
+return;
+}
+
+const token=getToken();
+
+if(!token){
+hideLoading();
+showMessage("Your administrator session is missing or expired. Please log in again.","error");
+return;
+}
+
+try{
+
+showLoading("Loading staff account...");
+
+const response=await fetch(
+API_BASE+"/api/auth/staff/"+encodeURIComponent(staffId),
+{
+method:"GET",
+headers:requestHeaders(),
+cache:"no-store"
+}
+);
+
+const data=await parseResponse(response);
+
+if(!data.success||!data.staff){
+throw new Error(data.message||"Staff account data was not returned by the server.");
+}
+
+const staff=data.staff;
+
+$("full_name").value=staff.full_name||"";
+$("username").value=staff.username||"";
+$("position").value=staff.position||"";
+$("department").value=staff.department||"";
+$("email").value=staff.email||"";
+$("phone").value=staff.phone||"";
+$("notes").value=staff.notes||"";
+$("status").value=staff.is_active===false?"false":"true";
+
+renderClasses(
+staff.classes||
+staff.assigned_classes||
+staff.class_permissions||
+[]
+);
+
+updateClassVisibility();
+showForm();
+
+}catch(error){
+
+hideLoading();
+console.error("EDIT STAFF LOAD ERROR:",error);
+showMessage(error.message||"Unable to load staff account.","error");
+
+}
+
+}
+
+async function saveStaff(event){
+
+event.preventDefault();
+hideMessage();
+
+if(!staffId){
+showMessage("No staff account ID was provided.","error");
+return;
+}
+
+const token=getToken();
+
+if(!token){
+showMessage("Your administrator session is missing or expired. Please log in again.","error");
+return;
+}
+
+const fullName=$("full_name").value.trim();
+const username=$("username").value.trim();
+const position=$("position").value.trim();
+const department=$("department").value.trim();
+const email=$("email").value.trim();
+const phone=$("phone").value.trim();
+const notes=$("notes").value.trim();
+const active=$("status").value==="true";
+
+if(!fullName||!username||!position||!department||!email){
+showMessage("Please complete Full Name, Username, Position, Department and Email.","error");
+return;
+}
+
+const classes=isAdministrator()?[]:getSelectedClasses();
+
+const payload={
+full_name:fullName,
+username:username,
+position:position,
+department:department,
+email:email,
+phone:phone,
+notes:notes,
+is_active:active,
+classes:classes
+};
+
+const saveButton=$("saveBtn");
+
+try{
+
+saveButton.disabled=true;
+saveButton.textContent="Saving...";
+
+showMessage("Saving staff account changes...","info");
+
+const response=await fetch(
+API_BASE+"/api/auth/staff/"+encodeURIComponent(staffId),
+{
+method:"PUT",
+headers:requestHeaders(),
+body:JSON.stringify(payload)
+}
+);
+
+const data=await parseResponse(response);
+
+if(!data.success){
+throw new Error(data.message||"Unable to update staff account.");
+}
+
+showMessage("Staff account updated successfully.","success");
+
+if(data.staff){
+renderClasses(data.staff.classes||[]);
+}
+
+updateClassVisibility();
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}catch(error){
+
+console.error("EDIT STAFF SAVE ERROR:",error);
+showMessage(error.message||"Unable to update staff account.","error");
+
+}finally{
+
+saveButton.disabled=false;
+saveButton.textContent="Save Changes";
+
+}
+
+}
+
+$("position").addEventListener("change",updateClassVisibility);
+
+$("staffForm").addEventListener("submit",saveStaff);
+
+$("cancelBtn").addEventListener("click",function(){
+if(window.history.length>1){
+window.history.back();
+}else{
+window.location.href="staff-accounts.html";
+}
+});
+
+loadStaff();
+
+});
+</script></body>
+                                                                               </html>
