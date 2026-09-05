@@ -430,7 +430,7 @@ router.get("/me",requireBoard,async(req,res)=>{
       board_member:board
     });
 
-  }catch(error){
+  catch(error){
     console.error("BOARD ME ERROR:",error.message);
 
     return res.status(500).json({
