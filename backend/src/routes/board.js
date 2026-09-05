@@ -146,33 +146,142 @@ router.post("/login",async(req,res)=>{
     });
   }
 });
-/* BOARD PORTAL LOGIN */
-
+/* BOARD PORTAL LOGIN - PASSWORD ONLY */
 router.post("/login",async(req,res)=>{
-  try{
-    const password=String(req.body?.password||"");
-    if(!password)return res.status(400).json({success:false,message:"Please enter the Board password."});
+ try{
+  const password=String(req.body?.password||"");
 
-    const email=String(process.env.BOARD_PORTAL_EMAIL||"").trim().toLowerCase();
-    if(!email||!process.env.BOARD_PORTAL_PASSWORD)return res.status(503).json({success:false,message:"Board portal authentication is not configured."});
-
-    const{data,error}=await supabase.auth.signInWithPassword({email,password});
-    if(error||!data?.user||!data?.session)return res.status(401).json({success:false,message:"Incorrect Board password or access denied."});
-
-    const{rows}=await pool.query(`SELECT id,full_name,username,email,role,position,department,phone,is_active FROM users WHERE id=$1 LIMIT 1`,[data.user.id]);
-    const user=rows[0],role=String(user?.role||"").toUpperCase();
-
-    if(!user)return res.status(403).json({success:false,message:"Board portal account is not configured correctly."});
-    if(!user.is_active)return res.status(403).json({success:false,message:"Board portal account is inactive."});
-    if(!["BOARD","ADMIN"].includes(role))return res.status(403).json({success:false,message:"This account does not have Board access."});
-
-    return res.status(200).json({success:true,message:"Board login successful.",user,access_token:data.session.access_token,refresh_token:data.session.refresh_token,expires_at:data.session.expires_at});
-  }catch(error){
-    console.error("BOARD PASSWORD LOGIN ERROR:",error.message);
-    return res.status(500).json({success:false,message:"Unable to complete Board login."});
+  if(!password){
+   return res.status(400).json({
+    success:false,
+    message:"Board password is required."
+   });
   }
+
+  const portalPassword=process.env.BOARD_PORTAL_PASSWORD;
+  const portalEmail=process.env.BOARD_PORTAL_EMAIL;
+  const portalAuthPassword=process.env.BOARD_PORTAL_AUTH_PASSWORD;
+
+  if(!portalPassword||!portalEmail||!portalAuthPassword){
+   console.error(
+    "BOARD PORTAL AUTH ENVIRONMENT VARIABLES ARE NOT CONFIGURED."
+   );
+
+   return res.status(500).json({
+    success:false,
+    message:"Board portal authentication is not configured."
+   });
+  }
+
+  if(password!==portalPassword){
+   return res.status(401).json({
+    success:false,
+    message:"Incorrect Board password."
+   });
+  }
+
+  const{
+   data,
+   error
+  }=await supabase.auth.signInWithPassword({
+   email:portalEmail,
+   password:portalAuthPassword
+  });
+
+  if(error||!data?.session?.access_token){
+   console.error(
+    "BOARD PORTAL SUPABASE LOGIN ERROR:",
+    error?.message||"No session returned."
+   );
+
+   return res.status(500).json({
+    success:false,
+    message:"Unable to establish Board portal session."
+   });
+  }
+
+  const token=data.session.access_token;
+
+  const{
+   rows
+  }=await pool.query(
+   `SELECT
+      id,
+      full_name,
+      username,
+      email,
+      role,
+      position,
+      department,
+      phone,
+      is_active
+    FROM users
+    WHERE id=$1
+    LIMIT 1`,
+   [data.user.id]
+  );
+
+  const user=rows[0];
+
+  if(!user){
+   return res.status(403).json({
+    success:false,
+    message:"Board portal account was not found in the Kenbridge system."
+   });
+  }
+
+  if(!user.is_active){
+   return res.status(403).json({
+    success:false,
+    message:"Board portal account is inactive."
+   });
+  }
+
+  if(!isAdmin(user)&&!isBoard(user)){
+   return res.status(403).json({
+    success:false,
+    message:"This account does not have Board of Governors access."
+   });
+  }
+
+  return res.status(200).json({
+   success:true,
+   message:"Board login successful.",
+   access_token:token,
+   user
+  });
+
+ }catch(error){
+  console.error(
+   "BOARD PORTAL LOGIN ERROR:",
+   error.message
+  );
+
+  return res.status(500).json({
+   success:false,
+   message:"Unable to complete Board login."
+  });
+ }
 });
 
+/* BOARD SESSION */
+router.get("/session",async(req,res)=>{
+ const user=await requireBoard(req,res);
+ if(!user)return;
+
+ return res.status(200).json({
+  success:true,
+  user
+ });
+});
+
+/* BOARD LOGOUT */
+router.post("/logout",async(req,res)=>{
+ return res.status(200).json({
+  success:true,
+  message:"Board session ended."
+ });
+});
 /* VERIFY BOARD SESSION */
 
 router.get("/session",async(req,res)=>{
