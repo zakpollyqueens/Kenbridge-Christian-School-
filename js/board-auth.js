@@ -1,178 +1,674 @@
+/* =========================================================
+   KENBRIDGE CHRISTIAN SCHOOL
+   BOARD OF GOVERNORS AUTHENTICATION
+   =========================================================
+
+   SECURITY FLOW:
+
+   1. User logs into Staff Portal.
+   2. User must have ADMIN role.
+   3. User opens Board of Governors.
+   4. Board login asks for ONE password.
+   5. Staff ADMIN token is sent silently to the backend.
+   6. Backend verifies ADMIN + Board password.
+   7. Backend returns a separate Board session token.
+   8. Board pages use the separate Board session.
+
+   ========================================================= */
+
 (function(){
-"use strict";
 
-const API_BASE=window.KENBRIDGE_API_BASE||"https://kenbridge-christian-school.onrender.com";
-const TOKEN_KEY="kenbridgeBoardAccessToken";
-const USER_KEY="kenbridgeBoardUser";
+  "use strict";
 
-function getToken(){
-return localStorage.getItem(TOKEN_KEY);
-}
+  /* =======================================================
+     CONFIGURATION
+     ======================================================= */
 
-function getUser(){
-try{
-const raw=localStorage.getItem(USER_KEY);
-return raw?JSON.parse(raw):null;
-}catch{
-return null;
-}
-}
+  const API_BASE=
+    "https://kenbridge-christian-school.onrender.com";
 
-function setUser(user){
-localStorage.setItem(USER_KEY,JSON.stringify(user));
-}
+  const BOARD_TOKEN_KEY=
+    "kenbridgeBoardAccessToken";
 
-function clearSession(){
-localStorage.removeItem(TOKEN_KEY);
-localStorage.removeItem(USER_KEY);
-}
+  const BOARD_USER_KEY=
+    "kenbridgeBoardUser";
 
-function authHeaders(){
-const token=getToken();
-return token
-?{"Authorization":`Bearer ${token}`,"Content-Type":"application/json"}
-:{"Content-Type":"application/json"};
-}
+  const STAFF_TOKEN_KEY=
+    "kenbridgeAccessToken";
 
-function apiUrl(path){
-if(/^https?:\/\//i.test(path))return path;
-return `${API_BASE}${path}`;
-}
 
-async function request(path,options={}){
-const response=await fetch(apiUrl(path),{
-...options,
-headers:{...authHeaders(),...(options.headers||{})}
-});
+  /* =======================================================
+     STORAGE HELPERS
+     ======================================================= */
 
-let data=null;
-try{
-data=await response.json();
-}catch{}
+  function getStaffToken(){
 
-if(!response.ok){
-const error=new Error(data?.message||`Request failed with status ${response.status}`);
-error.status=response.status;
-error.data=data;
-throw error;
-}
+    return localStorage.getItem(
+      STAFF_TOKEN_KEY
+    );
+  }
 
-return data;
-}
 
-function allowedRole(role){
-role=String(role||"").toUpperCase();
-return role==="BOARD"||role==="ADMIN";
-}
+  function getBoardToken(){
 
-async function getCurrentUser(){
-const data=await request("/api/board/me");
+    return localStorage.getItem(
+      BOARD_TOKEN_KEY
+    );
+  }
 
-if(!data?.success||!data?.user){
-throw new Error("Unable to verify Board of Governors access.");
-}
 
-const user=data.user;
+  function getStoredBoardUser(){
 
-if(!allowedRole(user.role)){
-const error=new Error("This account does not have Board of Governors access.");
-error.status=403;
-throw error;
-}
+    try{
 
-setUser(user);
+      const raw=
+        localStorage.getItem(
+          BOARD_USER_KEY
+        );
 
-return user;
-}
+      return raw?
+        JSON.parse(raw):
+        null;
 
-async function login(password){
-const cleanPassword=String(password||"");
+    }catch(error){
 
-if(!cleanPassword){
-throw new Error("Please enter the Board password.");
-}
+      return null;
+    }
+  }
 
-const response=await fetch(apiUrl("/api/board/login"),{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({password:cleanPassword})
-});
 
-let data=null;
+  function saveBoardSession(
+    token,
+    user
+  ){
 
-try{
-data=await response.json();
-}catch{}
+    localStorage.setItem(
+      BOARD_TOKEN_KEY,
+      token
+    );
 
-if(!response.ok||!data?.success){
-throw new Error(data?.message||"Incorrect Board password or access denied.");
-}
+    if(user){
 
-const token=data?.access_token||data?.token||data?.session?.access_token;
+      localStorage.setItem(
+        BOARD_USER_KEY,
+        JSON.stringify(user)
+      );
+    }
+  }
 
-if(!token){
-throw new Error("Board login succeeded but no access token was returned.");
-}
 
-localStorage.setItem(TOKEN_KEY,token);
+  function clearBoardSession(){
 
-if(data?.user){
-setUser(data.user);
-}
+    localStorage.removeItem(
+      BOARD_TOKEN_KEY
+    );
 
-return await getCurrentUser();
-}
+    localStorage.removeItem(
+      BOARD_USER_KEY
+    );
+  }
 
-async function requireBoard(options={}){
-const{redirect=true,loginPath="login.html"}=options;
-const token=getToken();
 
-if(!token){
-if(redirect)window.location.replace(loginPath);
-return null;
-}
+  /* =======================================================
+     STAFF ADMIN SESSION CHECK
+     ======================================================= */
 
-try{
-return await getCurrentUser();
-}catch(error){
-if(error.status===401||error.status===403){
-clearSession();
-}
+  async function verifyStaffAdmin(){
 
-if(redirect){
-window.location.replace(loginPath);
-}
+    const staffToken=
+      getStaffToken();
 
-return null;
-}
-}
+    if(!staffToken){
 
-async function logout(options={}){
-const{redirect=true,loginPath="login.html"}=options;
+      return {
+        authenticated:false,
+        isAdmin:false,
+        user:null
+      };
+    }
 
-try{
-await request("/api/board/logout",{method:"POST"});
-}catch{}
+    try{
 
-clearSession();
+      const response=
+        await fetch(
+          `${API_BASE}/api/auth/me`,
+          {
+            method:"GET",
 
-if(redirect){
-window.location.replace(loginPath);
-}
-}
+            headers:{
+              "Authorization":
+                `Bearer ${staffToken}`,
+              "Accept":
+                "application/json"
+            },
 
-window.KenbridgeBoardAuth={
-getToken,
-getUser,
-setUser,
-clearSession,
-authHeaders,
-request,
-getCurrentUser,
-login,
-requireBoard,
-logout,
-allowedRole
-};
+            cache:"no-store"
+          }
+        );
+
+      if(!response.ok){
+
+        return {
+          authenticated:false,
+          isAdmin:false,
+          user:null
+        };
+      }
+
+      const data=
+        await response.json();
+
+      const user=
+        data?.user||
+        data?.data||
+        null;
+
+      const role=
+        String(
+          user?.role||
+          ""
+        ).toUpperCase();
+
+      return {
+        authenticated:true,
+        isAdmin:
+          role==="ADMIN",
+        user
+      };
+
+    }catch(error){
+
+      console.error(
+        "STAFF ADMIN VERIFICATION ERROR:",
+        error
+      );
+
+      return {
+        authenticated:false,
+        isAdmin:false,
+        user:null
+      };
+    }
+  }
+
+
+  /* =======================================================
+     BOARD LOGIN
+     ======================================================= */
+
+  async function login(password){
+
+    const cleanPassword=
+      String(
+        password||""
+      );
+
+    if(!cleanPassword){
+
+      throw new Error(
+        "Please enter the Board password."
+      );
+    }
+
+    /*
+       The Board login cannot work without an
+       already authenticated Staff session.
+    */
+
+    const staffToken=
+      getStaffToken();
+
+    if(!staffToken){
+
+      throw new Error(
+        "Please sign in to the Staff Portal as an administrator first."
+      );
+    }
+
+
+    /*
+       Send the Staff ADMIN token invisibly.
+       The user only enters the Board password.
+    */
+
+    let response;
+
+    try{
+
+      response=
+        await fetch(
+          `${API_BASE}/api/board/login`,
+          {
+            method:"POST",
+
+            headers:{
+              "Content-Type":
+                "application/json",
+
+              "Authorization":
+                `Bearer ${staffToken}`,
+
+              "Accept":
+                "application/json"
+            },
+
+            body:
+              JSON.stringify({
+                password:
+                  cleanPassword
+              }),
+
+            cache:"no-store"
+          }
+        );
+
+    }catch(error){
+
+      console.error(
+        "BOARD LOGIN NETWORK ERROR:",
+        error
+      );
+
+      throw new Error(
+        "Unable to connect to the Board Portal server. Please try again."
+      );
+    }
+
+
+    let data={};
+
+    try{
+
+      data=
+        await response.json();
+
+    }catch(error){
+
+      data={};
+    }
+
+
+    if(!response.ok){
+
+      throw new Error(
+        data?.message||
+        "Board login failed."
+      );
+    }
+
+
+    const token=
+      data?.access_token||
+      data?.token||
+      null;
+
+    if(!token){
+
+      throw new Error(
+        "Board login succeeded but no Board session was returned."
+      );
+    }
+
+
+    saveBoardSession(
+      token,
+      data?.user||
+      null
+    );
+
+
+    return {
+      success:true,
+      access_token:token,
+      user:
+        data?.user||
+        null
+    };
+  }
+
+
+  /* =======================================================
+     GET CURRENT BOARD USER
+     ======================================================= */
+
+  async function getCurrentUser(){
+
+    const token=
+      getBoardToken();
+
+    if(!token){
+
+      return null;
+    }
+
+    try{
+
+      const response=
+        await fetch(
+          `${API_BASE}/api/board/me`,
+          {
+            method:"GET",
+
+            headers:{
+              "Authorization":
+                `Bearer ${token}`,
+
+              "Accept":
+                "application/json"
+            },
+
+            cache:"no-store"
+          }
+        );
+
+
+      if(!response.ok){
+
+        /*
+           A 401/403 means the Board session is
+           no longer valid.
+        */
+
+        if(
+          response.status===401||
+          response.status===403
+        ){
+
+          clearBoardSession();
+        }
+
+        return null;
+      }
+
+
+      const data=
+        await response.json();
+
+      const user=
+        data?.user||
+        null;
+
+
+      if(user){
+
+        localStorage.setItem(
+          BOARD_USER_KEY,
+          JSON.stringify(user)
+        );
+      }
+
+      return user;
+
+    }catch(error){
+
+      console.error(
+        "BOARD USER CHECK ERROR:",
+        error
+      );
+
+      return null;
+    }
+  }
+
+
+  /* =======================================================
+     REQUIRE BOARD ACCESS
+     ======================================================= */
+
+  async function requireBoard(
+    options={}
+  ){
+
+    const redirect=
+      options.redirect!==false;
+
+
+    /*
+       First make sure the Staff Portal session exists.
+    */
+
+    const staff=
+      await verifyStaffAdmin();
+
+
+    if(
+      !staff.authenticated||
+      !staff.isAdmin
+    ){
+
+      clearBoardSession();
+
+      if(redirect){
+
+        window.location.href=
+          "../staff/login.html";
+      }
+
+      return null;
+    }
+
+
+    /*
+       Then verify the separate Board session.
+    */
+
+    const boardToken=
+      getBoardToken();
+
+
+    if(!boardToken){
+
+      if(redirect){
+
+        window.location.href=
+          "login.html";
+      }
+
+      return null;
+    }
+
+
+    const user=
+      await getCurrentUser();
+
+
+    if(!user){
+
+      clearBoardSession();
+
+      if(redirect){
+
+        window.location.href=
+          "login.html";
+      }
+
+      return null;
+    }
+
+
+    /*
+       The backend is authoritative, but we also
+       perform a client-side role check.
+    */
+
+    const role=
+      String(
+        user?.role||
+        ""
+      ).toUpperCase();
+
+
+    if(role!=="ADMIN"){
+
+      clearBoardSession();
+
+      if(redirect){
+
+        window.location.href=
+          "../staff/login.html";
+      }
+
+      return null;
+    }
+
+
+    return user;
+  }
+
+
+  /* =======================================================
+     LOGOUT
+     ======================================================= */
+
+  async function logout(){
+
+    const token=
+      getBoardToken();
+
+
+    if(token){
+
+      try{
+
+        await fetch(
+          `${API_BASE}/api/board/logout`,
+          {
+            method:"POST",
+
+            headers:{
+              "Authorization":
+                `Bearer ${token}`,
+
+              "Accept":
+                "application/json"
+            },
+
+            cache:"no-store"
+          }
+        );
+
+      }catch(error){
+
+        console.warn(
+          "BOARD LOGOUT REQUEST FAILED:",
+          error
+        );
+      }
+    }
+
+
+    clearBoardSession();
+  }
+
+
+  /* =======================================================
+     AUTHENTICATED FETCH HELPER
+     ======================================================= */
+
+  async function apiFetch(
+    endpoint,
+    options={}
+  ){
+
+    const token=
+      getBoardToken();
+
+
+    if(!token){
+
+      throw new Error(
+        "Board session is required."
+      );
+    }
+
+
+    const headers={
+      ...(options.headers||{}),
+
+      "Authorization":
+        `Bearer ${token}`,
+
+      "Accept":
+        "application/json"
+    };
+
+
+    /*
+       Only add JSON content type when a body exists
+       and the caller has not already specified one.
+    */
+
+    if(
+      options.body&&
+      !headers["Content-Type"]
+    ){
+
+      headers["Content-Type"]=
+        "application/json";
+    }
+
+
+    const response=
+      await fetch(
+        endpoint.startsWith("http")?
+          endpoint:
+          `${API_BASE}${endpoint}`,
+        {
+          ...options,
+          headers,
+          cache:"no-store"
+        }
+      );
+
+
+    if(
+      response.status===401||
+      response.status===403
+    ){
+
+      clearBoardSession();
+    }
+
+
+    return response;
+  }
+
+
+  /* =======================================================
+     EXPOSE PUBLIC API
+     ======================================================= */
+
+  window.KenbridgeBoardAuth={
+
+    API_BASE,
+
+    BOARD_TOKEN_KEY,
+
+    BOARD_USER_KEY,
+
+    STAFF_TOKEN_KEY,
+
+    getStaffToken,
+
+    getBoardToken,
+
+    getStoredBoardUser,
+
+    saveBoardSession,
+
+    clearBoardSession,
+
+    verifyStaffAdmin,
+
+    login,
+
+    getCurrentUser,
+
+    requireBoard,
+
+    logout,
+
+    apiFetch
+  };
 
 })();
