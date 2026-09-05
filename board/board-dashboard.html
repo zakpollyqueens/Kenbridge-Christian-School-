@@ -967,9 +967,9 @@ class="menu-toggle"
   if(!meeting){
 
    container.innerHTML=
-    `<div class="empty">
+    <div class="empty">
       No upcoming Board meeting has been scheduled.
-     </div>`;
+     </div>;
 
    return;
 
@@ -983,20 +983,20 @@ class="menu-toggle"
 
   const joinButton=
    canJoin&&meeting.meeting_url
-    ?`<a
+    ?<a
         class="btn btn-primary"
         href="${escapeHtml(meeting.meeting_url)}"
         target="_blank"
         rel="noopener"
       >
        🎥 Join Online Meeting
-      </a>`
-    :`<span class="btn btn-disabled">
+      </a>
+    :<span class="btn btn-disabled">
         🎥 Online Meeting Not Available
-      </span>`;
+      </span>;
 
 
-  container.innerHTML=`
+  container.innerHTML=
 
    <div class="meeting-title">
     ${escapeHtml(meeting.title)}
@@ -1004,9 +1004,9 @@ class="menu-toggle"
 
    ${
     meeting.description
-     ?`<p style="color:#64748b;line-height:1.5">
+     ?<p style="color:#64748b;line-height:1.5">
         ${escapeHtml(meeting.description)}
-       </p>`
+       </p>
      :""
    }
 
@@ -1094,7 +1094,7 @@ class="menu-toggle"
 
    </div>
 
-  `;
+  ;
 
  }
 
@@ -1109,9 +1109,9 @@ class="menu-toggle"
      !items.length){
 
    container.innerHTML=
-    `<div class="empty">
+    <div class="empty">
       No Board announcements available.
-     </div>`;
+     </div>;
 
    return;
 
@@ -1127,7 +1127,7 @@ class="menu-toggle"
       item.priority||"normal"
      ).toLowerCase();
 
-    return `
+    return 
 
      <div class="announcement">
 
@@ -1145,7 +1145,7 @@ class="menu-toggle"
 
      </div>
 
-    `;
+    ;
 
    })
    .join("");
@@ -1250,9 +1250,9 @@ class="menu-toggle"
    document
     .getElementById("announcements")
     .innerHTML=
-     `<div class="empty">
+     <div class="empty">
        Unable to load announcements.
-      </div>`;
+      </div>;
 
   }
 
@@ -1295,7 +1295,7 @@ class="menu-toggle"
 
   setText(
    "welcomeTitle",
-   `Welcome, ${name.split(" ")[0]}`
+   Welcome, ${name.split(" ")[0]}`
   );
 
 
@@ -1307,7 +1307,7 @@ class="menu-toggle"
     ).toUpperCase()==="ADMIN"
      ?"an Administrator with Board access."
      :"an authorized Board Member."
-   }`
+   }
   );
 
 
