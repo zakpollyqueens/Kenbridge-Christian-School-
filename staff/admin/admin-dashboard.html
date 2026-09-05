@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Admin Dashboard | Kenbridge Christian School</title>
+<meta name="description" content="Kenbridge Christian School Administration Portal.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../../css/style.css">
+<script src="../../js/portal-auth.js"></script>
+
+<style>
+:root{
+--green:#08783f;
+--green2:#0ca653;
+--dark:#062b1b;
+--gold:#f2c94c;
+--bg:#f4f8f6;
+--white:#fff;
+--text:#17352a;
+--muted:#6c7f76;
+--shadow:0 12px 35px rgba(3,52,31,.10);
+--radius:20px
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+margin:0;
+font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+background:linear-gradient(135deg,#f5faf7,#eef6f1);
+color:var(--text)
+}
+a{text-decoration:none;color:inherit}
+button{font:inherit}
+.admin-page{min-height:100vh;overflow:hidden}
+.admin-topbar{
+position:sticky;
+top:0;
+z-index:1000;
+background:rgba(4,45,28,.96);
+backdrop-filter:blur(15px);
+box-shadow:0 5px 25px rgba(0,0,0,.14)
+}
+.admin-topbar-inner{
+max-width:1450px;
+margin:auto;
+min-height:76px;
+padding:10px 22px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:20px
+}
+.admin-brand{
+display:flex;
+align-items:center;
+gap:13px;
+color:#fff;
+min-width:0
+}
+.admin-brand img{
+width:48px;
+height:48px;
+object-fit:contain;
+border-radius:50%;
+background:#fff;
+padding:3px;
+box-shadow:0 0 0 3px rgba(255,255,255,.12)
+}
+.admin-brand strong{
+display:block;
+font-size:16px;
+letter-spacing:.2px
+}
+.admin-brand span{
+display:block;
+font-size:11px;
+opacity:.72;
+margin-top:3px
+}
+.admin-actions{
+display:flex;
+align-items:center;
+gap:9px
+}
+.admin-oversight,
+.admin-logout,
+.admin-menu-button{
+border:1px solid rgba(255,255,255,.14);
+color:#fff;
+background:rgba(255,255,255,.08);
+border-radius:12px;
+cursor:pointer;
+transition:.25s ease
+}
+.admin-oversight{
+padding:10px 14px
+}
+.admin-logout{
+padding:10px 15px
+}
+.admin-oversight:hover,
+.admin-logout:hover,
+.admin-menu-button:hover{
+background:rgba(255,255,255,.18);
+transform:translateY(-2px)
+}
+.admin-menu-button{
+width:45px;
+height:42px;
+display:none;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+gap:5px
+}
+.admin-menu-button span{
+display:block;
+width:20px;
+height:2px;
+border-radius:5px;
+background:#fff
+}
+.oversight-menu,
+.admin-menu{
+position:absolute;
+right:20px;
+top:72px;
+width:310px;
+max-height:calc(100vh - 90px);
+overflow:auto;
+padding:14px;
+background:rgba(255,255,255,.98);
+border:1px solid rgba(8,120,63,.10);
+border-radius:18px;
+box-shadow:0 22px 60px rgba(0,0,0,.18);
+opacity:0;
+visibility:hidden;
+transform:translateY(-10px) scale(.98);
+transition:.25s ease
+}
+.oversight-menu.show,
+.admin-menu.show{
+opacity:1;
+visibility:visible;
+transform:translateY(0) scale(1)
+}
+.oversight-menu{right:90px}
+.oversight-menu a,
+.admin-menu a{
+display:flex;
+align-items:center;
+gap:10px;
+padding:11px 12px;
+border-radius:11px;
+font-size:14px;
+font-weight:600;
+transition:.2s ease
+}
+.oversight-menu a:hover,
+.admin-menu a:hover{
+background:#edf8f1;
+color:var(--green);
+transform:translateX(4px)
+}
+.oversight-menu-title,
+.admin-menu-title{
+font-size:11px;
+font-weight:800;
+letter-spacing:1px;
+color:var(--green);
+padding:5px 10px 11px;
+border-bottom:1px solid #edf1ee;
+margin-bottom:7px
+}
+.oversight-role{
+float:right;
+background:var(--green);
+color:#fff;
+padding:3px 7px;
+border-radius:20px;
+font-size:9px
+}
+.oversight-section{
+font-size:10px;
+font-weight:800;
+text-transform:uppercase;
+letter-spacing:.8px;
+color:#8a9991;
+padding:12px 10px 5px
+}
+.admin-container{
+max-width:1450px;
+margin:auto;
+padding:30px 22px 50px
+}
+.dashboard-message{
+display:none;
+padding:13px 16px;
+margin-bottom:18px;
+border-radius:13px;
+background:#fff0f0;
+color:#a02020;
+border:1px solid #ffd3d3;
+font-weight:600
+}
+.admin-welcome{
+position:relative;
+overflow:hidden;
+padding:38px;
+border-radius:28px;
+color:#fff;
+background:
+radial-gradient(circle at 85% 20%,rgba(255,255,255,.18),transparent 25%),
+radial-gradient(circle at 10% 100%,rgba(255,255,255,.10),transparent 30%),
+linear-gradient(135deg,#043a24,#08783f 55%,#0ca653);
+box-shadow:0 20px 50px rgba(4,76,43,.20);
+animation:fadeUp .65s ease both
+}
+.admin-welcome:before{
+content:"";
+position:absolute;
+width:250px;
+height:250px;
+right:-90px;
+bottom:-130px;
+border:45px solid rgba(255,255,255,.06);
+border-radius:50%
+}
+.admin-welcome:after{
+content:"";
+position:absolute;
+width:120px;
+height:120px;
+right:120px;
+top:-70px;
+border:25px solid rgba(255,255,255,.05);
+border-radius:50%
+}
+.admin-welcome>*{position:relative;z-index:1}
+.admin-welcome small{
+font-size:11px;
+font-weight:800;
+letter-spacing:2px;
+opacity:.75
+}
+.admin-welcome h1{
+font-size:clamp(28px,4vw,43px);
+margin:9px 0 8px;
+line-height:1.05
+}
+.admin-welcome p{
+margin:0;
+font-size:15px;
+opacity:.86;
+max-width:620px
+}
+.admin-user{
+display:inline-flex;
+margin-top:20px;
+padding:9px 14px;
+border:1px solid rgba(255,255,255,.20);
+background:rgba(255,255,255,.10);
+border-radius:30px;
+font-size:13px;
+font-weight:600;
+backdrop-filter:blur(8px)
+}
+.admin-stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:17px;
+margin:22px 0 30px
+}
+.admin-stat{
+position:relative;
+overflow:hidden;
+background:#fff;
+border:1px solid rgba(8,120,63,.08);
+border-radius:18px;
+padding:22px;
+box-shadow:var(--shadow);
+animation:fadeUp .6s ease both
+}
+.admin-stat:nth-child(2){animation-delay:.08s}
+.admin-stat:nth-child(3){animation-delay:.16s}
+.admin-stat:nth-child(4){animation-delay:.24s}
+.admin-stat:after{
+content:"";
+position:absolute;
+width:75px;
+height:75px;
+right:-30px;
+top:-30px;
+background:#e9f7ef;
+border-radius:50%
+}
+.admin-stat strong{
+position:relative;
+z-index:1;
+display:block;
+font-size:32px;
+color:var(--green);
+line-height:1
+}
+.admin-stat span{
+display:block;
+margin-top:8px;
+font-size:12px;
+font-weight:700;
+color:var(--muted)
+}
+.admin-title{
+font-size:21px;
+margin:0 0 15px;
+animation:fadeUp .7s ease both
+}
+.admin-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:17px
+}
+.admin-card{
+position:relative;
+overflow:hidden;
+background:#fff;
+border:1px solid rgba(8,120,63,.08);
+border-radius:20px;
+padding:23px;
+box-shadow:var(--shadow);
+transition:.3s cubic-bezier(.2,.8,.2,1);
+animation:fadeUp .65s ease both
+}
+.admin-card:hover{
+transform:translateY(-7px);
+box-shadow:0 22px 48px rgba(3,75,42,.16);
+border-color:rgba(8,120,63,.22)
+}
+.admin-card:before{
+content:"";
+position:absolute;
+width:90px;
+height:90px;
+right:-35px;
+top:-35px;
+background:#eff9f3;
+border-radius:50%;
+transition:.3s ease
+}
+.admin-card:hover:before{transform:scale(1.35)}
+.admin-icon{
+position:relative;
+width:51px;
+height:51px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:24px;
+background:#edf8f1;
+border-radius:15px;
+margin-bottom:17px;
+transition:.3s ease
+}
+.admin-card:hover .admin-icon{
+transform:rotate(-5deg) scale(1.08);
+background:#dff3e7
+}
+.admin-card h3{
+margin:0 0 7px;
+font-size:17px
+}
+.admin-card p{
+margin:0;
+font-size:13px;
+line-height:1.55;
+color:var(--muted)
+}
+.admin-badge{
+display:inline-block;
+margin-top:16px;
+padding:6px 10px;
+border-radius:20px;
+font-size:10px;
+font-weight:800;
+text-transform:uppercase;
+letter-spacing:.5px;
+color:var(--green);
+background:#edf8f1
+}
+.admin-panel{
+margin-top:25px;
+padding:25px;
+background:#fff;
+border-radius:21px;
+box-shadow:var(--shadow);
+border:1px solid rgba(8,120,63,.08);
+animation:fadeUp .75s ease both
+}
+.admin-panel h2{
+margin:0 0 5px;
+font-size:19px
+}
+.admin-panel p{
+margin:0 0 17px;
+font-size:13px;
+color:var(--muted)
+}
+.admin-links{
+display:flex;
+flex-wrap:wrap;
+gap:10px
+}
+.admin-links a{
+padding:10px 14px;
+border-radius:11px;
+background:#f1f7f3;
+color:var(--green);
+font-size:12px;
+font-weight:800;
+transition:.2s ease
+}
+.admin-links a:hover{
+background:var(--green);
+color:#fff;
+transform:translateY(-2px)
+}
+.admin-security{
+margin-top:18px;
+padding:15px 18px;
+border-radius:14px;
+background:linear-gradient(90deg,#edf9f2,#f8fbf9);
+border:1px solid #dceee3;
+font-size:12px;
+color:#547066
+}
+.board-access-button{
+position:fixed;
+right:22px;
+bottom:76px;
+z-index:900;
+display:flex;
+align-items:center;
+gap:10px;
+padding:11px 15px 11px 11px;
+color:#fff;
+background:linear-gradient(135deg,#173b2a,#08783f);
+border:1px solid rgba(255,255,255,.15);
+border-radius:16px;
+box-shadow:0 14px 35px rgba(3,65,36,.28);
+transition:.3s ease;
+animation:floatButton 3s ease-in-out infinite
+}
+.board-access-button:hover{
+transform:translateY(-5px) scale(1.02);
+box-shadow:0 20px 42px rgba(3,65,36,.35)
+}
+.board-access-icon{
+width:38px;
+height:38px;
+display:flex;
+align-items:center;
+justify-content:center;
+background:rgba(255,255,255,.13);
+border-radius:11px;
+font-size:19px
+}
+.board-access-text strong{
+display:block;
+font-size:12px
+}
+.board-access-text small{
+display:block;
+font-size:9px;
+opacity:.7;
+margin-top:2px
+}
+.portal-footer{
+margin-top:45px;
+padding:24px 20px 30px;
+text-align:center;
+font-size:11px;
+color:#789087
+}
+.portal-footer p{margin:5px}
+.portal-footer strong{color:var(--green)}
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(18px)}
+to{opacity:1;transform:translateY(0)}
+}
+@keyframes floatButton{
+0%,100%{transform:translateY(0)}
+50%{transform:translateY(-5px)}
+}
+@media(max-width:950px){
+.admin-stats{grid-template-columns:repeat(2,1fr)}
+.admin-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:700px){
+.admin-topbar-inner{padding:9px 14px}
+.admin-brand strong{font-size:14px}
+.admin-brand span{font-size:10px}
+.admin-brand img{width:42px;height:42px}
+.admin-oversight,.admin-logout{display:none}
+.admin-menu-button{display:flex}
+.admin-container{padding:18px 14px 35px}
+.admin-welcome{padding:27px 22px;border-radius:22px}
+.admin-welcome h1{font-size:30px}
+.admin-stats{gap:11px;margin:15px 0 23px}
+.admin-stat{padding:17px;border-radius:15px}
+.admin-stat strong{font-size:27px}
+.admin-grid{grid-template-columns:1fr;gap:12px}
+.admin-card{padding:19px}
+.admin-panel{padding:20px}
+.oversight-menu,.admin-menu{
+right:12px;
+left:12px;
+width:auto;
+top:66px;
+max-height:75vh
+}
+.oversight-menu{display:none}
+.board-access-button{
+right:13px;
+bottom:62px;
+padding:9px 11px 9px 9px
+}
+.board-access-icon{width:34px;height:34px}
+}
+@media(max-width:390px){
+.admin-stats{grid-template-columns:1fr}
+.admin-welcome h1{font-size:27px}
+.board-access-text{display:none}
+.board-access-button{padding:8px}
+}
+</style>
+</head>
+
+<body>
+<div class="admin-page">
+
+<header class="admin-topbar">
+<div class="admin-topbar-inner">
+
+<a href="admin-dashboard.html" class="admin-brand">
+<img src="../../images/logo.png" alt="Kenbridge Christian School Logo">
+<div>
+<strong>Kenbridge Christian School</strong>
+<span>Administration Portal</span>
+</div>
+</a>
+
+<div class="admin-actions">
+<button type="button" class="admin-oversight" id="oversightButton">👁️ Oversight ▼</button>
+<a href="../login.html" class="admin-logout" id="logoutButton">Log Out</a>
+<button type="button" class="admin-menu-button" id="adminMenuButton" aria-label="Open admin menu">
+<span></span><span></span><span></span>
+</button>
+</div>
+
+</div>
+
+<nav class="oversight-menu" id="oversightMenu">
+<div class="oversight-menu-title">STAFF PORTAL OVERSIGHT <span class="oversight-role">ADMIN</span></div>
+
+<div class="oversight-section">Main Portal</div>
+<a href="../staff-dashboard.html">🏠 Staff Dashboard</a>
+<a href="../students.html">👨‍🎓 Students</a>
+<a href="../attendance.html">📋 Attendance</a>
+<a href="../announcements.html">📢 Announcements</a>
+<a href="../articles.html">📰 Articles</a>
+<a href="../reports.html">📊 Reports</a>
+<a href="../files.html">📁 Files</a>
+<a href="../uploads.html">📤 Upload Documents</a>
+<a href="../calendar.html">📅 Calendar</a>
+<a href="../messages.html">💬 Messages</a>
+<a href="../tasks.html">✅ Tasks</a>
+<a href="../leave.html">📝 Leave Requests</a>
+<a href="../payroll.html">💰 Payroll</a>
+
+<div class="oversight-section">Professional Development</div>
+<a href="../training.html">🎓 Training &amp; Development</a>
+<a href="../resources.html">🧰 Staff Resources</a>
+
+<div class="oversight-section">Account &amp; Communication</div>
+<a href="../notifications.html">🔔 Notifications</a>
+<a href="../profile.html">👤 My Profile</a>
+<a href="../settings.html">⚙️ Settings</a>
+</nav>
+
+<nav class="admin-menu" id="adminMenu">
+<div class="admin-menu-title">ADMIN PORTAL MENU</div>
+<a href="admin-dashboard.html">🏠 Dashboard</a>
+<a href="staff-accounts.html">👥 Staff Accounts</a>
+<a href="tasks.html">📋 Task Management</a>
+<a href="add-staff.html">➕ Add Staff</a>
+<a href="gallery-management.html">🖼️ Gallery Management</a>
+<a href="../uploads.html">📤 Upload Documents</a>
+<a href="edit-staff.html">✏️ Edit Staff</a>
+<a href="pending-content.html">📝 Pending Content</a>
+<a href="admin-profile.html">👤 My Profile</a>
+<a href="settings.html">⚙️ Settings</a>
+<a href="../login.html" id="menuLogout">🚪 Log Out</a>
+</nav>
+</header>
+
+<main class="admin-container">
+
+<div class="dashboard-message" id="dashboardMessage"></div>
+
+<section class="admin-welcome">
+<small>ADMINISTRATION PORTAL</small>
+<h1>Admin Dashboard</h1>
+<p>Manage staff, content, accounts and administration from one place.</p>
+<div class="admin-user" id="adminUser">Loading administrator...</div>
+</section>
+
+<section class="admin-stats">
+<div class="admin-stat">
+<strong id="staffCount">0</strong>
+<span>Staff Accounts</span>
+</div>
+<div class="admin-stat">
+<strong id="pendingCount">0</strong>
+<span>Pending Content</span>
+</div>
+<div class="admin-stat">
+<strong id="announcementCount">0</strong>
+<span>Announcements</span>
+</div>
+<div class="admin-stat">
+<strong id="articleCount">0</strong>
+<span>Articles</span>
+</div>
+</section>
+
+<h2 class="admin-title">Administration</h2>
+
+<section class="admin-grid">
+
+<a href="staff-accounts.html" class="admin-card">
+<div class="admin-icon">👥</div>
+<h3>Staff Accounts</h3>
+<p>Manage staff accounts and access.</p>
+<span class="admin-badge">Manage</span>
+</a>
+
+<a href="tasks.html" class="admin-card">
+<div class="admin-icon">📋</div>
+<h3>Task Management</h3>
+<p>Create and monitor staff tasks.</p>
+<span class="admin-badge">Manage</span>
+</a>
+
+<a href="add-staff.html" class="admin-card">
+<div class="admin-icon">➕</div>
+<h3>Add Staff</h3>
+<p>Create a staff account.</p>
+<span class="admin-badge">Add Staff</span>
+</a>
+
+<a href="gallery-management.html" class="admin-card">
+<div class="admin-icon">🖼️</div>
+<h3>Gallery Management</h3>
+<p>Manage school photographs.</p>
+<span class="admin-badge">Manage</span>
+</a>
+
+<a href="pending-content.html" class="admin-card">
+<div class="admin-icon">📝</div>
+<h3>Pending Content</h3>
+<p>Review content awaiting approval.</p>
+<span class="admin-badge">Review</span>
+</a>
+
+<a href="admin-profile.html" class="admin-card">
+<div class="admin-icon">👤</div>
+<h3>My Profile</h3>
+<p>View administrator information.</p>
+<span class="admin-badge">Profile</span>
+</a>
+
+<a href="settings.html" class="admin-card">
+<div class="admin-icon">⚙️</div>
+<h3>Settings</h3>
+<p>Manage portal settings.</p>
+<span class="admin-badge">Settings</span>
+</a>
+
+<a href="../uploads.html" class="admin-card">
+<div class="admin-icon">📤</div>
+<h3>Upload Documents</h3>
+<p>Manage school documents.</p>
+<span class="admin-badge">Uploads</span>
+</a>
+
+<a href="payroll.html" class="admin-card">
+<div class="admin-icon">💰</div>
+<h3>Payroll Management</h3>
+<p>Manage staff payroll.</p>
+<span class="admin-badge">Payroll</span>
+</a>
+
+</section>
+
+<section class="admin-panel">
+<h2>Quick Administration</h2>
+<p>Access common administration tools.</p>
+
+<div class="admin-links">
+<a href="staff-accounts.html">Staff Accounts</a>
+<a href="add-staff.html">Add Staff</a>
+<a href="gallery-management.html">Gallery</a>
+<a href="pending-content.html">Pending Content</a>
+<a href="admin-profile.html">Profile</a>
+<a href="payroll.html">Payroll</a>
+</div>
+</section>
+
+<div class="admin-security">
+<strong>Secure Portal:</strong>
+Administrator access and permissions are verified before protected data is displayed.
+</div>
+
+</main>
+
+<a href="../../board/login.html" class="board-access-button" aria-label="Open Board of Governors Login">
+<span class="board-access-icon">🏛️</span>
+<span class="board-access-text">
+<strong>Board of Governors</strong>
+<small>Secure Access</small>
+</span>
+</a>
+
+<footer class="portal-footer">
+<p>© <span id="portalFooterYear"></span> Kenbridge Christian School. All Rights Reserved.</p>
+<p>Designed by <strong>Zakmolanitech Solutions</strong></p>
+</footer>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+const API_BASE="https://kenbridge-christian-school.onrender.com";
+const menuButton=document.getElementById("adminMenuButton");
+const menu=document.getElementById("adminMenu");
+const oversightButton=document.getElementById("oversightButton");
+const oversightMenu=document.getElementById("oversightMenu");
+const message=document.getElementById("dashboardMessage");
+const staffCount=document.getElementById("staffCount");
+const pendingCount=document.getElementById("pendingCount");
+const announcementCount=document.getElementById("announcementCount");
+const articleCount=document.getElementById("articleCount");
+const adminUser=document.getElementById("adminUser");
+
+const token=()=>localStorage.getItem("kenbridgeAccessToken")||
+localStorage.getItem("access_token")||
+localStorage.getItem("token")||
+sessionStorage.getItem("kenbridgeAccessToken")||
+sessionStorage.getItem("access_token")||
+sessionStorage.getItem("token");
+
+function logout(){
+localStorage.clear();
+sessionStorage.clear();
+location.replace("../login.html");
+}
+
+function toggle(el){el.classList.toggle("show")}
+
+menuButton.onclick=()=>{
+oversightMenu.classList.remove("show");
+toggle(menu);
+};
+
+oversightButton.onclick=()=>{
+menu.classList.remove("show");
+toggle(oversightMenu);
+};
+
+document.addEventListener("click",e=>{
+if(!menu.contains(e.target)&&e.target!==menuButton)menu.classList.remove("show");
+if(!oversightMenu.contains(e.target)&&e.target!==oversightButton)oversightMenu.classList.remove("show");
+});
+
+document.querySelectorAll("#logoutButton,#menuLogout").forEach(el=>{
+el.onclick=e=>{
+e.preventDefault();
+logout();
+};
+});
+
+async function fetchData(path,t){
+const r=await fetch(API_BASE+path,{
+headers:{Authorization:"Bearer "+t}
+});
+const d=await r.json();
+if(!r.ok||!d.success)throw Error(d.message||"Unable to load dashboard data.");
+return d;
+}
+
+async function start(){
+try{
+const t=token();
+if(!t)return logout();
+
+const me=await fetchData("/api/auth/me",t);
+const user=me.user;
+
+if(String(user.role).toUpperCase()!=="ADMIN")return logout();
+
+adminUser.textContent="Welcome, "+(user.full_name||user.username||"Administrator")+".";
+
+const [staff,announcements,articles]=await Promise.all([
+fetchData("/api/auth/staff",t),
+fetchData("/api/content/announcements",t),
+fetchData("/api/content/articles",t)
+]);
+
+const s=staff.staff||[];
+const a=announcements.announcements||[];
+const r=articles.articles||[];
+
+staffCount.textContent=s.length;
+announcementCount.textContent=a.length;
+articleCount.textContent=r.length;
+pendingCount.textContent=
+a.filter(x=>x.is_published===false).length+
+r.filter(x=>x.is_published===false).length;
+
+}catch(e){
+message.textContent=e.message;
+message.style.display="block";
+}
+}
+
+document.getElementById("portalFooterYear").textContent=new Date().getFullYear();
+start();
+});
+</script>
+
+</body>
+                                        </html>
