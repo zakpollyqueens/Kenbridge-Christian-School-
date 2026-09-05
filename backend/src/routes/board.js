@@ -215,11 +215,6 @@ router.post("/logout",async(req,res)=>{
   message:"Board session ended."
  });
 });
-const express=require("express");
-const supabase=require("../supabase");
-const pool=require("../db");
-const router=express.Router();
-
 async function getUser(req){
   const authorization=req.headers.authorization;
 
