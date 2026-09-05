@@ -668,7 +668,29 @@
 
     logout,
 
-    apiFetch
+apiFetch,
+
+request: async function(endpoint, options={}){
+  const response = await apiFetch(endpoint, options);
+
+  let data = null;
+
+  try{
+    data = await response.json();
+  }catch(error){
+    data = null;
+  }
+
+  if(!response.ok){
+    throw new Error(
+      data?.message ||
+      data?.error ||
+      Request failed with status ${response.status}`
+    );
+  }
+
+  return data;
+}
   };
 
 })();
