@@ -531,9 +531,9 @@ const box=$("list");
 if(!list.length){
 
 box.innerHTML=
-`<div class="empty">
+<div class="empty">
 No announcements match your search.
-</div>`;
+</div>;
 
 return;
 
@@ -547,7 +547,7 @@ String(a.priority||"normal").toLowerCase();
 const isPublished=
 a.published===true;
 
-return`
+return
 
 <article class="announcement">
 
@@ -576,29 +576,29 @@ ${esc(a.message||"")}
 <div class="meta">
 
 ${a.created_at?
-`<div>
+<div>
 <strong>Created:</strong>
 ${esc(dateTimeText(a.created_at))}
-</div>`:""}
+</div>:""}
 
 ${a.created_by_name||a.creator_name?
-`<div>
+<div>
 <strong>Created by:</strong>
 ${esc(a.created_by_name||a.creator_name)}
-</div>`:""}
+</div>:""}
 
 ${a.updated_at?
-`<div>
+<div>
 <strong>Updated:</strong>
 ${esc(dateTimeText(a.updated_at))}
-</div>`:""}
+</div>:""}
 
 </div>
 
 <div class="actions">
 
 ${isAdmin()?
-`<button
+<button
 class="btn secondary edit"
 data-id="${esc(a.id)}">
 Edit
@@ -608,13 +608,12 @@ Edit
 class="btn danger delete"
 data-id="${esc(a.id)}">
 Delete
-</button>`:""}
+</button>:""}
 
 </div>
 
 </article>
 
-`;
 
 }).join("");
 
@@ -641,7 +640,7 @@ btn.addEventListener(
 async function load(){
 
 $("list").innerHTML=
-`<div class="loading">
+<div class="loading">
 Loading announcements...
 </div>`;
 
@@ -669,9 +668,9 @@ render();
 console.error(error);
 
 $("list").innerHTML=
-`<div class="empty">
+<div class="empty">
 Unable to load announcements.
-</div>`;
+</div>
 
 showNotice(
 error.message||
@@ -821,7 +820,7 @@ try{
 if(editingId){
 
 await KenbridgeBoardAuth.request(
-`/api/board/announcements/${encodeURIComponent(editingId)}`,
+/api/board/announcements/${encodeURIComponent(editingId)}`,
 {
 method:"PUT",
 body:JSON.stringify(payload)
@@ -894,13 +893,13 @@ x=>String(x.id)===String(id)
 if(!a)return;
 
 if(!confirm(
-`Delete announcement "${a.title||"this announcement"}"?`
+Delete announcement "${a.title||"this announcement"}"?`
 ))return;
 
 try{
 
 await KenbridgeBoardAuth.request(
-`/api/board/announcements/${encodeURIComponent(id)}`,
+/api/board/announcements/${encodeURIComponent(id)}`,
 {
 method:"DELETE"
 }
