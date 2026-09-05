@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Kenbridge Christian School | Kampala, Uganda</title>
+<meta name="description" content="Kenbridge Christian School — quality education, Christian values, and holistic learner development.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+/* COUNTDOWN */
+.opening-screen{position:fixed;inset:0;z-index:999999;width:100%;height:100%;min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#08783f;opacity:1;visibility:visible;pointer-events:auto;isolation:isolate;transition:opacity .8s ease,visibility .8s ease}
+.opening-screen::before{content:"";position:absolute;inset:0;z-index:-2;background:radial-gradient(circle at 50% 35%,rgba(255,255,255,.12),transparent 32%),linear-gradient(145deg,#08783f 0%,#075f34 52%,#033b20 100%)}
+.opening-screen::after{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(circle at 15% 20%,rgba(242,140,40,.16),transparent 18%),radial-gradient(circle at 85% 80%,rgba(242,140,40,.12),transparent 20%);pointer-events:none}
+.opening-content{position:relative;z-index:10;width:min(92%,620px);padding:30px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.opening-logo-background{display:none!important}
+.opening-school-logo{width:clamp(125px,24vw,190px);height:clamp(125px,24vw,190px);object-fit:contain;display:block;margin:0 auto 18px;padding:9px;background:#fff;border-radius:50%;box-shadow:0 0 0 5px rgba(255,255,255,.95),0 18px 55px rgba(0,0,0,.32);animation:openingLogoIn 1s ease both}
+.opening-school-name{margin:0;color:#fff;font-size:clamp(1.7rem,5vw,2.7rem);line-height:1.08;font-weight:900;letter-spacing:.025em;text-align:center;text-shadow:0 4px 18px rgba(0,0,0,.28)}
+.opening-school-subtitle{margin:7px 0 15px;color:rgba(255,255,255,.9);font-size:.8rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
+.opening-small{margin:0 0 5px;color:rgba(255,255,255,.78);font-size:.72rem;font-weight:800;letter-spacing:.22em}
+.opening-motto{margin:0 0 12px;color:#fff;font-size:.92rem;font-style:italic;font-weight:600}
+.opening-counter{min-width:90px;color:#fff;font-size:clamp(3rem,10vw,4.8rem);line-height:1;font-weight:900;text-align:center;text-shadow:0 5px 25px rgba(0,0,0,.35)}
+.opening-message{min-height:25px;margin:11px 0 16px;color:rgba(255,255,255,.96);font-size:.95rem;font-weight:600;text-align:center}
+.opening-line{width:min(90%,380px);height:5px;overflow:hidden;border-radius:20px;background:rgba(255,255,255,.2);box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.opening-line span{display:block;width:0;height:100%;border-radius:inherit;background:#fff;transition:width .8s ease}
+.opening-screen.hide{opacity:0;visibility:hidden;pointer-events:none}
+@keyframes openingLogoIn{0%{opacity:0;transform:scale(.72) translateY(-20px)}60%{opacity:1;transform:scale(1.05) translateY(0)}100%{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes counterPop{0%{opacity:.2;transform:scale(.8)}60%{opacity:1;transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
+
+/* NAVIGATION */
+.brand{text-decoration:none}
+.desktop-nav{align-items:center}
+.more-menu{position:relative}
+.more-button{display:inline-flex;align-items:center;gap:7px;border:0;background:transparent;cursor:pointer;font:inherit}
+.more-menu .dropdown{min-width:220px;max-height:75vh;overflow-y:auto}
+.more-menu .dropdown a{display:block}
+.portal-menu-link{border-top:1px solid rgba(0,0,0,.08);font-weight:800}
+.mobile-nav{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease}
+.mobile-nav.open,.mobile-nav.active{max-height:calc(100vh - 70px);overflow-y:auto}
+.mobile-nav a{display:block}
+.mobile-special-link{margin-top:4px;font-weight:800}
+.mobile-apply{margin:10px 0}
+.mobile-staff-portal{margin-top:8px!important;font-weight:800!important;border-top:1px solid rgba(8,120,63,.15)}
+body.menu-open{overflow:hidden}
+
+/* DEVELOPER REMOVED FROM NAVIGATION */
+.desktop-nav [data-developer-trigger],
+.mobile-nav [data-developer-trigger],
+.mobile-nav .mobile-developer-profile,
+.mobile-nav .mobile-developer-button,
+.mobile-nav .mobile-menu-footer{display:none!important}
+
+/* MOBILE ORDER */
+.mobile-nav .mobile-apply{order:998}
+.mobile-nav .mobile-staff-portal{order:999}
+
+@media(max-width:600px){
+.opening-content{width:94%;padding:20px 14px}
+.opening-school-logo{width:125px;height:125px;padding:7px;margin-bottom:15px}
+.opening-school-name{font-size:1.55rem}
+.opening-school-subtitle{font-size:.7rem;letter-spacing:.13em}
+.opening-counter{font-size:3rem}
+.opening-message{font-size:.85rem}
+}
+</style>
+</head>
+
+<body>
+
+<!-- COUNTDOWN / OPENING SCREEN -->
+<div id="openingScreen" class="opening-screen" aria-label="Kenbridge Christian School welcome screen">
+<div class="opening-logo-background" aria-hidden="true"></div>
+
+<div class="bg-decoration bg-orange-circle" style="left:7%;top:17%;opacity:.55"></div>
+<div class="bg-decoration bg-green-circle" style="right:7%;bottom:17%;opacity:.55"></div>
+<div class="bg-decoration bg-star" style="left:18%;bottom:23%;opacity:.6"></div>
+<div class="bg-decoration bg-star" style="right:18%;top:22%;opacity:.6"></div>
+
+<div class="opening-content">
+
+<img src="images/logo.jpg"
+alt="Kenbridge Christian School Badge"
+class="opening-school-logo"
+width="190"
+height="190"
+fetchpriority="high"
+decoding="async">
+
+<h1 class="opening-school-name">Kenbridge Christian School</h1>
+
+<p class="opening-school-subtitle">Kampala, Uganda</p>
+
+<p class="opening-small">WELCOMES YALL</p>
+
+<p class="opening-motto">“Heads And Not Tails”</p>
+
+<div id="openingCounter" class="opening-counter">10</div>
+
+<p id="openingMessage" class="opening-message">Preparing your experience...</p>
+
+<div class="opening-line" aria-hidden="true">
+<span id="openingProgress"></span>
+</div>
+
+</div>
+</div>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+<div class="container">
+<div>Kenbridge Christian School</div>
+<a href="tel:+256789825517">+256 789 825 517</a>
+</div>
+</div>
+
+<!-- MAIN HEADER -->
+<header class="header" id="header">
+<div class="container nav-container">
+
+<a href="index.html" class="brand" aria-label="Kenbridge Christian School Home">
+
+<div class="logo-container">
+<img src="images/logo.jpg"
+alt="Kenbridge Christian School Logo"
+class="school-logo"
+width="60"
+height="60">
+</div>
+
+<div class="brand-name">
+<strong>KENBRIDGE</strong>
+<span>CHRISTIAN SCHOOL</span>
+</div>
+
+</a>
+
+<!-- DESKTOP NAV -->
+<nav class="desktop-nav" aria-label="Main navigation">
+
+<a href="index.html" class="active">Home</a>
+<a href="page/about.html">About</a>
+<a href="page/academics.html">Academics</a>
+<a href="page/admissions.html">Admissions</a>
+<a href="page/fees.html">Fees</a>
+<a href="page/articles.html">Articles</a>
+<a href="page/contact.html">Contact</a>
+
+<div class="more-menu">
+
+<button type="button"
+class="more-button"
+aria-label="Open more pages"
+aria-expanded="false">
+
+<span class="hamburger-icon">
+<span></span>
+<span></span>
+<span></span>
+</span>
+
+<span class="more-text">More</span>
+
+</button>
+
+<div class="dropdown">
+
+<a href="page/boarding.html">Boarding</a>
+<a href="page/gallery.html">Gallery</a>
+<a href="page/management.html">Management</a>
+<a href="page/announcements.html">Announcements</a>
+<a href="page/projects.html">Projects</a>
+<a href="page/sports.html">Sports</a>
+<a href="page/facilities.html">Facilities</a>
+<a href="page/careers.html">Careers</a>
+<a href="page/feedback.html">Feedback</a>
+<a href="page/reports.html">Reports</a>
+<a href="page/submissions.html">Submissions</a>
+
+<a href="staff/login.html"
+class="portal-menu-link">
+👨‍💼 Staff Portal
+</a>
+
+</div>
+</div>
+
+<a href="page/submissions.html"
+class="apply-button">
+Apply Online
+</a>
+
+</nav>
+
+<!-- MOBILE MENU BUTTON -->
+<button class="mobile-menu-button"
+id="mobileMenuButton"
+type="button"
+aria-label="Open navigation menu"
+aria-expanded="false">
+
+<span></span>
+<span></span>
+<span></span>
+
+</button>
+
+</div>
+
+<!-- MOBILE NAVIGATION -->
+<nav class="mobile-nav"
+id="mobileNav"
+aria-label="Mobile navigation">
+
+<a href="index.html" class="active">Home</a>
+<a href="page/about.html">About</a>
+<a href="page/academics.html">Academics</a>
+<a href="page/admissions.html">Admissions</a>
+<a href="page/fees.html">Fees</a>
+<a href="page/boarding.html">Boarding</a>
+<a href="page/articles.html">Articles</a>
+<a href="page/gallery.html">Gallery</a>
+<a href="page/management.html">Management</a>
+<a href="page/announcements.html">Announcements</a>
+<a href="page/projects.html">Projects</a>
+<a href="page/sports.html">Sports</a>
+<a href="page/facilities.html">Facilities</a>
+<a href="page/careers.html">Careers</a>
+<a href="page/feedback.html">Feedback</a>
+<a href="page/reports.html">Reports</a>
+<a href="page/submissions.html">Submissions</a>
+<a href="page/contact.html">Contact</a>
+
+<a href="page/submissions.html"
+class="mobile-apply">
+Apply Online
+</a>
+
+<a href="staff/login.html"
+class="mobile-special-link mobile-staff-portal">
+👨‍💼 Staff Portal
+</a>
+
+</nav>
+
+</header>
+
+<!-- WHY KENBRIDGE -->
+<section class="section animated-bg">
+
+<div class="bg-decoration bg-pencil"
+style="left:2%;bottom:15%"></div>
+
+<div class="bg-decoration bg-green-circle"
+style="right:4%;top:15%"></div>
+
+<div class="container">
+
+<div class="section-heading">
+
+<span class="section-label">
+WHY KENBRIDGE
+</span>
+
+<h2>
+Growing learners for
+<span>life.</span>
+</h2>
+
+<p>
+We provide a balanced learning environment
+where every learner is encouraged to discover
+their strengths and develop their potential.
+</p>
+
+</div>
+
+<div class="feature-grid">
+
+<article class="feature-card">
+
+<div class="feature-icon">❤️</div>
+
+<h3>
+Christian Character
+</h3>
+
+<p>
+We encourage honesty, respect, discipline,
+responsibility, kindness, and service.
+</p>
+
+<a href="page/about.html"
+class="text-link">
+Our Values →
+</a>
+
+</article>
+
+<article class="feature-card">
+
+<div class="feature-icon">🧠</div>
+
+<h3>
+Confident Learners
+</h3>
+
+<p>
+Learners are encouraged to think,
+communicate, create, collaborate,
+and solve problems.
+</p>
+
+<a href="page/academics.html"
+class="text-link">
+Our Academics →
+</a>
+
+</article>
+
+<article class="feature-card">
+
+<div class="feature-icon">⚽</div>
+
+<h3>
+Beyond the Classroom
+</h3>
+
+<p>
+Sports, creativity, teamwork, leadership,
+and practical experiences help learners
+grow in confidence.
+</p>
+
+<a href="page/sports.html"
+class="text-link">
+Explore Activities →
+</a>
+
+</article>
+
+</div>
+</div>
+</section>
+
+<!-- SCHOOL JOURNEY -->
+<section class="section journey-section animated-bg">
+
+<div class="bg-decoration bg-star"
+style="left:7%;top:15%"></div>
+
+<div class="bg-decoration bg-orange-circle"
+style="right:5%;bottom:13%"></div>
+
+<div class="container">
+
+<div class="section-heading">
+
+<span class="section-label">
+OUR JOURNEY
+</span>
+
+<h2>
+Building a stronger
+<span>future.</span>
+</h2>
+
+<p>
+From humble beginnings to a growing
+learning community, Kenbridge continues
+to move forward with purpose.
+</p>
+
+</div>
+
+<div class="timeline">
+
+<div class="timeline-item">
+
+<div class="timeline-year">
+2008
+</div>
+
+<div class="timeline-content">
+
+<h3>
+The Beginning
+</h3>
+
+<p>
+Kenbridge Christian School began operating
+in 2008 with a vision to provide meaningful
+education grounded in Christian values.
+</p>
+
+</div>
+</div>
+
+<div class="timeline-item">
+
+<div class="timeline-year">
+Growth
+</div>
+
+<div class="timeline-content">
+
+<h3>
+Growing With Purpose
+</h3>
+
+<p>
+The school continued developing its learning
+environment, facilities, leadership, and
+opportunities for learners.
+</p>
+
+</div>
+</div>
+
+<div class="timeline-item">
+
+<div class="timeline-year">
+Today
+</div>
+
+<div class="timeline-content">
+
+<h3>
+A Growing School Community
+</h3>
+
+<p>
+Today, Kenbridge continues to strengthen
+academic learning, Christian character,
+sports, leadership, and learner development.
+</p>
+
+</div>
+</div>
+
+</div>
+</div>
+</section>
+
+<!-- SCHOOL LIFE -->
+<section class="section school-life animated-bg">
+
+<div class="bg-decoration bg-leaf"
+style="left:5%;top:18%"></div>
+
+<div class="bg-decoration bg-book"
+style="right:5%;bottom:15%"></div>
+
+<div class="container">
+
+<div class="section-heading">
+
+<span class="section-label">
+SCHOOL LIFE
+</span>
+
+<h2>
+Learning doesn't stop
+<span>at the classroom door.</span>
+</h2>
+
+<p>
+Learners experience opportunities to
+develop academically, socially, physically,
+creatively, and spiritually.
+</p>
+
+</div>
+
+<div class="feature-grid">
+
+<article class="feature-card">
+
+<div class="feature-icon">
+🏫
+</div>
+
+<h3>
+Learning
+</h3>
+
+<p>
+A supportive environment focused on
+knowledge, understanding, discipline,
+and continuous improvement.
+</p>
+
+<a href="page/academics.html"
+class="text-link">
+View Academics →
+</a>
+
+</article>
+
+<article class="feature-card">
+
+<div class="feature-icon">
+🏆
+</div>
+
+<h3>
+Sports
+</h3>
+
+<p>
+Sports encourage teamwork, discipline,
+confidence, determination, and healthy
+competition.
+</p>
+
+<a href="page/sports.html"
+class="text-link">
+View Sports →
+</a>
+
+</article>
+
+<article class="feature-card">
+
+<div class="feature-icon">
+🎨
+</div>
+
+<h3>
+Creativity
+</h3>
+
+<p>
+Learners are encouraged to explore
+creative interests and express themselves
+with confidence.
+</p>
+
+<a href="page/projects.html"
+class="text-link">
+View Projects →
+</a>
+
+</article>
+
+</div>
+</div>
+</section>
+
+<!-- ADMISSIONS CTA -->
+<section class="cta-section animated-bg">
+
+<div class="bg-decoration bg-orange-circle"
+style="left:5%;top:20%"></div>
+
+<div class="bg-decoration bg-star"
+style="right:8%;bottom:20%"></div>
+
+<div class="container">
+
+<div class="cta-content">
+
+<span class="section-label">
+ADMISSIONS
+</span>
+
+<h2>
+Give your child a foundation
+<span>for life.</span>
+</h2>
+
+<p>
+Discover the Kenbridge Christian School
+community and learn more about admissions,
+programmes, and how to begin the application
+process.
+</p>
+
+<div class="hero-buttons">
+
+<a href="page/admissions.html"
+class="btn btn-primary">
+Admissions
+</a>
+
+<a href="page/submissions.html"
+class="btn btn-outline">
+Apply Online
+</a>
+
+</div>
+</div>
+</div>
+  </section>
+  <!-- CONTACT PREVIEW -->
+<section class="section contact-preview animated-bg">
+
+<div class="bg-decoration bg-green-circle"
+style="right:4%;top:15%"></div>
+
+<div class="container">
+
+<div class="section-heading">
+
+<span class="section-label">
+GET IN TOUCH
+</span>
+
+<h2>
+We'd love to hear
+<span>from you.</span>
+</h2>
+
+<p>
+For admissions enquiries, school information,
+feedback, or general questions, please contact
+the school.
+</p>
+
+</div>
+
+<div class="contact-grid">
+
+<div class="contact-card">
+
+<div class="contact-icon">📞</div>
+
+<h3>
+Call Us
+</h3>
+
+<p>
+Speak with the school team directly.
+</p>
+
+<a href="tel:+256789825517"
+class="text-link">
++256 789 825 517 →
+</a>
+
+</div>
+
+<div class="contact-card">
+
+<div class="contact-icon">✉️</div>
+
+<h3>
+Email
+</h3>
+
+<p>
+Send us an enquiry or request for more
+information.
+</p>
+
+<a href="page/contact.html"
+class="text-link">
+Contact School →
+</a>
+
+</div>
+
+<div class="contact-card">
+
+<div class="contact-icon">📝</div>
+
+<h3>
+Online Application
+</h3>
+
+<p>
+Start the admissions process online.
+</p>
+
+<a href="page/submissions.html"
+class="text-link">
+Apply Online →
+</a>
+
+</div>
+
+</div>
+</div>
+</section>
+
+
+<!-- ANNOUNCEMENTS PREVIEW -->
+<section class="section announcements-preview animated-bg">
+
+<div class="bg-decoration bg-star"
+style="left:5%;top:14%"></div>
+
+<div class="bg-decoration bg-pencil"
+style="right:4%;bottom:12%"></div>
+
+<div class="container">
+
+<div class="section-heading">
+
+<span class="section-label">
+LATEST NEWS
+</span>
+
+<h2>
+What's happening at
+<span>Kenbridge.</span>
+</h2>
+
+<p>
+Keep up with school announcements,
+activities, opportunities, and updates.
+</p>
+
+</div>
+
+<div class="feature-grid">
+
+<article class="feature-card">
+
+<div class="feature-icon">
+📢
+</div>
+
+<h3>
+School Announcements
+</h3>
+
+<p>
+Read important school notices, updates,
+and announcements.
+</p>
+
+<a href="page/announcements.html"
+class="text-link">
+View Announcements →
+</a>
+
+</article>
+
+
+<article class="feature-card">
+
+<div class="feature-icon">
+📰
+</div>
+
+<h3>
+School Articles
+</h3>
+
+<p>
+Explore stories, educational content,
+school activities, and useful information.
+</p>
+
+<a href="page/articles.html"
+class="text-link">
+Read Articles →
+</a>
+
+</article>
+
+
+<article class="feature-card">
+
+<div class="feature-icon">
+📸
+</div>
+
+<h3>
+School Gallery
+</h3>
+
+<p>
+Explore moments from school life,
+activities, events, and achievements.
+</p>
+
+<a href="page/gallery.html"
+class="text-link">
+View Gallery →
+</a>
+
+</article>
+
+</div>
+</div>
+</section>
+
+
+<!-- SCHOOL GALLERY -->
+<section class="section animated-bg">
+
+<div class="bg-decoration bg-green-circle"
+style="left:5%;top:15%"></div>
+
+<div class="bg-decoration bg-orange-circle"
+style="right:5%;bottom:15%"></div>
+
+<div class="container">
+
+<div class="section-heading">
+
+<span class="section-label">
+SCHOOL LIFE
+</span>
+
+<h2>
+A glimpse of
+<span>Kenbridge.</span>
+</h2>
+
+<p>
+Explore school life, activities, and
+the Kenbridge community.
+</p>
+
+</div>
+
+<div class="feature-grid">
+
+<div class="welcome-image">
+
+<img src="images/learners.png"
+alt="Kenbridge Christian School learners"
+loading="lazy">
+
+</div>
+
+
+<div class="welcome-image">
+
+<img src="images/schoolenvironment.png"
+alt="Kenbridge Christian School environment"
+loading="lazy">
+
+</div>
+
+
+<div class="welcome-image">
+
+<img src="images/gallery.png"
+alt="Kenbridge Christian School activities"
+loading="lazy">
+
+</div>
+
+</div>
+
+<div class="section-heading">
+
+<a href="page/gallery.html"
+class="btn btn-primary">
+View Full Gallery
+</a>
+
+</div>
+
+</div>
+</section>
+
+
+<!-- PARENT VOICE -->
+<section class="section why-section animated-bg">
+
+<div class="bg-decoration bg-star"
+style="right:9%;top:20%"></div>
+
+<div class="bg-decoration bg-leaf"
+style="left:7%;bottom:18%"></div>
+
+<div class="container">
+
+<div class="section-heading">
+
+<span class="section-label">
+PARENT VOICE
+</span>
+
+<h2>
+Help improve the
+<span>Kenbridge experience.</span>
+</h2>
+
+<p>
+Share suggestions, appreciation, or concerns.
+</p>
+
+<a href="page/feedback.html"
+class="btn btn-primary">
+Share Feedback
+</a>
+
+</div>
+
+</div>
+</section>
+
+
+<!-- ADMISSIONS CTA -->
+<section class="admissions-cta animated-bg">
+
+<div class="bg-decoration bg-orange-circle"
+style="right:8%;top:18%"></div>
+
+<div class="bg-decoration bg-star"
+style="left:8%;bottom:18%"></div>
+
+<div class="container cta-inner">
+
+<div>
+
+<span class="section-label">
+ADMISSIONS
+</span>
+
+<h2>
+Give your child a strong foundation.
+</h2>
+
+<p>
+Learn about admissions, requirements,
+and applications.
+</p>
+
+</div>
+
+<a href="page/admissions.html"
+class="btn btn-primary">
+Apply Online
+</a>
+
+</div>
+</section>
+
+
+<!-- CONTACT -->
+<section class="section animated-bg">
+
+<div class="bg-decoration bg-book"
+style="left:6%;top:18%"></div>
+
+<div class="bg-decoration bg-star"
+style="right:7%;bottom:20%"></div>
+
+<div class="container">
+
+<div class="section-heading">
+
+<span class="section-label">
+GET IN TOUCH
+</span>
+
+<h2>
+We are ready
+<span>to hear from you.</span>
+</h2>
+
+<p>
+Questions about admissions, academics,
+or school life? Contact us.
+</p>
+
+<a href="page/contact.html"
+class="btn btn-primary">
+Contact Us
+</a>
+
+</div>
+
+</div>
+</section>
+
+
+<!-- FINAL CTA -->
+<section class="final-cta animated-bg">
+
+<div class="container">
+
+<div class="final-cta-content">
+
+<h2>
+Kenbridge Christian School
+</h2>
+
+<p>
+Quality education. Christian values.
+A foundation for life.
+</p>
+
+<div class="hero-buttons">
+
+<a href="page/admissions.html"
+class="btn btn-primary">
+Explore Admissions
+</a>
+
+<a href="page/contact.html"
+class="btn btn-outline">
+Contact Us
+</a>
+
+</div>
+
+</div>
+</div>
+</section>
+
+
+<!-- ADDITIONAL SCHOOL NEWS -->
+<section class="section why-section animated-bg">
+
+<div class="bg-decoration bg-book"
+style="right:5%;top:16%"></div>
+
+<div class="bg-decoration bg-star"
+style="left:6%;bottom:15%"></div>
+
+<div class="container">
+
+<div class="section-heading">
+
+<span class="section-label">
+SCHOOL NEWS
+</span>
+
+<h2>
+Latest announcements.
+</h2>
+
+<p>
+Stay informed about school information
+and activities.
+</p>
+
+</div>
+
+<div class="feature-grid">
+
+<article class="feature-card">
+
+<div class="feature-icon">
+📢
+</div>
+
+<h3>
+School Announcements
+</h3>
+
+<p>
+Notices and updates from the administration.
+</p>
+
+<a href="page/announcements.html"
+class="btn btn-primary">
+View Announcements
+</a>
+
+</article>
+
+
+<article class="feature-card">
+
+<div class="feature-icon">
+📰
+</div>
+
+<h3>
+School Articles
+</h3>
+
+<p>
+Stories and updates from the Kenbridge
+community.
+</p>
+
+<a href="page/articles.html"
+class="btn btn-primary">
+Read Articles
+</a>
+
+</article>
+
+
+<article class="feature-card">
+
+<div class="feature-icon">
+📅
+</div>
+
+<h3>
+School Activities
+</h3>
+
+<p>
+Discover projects, events, and activities.
+</p>
+
+<a href="page/projects.html"
+class="btn btn-primary">
+View Projects
+</a>
+
+</article>
+
+</div>
+</div>
+</section>
+
+
+<!-- SCHOOL LIFE -->
+<section class="section animated-bg">
+
+<div class="bg-decoration bg-green-circle"
+style="left:5%;top:15%"></div>
+
+<div class="bg-decoration bg-orange-circle"
+style="right:5%;bottom:15%"></div>
+
+<div class="container">
+
+<div class="section-heading">
+
+<span class="section-label">
+SCHOOL LIFE
+</span>
+
+<h2>
+A glimpse of
+<span>Kenbridge.</span>
+</h2>
+
+<p>
+Explore school life, activities,
+and the Kenbridge community.
+</p>
+
+</div>
+
+<div class="feature-grid">
+
+<div class="welcome-image">
+
+<img src="images/learners.png"
+alt="Kenbridge Christian School learners"
+loading="lazy">
+
+</div>
+
+<div class="welcome-image">
+
+<img src="images/schoolenvironment.png"
+alt="Kenbridge Christian School environment"
+loading="lazy">
+
+</div>
+
+<div class="welcome-image">
+
+<img src="images/gallery.png"
+alt="Kenbridge Christian School activities"
+loading="lazy">
+
+</div>
+
+</div>
+
+<div class="section-heading">
+
+<a href="page/gallery.html"
+class="btn btn-primary">
+View Full Gallery
+</a>
+
+</div>
+
+</div>
+</section>
+
+
+<!-- PARENT FEEDBACK -->
+<section class="section why-section animated-bg">
+
+<div class="bg-decoration bg-star"
+style="right:9%;top:20%"></div>
+
+<div class="bg-decoration bg-leaf"
+style="left:7%;bottom:18%"></div>
+
+<div class="container">
+
+<div class="section-heading">
+
+<span class="section-label">
+PARENT VOICE
+</span>
+
+<h2>
+Help improve the
+<span>Kenbridge experience.</span>
+</h2>
+
+<p>
+Share suggestions, appreciation,
+or concerns.
+</p>
+
+<a href="page/feedback.html"
+class="btn btn-primary">
+Share Feedback
+</a>
+
+</div>
+
+</div>
+</section>
+
+
+<!-- ADMISSIONS -->
+<section class="admissions-cta animated-bg">
+
+<div class="bg-decoration bg-orange-circle"
+style="right:8%;top:18%"></div>
+
+<div class="bg-decoration bg-star"
+style="left:8%;bottom:18%"></div>
+
+<div class="container cta-inner">
+
+<div>
+
+<span class="section-label">
+ADMISSIONS
+</span>
+
+<h2>
+Give your child a strong foundation.
+</h2>
+
+<p>
+Learn about admissions, requirements,
+and applications.
+</p>
+
+</div>
+
+<a href="page/admissions.html"
+class="btn btn-primary">
+Apply Online
+</a>
+
+</div>
+  </section>
+  <!-- SCHOOL NEWS -->
+<section class="section school-news" id="school-news">
+  <div class="container">
+    <div class="section-heading">
+      <span class="section-kicker">Latest Updates</span>
+      <h2>School News</h2>
+      <p>Stay updated with the latest news and activities from Kenbridge Christian School.</p>
+    </div>
+
+    <div class="news-grid">
+      <article class="news-card">
+        <div class="news-card-content">
+          <span class="news-date">Kenbridge Christian School</span>
+          <h3>Building a Brighter Future</h3>
+          <p>
+            We continue to provide quality education while nurturing Christian
+            values, discipline, confidence and leadership in every learner.
+          </p>
+          <a href="page/articles.html" class="btn btn-outline">Read More</a>
+        </div>
+      </article>
+
+      <article class="news-card">
+        <div class="news-card-content">
+          <span class="news-date">School Activities</span>
+          <h3>Learning Beyond the Classroom</h3>
+          <p>
+            Our learners participate in sports, academic activities and
+            practical experiences that encourage teamwork and personal growth.
+          </p>
+          <a href="page/sports.html" class="btn btn-outline">Explore Activities</a>
+        </div>
+      </article>
+
+      <article class="news-card">
+        <div class="news-card-content">
+          <span class="news-date">Admissions</span>
+          <h3>Join Kenbridge Christian School</h3>
+          <p>
+            Discover our learning environment and begin the admissions process
+            for your child.
+          </p>
+          <a href="page/admissions.html" class="btn btn-outline">Admissions</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- SCHOOL LIFE -->
+<section class="section school-life" id="school-life">
+  <div class="container">
+    <div class="section-heading">
+      <span class="section-kicker">Campus Experience</span>
+      <h2>School Life</h2>
+      <p>
+        A vibrant environment where learners study, play, grow and build
+        lasting friendships.
+      </p>
+    </div>
+
+    <div class="gallery-grid">
+      <a href="page/gallery.html" class="gallery-item">
+        <img src="images/school-life-1.jpg" alt="Kenbridge Christian School life" loading="lazy">
+        <span>School Life</span>
+      </a>
+
+      <a href="page/gallery.html" class="gallery-item">
+        <img src="images/school-life-2.jpg" alt="Kenbridge Christian School activities" loading="lazy">
+        <span>Activities</span>
+      </a>
+
+      <a href="page/sports.html" class="gallery-item">
+        <img src="images/school-life-3.jpg" alt="Kenbridge Christian School sports" loading="lazy">
+        <span>Sports</span>
+      </a>
+
+      <a href="page/facilities.html" class="gallery-item">
+        <img src="images/school-life-4.jpg" alt="Kenbridge Christian School facilities" loading="lazy">
+        <span>Facilities</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PARENT VOICE -->
+<section class="section parent-voice" id="parent-voice">
+  <div class="container">
+    <div class="section-heading">
+      <span class="section-kicker">Community</span>
+      <h2>Parent Voice</h2>
+      <p>
+        We value the partnership between parents, teachers and the school
+        community.
+      </p>
+    </div>
+
+    <div class="testimonial-card">
+      <div class="testimonial-mark">“</div>
+      <p>
+        Kenbridge Christian School continues to focus on developing learners
+        academically, socially and spiritually.
+      </p>
+      <strong>Kenbridge Christian School Community</strong>
+    </div>
+  </div>
+</section>
+
+<!-- ADMISSIONS CTA -->
+<section class="section admissions-cta">
+  <div class="container">
+    <div class="cta-box">
+      <div>
+        <span class="section-kicker">Admissions</span>
+        <h2>Give Your Child a Strong Foundation</h2>
+        <p>
+          Learn more about our admissions process, requirements and available
+          opportunities.
+        </p>
+      </div>
+      <a href="page/admissions.html" class="btn btn-primary">Apply Now</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section contact-section" id="contact">
+  <div class="container">
+    <div class="section-heading">
+      <span class="section-kicker">Get In Touch</span>
+      <h2>Contact Kenbridge Christian School</h2>
+      <p>
+        We are happy to hear from parents, guardians, learners and members of
+        our community.
+      </p>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-card">
+        <h3>Phone</h3>
+        <a href="tel:+256789825517">+256 789 825 517</a>
+      </div>
+
+      <div class="contact-card">
+        <h3>Email</h3>
+        <a href="mailto:kenbridgechristianschool@gmail.com">
+          kenbridgechristianschool@gmail.com
+        </a>
+      </div>
+
+      <div class="contact-card">
+        <h3>Location</h3>
+        <p>Kampala, Uganda</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SHARED FOOTER -->
+<footer id="site-footer"></footer>
+
+<!-- SCRIPTS -->
+<script src="js/script.js"></script>
+<script src="js/components.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+  const mobileNav=document.getElementById("mobileNav");
+
+  if(mobileNav){
+    mobileNav.querySelectorAll('[data-developer-trigger]').forEach(function(el){
+      el.remove();
+    });
+
+    const developerProfile=mobileNav.querySelector(".mobile-developer-profile");
+    const developerButton=mobileNav.querySelector(".mobile-developer-button");
+    const mobileFooter=mobileNav.querySelector(".mobile-menu-footer");
+
+    if(developerProfile) developerProfile.remove();
+    if(developerButton) developerButton.remove();
+    if(mobileFooter) mobileFooter.remove();
+  }
+});
+</script>
+
+</body>
+          </html>
