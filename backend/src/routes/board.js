@@ -43,7 +43,62 @@ function isAdmin(user){
 function isBoard(user){
  return String(user.role||"").toUpperCase()==="BOARD";
 }
+/* BOARD PORTAL LOGIN */
 
+router.post("/login",async(req,res)=>{
+  try{
+    const password=String(req.body?.password||"");
+    if(!password)return res.status(400).json({success:false,message:"Please enter the Board password."});
+
+    const email=String(process.env.BOARD_PORTAL_EMAIL||"").trim().toLowerCase();
+    if(!email||!process.env.BOARD_PORTAL_PASSWORD)return res.status(503).json({success:false,message:"Board portal authentication is not configured."});
+
+    const{data,error}=await supabase.auth.signInWithPassword({email,password});
+    if(error||!data?.user||!data?.session)return res.status(401).json({success:false,message:"Incorrect Board password or access denied."});
+
+    const{rows}=await pool.query(`SELECT id,full_name,username,email,role,position,department,phone,is_active FROM users WHERE id=$1 LIMIT 1`,[data.user.id]);
+    const user=rows[0],role=String(user?.role||"").toUpperCase();
+
+    if(!user)return res.status(403).json({success:false,message:"Board portal account is not configured correctly."});
+    if(!user.is_active)return res.status(403).json({success:false,message:"Board portal account is inactive."});
+    if(!["BOARD","ADMIN"].includes(role))return res.status(403).json({success:false,message:"This account does not have Board access."});
+
+    return res.status(200).json({success:true,message:"Board login successful.",user,access_token:data.session.access_token,refresh_token:data.session.refresh_token,expires_at:data.session.expires_at});
+  }catch(error){
+    console.error("BOARD PASSWORD LOGIN ERROR:",error.message);
+    return res.status(500).json({success:false,message:"Unable to complete Board login."});
+  }
+});
+
+/* VERIFY BOARD SESSION */
+
+router.get("/session",async(req,res)=>{
+  try{
+    const token=req.headers.authorization?.replace("Bearer ","");
+    if(!token||token===req.headers.authorization)return res.status(401).json({success:false,message:"Authorization token is required."});
+
+    const{data,error}=await supabase.auth.getUser(token);
+    if(error||!data?.user)return res.status(401).json({success:false,message:"Invalid or expired Board session."});
+
+    const{rows}=await pool.query(`SELECT id,full_name,username,email,role,position,department,phone,is_active FROM users WHERE id=$1 LIMIT 1`,[data.user.id]);
+    const user=rows[0],role=String(user?.role||"").toUpperCase();
+
+    if(!user)return res.status(403).json({success:false,message:"Kenbridge profile was not found."});
+    if(!user.is_active)return res.status(403).json({success:false,message:"This account is inactive."});
+    if(!["BOARD","ADMIN"].includes(role))return res.status(403).json({success:false,message:"Board access is required."});
+
+    return res.status(200).json({success:true,user,is_board:role==="BOARD",is_admin:role==="ADMIN"});
+  }catch(error){
+    console.error("BOARD SESSION ERROR:",error.message);
+    return res.status(500).json({success:false,message:"Unable to verify Board session."});
+  }
+});
+
+/* BOARD PORTAL LOGOUT */
+
+router.post("/logout",async(req,res)=>{
+  return res.status(200).json({success:true,message:"Board session ended."});
+});
 async function requireBoard(req,res){
  try{
   const user=await getUser(req);
