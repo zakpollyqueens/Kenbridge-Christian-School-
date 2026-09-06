@@ -1,0 +1,293 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Board Dashboard | Kenbridge Christian School</title>
+<meta name="theme-color" content="#0b3558">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+:root{--navy:#0b3558;--navy2:#124b78;--gold:#c9a227;--bg:#f4f7fb;--white:#fff;--text:#172536;--muted:#66768a;--border:#e2e8f0;--green:#08783f;--red:#b42318}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;width:100%;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:270px;background:linear-gradient(180deg,#082e4d,#0b3558 55%,#082b48);color:#fff;display:flex;flex-direction:column;z-index:2000;box-shadow:8px 0 30px #00000018}
+.sidebar-brand{padding:27px 22px 23px;border-bottom:1px solid #ffffff1f}
+.sidebar-brand small{display:block;font-size:10px;letter-spacing:1.8px;opacity:.65;margin-bottom:8px;font-weight:bold}
+.sidebar-brand h2{margin:0;font-size:20px}
+.sidebar-brand span{display:block;margin-top:7px;font-size:11px;color:#d8e5ef}
+.sidebar-nav{flex:1;overflow-y:auto;padding:16px 12px}
+.nav-label{margin:17px 10px 7px;font-size:9px;letter-spacing:1.5px;font-weight:bold;color:#b9cad8}
+.nav-link{display:flex;align-items:center;gap:11px;padding:12px 13px;margin:3px 0;border-radius:9px;color:#fff;text-decoration:none;font-size:13.5px;transition:.2s}
+.nav-link:hover{background:#ffffff17}
+.nav-link.active{background:#ffffff14;box-shadow:inset 3px 0 0 #e7c65c}
+.sidebar-bottom{padding:15px;border-top:1px solid #ffffff1f}
+.logout-btn{width:100%;padding:11px;border:1px solid #ffffff40;border-radius:9px;background:#ffffff0a;color:#fff;font-weight:bold;cursor:pointer}
+.main{margin-left:270px;min-height:100vh}
+.topbar{height:76px;background:#fffffff5;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:1000;box-shadow:0 3px 15px #0f274008}
+.topbar-left,.user-area{display:flex;align-items:center;gap:14px}
+.topbar h1{margin:0;font-size:21px;color:var(--navy)}
+.topbar-sub,.user-role{font-size:11px;color:var(--muted);margin-top:3px}
+.user-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--navy2));border:2px solid #e9d27a;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:13px}
+.user-info{line-height:1.25}.user-name{font-size:13px;font-weight:bold}
+.content{padding:30px;max-width:1600px;margin:auto}
+.hero{background:linear-gradient(135deg,var(--navy),#17618c);border-radius:18px;padding:30px;color:#fff;margin-bottom:25px;box-shadow:0 10px 30px #0f274010}
+.hero-content{display:flex;justify-content:space-between;gap:25px;align-items:center}
+.hero h2{margin:0 0 8px;font-size:27px}
+.hero p{margin:0;color:#d9e8f3;font-size:13px;line-height:1.6;max-width:650px}
+.hero-badge{background:#ffffff1a;border:1px solid #ffffff33;padding:13px 17px;border-radius:12px;min-width:190px;text-align:center}
+.hero-badge strong,.hero-badge span{display:block;font-size:12px}.hero-badge strong{color:#f4db75}.hero-badge span{margin-top:5px;color:#e2edf5}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:25px}
+.stat-card,.card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:19px}
+.stat-card{position:relative;overflow:hidden;box-shadow:0 5px 18px #0f274008}
+.stat-card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--gold)}
+.stat-icon{width:36px;height:36px;border-radius:10px;background:#eef4f8;display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:13px}
+.stat-label{font-size:11px;color:var(--muted);font-weight:bold}.stat-value{font-size:29px;font-weight:bold;color:var(--navy);margin-top:5px}
+.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(280px,.85fr);gap:22px}
+.card{margin-bottom:22px;box-shadow:0 5px 18px #0f274008}
+.card-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;padding-bottom:13px;border-bottom:1px solid #edf1f5}
+.card-header h3{margin:0;font-size:16px;color:var(--navy)}
+.card-header h3:before{content:"";display:inline-block;width:4px;height:17px;background:var(--gold);border-radius:4px;vertical-align:-3px;margin-right:9px}
+.view-link{color:var(--navy2);font-size:12px;font-weight:bold;text-decoration:none}
+.meeting-title{font-size:21px;font-weight:bold;color:var(--navy);margin-bottom:10px}
+.meeting-description,.announcement-message{color:var(--muted);line-height:1.6;font-size:13px}
+.meeting-details{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0}
+.detail{background:#f7f9fb;border:1px solid #edf1f5;border-radius:10px;padding:13px}
+.detail-label{display:block;font-size:9px;font-weight:bold;letter-spacing:1px;color:#8290a0;margin-bottom:6px}.detail-value{font-size:13px;font-weight:bold}
+.meeting-actions{display:flex;gap:10px;flex-wrap:wrap}.quick-grid{display:grid;gap:10px}
+.btn{border:0;border-radius:9px;padding:11px 15px;font-weight:bold;font-size:12px;cursor:pointer;text-decoration:none;text-align:center}
+.btn-primary{background:var(--navy);color:#fff}.btn-secondary{background:#eef4f8;color:var(--navy);border:1px solid #dce7ef}.btn-disabled{background:#e8edf2;color:#94a3b8}
+.announcement{padding:14px 0;border-bottom:1px solid var(--border)}.announcement:last-child{border:0}
+.announcement-title{font-weight:bold;font-size:13px;color:var(--navy);margin-bottom:5px}.announcement-message{font-size:12px}
+.priority{display:inline-block;margin-top:8px;padding:4px 8px;border-radius:20px;font-size:9px;font-weight:bold;background:#f1f5f9;color:#475569}
+.access-box{background:#f1f6f9;border:1px solid #dce7ef;border-radius:12px;padding:17px;font-size:12px;line-height:1.6;color:var(--muted)}
+.access-status{display:flex;align-items:center;gap:8px;font-weight:bold;color:var(--green);margin-bottom:7px}
+.status-dot{width:9px;height:9px;border-radius:50%;background:#16a34a;box-shadow:0 0 0 4px #16a34a1f}
+.loading{color:var(--muted);font-size:13px;padding:14px 0}.empty{color:var(--muted);text-align:center;padding:28px 10px;font-size:13px}
+.menu-toggle{display:none;border:0;background:var(--navy);color:#fff;border-radius:9px;width:44px;height:44px;font-size:21px;line-height:1;cursor:pointer;position:relative;z-index:3000;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.overlay{display:none}
+@media(max-width:1200px){.stats{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){
+.sidebar{transform:translateX(-105%);transition:transform .25s ease;visibility:hidden}
+.sidebar.open{transform:translateX(0);visibility:visible}
+.overlay.show{display:block;position:fixed;inset:0;background:#00000059;z-index:1500}
+.main{margin-left:0}.menu-toggle{display:flex;align-items:center;justify-content:center}
+.dashboard-grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.content{padding:22px}
+}
+@media(max-width:600px){
+.topbar{height:68px;padding:0 15px}.topbar h1{font-size:17px}.topbar-sub,.user-info{display:none}.content{padding:15px}
+.hero{padding:22px 19px}.hero-content{display:block}.hero h2{font-size:23px}.hero-badge{margin-top:18px;text-align:left}
+.stats{grid-template-columns:1fr}.card{padding:17px}.meeting-details{grid-template-columns:1fr}.meeting-title{font-size:18px}
+}
+</style>
+</head>
+<body><aside id="sidebar" class="sidebar">
+<div class="sidebar-brand"><small>KENBRIDGE CHRISTIAN SCHOOL</small><h2>Board of Governors</h2><span>Governance & Strategic Leadership</span></div>
+<nav class="sidebar-nav">
+<a class="nav-link active" href="board-dashboard.html">🏠 Dashboard</a>
+<div class="nav-label">GOVERNANCE</div>
+<a class="nav-link" href="members.html">👥 Board Members</a>
+<a class="nav-link" href="meetings.html">📅 Meetings</a>
+<a class="nav-link" href="agendas.html">📋 Agendas</a>
+<a class="nav-link" href="minutes.html">📝 Minutes</a>
+<div class="nav-label">SCHOOL PLANNING</div>
+<a class="nav-link" href="planning.html">🎯 School Planning</a>
+<a class="nav-link" href="documents.html">📁 Board Documents</a>
+<a class="nav-link" href="resolutions.html">⚖️ Resolutions</a>
+<div class="nav-label">COMMUNICATION</div>
+<a class="nav-link" href="announcements.html">📢 Announcements</a>
+</nav>
+<div class="sidebar-bottom"><button type="button" id="logoutButton" class="logout-btn">Sign Out</button></div>
+</aside><div id="overlay" class="overlay" onclick="closeBoardMenu()"></div><main class="main">
+<header class="topbar">
+<div class="topbar-left">
+<button type="button" id="menuToggle" class="menu-toggle" aria-label="Open navigation" onclick="toggleBoardMenu()">☰</button>
+<div><h1>Board Dashboard</h1><div class="topbar-sub">Board of Governors • Executive Portal</div></div>
+</div>
+<div class="user-area">
+<div id="userAvatar" class="user-avatar">B</div>
+<div class="user-info"><div id="userName" class="user-name">Loading...</div><div id="userRole" class="user-role">Board Member</div></div>
+</div>
+</header><section class="content">
+<div class="hero">
+<div class="hero-content">
+<div><h2 id="welcomeTitle">Welcome</h2><p>Central access to Board governance, meetings, planning and oversight at Kenbridge Christian School.</p></div>
+<div class="hero-badge"><strong>BOARD OF GOVERNORS</strong><span id="todayDate">Loading date...</span></div>
+</div>
+</div><section class="stats">
+<div class="stat-card"><div class="stat-icon">📅</div><div class="stat-label">UPCOMING MEETINGS</div><div id="upcomingMeetings" class="stat-value">—</div></div>
+<div class="stat-card"><div class="stat-icon">👥</div><div class="stat-label">ACTIVE BOARD MEMBERS</div><div id="activeMembers" class="stat-value">—</div></div>
+<div class="stat-card"><div class="stat-icon">⚖️</div><div class="stat-label">OPEN RESOLUTIONS</div><div id="openResolutions" class="stat-value">—</div></div>
+<div class="stat-card"><div class="stat-icon">📋</div><div class="stat-label">PENDING AGENDA ITEMS</div><div id="pendingAgenda" class="stat-value">—</div></div>
+<div class="stat-card"><div class="stat-icon">📢</div><div class="stat-label">BOARD ANNOUNCEMENTS</div><div id="announcementCount" class="stat-value">0</div></div>
+</section><section class="dashboard-grid">
+<div>
+<div class="card">
+<div class="card-header"><h3>Next Board Meeting</h3><a class="view-link" href="meetings.html">View Meetings →</a></div>
+<div id="nextMeeting" class="loading">Loading meeting information...</div>
+</div><div class="card">
+<div class="card-header"><h3>Board Announcements</h3><a class="view-link" href="announcements.html">View All →</a></div>
+<div id="announcements"><div class="empty">No Board announcements available.</div></div>
+</div>
+</div><div>
+<div class="card">
+<div class="card-header"><h3>Quick Access</h3></div>
+<div class="quick-grid">
+<a href="meetings.html" class="btn btn-secondary">📅 Manage Meetings</a>
+<a href="agendas.html" class="btn btn-secondary">📋 Meeting Agendas</a>
+<a href="resolutions.html" class="btn btn-secondary">⚖️ Board Resolutions</a>
+<a href="documents.html" class="btn btn-secondary">📁 Board Documents</a>
+<a href="planning.html" class="btn btn-secondary">🎯 School Planning</a>
+</div>
+</div><div class="card">
+<div class="card-header"><h3>Board Access</h3></div>
+<div id="accessInfo" class="access-box"><div class="access-status"><span class="status-dot"></span>Verifying secure access...</div></div>
+</div>
+</div>
+</section>
+</section>
+</main><script>
+function toggleBoardMenu(){
+var sidebar=document.getElementById("sidebar"),overlay=document.getElementById("overlay");
+if(!sidebar)return;
+sidebar.classList.toggle("open");
+if(overlay)overlay.classList.toggle("show");
+}
+function closeBoardMenu(){
+var sidebar=document.getElementById("sidebar"),overlay=document.getElementById("overlay");
+if(sidebar)sidebar.classList.remove("open");
+if(overlay)overlay.classList.remove("show");
+}
+</script><script src="../js/board-auth.js"></script><script>
+(function(){
+"use strict";
+
+var sidebar=document.getElementById("sidebar");
+var overlay=document.getElementById("overlay");
+var logoutButton=document.getElementById("logoutButton");
+
+function escapeHtml(v){
+return String(v==null?"":v).replace(/[&<>"']/g,function(c){
+return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c];
+});
+}
+
+function setText(id,v){
+var e=document.getElementById(id);
+if(e)e.textContent=v==null?"—":v;
+}
+
+function formatDate(v){
+if(!v)return"Not specified";
+var d=new Date(String(v).length<=10?String(v)+"T00:00:00":v);
+return isNaN(d.getTime())?"Not specified":d.toLocaleDateString(undefined,{weekday:"short",year:"numeric",month:"long",day:"numeric"});
+}
+
+function formatTime(v){
+if(!v)return"Not specified";
+var p=String(v).split(":"),h=Number(p[0]);
+if(p.length<2||isNaN(h))return v;
+return(h%12||12)+":"+p[1]+" "+(h>=12?"PM":"AM");
+}
+
+function initials(n){
+return String(n||"B").split(/\s+/).filter(Boolean).slice(0,2).map(function(x){return x.charAt(0).toUpperCase()}).join("")||"B";
+}
+
+function renderMeeting(m){
+var c=document.getElementById("nextMeeting");
+if(!m){
+c.innerHTML='<div class="empty">No upcoming Board meeting has been scheduled.</div>';
+return;
+}
+var online=(m.meeting_type==="online"||m.meeting_type==="hybrid")&&m.meeting_url;
+c.innerHTML='<div class="meeting-title">'+escapeHtml(m.title||"Board Meeting")+'</div>'+
+(m.description?'<p class="meeting-description">'+escapeHtml(m.description)+'</p>':"")+
+'<div class="meeting-details">'+
+'<div class="detail"><span class="detail-label">DATE</span><div class="detail-value">'+formatDate(m.meeting_date)+'</div></div>'+
+'<div class="detail"><span class="detail-label">START TIME</span><div class="detail-value">'+formatTime(m.start_time)+'</div></div>'+
+'<div class="detail"><span class="detail-label">MEETING TYPE</span><div class="detail-value">'+escapeHtml(m.meeting_type||"online")+'</div></div>'+
+'<div class="detail"><span class="detail-label">PROVIDER / LOCATION</span><div class="detail-value">'+escapeHtml(m.online_provider||m.location||"Not specified")+'</div></div>'+
+'</div><div class="meeting-actions">'+
+'<a class="btn btn-secondary" href="meetings.html">View Meeting</a>'+
+(online?'<a class="btn btn-primary" href="'+escapeHtml(m.meeting_url)+'" target="_blank" rel="noopener">🎥 Join Online Meeting</a>':'<span class="btn btn-disabled">🎥 Online Meeting Not Available</span>')+
+'</div>';
+}
+
+async function loadDashboard(){
+try{
+var results=await Promise.all([
+KenbridgeBoardAuth.request("/api/board/members"),
+KenbridgeBoardAuth.request("/api/board/meetings")
+]);
+var members=results[0]&&Array.isArray(results[0].members)?results[0].members:[];
+var meetings=results[1]&&Array.isArray(results[1].meetings)?results[1].meetings:[];
+var now=new Date();
+
+var upcoming=meetings.filter(function(m){
+if(!m.meeting_date)return false;
+var d=new Date(String(m.meeting_date)+"T"+String(m.start_time||"00:00:00"));
+return !isNaN(d.getTime())&&d>=now;
+}).sort(function(a,b){
+return new Date(String(a.meeting_date)+"T"+String(a.start_time||"00:00:00"))-
+new Date(String(b.meeting_date)+"T"+String(b.start_time||"00:00:00"));
+});
+
+setText("upcomingMeetings",upcoming.length);
+setText("activeMembers",members.filter(function(m){return m.is_active!==false}).length);
+renderMeeting(upcoming[0]||null);
+}catch(e){
+console.error("BOARD DASHBOARD DATA ERROR:",e);
+setText("upcomingMeetings","—");
+setText("activeMembers","—");
+renderMeeting(null);
+}
+}
+
+async function initialize(){
+try{
+var user=await KenbridgeBoardAuth.requireBoard({redirect:true,loginPath:"login.html"});
+if(!user)return;
+
+var name=user.full_name||user.email||"Board Member";
+var admin=String(user.role||"BOARD").toUpperCase()==="ADMIN";
+
+setText("userName",name);
+setText("userRole",admin?"Administrator":"Board Member");
+setText("welcomeTitle","Welcome, "+(name.trim().split(/\s+/)[0]||"Member"));
+document.getElementById("userAvatar").textContent=initials(name);
+
+document.getElementById("accessInfo").innerHTML=
+'<div class="access-status"><span class="status-dot"></span>Secure Board Access Active</div>'+
+'You are signed in as '+(admin?"an Administrator with Board access.":"an authorized Board Member.");
+
+await loadDashboard();
+
+}catch(e){
+console.error("BOARD INITIALIZATION ERROR:",e);
+}
+}
+
+document.querySelectorAll(".nav-link").forEach(function(link){
+link.addEventListener("click",function(){closeBoardMenu()});
+});
+
+if(logoutButton){
+logoutButton.addEventListener("click",async function(){
+logoutButton.disabled=true;
+logoutButton.textContent="Signing Out...";
+try{
+await KenbridgeBoardAuth.logout({redirect:true,loginPath:"login.html"});
+}catch(e){
+console.error("BOARD LOGOUT ERROR:",e);
+logoutButton.disabled=false;
+logoutButton.textContent="Sign Out";
+}
+});
+}
+
+document.getElementById("todayDate").textContent=
+new Date().toLocaleDateString(undefined,{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+
+initialize();
+})();
+</script></body>
+  </html>
