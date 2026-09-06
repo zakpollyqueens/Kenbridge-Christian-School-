@@ -19,7 +19,18 @@ const user=rows[0];
 if(!user){res.status(403).json({success:false,message:"Your staff profile was not found."});return null;}
 if(!user.is_active){res.status(403).json({success:false,message:"Your staff account is inactive."});return null;}
 const role=String(user.role||"").toUpperCase();
-if(role!=="STAFF"&&role!=="ADMIN"){res.status(403).json({success:false,message:"Your account does not have permission to access this resource."});return null;}
+
+if(
+    role!=="STAFF" &&
+    role!=="GENERAL_STAFF" &&
+    role!=="ADMIN"
+){
+    res.status(403).json({
+        success:false,
+        message:"Your account does not have permission to access this resource."
+    });
+    return null;
+}
 return user;
 }catch(error){
 console.error("STAFF CONTENT AUTHORIZATION ERROR:",error.message);
