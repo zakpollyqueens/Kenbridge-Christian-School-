@@ -431,7 +431,7 @@ router.get(
                         ON w.submitted_by = u.id
                     WHERE w.submitted_by = $1
                     ORDER BY w.created_at DESC
-                `;
+                ;
 
                 values = [user.id];
             }
@@ -509,7 +509,7 @@ router.patch(
                     updated_at=NOW()
                  WHERE id=$2
                    AND status='PENDING'
-                 RETURNING *`,
+                 RETURNING *,
                 [
                     user.id,
                     req.params.id
@@ -641,7 +641,69 @@ router.patch(
         }
     }
 );
+/* =========================================================
+   PUBLIC WEBSITE — APPROVED CONTENT
+   ========================================================= */
 
+router.get(
+    "/published",
+    async (req, res) => {
+
+        try {
+
+            const section =
+                String(req.query.section || "")
+                    .trim()
+                    .toUpperCase();
+
+            if (!ALLOWED_SECTIONS.includes(section)) {
+
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        "Invalid website section."
+                });
+
+            }
+
+            const { rows } = await pool.query(
+                `SELECT
+                    id,
+                    section,
+                    title,
+                    description,
+                    media_type,
+                    media_url,
+                    file_name,
+                    created_at
+                 FROM website_content_submissions
+                 WHERE section=$1
+                   AND status='APPROVED'
+                 ORDER BY created_at DESC`,
+                [section]
+            );
+
+            return res.status(200).json({
+                success: true,
+                section,
+                content: rows
+            });
+
+        } catch (error) {
+
+            console.error(
+                "PUBLIC WEBSITE CONTENT ERROR:",
+                error.message
+            );
+
+            return res.status(500).json({
+                success: false,
+                message:
+                    "Unable to load published website content."
+            });
+        }
+    }
+);
 
 /* =========================================================
    MULTER ERROR HANDLER
