@@ -1,0 +1,933 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Website Content | Kenbridge Christian School</title>
+<meta name="description" content="Submit photos and videos for the Kenbridge Christian School website.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css"><style>
+.website-content-page{
+min-height:100vh;
+background:#f4f8f5;
+}
+
+.website-content-topbar{
+position:sticky;
+top:0;
+z-index:1000;
+background:#08783f;
+color:#fff;
+box-shadow:0 4px 18px rgba(0,0,0,.12);
+}
+
+.website-content-topbar-inner{
+width:min(1200px,94%);
+height:72px;
+margin:auto;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:18px;
+}
+
+.website-content-brand{
+display:flex;
+align-items:center;
+gap:12px;
+color:#fff;
+text-decoration:none;
+min-width:0;
+}
+
+.website-content-brand img{
+width:48px;
+height:48px;
+object-fit:contain;
+background:#fff;
+border-radius:50%;
+padding:5px;
+}
+
+.website-content-brand strong{
+display:block;
+font-size:16px;
+white-space:nowrap;
+}
+
+.website-content-brand span{
+display:block;
+font-size:12px;
+opacity:.85;
+margin-top:3px;
+}
+
+.website-content-actions{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.website-content-back{
+padding:10px 15px;
+border:1px solid rgba(255,255,255,.5);
+border-radius:8px;
+color:#fff;
+text-decoration:none;
+font-size:13px;
+font-weight:800;
+}
+
+.website-content-back:hover{
+background:rgba(255,255,255,.12);
+}
+
+.website-content-container{
+width:min(1050px,92%);
+margin:auto;
+padding:38px 0 60px;
+}
+
+.website-content-heading{
+margin-bottom:25px;
+}
+
+.website-content-heading small{
+display:block;
+color:#08783f;
+font-weight:900;
+font-size:12px;
+letter-spacing:1.5px;
+margin-bottom:7px;
+}
+
+.website-content-heading h1{
+margin:0 0 8px;
+color:#173a2c;
+font-size:clamp(28px,4vw,40px);
+}
+
+.website-content-heading p{
+margin:0;
+color:#68776f;
+line-height:1.6;
+}
+
+.website-content-alert{
+display:none;
+margin-bottom:20px;
+padding:14px 16px;
+border-radius:9px;
+font-size:13px;
+line-height:1.5;
+}
+
+.website-content-alert.show{
+display:block;
+}
+
+.website-content-alert.success{
+background:#eef8f1;
+border:1px solid #c9e7d1;
+color:#176b35;
+}
+
+.website-content-alert.error{
+background:#fff1f1;
+border:1px solid #efcaca;
+color:#9a2929;
+}
+
+.website-content-grid{
+display:grid;
+grid-template-columns:1.1fr .9fr;
+gap:22px;
+align-items:start;
+}
+
+.website-content-card{
+background:#fff;
+border:1px solid #e1e8e4;
+border-radius:14px;
+padding:25px;
+box-shadow:0 8px 25px rgba(0,0,0,.05);
+}
+
+.website-content-card h2{
+margin:0 0 7px;
+color:#173a2c;
+font-size:21px;
+}
+
+.website-content-card-intro{
+margin:0 0 22px;
+color:#718079;
+font-size:13px;
+line-height:1.6;
+}
+
+.website-form-group{
+margin-bottom:17px;
+}
+
+.website-form-group label{
+display:block;
+margin-bottom:7px;
+color:#29463a;
+font-size:13px;
+font-weight:800;
+}
+
+.website-form-group input,
+.website-form-group select,
+.website-form-group textarea{
+width:100%;
+box-sizing:border-box;
+padding:12px 13px;
+border:1px solid #d8e1dc;
+border-radius:8px;
+background:#fff;
+color:#29463a;
+font:inherit;
+font-size:14px;
+outline:none;
+}
+
+.website-form-group input:focus,
+.website-form-group select:focus,
+.website-form-group textarea:focus{
+border-color:#08783f;
+box-shadow:0 0 0 3px rgba(8,120,63,.08);
+}
+
+.website-form-group textarea{
+min-height:120px;
+resize:vertical;
+}
+
+.website-file-help{
+margin-top:6px;
+color:#7a8781;
+font-size:11px;
+line-height:1.5;
+}
+
+.website-submit-button{
+width:100%;
+padding:13px 16px;
+border:0;
+border-radius:8px;
+background:#08783f;
+color:#fff;
+font-size:14px;
+font-weight:900;
+cursor:pointer;
+}
+
+.website-submit-button:hover{
+filter:brightness(.94);
+}
+
+.website-submit-button:disabled{
+opacity:.6;
+cursor:not-allowed;
+}
+
+.website-status-list{
+display:grid;
+gap:12px;
+margin-top:18px;
+}
+
+.website-submission-item{
+padding:15px;
+border:1px solid #e1e8e4;
+border-radius:10px;
+background:#fbfdfb;
+}
+
+.website-submission-top{
+display:flex;
+align-items:flex-start;
+justify-content:space-between;
+gap:12px;
+}
+
+.website-submission-item h3{
+margin:0;
+color:#29463a;
+font-size:15px;
+}
+
+.website-submission-meta{
+margin-top:6px;
+color:#7a8781;
+font-size:11px;
+line-height:1.5;
+}
+
+.website-status-badge{
+display:inline-block;
+padding:5px 8px;
+border-radius:20px;
+font-size:10px;
+font-weight:900;
+white-space:nowrap;
+}
+
+.status-pending{
+background:#fff5df;
+color:#936000;
+}
+
+.status-approved{
+background:#eaf7ed;
+color:#176b35;
+}
+
+.status-rejected{
+background:#fff0f0;
+color:#a42b2b;
+}
+
+.website-empty{
+padding:20px;
+text-align:center;
+border:1px dashed #d6e0da;
+border-radius:10px;
+color:#7a8781;
+font-size:13px;
+}
+
+.website-info-list{
+display:grid;
+gap:11px;
+margin-top:20px;
+}
+
+.website-info-item{
+display:flex;
+gap:11px;
+padding:12px;
+border-radius:9px;
+background:#f6faf7;
+}
+
+.website-info-icon{
+font-size:20px;
+flex:0 0 auto;
+}
+
+.website-info-item strong{
+display:block;
+color:#29463a;
+font-size:13px;
+margin-bottom:3px;
+}
+
+.website-info-item span{
+display:block;
+color:#718079;
+font-size:12px;
+line-height:1.5;
+}
+
+.portal-footer{
+margin-top:20px;
+padding:16px 15px;
+text-align:center;
+background:#08783f;
+color:#fff;
+font-size:12px;
+line-height:1.6;
+}
+
+.portal-footer p{
+margin:2px 0;
+}
+
+.portal-footer strong{
+color:#f28c28;
+}
+
+@media(max-width:800px){
+.website-content-grid{
+grid-template-columns:1fr;
+}
+}
+
+@media(max-width:600px){
+.website-content-topbar-inner{
+height:64px;
+}
+
+.website-content-brand img{
+width:40px;
+height:40px;
+}
+
+.website-content-brand strong{
+font-size:13px;
+}
+
+.website-content-brand span{
+font-size:10px;
+}
+
+.website-content-back{
+padding:9px 11px;
+font-size:12px;
+}
+
+.website-content-container{
+width:calc(100% - 28px);
+padding:28px 0 50px;
+}
+
+.website-content-card{
+padding:20px 16px;
+}
+
+.website-submission-top{
+flex-direction:column;
+}
+}
+</style><script src="../js/portal-auth.js"></script></head><body><div class="website-content-page"><header class="website-content-topbar"><div class="website-content-topbar-inner"><a href="staff-dashboard.html" class="website-content-brand">
+<img src="../images/logo.png" alt="Kenbridge Christian School Logo">
+<div>
+<strong>Kenbridge Christian School</strong>
+<span>Staff Portal</span>
+</div>
+</a><div class="website-content-actions">
+<a href="staff-dashboard.html" class="website-content-back">
+← Dashboard
+</a>
+</div></div></header><main class="website-content-container"><section class="website-content-heading">
+<small>WEBSITE CONTENT</small>
+<h1>Submit Website Content</h1>
+<p>
+Upload school photos and videos for consideration on the Kenbridge Christian School website.
+All submissions must be reviewed by an administrator before they become public.
+</p>
+</section><div class="website-content-alert" id="websiteAlert"></div><section class="website-content-grid"><div class="website-content-card"><h2>New Submission</h2><p class="website-content-card-intro">
+Choose the website section, provide a title and upload your media.
+Your submission will initially remain pending.
+</p><form id="websiteContentForm"><div class="website-form-group">
+<label for="section">Website Section</label><select id="section" name="section" required>
+<option value="">Select a section</option>
+<option value="GALLERY">School Gallery</option>
+<option value="SPORTS">Sports</option>
+<option value="FACILITIES">Facilities</option>
+<option value="PROJECTS">Projects</option>
+</select>
+</div><div class="website-form-group">
+<label for="title">Title</label><input
+type="text"
+id="title"
+name="title"
+maxlength="200"
+placeholder="Enter a title for the content"
+required
+
+«»
+
+</div><div class="website-form-group">
+<label for="description">Description</label><textarea
+id="description"
+name="description"
+placeholder="Describe the photo or video..."
+></textarea></div><div class="website-form-group"><label for="file">Photo or Video</label>
+
+<input
+type="file"
+id="file"
+name="file"
+accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime"
+required
+
+«»
+
+<div class="website-file-help">
+Images: JPG, PNG or WEBP. Videos: MP4, WEBM or MOV.
+Maximum file size: 100 MB.
+</div></div><button
+type="submit"
+class="website-submit-button"
+id="submitButton"
+
+«»
+
+Submit for Administrator Approval
+</button>
+
+</form></div><div class="website-content-card"><h2>How It Works</h2><p class="website-content-card-intro">
+Your uploaded content follows a review process before appearing publicly.
+</p><div class="website-info-list"><div class="website-info-item">
+<div class="website-info-icon">1️⃣</div>
+<div>
+<strong>Submit</strong>
+<span>Upload your photo or video and select the correct website section.</span>
+</div>
+</div><div class="website-info-item">
+<div class="website-info-icon">2️⃣</div>
+<div>
+<strong>Administrator Review</strong>
+<span>An administrator checks the submitted content.</span>
+</div>
+</div><div class="website-info-item">
+<div class="website-info-icon">3️⃣</div>
+<div>
+<strong>Approval</strong>
+<span>Approved content becomes eligible for publication.</span>
+</div>
+</div><div class="website-info-item">
+<div class="website-info-icon">4️⃣</div>
+<div>
+<strong>Website Publication</strong>
+<span>Approved content can then appear in the appropriate public website section.</span>
+</div>
+</div></div></div></section><section class="website-content-card" style="margin-top:22px;"><h2>My Submissions</h2><p class="website-content-card-intro">
+Track the content you have submitted and its current review status.
+</p><div id="submissionList" class="website-status-list"><div class="website-empty">
+Loading your submissions...
+</div></div></section></main><footer class="portal-footer"><p>
+© <span id="portalFooterYear"></span>
+Kenbridge Christian School. All Rights Reserved.
+</p><p>
+Designed with ❤️ by <strong>Zakmolanitech Solutions</strong>
+</p></footer></div><script>
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+const API_BASE=
+"https://kenbridge-christian-school.onrender.com";
+
+const form=
+document.getElementById("websiteContentForm");
+
+const section=
+document.getElementById("section");
+
+const title=
+document.getElementById("title");
+
+const description=
+document.getElementById("description");
+
+const file=
+document.getElementById("file");
+
+const submitButton=
+document.getElementById("submitButton");
+
+const websiteAlert=
+document.getElementById("websiteAlert");
+
+const submissionList=
+document.getElementById("submissionList");
+
+
+function getAccessToken(){
+
+for(const key of[
+"kenbridgeAccessToken",
+"access_token",
+"kenbridge_access_token",
+"token"
+]){
+
+const token=
+localStorage.getItem(key)||
+sessionStorage.getItem(key);
+
+if(token)return token;
+}
+
+return null;
+}
+
+
+function clearSession(){
+
+[
+"kenbridgeAccessToken",
+"kenbridgeRefreshToken",
+"kenbridgeUser",
+"access_token",
+"refresh_token",
+"kenbridge_access_token",
+"token",
+"user",
+"kenbridge_user"
+].forEach(key=>{
+localStorage.removeItem(key);
+});
+
+[
+"kenbridgeStaffLoggedIn",
+"kenbridgeUserRole"
+].forEach(key=>{
+sessionStorage.removeItem(key);
+});
+
+}
+
+
+function showAlert(message,type){
+
+websiteAlert.textContent=message;
+
+websiteAlert.className=
+"website-content-alert show "+type;
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+}
+
+
+function formatDate(value){
+
+if(!value)return"";
+
+const date=new Date(value);
+
+if(Number.isNaN(date.getTime()))return"";
+
+return date.toLocaleString();
+}
+
+
+function sectionName(value){
+
+const names={
+GALLERY:"School Gallery",
+SPORTS:"Sports",
+FACILITIES:"Facilities",
+PROJECTS:"Projects"
+};
+
+return names[value]||value;
+}
+
+
+function statusClass(status){
+
+const value=
+String(status||"").toUpperCase();
+
+if(value==="APPROVED")
+return"status-approved";
+
+if(value==="REJECTED")
+return"status-rejected";
+
+return"status-pending";
+}
+
+
+function renderSubmissions(submissions){
+
+if(!Array.isArray(submissions)||
+submissions.length===0){
+
+submissionList.innerHTML=
+`<div class="website-empty">
+You have not submitted any website content yet.
+</div>`;
+
+return;
+}
+
+
+submissionList.innerHTML=
+submissions.map(item=>{
+
+const status=
+String(item.status||"PENDING").toUpperCase();
+
+return`
+<div class="website-submission-item">
+
+<div class="website-submission-top">
+
+<h3>
+${escapeHtml(item.title||"Untitled")}
+</h3>
+
+<span class="website-status-badge ${statusClass(status)}">
+${escapeHtml(status)}
+</span>
+
+</div>
+
+<div class="website-submission-meta">
+Section: ${escapeHtml(sectionName(item.section))}
+<br>
+Media: ${escapeHtml(item.media_type||"")}
+<br>
+Submitted: ${escapeHtml(formatDate(item.created_at))}
+${status==="REJECTED"&&item.rejection_reason?
+`<br>Reason: ${escapeHtml(item.rejection_reason)}`:""}
+</div>
+
+</div>
+`;
+
+}).join("");
+}
+
+
+function escapeHtml(value){
+
+return String(value??"")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+}
+
+
+async function loadSubmissions(){
+
+const token=getAccessToken();
+
+if(!token){
+
+clearSession();
+
+window.location.href="login.html";
+
+return;
+}
+
+
+try{
+
+const response=
+await fetch(
+API_BASE+"/api/website-content/submissions",
+{
+headers:{
+Authorization:"Bearer "+token
+}
+}
+);
+
+
+const result=
+await response.json();
+
+
+if(
+response.status===401||
+response.status===403
+){
+
+clearSession();
+
+window.location.href="login.html";
+
+return;
+}
+
+
+if(!response.ok||
+!result.success){
+
+throw new Error(
+result.message||
+"Unable to load your submissions."
+);
+}
+
+
+renderSubmissions(
+result.submissions||[]
+);
+
+
+}catch(error){
+
+console.error(
+"LOAD WEBSITE SUBMISSIONS ERROR:",
+error
+);
+
+submissionList.innerHTML=
+`<div class="website-empty">
+Unable to load your submissions.
+</div>`;
+}
+}
+
+
+form.addEventListener(
+"submit",
+async event=>{
+
+event.preventDefault();
+
+const token=getAccessToken();
+
+if(!token){
+
+clearSession();
+
+window.location.href="login.html";
+
+return;
+}
+
+
+if(!file.files||
+!file.files[0]){
+
+showAlert(
+"Please select an image or video.",
+"error"
+);
+
+return;
+}
+
+
+const selectedFile=
+file.files[0];
+
+
+if(selectedFile.size>
+100*1024*1024){
+
+showAlert(
+"The selected file is larger than 100 MB.",
+"error"
+);
+
+return;
+}
+
+
+const formData=
+new FormData();
+
+formData.append(
+"section",
+section.value
+);
+
+formData.append(
+"title",
+title.value.trim()
+);
+
+formData.append(
+"description",
+description.value.trim()
+);
+
+formData.append(
+"file",
+selectedFile
+);
+
+
+submitButton.disabled=true;
+
+submitButton.textContent=
+"Uploading...";
+
+
+try{
+
+const response=
+await fetch(
+API_BASE+"/api/website-content/submit",
+{
+method:"POST",
+headers:{
+Authorization:"Bearer "+token
+},
+body:formData
+}
+);
+
+
+const result=
+await response.json();
+
+
+if(
+response.status===401||
+response.status===403
+){
+
+clearSession();
+
+window.location.href="login.html";
+
+return;
+}
+
+
+if(!response.ok||
+!result.success){
+
+throw new Error(
+result.message||
+"Unable to submit website content."
+);
+}
+
+
+showAlert(
+"✅ "+(
+result.message||
+"Content submitted successfully."
+),
+"success"
+);
+
+
+form.reset();
+
+await loadSubmissions();
+
+
+}catch(error){
+
+console.error(
+"WEBSITE CONTENT SUBMISSION ERROR:",
+error
+);
+
+showAlert(
+error.message||
+"Unable to submit website content.",
+"error"
+);
+
+}finally{
+
+submitButton.disabled=false;
+
+submitButton.textContent=
+"Submit for Administrator Approval";
+}
+
+});
+
+
+document.getElementById(
+"portalFooterYear"
+).textContent=
+new Date().getFullYear();
+
+
+loadSubmissions();
+
+});
+
+</script></body>
+  </html>
