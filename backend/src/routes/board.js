@@ -122,7 +122,234 @@ router.get("/members",async(req,res)=>{
     res.status(500).json({success:false,message:"Unable to retrieve Board members."});
   }
 });
+router.post("/members",async(req,res)=>{
+  try{
+    const admin=await getUser(req);
 
+    if(!admin){
+      return res.status(401).json({
+        success:false,
+        message:"Authentication required."
+      });
+    }
+
+    if(!isAdmin(admin)){
+      return res.status(403).json({
+        success:false,
+        message:"Administrator access required."
+      });
+    }
+
+    const{
+      full_name,
+      username,
+      email,
+      password,
+      board_position,
+      appointment_date,
+      term_end_date,
+      bio,
+      phone,
+      is_active
+    }=req.body||{};
+
+    if(!full_name||!username||!email||!password||!board_position){
+      return res.status(400).json({
+        success:false,
+        message:"Full name, username, email, password and Board position are required."
+      });
+    }
+
+    const name=String(full_name).trim();
+    const userName=String(username).trim();
+    const mail=String(email).trim().toLowerCase();
+    const position=String(board_position).trim();
+    const accountActive=is_active!==false;
+
+    const{rows:duplicate}=await pool.query(
+      `SELECT id
+       FROM users
+       WHERE LOWER(email)=LOWER($1)
+          OR LOWER(username)=LOWER($2)
+       LIMIT 1`,
+      [mail,userName]
+    );
+
+    if(duplicate.length){
+      return res.status(409).json({
+        success:false,
+        message:"An account already uses that email or username."
+      });
+    }
+
+    /*
+      STEP 1:
+      Create the authentication account in Supabase.
+    */
+
+    const{
+      data:authData,
+      error:authError
+    }=await supabase.auth.admin.createUser({
+      email:mail,
+      password:String(password),
+      email_confirm:true
+    });
+
+    if(authError||!authData?.user){
+      console.error(
+        "SUPABASE BOARD CREATE ERROR:",
+        authError?.message
+      );
+
+      return res.status(400).json({
+        success:false,
+        message:authError?.message||
+          "Unable to create the Board member authentication account."
+      });
+    }
+
+    const userId=authData.user.id;
+
+    const client=await pool.connect();
+
+    try{
+      await client.query("BEGIN");
+
+      /*
+        STEP 2:
+        Create the main Kenbridge user account.
+      */
+
+      const{rows:userRows}=await client.query(
+        `INSERT INTO users(
+          id,
+          full_name,
+          username,
+          email,
+          role,
+          position,
+          department,
+          phone,
+          is_active,
+          created_at,
+          updated_at
+        )
+        VALUES(
+          $1,$2,$3,$4,
+          'BOARD',
+          $5,
+          'Board of Governors',
+          $6,
+          $7,
+          NOW(),
+          NOW()
+        )
+        RETURNING
+          id,
+          full_name,
+          username,
+          email,
+          role,
+          position,
+          department,
+          phone,
+          is_active`,
+        [
+          userId,
+          name,
+          userName,
+          mail,
+          position,
+          phone?.trim()||null,
+          accountActive
+        ]
+      );
+
+      /*
+        STEP 3:
+        Create the Board member profile.
+      */
+
+      const{rows:boardRows}=await client.query(
+        `INSERT INTO board_members(
+          user_id,
+          board_position,
+          appointment_date,
+          term_end_date,
+          bio,
+          is_active,
+          created_at,
+          updated_at
+        )
+        VALUES(
+          $1,$2,$3,$4,$5,$6,NOW(),NOW()
+        )
+        RETURNING *`,
+        [
+          userId,
+          position,
+          appointment_date||null,
+          term_end_date||null,
+          bio?.trim()||null,
+          accountActive
+        ]
+      );
+
+      await client.query("COMMIT");
+
+      return res.status(201).json({
+        success:true,
+        message:"Board member created successfully.",
+        member:{
+          ...userRows[0],
+          ...boardRows[0]
+        }
+      });
+
+    }catch(error){
+
+      await client.query("ROLLBACK");
+
+      /*
+        If database creation fails,
+        remove the Supabase user so that
+        we do not leave an orphan account.
+      */
+
+      try{
+        await supabase.auth.admin.deleteUser(userId);
+      }catch(deleteError){
+        console.error(
+          "SUPABASE BOARD CLEANUP ERROR:",
+          deleteError.message
+        );
+      }
+
+      throw error;
+
+    }finally{
+      client.release();
+    }
+
+  }catch(error){
+
+    console.error(
+      "CREATE BOARD MEMBER ERROR:",
+      error.message
+    );
+
+    return res.status(
+      error.code==="23505"?409:500
+    ).json({
+      success:false,
+      message:
+        error.code==="23505"
+          ?"That username or email is already in use."
+          :"Unable to create Board member."
+    });
+  }
+});
 router.put("/members/:id",async(req,res)=>{
   try{
     const admin=await getUser(req);
