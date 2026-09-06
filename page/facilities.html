@@ -214,7 +214,22 @@
 </div>
 </div>
 </section>
+<!-- APPROVED WEBSITE FACILITIES CONTENT -->
+<section class="section" id="approvedFacilitiesContent" style="display:none;">
+    <div class="container">
 
+        <div class="section-heading">
+            <span class="section-label">LATEST FACILITIES UPDATES</span>
+            <h2>Recent Facility Photos & Videos</h2>
+            <p>
+                New photographs and videos of our school facilities.
+            </p>
+        </div>
+
+        <div class="gallery-grid" id="approvedFacilitiesGrid"></div>
+
+    </div>
+  </section>
 <section class="school-life">
 <div class="container">
 <div class="section-heading light">
@@ -294,7 +309,131 @@
     Terms & Conditions
 </a>
 </footer>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
 
+    const API_BASE =
+        "https://kenbridge-christian-school.onrender.com";
+
+    const section =
+        document.getElementById("approvedFacilitiesContent");
+
+    const grid =
+        document.getElementById("approvedFacilitiesGrid");
+
+    if(!section || !grid){
+        return;
+    }
+
+    fetch(
+        API_BASE +
+        "/api/website-content/published?section=FACILITIES"
+    )
+    .then(response => response.json())
+    .then(result => {
+
+        if(
+            !result.success ||
+            !Array.isArray(result.content) ||
+            !result.content.length
+        ){
+            return;
+        }
+
+        grid.innerHTML = "";
+
+        result.content.forEach(item => {
+
+            const card =
+                document.createElement("figure");
+
+            card.className = "gallery-item";
+
+            const mediaType =
+                String(item.media_type || "").toUpperCase();
+
+            if(mediaType === "VIDEO"){
+
+                card.innerHTML = `
+                    <video
+                        controls
+                        preload="metadata"
+                        style="
+                            display:block;
+                            width:100%;
+                            height:270px;
+                            object-fit:cover;
+                            background:#000;
+                        "
+                    >
+                        <source src="${item.media_url}">
+                        Your browser does not support video.
+                    </video>
+
+                    <figcaption>
+                        <strong>${escapeFacilitiesText(item.title)}</strong>
+                        <span>
+                            ${escapeFacilitiesText(
+                                item.description ||
+                                "Kenbridge Christian School facility"
+                            )}
+                        </span>
+                    </figcaption>
+                `;
+
+            } else {
+
+                card.innerHTML = `
+                    <img
+                        src="${item.media_url}"
+                        alt="${escapeFacilitiesText(item.title)}"
+                        loading="lazy"
+                    >
+
+                    <figcaption>
+                        <strong>${escapeFacilitiesText(item.title)}</strong>
+                        <span>
+                            ${escapeFacilitiesText(
+                                item.description ||
+                                "Kenbridge Christian School facility"
+                            )}
+                        </span>
+                    </figcaption>
+                `;
+
+            }
+
+            grid.appendChild(card);
+
+        });
+
+        if(grid.children.length){
+            section.style.display = "block";
+        }
+
+    })
+    .catch(error => {
+
+        console.error(
+            "Unable to load approved facilities content:",
+            error
+        );
+
+    });
+
+    function escapeFacilitiesText(value){
+
+        return String(value || "")
+            .replace(/&/g,"&amp;")
+            .replace(/</g,"&lt;")
+            .replace(/>/g,"&gt;")
+            .replace(/"/g,"&quot;")
+            .replace(/'/g,"&#039;");
+
+    }
+
+});
+  </script>
 <script src="../js/script.js"></script>
 
 </body>
