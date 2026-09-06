@@ -280,6 +280,23 @@ beyond the classroom.
 </div>
 </div>
 </section>
+  <!-- APPROVED WEBSITE PROJECT CONTENT -->
+<section class="section" id="approvedProjectsContent" style="display:none;">
+    <div class="container">
+
+        <div class="section-heading">
+            <span class="section-label">LATEST PROJECT UPDATES</span>
+            <h2>Recent School Projects</h2>
+            <p>
+                New photographs and videos from school projects
+                and development activities.
+            </p>
+        </div>
+
+        <div class="project-grid" id="approvedProjectsGrid"></div>
+
+    </div>
+</section>
 
 <!-- PROJECT VALUES -->
 <section class="section">
@@ -494,7 +511,153 @@ Made with ❤️ by Zakmolanitech Solutions
 </div>
 
 </footer>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
 
+    const API_BASE =
+        "https://kenbridge-christian-school.onrender.com";
+
+    const section =
+        document.getElementById("approvedProjectsContent");
+
+    const grid =
+        document.getElementById("approvedProjectsGrid");
+
+    if(!section || !grid){
+        return;
+    }
+
+    fetch(
+        API_BASE +
+        "/api/website-content/published?section=PROJECTS"
+    )
+    .then(response => response.json())
+    .then(result => {
+
+        if(
+            !result.success ||
+            !Array.isArray(result.content) ||
+            !result.content.length
+        ){
+            return;
+        }
+
+        grid.innerHTML = "";
+
+        result.content.forEach(item => {
+
+            const card =
+                document.createElement("article");
+
+            card.className = "project-card";
+
+            const mediaType =
+                String(item.media_type || "").toUpperCase();
+
+            if(mediaType === "VIDEO"){
+
+                card.innerHTML = `
+                    <video
+                        controls
+                        preload="metadata"
+                        style="
+                            width:100%;
+                            height:230px;
+                            object-fit:cover;
+                            display:block;
+                            background:#000;
+                        "
+                    >
+                        <source src="${item.media_url}">
+                        Your browser does not support video.
+                    </video>
+
+                    <div class="project-content">
+                        <span class="article-category">
+                            PROJECT UPDATE
+                        </span>
+
+                        <h3>
+                            ${escapeProjectText(item.title)}
+                        </h3>
+
+                        <p>
+                            ${escapeProjectText(
+                                item.description ||
+                                "Kenbridge Christian School project update."
+                            )}
+                        </p>
+
+                        <span class="project-status">
+                            Published ✓
+                        </span>
+                    </div>
+                `;
+
+            } else {
+
+                card.innerHTML = `
+                    <img
+                        src="${item.media_url}"
+                        alt="${escapeProjectText(item.title)}"
+                        loading="lazy"
+                    >
+
+                    <div class="project-content">
+                        <span class="article-category">
+                            PROJECT UPDATE
+                        </span>
+
+                        <h3>
+                            ${escapeProjectText(item.title)}
+                        </h3>
+
+                        <p>
+                            ${escapeProjectText(
+                                item.description ||
+                                "Kenbridge Christian School project update."
+                            )}
+                        </p>
+
+                        <span class="project-status">
+                            Published ✓
+                        </span>
+                    </div>
+                `;
+
+            }
+
+            grid.appendChild(card);
+
+        });
+
+        if(grid.children.length){
+            section.style.display = "block";
+        }
+
+    })
+    .catch(error => {
+
+        console.error(
+            "Unable to load approved project content:",
+            error
+        );
+
+    });
+
+    function escapeProjectText(value){
+
+        return String(value || "")
+            .replace(/&/g,"&amp;")
+            .replace(/</g,"&lt;")
+            .replace(/>/g,"&gt;")
+            .replace(/"/g,"&quot;")
+            .replace(/'/g,"&#039;");
+
+    }
+
+});
+</script>
 <script src="../js/script.js"></script>
 
 </body>
