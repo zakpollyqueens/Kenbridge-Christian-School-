@@ -219,10 +219,22 @@
 <img src="../images/academics.jpg" alt="Kenbridge learning" loading="lazy">
 <figcaption><strong>Learning</strong><span>Building a strong future</span></figcaption>
 </figure>
+</div>
+
+<!-- APPROVED WEBSITE GALLERY CONTENT -->
+<div id="websiteGalleryContent" style="display:none;">
+    <div class="section-heading" style="margin-top:50px;">
+        <span class="section-label">NEW SCHOOL MOMENTS</span>
+        <h2>Latest Gallery Uploads</h2>
+        <p>Official photographs recently added to the school website.</p>
+    </div>
+
+    <div class="gallery-grid" id="websiteGalleryGrid"></div>
+</div>
 
 </div>
-</div>
 </section>
+
 
 <!-- LIGHTBOX -->
 <div class="gallery-lightbox" id="galleryLightbox" aria-hidden="true">
@@ -424,6 +436,151 @@ if(e.key==="ArrowRight")move(1);
 });
 
 });
+  /* =========================================================
+   APPROVED WEBSITE GALLERY CONTENT
+   ========================================================= */
+
+const WEBSITE_API =
+"https://kenbridge-christian-school.onrender.com";
+
+const websiteGalleryContent =
+document.getElementById("websiteGalleryContent");
+
+const websiteGalleryGrid =
+document.getElementById("websiteGalleryGrid");
+
+async function loadWebsiteGallery(){
+
+    if(!websiteGalleryContent || !websiteGalleryGrid){
+        return;
+    }
+
+    try{
+
+        const response = await fetch(
+            WEBSITE_API +
+            "/api/website-content/published?section=GALLERY"
+        );
+
+        const result = await response.json();
+
+        if(
+            !response.ok ||
+            !result.success ||
+            !Array.isArray(result.content) ||
+            !result.content.length
+        ){
+            return;
+        }
+
+        websiteGalleryGrid.innerHTML="";
+
+        result.content.forEach(item=>{
+
+            if(
+                String(item.media_type||"").toUpperCase() !==
+                "IMAGE"
+            ){
+                return;
+            }
+
+            const figure =
+            document.createElement("figure");
+
+            figure.className="gallery-item";
+            figure.dataset.category="school";
+
+            figure.innerHTML=`
+                <img
+                    src="${item.media_url}"
+                    alt="${escapeGalleryText(item.title)}"
+                    loading="lazy"
+                >
+
+                <figcaption>
+                    <strong>
+                        ${escapeGalleryText(item.title)}
+                    </strong>
+
+                    <span>
+                        ${escapeGalleryText(
+                            item.description ||
+                            "Kenbridge Christian School"
+                        )}
+                    </span>
+                </figcaption>
+            `;
+
+            websiteGalleryGrid.appendChild(figure);
+
+            figure.addEventListener("click",function(){
+
+                const allWebsiteItems =
+                [...websiteGalleryGrid.querySelectorAll(
+                    ".gallery-item"
+                )];
+
+                const index =
+                allWebsiteItems.indexOf(figure);
+
+                const img =
+                figure.querySelector("img");
+
+                const title =
+                figure.querySelector("strong");
+
+                const text =
+                figure.querySelector("span");
+
+                image.src=img.src;
+                image.alt=img.alt;
+
+                caption.textContent =
+                title.textContent +
+                " — " +
+                text.textContent;
+
+                lightbox.classList.add("open");
+                lightbox.setAttribute(
+                    "aria-hidden",
+                    "false"
+                );
+
+                document.body.style.overflow="hidden";
+
+            });
+
+        });
+
+        if(websiteGalleryGrid.children.length){
+
+            websiteGalleryContent.style.display="block";
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "Unable to load approved gallery content:",
+            error
+        );
+
+    }
+
+}
+
+function escapeGalleryText(value){
+
+    return String(value||"")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+loadWebsiteGallery();
 </script>
 
 </body>
