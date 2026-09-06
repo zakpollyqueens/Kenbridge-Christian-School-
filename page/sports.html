@@ -262,7 +262,23 @@ wellbeing through activity.
 </div>
 </div>
 </section>
+<!-- APPROVED WEBSITE SPORTS CONTENT -->
+<section class="section" id="approvedSportsContent" style="display:none;">
+    <div class="container">
 
+        <div class="section-heading">
+            <span class="section-label">LATEST SPORTS UPDATES</span>
+            <h2>Recent Sports Moments</h2>
+            <p>
+                Photos and videos from recent Kenbridge Christian School
+                sports activities.
+            </p>
+        </div>
+
+        <div class="sports-gallery" id="approvedSportsGrid"></div>
+
+    </div>
+</section>
 <!-- SPORTS VALUES -->
 <section class="section">
 <div class="container">
@@ -539,7 +555,131 @@ Terms &amp; Conditions
 </div>
 
 </footer>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
 
+    const API_BASE =
+        "https://kenbridge-christian-school.onrender.com";
+
+    const section =
+        document.getElementById("approvedSportsContent");
+
+    const grid =
+        document.getElementById("approvedSportsGrid");
+
+    if(!section || !grid){
+        return;
+    }
+
+    fetch(
+        API_BASE +
+        "/api/website-content/published?section=SPORTS"
+    )
+    .then(response => response.json())
+    .then(result => {
+
+        if(
+            !result.success ||
+            !Array.isArray(result.content) ||
+            !result.content.length
+        ){
+            return;
+        }
+
+        grid.innerHTML = "";
+
+        result.content.forEach(item => {
+
+            const card =
+                document.createElement("figure");
+
+            card.className = "gallery-item";
+
+            const mediaType =
+                String(item.media_type || "").toUpperCase();
+
+            if(mediaType === "VIDEO"){
+
+                card.innerHTML = `
+                    <video
+                        controls
+                        preload="metadata"
+                        style="
+                            display:block;
+                            width:100%;
+                            height:270px;
+                            object-fit:cover;
+                            background:#000;
+                        "
+                    >
+                        <source src="${item.media_url}">
+                        Your browser does not support video.
+                    </video>
+
+                    <figcaption>
+                        <strong>${escapeSportsText(item.title)}</strong>
+                        <span>
+                            ${escapeSportsText(
+                                item.description ||
+                                "Kenbridge Christian School sports"
+                            )}
+                        </span>
+                    </figcaption>
+                `;
+
+            }else{
+
+                card.innerHTML = `
+                    <img
+                        src="${item.media_url}"
+                        alt="${escapeSportsText(item.title)}"
+                        loading="lazy"
+                    >
+
+                    <figcaption>
+                        <strong>${escapeSportsText(item.title)}</strong>
+                        <span>
+                            ${escapeSportsText(
+                                item.description ||
+                                "Kenbridge Christian School sports"
+                            )}
+                        </span>
+                    </figcaption>
+                `;
+
+            }
+
+            grid.appendChild(card);
+
+        });
+
+        if(grid.children.length){
+            section.style.display = "block";
+        }
+
+    })
+    .catch(error => {
+
+        console.error(
+            "Unable to load approved sports content:",
+            error
+        );
+
+    });
+
+    function escapeSportsText(value){
+
+        return String(value || "")
+            .replace(/&/g,"&amp;")
+            .replace(/</g,"&lt;")
+            .replace(/>/g,"&gt;")
+            .replace(/"/g,"&quot;")
+            .replace(/'/g,"&#039;");
+
+    }
+
+});
+  </script>
 <script src="../js/script.js"></script>
 
 </body>
