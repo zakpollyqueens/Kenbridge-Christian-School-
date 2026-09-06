@@ -14,7 +14,7 @@ const staffResourcesRoutes = require("./routes/staff-resources");
 const staffContentRoutes = require("./routes/staff-content");
 const tasksRoutes = require("./routes/tasks");
 const messagesRoutes = require("./routes/messages");
-
+const websiteContentRoutes=require("./routes/website-content");
 const adminNotificationsRoutes = require("./routes/admin-notifications");
 const reportsRoutes = require("./routes/reports");
 const boardRoutes=require("./routes/board");
@@ -111,7 +111,7 @@ app.use("/api/staff", staffRoutes);
 app.use("/api/students", studentsRoutes);
 app.use("/api/board",boardRoutes);
 app.use("/api/gallery", galleryRoutes);
-
+app.use("/api/website-content",websiteContentRoutes);
 // Report submissions workflow
 app.use("/api/submissions", submissionsRoutes);
 
