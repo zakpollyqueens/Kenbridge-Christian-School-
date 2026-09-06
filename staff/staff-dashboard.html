@@ -121,6 +121,7 @@
 <a href="training.html">📚 Training</a>
 <a href="resources.html">🧰 Resources</a>
 <a href="notifications.html">🔔 Notifications</a>
+<a href="website-content.html" id="websiteContentMenu">🌐 Website Content</a>
 <div class="staff-menu-divider"></div>
 <a href="profile.html">👤 My Profile</a>
 <a href="settings.html">⚙️ Settings</a>
@@ -260,7 +261,25 @@
 <p>View important alerts, approvals and portal updates.</p>
 <span class="staff-card-badge" id="notificationBadge">Notifications</span>
 </a>
+<a href="website-content.html"
+   class="staff-control-card"
+   id="websiteContentCard"
+   style="display:none;">
 
+<div class="staff-control-icon">🌐</div>
+
+<h3>Website Content</h3>
+
+<p>
+Submit photos and videos for the school website.
+Your submission will be reviewed by an administrator before publication.
+</p>
+
+<span class="staff-card-badge">
+Website Uploads
+</span>
+
+  </a>
 </section>
 
 <section class="staff-dashboard-panel">
@@ -309,7 +328,11 @@ const notificationBadge=document.getElementById("notificationBadge");
 const dashboardWelcomeText=document.getElementById("dashboardWelcomeText");
 const logoutButton=document.getElementById("logoutButton");
 const menuLogout=document.getElementById("menuLogout");
+const websiteContentMenu=
+document.getElementById("websiteContentMenu");
 
+const websiteContentCard=
+document.getElementById("websiteContentCard");
 function getAccessToken(){
 for(const key of[
 "kenbridgeAccessToken",
@@ -399,7 +422,19 @@ result.message||"Unable to load your staff dashboard."
 
 const user=result.user||{};
 const statistics=result.statistics||{};
+const userRole=
+String(user.role||"").toUpperCase();
 
+if(
+userRole==="GENERAL_STAFF"||
+userRole==="ADMIN"
+){
+websiteContentMenu.style.display="block";
+websiteContentCard.style.display="block";
+}else{
+websiteContentMenu.style.display="none";
+websiteContentCard.style.display="none";
+  }
 const firstName=String(
 user.full_name||"Staff Member"
 ).trim().split(/\s+/)[0];
