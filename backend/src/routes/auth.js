@@ -251,7 +251,14 @@ const cleanUsername=String(username).trim();
 const cleanEmail=String(email).trim().toLowerCase();
 const cleanPosition=String(position).trim();
 const cleanDepartment=String(department).trim();
-const portalRole=cleanPosition.toLowerCase()==="administrator"?"ADMIN":"STAFF";
+const positionRole = cleanPosition.toLowerCase();
+
+const portalRole =
+    positionRole === "administrator"
+        ? "ADMIN"
+        : positionRole === "general staff"
+            ? "GENERAL_STAFF"
+            : "STAFF";
 const cleanAssignedClasses=cleanClasses(classes);
 
 const{rows:existingUsers}=await pool.query(
@@ -469,7 +476,14 @@ const cleanUsername=String(username).trim();
 const cleanEmail=String(email).trim().toLowerCase();
 const cleanPosition=String(position).trim();
 const cleanDepartment=String(department).trim();
-const portalRole=cleanPosition.toLowerCase()==="administrator"?"ADMIN":"STAFF";
+const positionRole = cleanPosition.toLowerCase();
+
+const portalRole =
+    positionRole === "administrator"
+        ? "ADMIN"
+        : positionRole === "general staff"
+            ? "GENERAL_STAFF"
+            : "STAFF";
 const cleanAssignedClasses=cleanClasses(classes);
 
 const{rows:existingUsers}=await pool.query(
