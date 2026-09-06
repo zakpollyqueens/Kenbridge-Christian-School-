@@ -223,7 +223,17 @@ return Number.isNaN(d.getTime())?v:d.toLocaleDateString(undefined,{year:"numeric
 function initials(name){
 return String(name||"B").split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0].toUpperCase()).join("")||"B";
 }
+function generateUsername(first,last){
+const clean=v=>String(v||"")
+.toLowerCase()
+.trim()
+.replace(/[^a-z0-9]/g,"");
 
+const f=clean(first);
+const l=clean(last);
+
+return `${f}.${l}`;
+  }
 function render(){
 
 const box=$("members");
@@ -423,20 +433,51 @@ const first=$("firstName").value.trim();
 const last=$("lastName").value.trim();
 
 if(!first||!last){
-notice("First and last name are required.","error","formNotice");
+notice(
+"First and last name are required.",
+"error",
+"formNotice"
+);
+return;
+}
+
+const email=$("email").value.trim();
+
+if(!email){
+notice(
+"An email address is required.",
+"error",
+"formNotice"
+);
 return;
 }
 
 const password=$("password").value;
 
 if(!editingId&&!password){
-notice("An initial password is required when creating a Board account.","error","formNotice");
+notice(
+"An initial password is required when creating a Board account.",
+"error",
+"formNotice"
+);
 return;
 }
 
+/*
+Automatically create a username.
+
+Example:
+John Smith
+becomes:
+john.smith
+*/
+
+const username=generateUsername(first,last);
+
 const payload={
 full_name:`${first} ${last}`,
-email:$("email").value.trim(),
+username:username,
+email:email,
 phone:$("phone").value.trim()||null,
 board_position:$("position").value.trim(),
 appointment_date:$("appointmentDate").value||null,
@@ -444,6 +485,76 @@ term_end_date:$("termEndDate").value||null,
 bio:$("bio").value.trim()||null
 };
 
+if(password){
+payload.password=password;
+}
+
+$("save").disabled=true;
+$("save").textContent=
+editingId?"Updating...":"Creating...";
+
+try{
+
+if(editingId){
+
+await KenbridgeBoardAuth.request(
+`/api/board/members/${encodeURIComponent(editingId)}`,
+{
+method:"PUT",
+body:JSON.stringify(payload)
+}
+);
+
+notice(
+"Board member updated successfully.",
+"success",
+"formNotice"
+);
+
+}else{
+
+await KenbridgeBoardAuth.request(
+"/api/board/members",
+{
+method:"POST",
+body:JSON.stringify(payload)
+}
+);
+
+notice(
+"Board member and login account created successfully.",
+"success",
+"formNotice"
+);
+
+}
+
+await loadMembers();
+
+setTimeout(closeModal,600);
+
+}catch(error){
+
+console.error(error);
+
+notice(
+error.message||"Unable to save Board member.",
+"error",
+"formNotice"
+);
+
+}finally{
+
+$("save").disabled=false;
+
+$("save").textContent=
+editingId?
+"Update Board Member":
+"Create Board Member";
+
+}
+
+  }
 if(password)payload.password=password;
 
 $("save").disabled=true;
