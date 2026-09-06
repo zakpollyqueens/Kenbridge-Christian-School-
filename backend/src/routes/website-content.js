@@ -497,9 +497,7 @@ router.patch(
             }
 
 
-            const {
-                rows
-            } = await pool.query(
+            const { rows } = await pool.query(
                 `UPDATE website_content_submissions
                  SET
                     status='APPROVED',
@@ -509,7 +507,7 @@ router.patch(
                     updated_at=NOW()
                  WHERE id=$2
                    AND status='PENDING'
-                 RETURNING *,
+                 RETURNING *`,
                 [
                     user.id,
                     req.params.id
@@ -551,6 +549,7 @@ router.patch(
     }
 );
 
+    
 
 /* =========================================================
    ADMIN — REJECT SUBMISSION
