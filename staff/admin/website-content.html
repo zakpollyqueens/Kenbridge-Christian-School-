@@ -1,0 +1,1043 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Website Content Review | Kenbridge Administrator</title>
+<meta name="description" content="Review and approve Kenbridge Christian School website content submissions.">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../../css/style.css"><style>
+.admin-page{
+min-height:100vh;
+background:#f4f8f5;
+}
+
+.admin-topbar{
+position:sticky;
+top:0;
+z-index:1000;
+background:#08783f;
+color:#fff;
+box-shadow:0 4px 18px rgba(0,0,0,.12);
+}
+
+.admin-topbar-inner{
+width:min(1200px,94%);
+height:72px;
+margin:auto;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:18px;
+}
+
+.admin-brand{
+display:flex;
+align-items:center;
+gap:12px;
+color:#fff;
+text-decoration:none;
+min-width:0;
+}
+
+.admin-brand img{
+width:48px;
+height:48px;
+object-fit:contain;
+background:#fff;
+border-radius:50%;
+padding:5px;
+}
+
+.admin-brand strong{
+display:block;
+font-size:16px;
+white-space:nowrap;
+}
+
+.admin-brand span{
+display:block;
+font-size:12px;
+opacity:.85;
+margin-top:3px;
+}
+
+.admin-back{
+padding:10px 15px;
+border:1px solid rgba(255,255,255,.5);
+border-radius:8px;
+color:#fff;
+text-decoration:none;
+font-size:13px;
+font-weight:800;
+}
+
+.admin-back:hover{
+background:rgba(255,255,255,.12);
+}
+
+.admin-container{
+width:min(1200px,94%);
+margin:auto;
+padding:38px 0 60px;
+}
+
+.admin-heading{
+margin-bottom:25px;
+}
+
+.admin-heading small{
+display:block;
+color:#08783f;
+font-weight:900;
+font-size:12px;
+letter-spacing:1.5px;
+margin-bottom:7px;
+}
+
+.admin-heading h1{
+margin:0 0 8px;
+color:#173a2c;
+font-size:clamp(28px,4vw,40px);
+}
+
+.admin-heading p{
+margin:0;
+color:#68776f;
+line-height:1.6;
+}
+
+.admin-alert{
+display:none;
+margin-bottom:20px;
+padding:14px 16px;
+border-radius:9px;
+font-size:13px;
+line-height:1.5;
+}
+
+.admin-alert.show{
+display:block;
+}
+
+.admin-alert.success{
+background:#eef8f1;
+border:1px solid #c9e7d1;
+color:#176b35;
+}
+
+.admin-alert.error{
+background:#fff1f1;
+border:1px solid #efcaca;
+color:#9a2929;
+}
+
+.admin-filter-bar{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+align-items:center;
+margin-bottom:20px;
+}
+
+.admin-filter{
+padding:10px 13px;
+border:1px solid #d8e1dc;
+border-radius:8px;
+background:#fff;
+color:#29463a;
+font:inherit;
+font-size:13px;
+font-weight:700;
+cursor:pointer;
+}
+
+.admin-filter.active,
+.admin-filter:hover{
+border-color:#08783f;
+color:#08783f;
+background:#eef6f1;
+}
+
+.admin-submissions{
+display:grid;
+gap:18px;
+}
+
+.admin-submission{
+background:#fff;
+border:1px solid #e1e8e4;
+border-radius:14px;
+padding:20px;
+box-shadow:0 8px 25px rgba(0,0,0,.05);
+}
+
+.admin-submission-grid{
+display:grid;
+grid-template-columns:260px 1fr;
+gap:22px;
+}
+
+.admin-media{
+width:100%;
+min-height:190px;
+border-radius:10px;
+overflow:hidden;
+background:#edf2ef;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.admin-media img,
+.admin-media video{
+width:100%;
+height:220px;
+object-fit:cover;
+display:block;
+}
+
+.admin-media video{
+background:#000;
+}
+
+.admin-video-link{
+display:inline-block;
+margin-top:8px;
+font-size:12px;
+font-weight:800;
+color:#08783f;
+text-decoration:none;
+}
+
+.admin-info h2{
+margin:0 0 8px;
+color:#173a2c;
+font-size:20px;
+}
+
+.admin-description{
+margin:0 0 14px;
+color:#68776f;
+font-size:13px;
+line-height:1.6;
+white-space:pre-wrap;
+}
+
+.admin-meta{
+display:grid;
+gap:5px;
+margin-bottom:16px;
+color:#718079;
+font-size:12px;
+line-height:1.5;
+}
+
+.admin-meta strong{
+color:#29463a;
+}
+
+.admin-status{
+display:inline-block;
+width:max-content;
+padding:5px 9px;
+border-radius:20px;
+font-size:10px;
+font-weight:900;
+}
+
+.status-pending{
+background:#fff5df;
+color:#936000;
+}
+
+.status-approved{
+background:#eaf7ed;
+color:#176b35;
+}
+
+.status-rejected{
+background:#fff0f0;
+color:#a42b2b;
+}
+
+.admin-actions{
+display:flex;
+flex-wrap:wrap;
+gap:9px;
+margin-top:14px;
+}
+
+.admin-action{
+padding:10px 14px;
+border:0;
+border-radius:8px;
+font-size:12px;
+font-weight:900;
+cursor:pointer;
+}
+
+.admin-approve{
+background:#08783f;
+color:#fff;
+}
+
+.admin-reject{
+background:#a42b2b;
+color:#fff;
+}
+
+.admin-action:disabled{
+opacity:.55;
+cursor:not-allowed;
+}
+
+.admin-empty{
+padding:30px 20px;
+text-align:center;
+border:1px dashed #d6e0da;
+border-radius:12px;
+background:#fff;
+color:#718079;
+font-size:13px;
+}
+
+.admin-rejection-box{
+display:none;
+margin-top:12px;
+}
+
+.admin-rejection-box.show{
+display:block;
+}
+
+.admin-rejection-box textarea{
+width:100%;
+box-sizing:border-box;
+min-height:80px;
+padding:10px 12px;
+border:1px solid #d8e1dc;
+border-radius:8px;
+font:inherit;
+font-size:13px;
+resize:vertical;
+}
+
+.portal-footer{
+margin-top:20px;
+padding:16px 15px;
+text-align:center;
+background:#08783f;
+color:#fff;
+font-size:12px;
+line-height:1.6;
+}
+
+.portal-footer p{
+margin:2px 0;
+}
+
+.portal-footer strong{
+color:#f28c28;
+}
+
+@media(max-width:800px){
+
+.admin-submission-grid{
+grid-template-columns:1fr;
+}
+
+.admin-media{
+min-height:200px;
+}
+
+.admin-media img,
+.admin-media video{
+height:250px;
+}
+}
+
+@media(max-width:600px){
+
+.admin-topbar-inner{
+height:64px;
+}
+
+.admin-brand img{
+width:40px;
+height:40px;
+}
+
+.admin-brand strong{
+font-size:13px;
+}
+
+.admin-brand span{
+font-size:10px;
+}
+
+.admin-back{
+padding:9px 11px;
+font-size:12px;
+}
+
+.admin-container{
+width:calc(100% - 28px);
+padding:28px 0 50px;
+}
+}
+</style><script src="../../js/portal-auth.js"></script></head><body><div class="admin-page"><header class="admin-topbar"><div class="admin-topbar-inner"><a href="../staff-dashboard.html" class="admin-brand">
+<img src="../../images/logo.png" alt="Kenbridge Christian School Logo">
+<div>
+<strong>Kenbridge Christian School</strong>
+<span>Administrator Portal</span>
+</div>
+</a><a href="../staff-dashboard.html" class="admin-back">
+← Staff Dashboard
+</a></div></header><main class="admin-container"><section class="admin-heading"><small>ADMINISTRATOR REVIEW</small>
+
+<h1>Website Content</h1><p>
+Review photos and videos submitted by General Staff before they are published on the school website.
+</p></section><div class="admin-alert" id="adminAlert"></div><div class="admin-filter-bar"><button
+type="button"
+class="admin-filter active"
+data-filter="ALL"
+
+«»
+
+All
+</button>
+
+<button
+type="button"
+class="admin-filter"
+data-filter="PENDING"
+
+«»
+
+Pending
+</button>
+
+<button
+type="button"
+class="admin-filter"
+data-filter="APPROVED"
+
+«»
+
+Approved
+</button>
+
+<button
+type="button"
+class="admin-filter"
+data-filter="REJECTED"
+
+«»
+
+Rejected
+</button>
+
+</div><section
+class="admin-submissions"
+id="submissionList"
+><div class="admin-empty">
+Loading website submissions...
+</div></section></main><footer class="portal-footer"><p>
+© <span id="portalFooterYear"></span>
+Kenbridge Christian School. All Rights Reserved.
+</p><p>
+Designed with ❤️ by <strong>Zakmolanitech Solutions</strong>
+</p></footer></div><script>
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+const API_BASE=
+"https://kenbridge-christian-school.onrender.com";
+
+const submissionList=
+document.getElementById("submissionList");
+
+const adminAlert=
+document.getElementById("adminAlert");
+
+let allSubmissions=[];
+
+let currentFilter="ALL";
+
+
+function getAccessToken(){
+
+for(const key of[
+"kenbridgeAccessToken",
+"access_token",
+"kenbridge_access_token",
+"token"
+]){
+
+const token=
+localStorage.getItem(key)||
+sessionStorage.getItem(key);
+
+if(token)return token;
+}
+
+return null;
+}
+
+
+function clearSession(){
+
+[
+"kenbridgeAccessToken",
+"kenbridgeRefreshToken",
+"kenbridgeUser",
+"access_token",
+"refresh_token",
+"kenbridge_access_token",
+"token",
+"user",
+"kenbridge_user"
+].forEach(key=>{
+localStorage.removeItem(key);
+});
+
+[
+"kenbridgeStaffLoggedIn",
+"kenbridgeUserRole"
+].forEach(key=>{
+sessionStorage.removeItem(key);
+});
+}
+
+
+function showAlert(message,type){
+
+adminAlert.textContent=message;
+
+adminAlert.className=
+"admin-alert show "+type;
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+setTimeout(()=>{
+adminAlert.classList.remove("show");
+},5000);
+}
+
+
+function escapeHtml(value){
+
+return String(value??"")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+}
+
+
+function sectionName(value){
+
+const names={
+GALLERY:"School Gallery",
+SPORTS:"Sports",
+FACILITIES:"Facilities",
+PROJECTS:"Projects"
+};
+
+return names[value]||value;
+}
+
+
+function formatDate(value){
+
+if(!value)return"";
+
+const date=new Date(value);
+
+if(Number.isNaN(date.getTime()))return"";
+
+return date.toLocaleString();
+}
+
+
+function statusClass(status){
+
+const value=
+String(status||"PENDING").toUpperCase();
+
+if(value==="APPROVED")
+return"status-approved";
+
+if(value==="REJECTED")
+return"status-rejected";
+
+return"status-pending";
+}
+
+
+function renderSubmissions(){
+
+const filtered=
+allSubmissions.filter(item=>{
+
+if(currentFilter==="ALL")
+return true;
+
+return String(item.status||"")
+.toUpperCase()===currentFilter;
+});
+
+
+if(filtered.length===0){
+
+submissionList.innerHTML=
+`<div class="admin-empty">
+No ${currentFilter==="ALL"?"website":currentFilter.toLowerCase()}
+submissions found.
+</div>`;
+
+return;
+}
+
+
+submissionList.innerHTML=
+filtered.map(item=>{
+
+const status=
+String(item.status||"PENDING").toUpperCase();
+
+const mediaType=
+String(item.media_type||"").toUpperCase();
+
+let mediaHtml="";
+
+if(mediaType==="IMAGE"){
+
+mediaHtml=
+`<img
+src="${escapeHtml(item.media_url)}"
+alt="${escapeHtml(item.title||"Website content")}"
+loading="lazy"
+>`;
+}else{
+
+mediaHtml=
+`<video
+controls
+preload="metadata"
+src="${escapeHtml(item.media_url)}"
+></video>`;
+}
+
+
+const actions=
+status==="PENDING"
+?
+`
+<div class="admin-actions">
+
+<button
+type="button"
+class="admin-action admin-approve"
+data-action="approve"
+data-id="${escapeHtml(item.id)}"
+>
+✓ Approve
+</button>
+
+<button
+type="button"
+class="admin-action admin-reject"
+data-action="show-reject"
+data-id="${escapeHtml(item.id)}"
+>
+✕ Reject
+</button>
+
+</div>
+
+<div
+class="admin-rejection-box"
+id="rejectBox-${escapeHtml(item.id)}"
+>
+
+<textarea
+id="rejectReason-${escapeHtml(item.id)}"
+placeholder="Optional reason for rejection..."
+></textarea><div class="admin-actions"><button
+type="button"
+class="admin-action admin-reject"
+data-action="confirm-reject"
+data-id="${escapeHtml(item.id)}"
+
+«»
+
+Confirm Rejection
+</button>
+
+<button
+type="button"
+class="admin-filter"
+data-action="cancel-reject"
+data-id="${escapeHtml(item.id)}"
+
+«»
+
+Cancel
+</button>
+
+</div></div>
+`
+:"";return`
+
+<article class="admin-submission"><div class="admin-submission-grid"><div class="admin-media">
+${mediaHtml}
+</div><div class="admin-info"><h2>
+${escapeHtml(item.title||"Untitled")}
+</h2><p class="admin-description">
+${escapeHtml(item.description||"No description provided.")}
+</p><div class="admin-meta"><div>
+<strong>Section:</strong>
+${escapeHtml(sectionName(item.section))}
+</div><div>
+<strong>Media:</strong>
+${escapeHtml(mediaType)}
+</div><div>
+<strong>Submitted by:</strong>
+${escapeHtml(item.submitted_by_name||"Unknown")}
+</div><div>
+<strong>Email:</strong>
+${escapeHtml(item.submitted_by_email||"")}
+</div><div>
+<strong>Submitted:</strong>
+${escapeHtml(formatDate(item.created_at))}
+</div>${item.reviewed_at?
+`<div>
+<strong>Reviewed:</strong>
+${escapeHtml(formatDate(item.reviewed_at))}
+
+</div>`:""}</div><span class="admin-status ${statusClass(status)}">
+${escapeHtml(status)}
+</span>${status==="REJECTED"&&item.rejection_reason?
+`<p class="admin-description">
+<strong>Rejection reason:</strong>
+${escapeHtml(item.rejection_reason)}
+
+</p>`:""}${actions}
+
+</div></div></article>
+`;}).join("");
+
+bindActions();
+}
+
+function bindActions(){
+
+submissionList
+.querySelectorAll("[data-action]")
+.forEach(button=>{
+
+button.addEventListener(
+"click",
+()=>{
+
+const action=
+button.dataset.action;
+
+const id=
+button.dataset.id;
+
+if(action==="approve"){
+approveSubmission(id);
+}
+
+if(action==="show-reject"){
+
+const box=
+document.getElementById(
+"rejectBox-"+id
+);
+
+if(box){
+box.classList.add("show");
+}
+}
+
+if(action==="cancel-reject"){
+
+const box=
+document.getElementById(
+"rejectBox-"+id
+);
+
+if(box){
+box.classList.remove("show");
+}
+}
+
+if(action==="confirm-reject"){
+rejectSubmission(id);
+}
+
+});
+
+});
+}
+
+async function loadSubmissions(){
+
+const token=getAccessToken();
+
+if(!token){
+
+clearSession();
+
+window.location.href="../login.html";
+
+return;
+}
+
+try{
+
+const response=
+await fetch(
+API_BASE+
+"/api/website-content/submissions",
+{
+headers:{
+Authorization:"Bearer "+token
+}
+}
+);
+
+const result=
+await response.json();
+
+if(
+response.status===401||
+response.status===403
+){
+
+clearSession();
+
+window.location.href="../login.html";
+
+return;
+}
+
+if(!response.ok||
+!result.success){
+
+throw new Error(
+result.message||
+"Unable to load website submissions."
+);
+}
+
+allSubmissions=
+Array.isArray(result.submissions)?
+result.submissions:[];
+
+renderSubmissions();
+
+}catch(error){
+
+console.error(
+"ADMIN WEBSITE CONTENT LOAD ERROR:",
+error
+);
+
+submissionList.innerHTML=
+`<div class="admin-empty">
+Unable to load website submissions.
+
+</div>`;showAlert(
+error.message||
+"Unable to load website submissions.",
+"error"
+);
+}
+}
+
+async function approveSubmission(id){
+
+if(!confirm(
+"Approve this content for website publication?"
+))return;
+
+await reviewSubmission(
+id,
+"approve"
+);
+}
+
+async function rejectSubmission(id){
+
+const textarea=
+document.getElementById(
+"rejectReason-"+id
+);
+
+const reason=
+textarea?
+textarea.value.trim():"";
+
+await reviewSubmission(
+id,
+"reject",
+reason
+);
+}
+
+async function reviewSubmission(
+id,
+action,
+reason=""
+){
+
+const token=getAccessToken();
+
+if(!token){
+
+clearSession();
+
+window.location.href="../login.html";
+
+return;
+}
+
+const buttons=
+submissionList.querySelectorAll(
+"[data-id="${id}"]"
+);
+
+buttons.forEach(button=>{
+button.disabled=true;
+});
+
+try{
+
+const endpoint=
+action==="approve"
+?
+"/api/website-content/submissions/"+
+encodeURIComponent(id)+
+"/approve"
+:
+"/api/website-content/submissions/"+
+encodeURIComponent(id)+
+"/reject";
+
+const options={
+method:"PATCH",
+headers:{
+Authorization:"Bearer "+token,
+"Content-Type":"application/json"
+}
+};
+
+if(action==="reject"){
+
+options.body=
+JSON.stringify({
+reason:reason
+});
+}
+
+const response=
+await fetch(
+API_BASE+endpoint,
+options
+);
+
+const result=
+await response.json();
+
+if(
+response.status===401||
+response.status===403
+){
+
+clearSession();
+
+window.location.href="../login.html";
+
+return;
+}
+
+if(!response.ok||
+!result.success){
+
+throw new Error(
+result.message||
+"Unable to update this submission."
+);
+}
+
+showAlert(
+result.message||
+"Submission updated successfully.",
+"success"
+);
+
+await loadSubmissions();
+
+}catch(error){
+
+console.error(
+"ADMIN WEBSITE CONTENT REVIEW ERROR:",
+error
+);
+
+showAlert(
+error.message||
+"Unable to update the submission.",
+"error"
+);
+
+renderSubmissions();
+}
+}
+
+document
+.querySelectorAll(".admin-filter")
+.forEach(button=>{
+
+button.addEventListener(
+"click",
+()=>{
+
+if(button.dataset.action)
+return;
+
+document
+.querySelectorAll(".admin-filter")
+.forEach(item=>{
+item.classList.remove("active");
+});
+
+button.classList.add("active");
+
+currentFilter=
+button.dataset.filter||"ALL";
+
+renderSubmissions();
+});
+
+});
+
+document.getElementById(
+"portalFooterYear"
+).textContent=
+new Date().getFullYear();
+
+loadSubmissions();
+
+});
+
+</script></body>
+  </html>
