@@ -208,7 +208,7 @@ if (!user) return;
             message: `Only Administrators can ${status.toLowerCase()} website content.`
         });
     }
-
+    
     const reason = status === "REJECTED"
         ? String(req.body?.reason || "").trim() || null
         : null;
@@ -241,17 +241,14 @@ if (!user) return;
         message: `Unable to ${status.toLowerCase()} website content.`
     });
 }
-
 }
-
-router.patch("/submissions//approve", (req, res) =>
-reviewSubmission(req, res, "APPROVED")
+router.patch("/submissions/:id/approve", (req, res) =>
+    reviewSubmission(req, res, "APPROVED")
 );
 
-router.patch("/submissions//reject", (req, res) =>
-reviewSubmission(req, res, "REJECTED")
+router.patch("/submissions/:id/reject", (req, res) =>
+    reviewSubmission(req, res, "REJECTED")
 );
-
 router.get("/published", async (req, res) => {
 try {
 const section = String(req.query.section || "").trim().toUpperCase();
