@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reports | Kenbridge Administrator</title>
+<meta name="description" content="Manage learner reports for Kenbridge Christian School">
+<meta name="theme-color" content="#08783f">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4f7f5;color:#17231c;font-family:Arial,sans-serif}
+.admin-page{min-height:100vh}
+.admin-head{background:#08783f;color:#fff;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.admin-head h1{margin:0;font-size:22px}
+.admin-head p{margin:4px 0 0;font-size:13px;opacity:.9}
+.admin-head button,.btn{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:700}
+.admin-head button{background:#fff;color:#08783f}
+.wrap{max-width:1200px;margin:auto;padding:20px}
+.panel{background:#fff;border-radius:14px;padding:18px;margin-bottom:18px;box-shadow:0 3px 15px #00000010}
+.filters{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+select,input,textarea{width:100%;padding:10px;border:1px solid #d6ddd8;border-radius:8px;background:#fff;font:inherit}
+textarea{min-height:90px;resize:vertical}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.btn{background:#08783f;color:#fff}
+.btn.secondary{background:#e9efeb;color:#183d29}
+.btn.danger{background:#b42318;color:#fff}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 3px 12px #0000000d}
+.card b{font-size:25px;display:block;color:#08783f}
+.card span{font-size:13px;color:#647067}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:700px}
+th,td{padding:11px 9px;border-bottom:1px solid #e6ebe7;text-align:left;font-size:13px}
+th{background:#f0f5f2;color:#245438}
+.badge{display:inline-block;padding:5px 8px;border-radius:20px;font-size:11px;font-weight:700}
+.badge.not_started{background:#edf0ee;color:#59635d}
+.badge.draft{background:#fff3cd;color:#856404}
+.badge.submitted{background:#dcecff;color:#07559b}
+.badge.approved{background:#dff6e8;color:#08783f}
+.hidden{display:none!important}
+.form-title{margin:0 0 14px;color:#08783f}
+.subject-table{min-width:650px}
+.subject-table input,.subject-table select{padding:8px}
+.message{padding:11px;border-radius:8px;background:#eef7f1;margin-bottom:12px;font-size:13px}
+.error{background:#fff0ef;color:#a51c14}
+.loading{text-align:center;padding:20px;color:#68736c}
+.files a{color:#08783f;font-weight:700;text-decoration:none}
+@media(max-width:800px){
+ .filters,.summary{grid-template-columns:1fr 1fr}
+}
+@media(max-width:520px){
+ .wrap{padding:12px}
+ .filters,.summary{grid-template-columns:1fr}
+ .admin-head{padding:15px}
+ .admin-head h1{font-size:18px}
+}
+</style>
+</head>
+<body>
+<div class="admin-page">
+<header class="admin-head">
+<div><h1>Reports Dashboard</h1><p>Kenbridge Christian School</p></div>
+<button onclick="logout()">Logout</button>
+</header>
+
+<main class="wrap">
+
+<section class="panel">
+<h2 class="form-title">Report Filters</h2>
+<div class="filters">
+<div>
+<label>Class</label>
+<select id="classSelect"><option value="">Select class</option></select>
+</div>
+<div>
+<label>Academic Year</label>
+<input id="year" value="2026">
+</div>
+<div>
+<label>Term</label>
+<select id="term">
+<option value="Term 1">Term 1</option>
+<option value="Term 2">Term 2</option>
+<option value="Term 3">Term 3</option>
+</select>
+</div>
+</div>
+<div class="actions">
+<button class="btn" onclick="loadStudents()">Load Learners</button>
+<button class="btn secondary" onclick="showManual()">Create Report Manually</button>
+</div>
+<div id="msg"></div>
+</section>
+
+<section class="summary">
+<div class="card"><b id="total">0</b><span>Total Learners</span></div>
+<div class="card"><b id="draft">0</b><span>Draft</span></div>
+<div class="card"><b id="submitted">0</b><span>Submitted</span></div>
+<div class="card"><b id="approved">0</b><span>Approved</span></div>
+</section>
+
+<section class="panel">
+<h2 class="form-title">Learners</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Learner</th>
+<th>Class</th>
+<th>Aggregate</th>
+<th>Grade</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="students"><tr><td colspan="6" class="loading">Select a class and load learners.</td></tr></tbody>
+</table>
+</div>
+</section>
+
+<section id="manual" class="panel hidden">
+<h2 class="form-title">Create / Edit Report Manually</h2>
+
+<div class="filters">
+<div>
+<label>Student</label>
+<select id="studentSelect"><option value="">Select student</option></select>
+</div>
+<div>
+<label>Aggregate</label>
+<input id="aggregate" type="number" min="0">
+</div>
+<div>
+<label>Overall Grade</label>
+<input id="overallGrade" placeholder="e.g. A">
+</div>
+<div>
+<label>Status</label>
+<select id="reportStatus">
+<option value="DRAFT">Draft</option>
+<option value="SUBMITTED">Submitted</option>
+<option value="APPROVED">Approved</option>
+</select>
+</div>
+<div>
+<label>Attendance Days</label>
+<input id="attendance" type="number" min="0">
+</div>
+<div>
+<label>Total School Days</label>
+<input id="schoolDays" type="number" min="0">
+</div>
+</div>
+
+<h3>Subjects</h3>
+<div class="table-wrap">
+<table class="subject-table">
+<thead>
+<tr><th>Subject</th><th>Marks</th><th>Grade</th></tr>
+</thead>
+<tbody id="subjectRows"></tbody>
+</table>
+</div>
+
+<div style="margin-top:15px">
+<label>Teacher Comment</label>
+<textarea id="teacherComment"></textarea>
+</div>
+
+<div style="margin-top:12px">
+<label>Head Teacher Comment</label>
+<textarea id="headComment"></textarea>
+</div>
+
+<div class="actions">
+<button class="btn" onclick="saveReport()">Save Report</button>
+<button class="btn secondary" onclick="hideManual()">Cancel</button>
+</div>
+</section>
+
+<section class="panel">
+<h2 class="form-title">Uploaded Report Files</h2>
+<div id="files" class="files">Select a class to view uploaded reports.</div>
+</section>
+
+</main>
+</div>
+
+<script>
+const API="https://kenbridge-christian-school.onrender.com/api",REPORTS=API+"/reports",DOCS=API+"/documents/reports";
+const $=id=>document.getElementById(id);
+let learners=[];
+
+const SUBJECTS={
+KG1:[
+"Communication and Language",
+"Literacy",
+"Physical Development",
+"Handwriting",
+"Expressive and Creative Arts",
+"Personal, Social and Emotional Development",
+"Numeracy",
+"Understanding the World"
+],
+KG2:[
+"Communication and Language",
+"Literacy",
+"Physical Development",
+"Handwriting",
+"Expressive and Creative Arts",
+"Personal, Social and Emotional Development",
+"Numeracy",
+"Understanding the World"
+],
+KG3:["Numeracy","English","Science","SST"],
+PRIMARY:[
+"Mathematics",
+"English & Literacy",
+"Science",
+"Social Studies",
+"Creative Activities",
+"ICT & Digital Skills"
+]
+};
+
+function token(){
+ return localStorage.getItem("access_token")||
+ localStorage.getItem("kenbridge_access_token")||
+ localStorage.getItem("kenbridgeAccessToken")||
+ localStorage.getItem("token")||"";
+}
+function headers(json=false){
+ const h={Authorization:"Bearer "+token()};
+ if(json)h["Content-Type"]="application/json";
+ return h;
+}
+function classKey(c){
+ c=(c||"").trim().toUpperCase().replace(/[_-]/g," ");
+ if(["KG1","KG 1","BABY"].includes(c))return"KG1";
+ if(["KG2","KG 2","MIDDLE"].includes(c))return"KG2";
+ if(["KG3","KG 3","TOP"].includes(c))return"KG3";
+ return"PRIMARY";
+}
+function subjects(c){return SUBJECTS[classKey(c)]||SUBJECTS.PRIMARY}
+
+function displayClass(c){
+ const x=(c||"").trim().toUpperCase().replace(/[_-]/g," ");
+ const map={
+  "BABY":"Baby / KG 1","KG1":"Baby / KG 1","KG 1":"Baby / KG 1",
+  "MIDDLE":"Middle / KG 2","KG2":"Middle / KG 2","KG 2":"Middle / KG 2",
+  "TOP":"Top / KG 3","KG3":"Top / KG 3","KG 3":"Top / KG 3",
+  "P1":"Year 1","P2":"Year 2","P3":"Year 3","P4":"Year 4",
+  "P5":"Year 5","P6":"Year 6","P7":"Year 7",
+  "YEAR 1":"Year 1","YEAR 2":"Year 2","YEAR 3":"Year 3",
+  "YEAR 4":"Year 4","YEAR 5":"Year 5","YEAR 6":"Year 6","YEAR 7":"Year 7"
+ };
+ return map[x]||c;
+}
+
+function msg(t,err=false){
+ $("msg").innerHTML=t?`<div class="message ${err?"error":""}">${t}</div>`:"";
+}
+
+async function get(url,opt={}){
+ const r=await fetch(url,{...opt,headers:{...headers(),...(opt.headers||{})}});
+ let d={};try{d=await r.json()}catch{}
+ if(!r.ok)throw Error(d.error||d.message||"Request failed");
+ return d;
+}
+
+async function loadClasses(){
+ try{
+  const d=await get(REPORTS+"/classes");
+  const arr=d.classes||d||[];
+  $("classSelect").innerHTML='<option value="">Select class</option>'+
+  arr.map(x=>{
+   const v=typeof x==="string"?x:(x.class_name||x.name||"");
+   return v?`<option value="${v}">${displayClass(v)}</option>`:"";
+  }).join("");
+ }catch(e){msg("Unable to load classes: "+e.message,true)}
+}
+
+async function loadStudents(){
+ const c=$("classSelect").value,y=$("year").value,t=$("term").value;
+ if(!c)return msg("Please select a class.",true);
+ try{
+  msg("Loading learners...");
+  const d=await get(`${REPORTS}/classes/${encodeURIComponent(c)}?academic_year=${encodeURIComponent(y)}&term=${encodeURIComponent(t)}`);
+  learners=d.students||d.learners||d.rows||d||[];
+  renderLearners();
+  fillStudents();
+  await loadFiles();
+  msg("");
+ }catch(e){msg("Unable to retrieve learners for this class: "+e.message,true)}
+}
+
+function status(v){
+ const s=(v||"NOT_STARTED").toUpperCase();
+ return `<span class="badge ${s.toLowerCase()}">${s.replace(/_/g," ")}</span>`;
+}
+
+function renderLearners(){
+ $("total").textContent=learners.length;
+ $("draft").textContent=learners.filter(x=>(x.report_status||"").toUpperCase()==="DRAFT").length;
+ $("submitted").textContent=learners.filter(x=>(x.report_status||"").toUpperCase()==="SUBMITTED").length;
+ $("approved").textContent=learners.filter(x=>(x.report_status||"").toUpperCase()==="APPROVED").length;
+ $("students").innerHTML=learners.length?learners.map(x=>{
+  const id=x.student_id||x.id;
+  return `<tr>
+  <td>${esc(x.full_name||x.student_name||"Unnamed")}</td>
+  <td>${esc(displayClass(x.class_name||$("classSelect").value))}</td>
+  <td>${x.aggregate??"—"}</td>
+  <td>${esc(x.overall_grade||"—")}</td>
+  <td>${status(x.report_status)}</td>
+  <td><button class="btn" onclick="openReport('${id}')">Open</button></td>
+  </tr>`;
+ }).join(""):'<tr><td colspan="6" class="loading">No learners found.</td></tr>';
+}
+
+function fillStudents(){
+ $("studentSelect").innerHTML='<option value="">Select student</option>'+
+ learners.map(x=>{
+  const id=x.student_id||x.id,n=x.full_name||x.student_name||"Unnamed";
+  return `<option value="${id}">${esc(n)}</option>`;
+ }).join("");
+}
+
+function buildSubjects(data={}){
+ const list=subjects($("classSelect").value);
+ const marks=data.subject_marks||data.marks||{};
+ const grades=data.subject_grades||data.grades||{};
+ $("subjectRows").innerHTML=list.map(s=>`
+ <tr>
+  <td><select class="subject">${list.map(x=>`<option ${x===s?"selected":""}>${esc(x)}</option>`).join("")}</select></td>
+  <td><input class="marks" type="number" min="0" max="100" value="${esc(marks[s]??"")}"></td>
+  <td><input class="grade" value="${esc(grades[s]??"")}"></td>
+ </tr>`).join("");
+}
+
+function showManual(){
+ $("manual").classList.remove("hidden");
+ buildSubjects();
+ $("manual").scrollIntoView({behavior:"smooth"});
+}
+
+function hideManual(){$("manual").classList.add("hidden")}
+
+$("classSelect").addEventListener("change",()=>{
+ if(!$("manual").classList.contains("hidden"))buildSubjects();
+});
+
+$("studentSelect").addEventListener("change",async()=>{
+ const id=$("studentSelect").value;
+ if(!id)return buildSubjects();
+ try{
+  const d=await get(`${REPORTS}/manual/${encodeURIComponent(id)}?academic_year=${encodeURIComponent($("year").value)}&term=${encodeURIComponent($("term").value)}`);
+  const r=d.report||d;
+  $("aggregate").value=r.aggregate??"";
+  $("overallGrade").value=r.overall_grade||"";
+  $("reportStatus").value=r.report_status||"DRAFT";
+  $("attendance").value=r.attendance_days??"";
+  $("schoolDays").value=r.total_school_days??"";
+  $("teacherComment").value=r.teacher_comment||"";
+  $("headComment").value=r.head_teacher_comment||"";
+  buildSubjects(r);
+ }catch(e){buildSubjects()}
+});
+
+async function saveReport(){
+ const student=$("studentSelect").value,c=$("classSelect").value,y=$("year").value,t=$("term").value;
+ if(!student||!c)return msg("Select a class and student first.",true);
+
+ const subject_marks={},subject_grades={};
+ document.querySelectorAll("#subjectRows tr").forEach(row=>{
+  const s=row.querySelector(".subject")?.value;
+  if(s){
+   subject_marks[s]=row.querySelector(".marks")?.value===""?null:Number(row.querySelector(".marks").value);
+   subject_grades[s]=row.querySelector(".grade")?.value||"";
+  }
+ });
+
+ const body={
+  student_id:student,class_name:c,academic_year:y,term:t,
+  subject_marks,subject_grades,
+  aggregate:$("aggregate").value===""?null:Number($("aggregate").value),
+  overall_grade:$("overallGrade").value.trim(),
+  attendance_days:$("attendance").value===""?null:Number($("attendance").value),
+  total_school_days:$("schoolDays").value===""?null:Number($("schoolDays").value),
+  teacher_comment:$("teacherComment").value.trim(),
+  head_teacher_comment:$("headComment").value.trim(),
+  report_status:$("reportStatus").value
+ };
+
+ try{
+  msg("Saving report...");
+  await get(REPORTS+"/manual",{method:"POST",headers:headers(true),body:JSON.stringify(body)});
+  msg("Report saved successfully.");
+  await loadStudents();
+  hideManual();
+ }catch(e){msg("Unable to save report: "+e.message,true)}
+}
+
+async function openReport(id){
+ $("manual").classList.remove("hidden");
+ $("studentSelect").value=id;
+ $("studentSelect").dispatchEvent(new Event("change"));
+ $("manual").scrollIntoView({behavior:"smooth"});
+}
+
+async function loadFiles(){
+ const c=$("classSelect").value;
+ if(!c){$("files").textContent="Select a class to view uploaded reports.";return}
+ try{
+  const d=await get(`${DOCS}?class_name=${encodeURIComponent(c)}`);
+  const files=d.files||d.documents||d||[];
+  $("files").innerHTML=files.length?files.map(f=>{
+   const name=f.name||f.filename||"Report file",url=f.url||f.file_url||f.public_url;
+   return url?`<div style="padding:8px 0"><a href="${esc(url)}" target="_blank">${esc(name)}</a></div>`:`<div>${esc(name)}</div>`;
+  }).join(""):"No uploaded report files found.";
+ }catch(e){$("files").textContent="Unable to load uploaded files."}
+}
+
+function esc(v){
+ return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+}
+
+function logout(){
+ ["access_token","kenbridge_access_token","kenbridgeAccessToken","token"].forEach(k=>localStorage.removeItem(k));
+ location.href="../index.html";
+}
+
+loadClasses();
+</script>
+</body>
+  </html>
