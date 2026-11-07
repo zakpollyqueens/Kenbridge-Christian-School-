@@ -1,5 +1,6 @@
 (function(){"use strict";
 
+const helpScript=document.createElement("script");helpScript.src=new URL("feature-help.js",document.currentScript.src).href;helpScript.defer=true;document.head.append(helpScript);
 document.addEventListener("DOMContentLoaded",function(){
 
 const openingScreen=document.getElementById("openingScreen");
