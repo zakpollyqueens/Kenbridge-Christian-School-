@@ -1,5 +1,6 @@
 (function () {
 "use strict";
+const fh=document.createElement("script");fh.src=new URL("feature-help.js",document.currentScript.src).href;fh.defer=true;document.head.append(fh);
 
 const API_BASE_URL =
     "https://kenbridge-christian-school.onrender.com/api";
