@@ -3,6 +3,33 @@
  * Handles form submissions across all pages
  */
 
+const KENBRIDGE_ZAKITECH_BRIDGE="https://mmozesoarwkimhyloivu.supabase.co/functions/v1/zakitech-product-bridge";
+const KENBRIDGE_THREAD_KEY="kenbridge_zakitech_contact_thread_v1";
+async function kenbridgeBridgeRequest(payload){
+ const response=await fetch(KENBRIDGE_ZAKITECH_BRIDGE,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({product_slug:"kenbridge-christian-school",...payload})});
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok||data.success===false)throw new Error(data.error||"The school company support connection is unavailable.");
+ return data;
+}
+function renderKenbridgeCompanyThread(thread){
+ let host=document.getElementById("kenbridgeCompanySupportThread");
+ if(!host){host=document.createElement("section");host.id="kenbridgeCompanySupportThread";host.className="contact-card";const form=document.getElementById("contactForm");form?.parentElement?.append(host);}
+ host.replaceChildren();
+ const heading=document.createElement("h3");heading.textContent="Company support conversation";
+ const detail=document.createElement("p");detail.textContent=(thread.ticket?.subject||"School enquiry")+" · "+(thread.ticket?.status||"new");
+ host.append(heading,detail);
+ if(thread.ticket?.message){const first=document.createElement("article");const label=document.createElement("small");label.textContent=(thread.ticket.sender_name||"You")+" · "+new Date(thread.ticket.received_at).toLocaleString();const body=document.createElement("p");body.textContent=thread.ticket.message;first.append(label,body);host.append(first);}
+ (thread.replies||[]).forEach(reply=>{const item=document.createElement("article"),meta=document.createElement("small"),body=document.createElement("p");meta.textContent=(reply.sender_name||reply.sender_type)+" · "+new Date(reply.created_at).toLocaleString();body.textContent=reply.body;item.append(meta,body);host.append(item);});
+ if(!["closed","resolved"].includes(thread.ticket?.status)){
+  const form=document.createElement("form"),area=document.createElement("textarea"),send=document.createElement("button");form.className="kenbridge-company-reply";area.required=true;area.maxLength=10000;area.placeholder="Reply to the school support team…";send.type="submit";send.textContent="Send reply";form.append(area,send);
+  form.addEventListener("submit",async e=>{e.preventDefault();send.disabled=true;try{const saved=JSON.parse(localStorage.getItem(KENBRIDGE_THREAD_KEY)||"{}");await kenbridgeBridgeRequest({action:"reply-support-thread",conversation_id:saved.id,conversation_token:saved.token,message:area.value.trim()});const next=await kenbridgeBridgeRequest({action:"get-support-thread",conversation_id:saved.id,conversation_token:saved.token});renderKenbridgeCompanyThread(next);}catch(error){const p=document.createElement("p");p.textContent=error.message||"Could not send reply.";host.append(p);}finally{send.disabled=false;}});
+  host.append(form);
+ }
+}
+async function restoreKenbridgeCompanyThread(){
+ try{const saved=JSON.parse(localStorage.getItem(KENBRIDGE_THREAD_KEY)||"{}");if(!saved.id||!saved.token)return;const thread=await kenbridgeBridgeRequest({action:"get-support-thread",conversation_id:saved.id,conversation_token:saved.token});renderKenbridgeCompanyThread(thread);}catch(error){console.info("Kenbridge company support thread could not be restored:",error.message);}
+}
+
 /**
  * Contact Form Handler
  * Submits contact form data to backend
@@ -49,8 +76,26 @@ function initContactFormHandler() {
       const response = await apiPost(API_ENDPOINTS.submissions.contactForm, formData);
       
       if (response.success) {
+        let companyCopy = false;
+        try {
+          const central = await kenbridgeBridgeRequest({
+            action: 'submit-support',
+            sender_name: formData.name,
+            sender_email: formData.email,
+            subject: formData.subject,
+            message: formData.message
+          });
+          localStorage.setItem(KENBRIDGE_THREAD_KEY, JSON.stringify({id:central.conversation_id,token:central.conversation_token}));
+          const thread = await kenbridgeBridgeRequest({action:'get-support-thread',conversation_id:central.conversation_id,conversation_token:central.conversation_token});
+          renderKenbridgeCompanyThread(thread);
+          companyCopy = true;
+        } catch (bridgeError) {
+          console.warn('Kenbridge enquiry was received by the school backend, but the ZakiTech copy was not confirmed:', bridgeError);
+        }
         if (contactStatus) {
-          contactStatus.textContent = 'Thank you! Your message has been received. We will get back to you soon.';
+          contactStatus.textContent = companyCopy
+            ? 'Thank you! Your message was received by Kenbridge and forwarded to the ZakiTech Kenbridge Control Station. You can follow the company-team reply below.'
+            : 'Thank you! Your message was received by the school. Please contact the school directly if you need an urgent response.';
           contactStatus.classList.add('success');
           contactStatus.classList.remove('error');
         }
@@ -215,6 +260,7 @@ function initAdmissionsFormHandler() {
  * Initialize all form handlers when DOM is ready
  */
 document.addEventListener('DOMContentLoaded', function() {
+  restoreKenbridgeCompanyThread();
   initContactFormHandler();
   initFeedbackFormHandler();
   initAdmissionsFormHandler();
